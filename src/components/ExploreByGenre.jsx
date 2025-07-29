@@ -10,7 +10,7 @@ import AnimationImage from "../assets/animation.jpg"
 const genresData = [
   {
     id: 1,
-    name: "Science Fiction",
+    name: "Science-Fiction",
     imageUrl: "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986",
   },
   {
@@ -83,6 +83,7 @@ export default function ExploreByGenre() {
         >
           {genresData.map((genre, index) => (
             <motion.div
+            onClick={() => window.location.href = `/genre/${genre.name}`}
               key={genre.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
