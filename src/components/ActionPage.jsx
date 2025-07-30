@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Star, Calendar, Tag, ArrowRight } from "lucide-react";
 import MissionImpossibleImage from "../assets/missionimpossible.jpg";
 import JohnWickImage from "../assets/JohnWick2.jpg";

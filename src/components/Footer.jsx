@@ -25,7 +25,7 @@ export const Footer = () => {
               className="text-4xl font-black mb-8 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight"
               whileHover={{ scale: 1.02 }}
             >
-              thecineprism
+              The Cinéprism
             </motion.h3>
 
             {/* Navigation Links */}

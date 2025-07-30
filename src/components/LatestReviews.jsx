@@ -1,5 +1,6 @@
-"use client";
 
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 import { motion, useMotionValue } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
@@ -211,7 +212,8 @@ export default function LatestReviews() {
                   style={{ pointerEvents: isDragging ? "none" : "auto" }}
                 >
                   <div className="aspect-[2/3] relative rounded-2xl overflow-hidden shadow-2xl group-hover:shadow-emerald-500/20 transition-all duration-500">
-                    <img
+                    <LazyLoadImage
+                    effect="blur"
                       src={movie.posterUrl || "/placeholder.svg"}
                       alt={movie.title}
                       className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 ${

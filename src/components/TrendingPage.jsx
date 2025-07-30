@@ -1,75 +1,258 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Star, TrendingUp } from "lucide-react";
-import SpiderManIntoTheSpiderVerseImage from "../assets/spidermanintothespiderverse.webp";
-const trendingData = [
-  {
-    id: 1,
-    rank: "01",
-    title: "Parasite",
-    posterUrl:
-      "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
-    rating: 8.5,
-    subtitle: "Most viewed this week",
-  },
-  {
-    id: 2,
-    rank: "02",
-    title: "Oppenheimer",
-    posterUrl:
-      "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
-    rating: 8.2,
-    subtitle: "Most viewed this week",
-  },
-  {
-    id: 3,
-    rank: "03",
-    title: "Interstellar",
-    posterUrl:
-      "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
-    rating: 8.6,
-    subtitle: "Most viewed this week",
-  },
-  {
-    id: 4,
-    rank: "04",
-    title: "Dune: Part Two",
-    posterUrl:
-      "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
-    rating: 8.8,
-    subtitle: "Most viewed this week",
-  },
-  {
-    id: 5,
-    rank: "05",
-    title: "The Dark Knight",
-    posterUrl:
-      "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
-    rating: 9.0,
-    subtitle: "Most viewed this week",
-  },
-  {
-    id: 6,
-    rank: "06",
-    title: "Joker",
-    posterUrl:
-      "https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
-    rating: 8.4,
-    subtitle: "Most viewed this week",
-  },
-  {
-    id: 7,
-    rank: "07",
-    title: "Spider-Man: Into the Spider-Verse",
-    posterUrl:
-      SpiderManIntoTheSpiderVerseImage,
-    rating: 8.4,
-    subtitle: "Most viewed this week",
-  },
+import SpiderManImage from "../assets/spiderman.jpeg";
+import DangalImage from "../assets/dangal.jpg";
+import IdiotsImage from "../assets/3idiots.jpg";
+import RRRImage from "../assets/rrr.jpg";
+import ZNMDImage from "../assets/znmd.jpg";
+import QueenImage from "../assets/queen.webp";
+import BahubaliImage from "../assets/bahubali.webp";
+import PushpaImage from "../assets/pushpa.webp";
+import ArjunReddyImage from "../assets/arjunreddy.webp";
+import EegaImage from "../assets/eega.webp";
+import MagdheeraImage from "../assets/magdheera.webp";
+import VikramImage from "../assets/vikram.webp";
+import NinetySixImage from "../assets/96.webp";
+import SuperDeluxeImage from "../assets/superdeluxe.webp";
+import KaakaMuttaiImage from "../assets/kaakamuttai.webp";
+import AsuranImage from "../assets/asuran.webp";
+import OldBoyImage from "../assets/oldboy.webp";
+import TrainToBusanImage from "../assets/traintobusan.webp";
+import TheHandMaidenImage from "../assets/thehandmaiden.webp";
+import BurningImage from "../assets/burning.webp";
+// --- CHANGE 1: Added 'origin' property to each movie object ---
+const trendingData = {
+  hollywood: [
+    {
+      id: 1,
+      rank: "01",
+      title: "Oppenheimer",
+      posterUrl:
+        "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
+      rating: 8.2,
+      origin: "Hollywood",
+    },
+    {
+      id: 2,
+      rank: "02",
+      title: "The Dark Knight",
+      posterUrl:
+        "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+      rating: 9.0,
+      origin: "Hollywood",
+    },
+    {
+      id: 3,
+      rank: "03",
+      title: "Interstellar",
+      posterUrl:
+        "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+      rating: 8.6,
+      origin: "Hollywood",
+    },
+    {
+      id: 4,
+      rank: "04",
+      title: "Dune: Part Two",
+      posterUrl:
+        "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
+      rating: 8.8,
+      origin: "Hollywood",
+    },
+    {
+      id: 5,
+      rank: "05",
+      title: "Spider-Man: Into the Spider-Verse",
+      posterUrl: SpiderManImage,
+      rating: 8.4,
+      origin: "Hollywood",
+    },
+  ],
+  bollywood: [
+    {
+      id: 1,
+      rank: "01",
+      title: "RRR",
+      posterUrl: RRRImage,
+      rating: 8.8,
+      origin: "Bollywood",
+    },
+    {
+      id: 2,
+      rank: "02",
+      title: "3 Idiots",
+      posterUrl: IdiotsImage,
+      rating: 8.4,
+      origin: "Bollywood",
+    },
+    {
+      id: 3,
+      rank: "03",
+      title: "Dangal",
+      posterUrl: DangalImage,
+      rating: 8.3,
+      origin: "Bollywood",
+    },
+    {
+      id: 4,
+      rank: "04",
+      title: "Zindagi Na Milegi Dobara",
+      posterUrl: ZNMDImage,
+      rating: 8.1,
+      origin: "Bollywood",
+    },
+    {
+      id: 5,
+      rank: "05",
+      title: "Queen",
+      posterUrl: QueenImage,
+      rating: 8.2,
+      origin: "Bollywood",
+    },
+  ],
+  tollywood: [
+    {
+      id: 1,
+      rank: "01",
+      title: "Baahubali 2: The Conclusion",
+      posterUrl: BahubaliImage,
+      rating: 8.7,
+      origin: "Tollywood",
+    },
+    {
+      id: 2,
+      rank: "02",
+      title: "Pushpa: The Rise",
+      posterUrl: PushpaImage,
+      rating: 7.6,
+      origin: "Tollywood",
+    },
+    {
+      id: 3,
+      rank: "03",
+      title: "Arjun Reddy",
+      posterUrl: ArjunReddyImage,
+      rating: 8.1,
+      origin: "Tollywood",
+    },
+    {
+      id: 4,
+      rank: "04",
+      title: "Eega",
+      posterUrl: EegaImage,
+      rating: 7.7,
+      origin: "Tollywood",
+    },
+    {
+      id: 5,
+      rank: "05",
+      title: "Magadheera",
+      posterUrl: MagdheeraImage,
+      rating: 7.9,
+      origin: "Tollywood",
+    },
+  ],
+  kollywood: [
+    {
+      id: 1,
+      rank: "01",
+      title: "Vikram",
+      posterUrl: VikramImage,
+      rating: 8.4,
+      origin: "Kollywood",
+    },
+    {
+      id: 2,
+      rank: "02",
+      title: "96",
+      posterUrl: NinetySixImage,
+      rating: 8.5,
+      origin: "Kollywood",
+    },
+    {
+      id: 3,
+      rank: "03",
+      title: "Super Deluxe",
+      posterUrl: SuperDeluxeImage,
+      rating: 8.3,
+      origin: "Kollywood",
+    },
+    {
+      id: 4,
+      rank: "04",
+      title: "Kaaka Muttai",
+      posterUrl: KaakaMuttaiImage,
+      rating: 8.2,
+      origin: "Kollywood",
+    },
+    {
+      id: 5,
+      rank: "05",
+      title: "Asuran",
+      posterUrl: AsuranImage,
+      rating: 8.4,
+      origin: "Kollywood",
+    },
+  ],
+  korean: [
+    {
+      id: 1,
+      rank: "01",
+      title: "Parasite",
+      posterUrl:
+        "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
+      rating: 8.5,
+      origin: "Korean",
+    },
+    {
+      id: 2,
+      rank: "02",
+      title: "Oldboy",
+      posterUrl: OldBoyImage,
+      rating: 8.4,
+      origin: "Korean",
+    },
+    {
+      id: 3,
+      rank: "03",
+      title: "Train to Busan",
+      posterUrl: TrainToBusanImage,
+      rating: 7.6,
+      origin: "Korean",
+    },
+    {
+      id: 4,
+      rank: "04",
+      title: "The Handmaiden",
+      posterUrl: TheHandMaidenImage,
+      rating: 8.1,
+      origin: "Korean",
+    },
+    {
+      id: 5,
+      rank: "05",
+      title: "Burning",
+      posterUrl: BurningImage,
+      rating: 7.5,
+      origin: "Korean",
+    },
+  ],
+};
+
+const categories = [
+  { id: "hollywood", name: "Hollywood", flag: "🇺🇸" },
+  { id: "bollywood", name: "Bollywood", flag: "🇮🇳" },
+  { id: "tollywood", name: "Tollywood", flag: "🎬" },
+  { id: "kollywood", name: "Kollywood", flag: "🎭" },
+  { id: "korean", name: "Korean", flag: "🇰🇷" },
 ];
 
 export default function TrendingPage() {
+  const [activeCategory, setActiveCategory] = useState("hollywood");
+
   return (
     <div className="min-h-screen bg-gradient-to-b pt-8 from-slate-950 to-slate-900 relative overflow-hidden">
       {/* Ambient Background Effects */}
@@ -126,7 +309,6 @@ export default function TrendingPage() {
               Hot Right Now
             </motion.span>
           </div>
-
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -135,7 +317,6 @@ export default function TrendingPage() {
           >
             Trending This Week
           </motion.h1>
-
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -146,19 +327,45 @@ export default function TrendingPage() {
           </motion.p>
         </motion.div>
 
-        {/* Trending List */}
+        {/* Category Selector */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
+          className="flex flex-wrap justify-center gap-3 mb-12"
+        >
+          {categories.map((category) => (
+            <motion.button
+              key={category.id}
+              onClick={() => setActiveCategory(category.id)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`px-6 py-3 rounded-2xl font-semibold text-sm transition-all duration-300 flex items-center gap-2 ${
+                activeCategory === category.id
+                  ? "bg-purple-500/20 text-purple-300 border border-purple-400/30 shadow-lg shadow-purple-500/10"
+                  : "bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20"
+              }`}
+            >
+              <span className="text-lg">{category.flag}</span>
+              {category.name}
+            </motion.button>
+          ))}
+        </motion.div>
+
+        {/* Trending List */}
+        <motion.div
+          key={activeCategory}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
           className="space-y-4"
         >
-          {trendingData.map((movie, index) => (
+          {trendingData[activeCategory].map((movie, index) => (
             <motion.div
               key={movie.id}
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
               whileHover={{ scale: 1.02, x: 10 }}
               className="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 cursor-pointer hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10"
             >
@@ -186,8 +393,9 @@ export default function TrendingPage() {
                   <h3 className="text-xl md:text-2xl font-bold text-white mb-1 tracking-tight group-hover:text-purple-300 transition-colors duration-300">
                     {movie.title}
                   </h3>
+                  {/* --- CHANGE 2: Displaying the new 'origin' property --- */}
                   <p className="text-slate-400 text-sm md:text-base">
-                    {movie.subtitle}
+                    {movie.origin}
                   </p>
                 </div>
 
