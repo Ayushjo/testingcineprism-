@@ -17,10 +17,12 @@ import SignupPage from "./components/SignUpPage";
 import UnpopularOpinionsPage from "./components/UnpopularOpinionsPage";
 import RecommendationsPage from "./components/RecommendationsPage";
 import Merchandise from "./components/Merchandise";
+import MeteorCursor from "./components/MeteorCursor";
 const App = () => {
   return (
     <>
       <ParallaxProvider>
+        <MeteorCursor />
         <Navbar />
         <Routes>
           <Route path="/" element={<Homepage />} />

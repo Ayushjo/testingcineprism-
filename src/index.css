@@ -6,3 +6,11 @@
 body {
   font-family: "Inter", sans-serif;
 }
+body {
+  cursor: none;
+}
+
+/* Optional: Show the default cursor on buttons and links for better usability */
+button, a {
+  cursor: pointer;
+}
