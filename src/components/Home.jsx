@@ -477,7 +477,7 @@ export default function Homepage() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[200px]"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {bentoItems.map((item, index) => (
               <motion.div
@@ -492,9 +492,9 @@ export default function Homepage() {
                 {item.type === "review" || item.type === "featured" ? (
                   <div className="absolute inset-0">
                     <LazyLoadImage
-                    effect="blur"
-                    width={"100%"}
-                    height={"100%"}
+                      effect="blur"
+                      width={"100%"}
+                      height={"100%"}
                       src={item.image || "/placeholder.svg"}
                       alt={item.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
