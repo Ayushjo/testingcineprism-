@@ -227,6 +227,7 @@ export default function Homepage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.5 }}
+                  className="hidden sm:flex"
                 >
                   <span className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-xl text-slate-300 px-4 py-2 rounded-full text-sm font-medium border border-white/10">
                     <Film className="w-4 h-4 text-emerald-400" />
@@ -249,7 +250,7 @@ export default function Homepage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.9 }}
-                  className="text-xl md:text-2xl text-slate-400 tracking-wider"
+                  className=" text-xl md:text-2xl text-slate-400 tracking-wider"
                 >
                   Honest reviews. Sharp takes. Cinematic insights.
                 </motion.p>
@@ -259,7 +260,7 @@ export default function Homepage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 1.1 }}
-                  className="flex flex-col sm:flex-row gap-4"
+                  className="hidden"
                 >
                   {/* Primary Button - Now an outline style that glows on hover */}
                   <motion.button
