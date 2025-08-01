@@ -13,7 +13,7 @@ import {
   MessageCircle,
   Send,
 } from "lucide-react";
-
+import { AnimatePresence } from "framer-motion";
 import FleebagImage from "../assets/fleebag.png";
 import FleebagImage3 from "../assets/fleebag3jpg.jpg";
 import FleebagImage4 from "../assets/fleebag4jpg.jpg";
@@ -92,96 +92,90 @@ const relatedPostsData = [
 ];
 
 // Comment Component
-const Comment = ({
-  comment,
-  depth = 0,
-  onToggleReply,
-  replyForms,
-  replyTexts,
-  setReplyTexts,
-  getAvatarColor,
-}) => {
-  const handleReplyTextChange = (commentId, text) => {
-    setReplyTexts((prev) => ({
-      ...prev,
-      [commentId]: text,
-    }));
+// --- START: New, Corrected, and Self-Contained Comment Component ---
+const Comment = ({ comment, getAvatarColor }) => {
+  // This component now manages its own state, making it much cleaner.
+  const [showReplyInput, setShowReplyInput] = useState(false);
+  const [replyText, setReplyText] = useState("");
+
+  const handleTextareaInput = (e) => {
+    e.currentTarget.style.height = "auto";
+    e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
   };
 
   return (
-    <div
-      className={`${depth > 0 ? "ml-8 pl-6 border-l-2 border-slate-700" : ""}`}
-    >
-      <div className="bg-slate-900/30 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 mb-4">
-        {/* Comment Header */}
-        <div className="flex items-center gap-3 mb-4">
-          <div
-            className={`w-10 h-10 rounded-full ${getAvatarColor(
-              comment.avatarInitial
-            )} flex items-center justify-center text-white font-semibold flex-shrink-0`}
-          >
-            {comment.avatarInitial}
-          </div>
-          <span className="text-emerald-400 font-medium">
+    // The main container uses a fixed left padding to create a "gutter" for the thread line.
+    // This will not shrink on deeper nesting.
+    <div className="relative pl-12">
+      {/* The vertical thread line, connecting the comment to its parent/children. */}
+      <div className="absolute left-4 top-0 bottom-0 w-px bg-slate-700" />
+
+      {/* The Avatar, positioned absolutely inside the gutter. */}
+      <div className="absolute left-[-2px] top-1">
+        <div
+          className={`w-8 h-8 rounded-full ${getAvatarColor(
+            comment.avatarInitial
+          )} flex items-center justify-center text-white text-sm font-semibold flex-shrink-0`}
+        >
+          {comment.avatarInitial}
+        </div>
+      </div>
+
+      {/* This wrapper holds all the content to the right of the gutter. */}
+      <div className="flex-1">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-sm font-medium text-emerald-400">
             {comment.username}
           </span>
         </div>
-
-        {/* Comment Text */}
-        <p className="text-slate-300 leading-relaxed mb-4">
+        <p className="text-slate-300 text-sm leading-relaxed mb-2">
           {comment.commentText}
         </p>
-
-        {/* Reply Button */}
         <button
-          onClick={() => onToggleReply(comment.id)}
-          className="text-sm text-slate-500 hover:text-emerald-400 transition-colors duration-200 font-medium"
+          onClick={() => setShowReplyInput(!showReplyInput)}
+          className="text-xs text-slate-500 hover:text-emerald-400 font-semibold transition-colors duration-200"
         >
           Reply
         </button>
 
-        {/* Reply Form */}
-        {replyForms[comment.id] && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mt-4 pt-4 border-t border-slate-700"
-          >
-            <div className="flex gap-3">
-              <input
-                type="text"
-                value={replyTexts[comment.id] || ""}
-                onChange={(e) =>
-                  handleReplyTextChange(comment.id, e.target.value)
-                }
-                placeholder="Write a reply..."
-                className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300"
-              />
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-4 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300"
-              >
-                Reply
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
+        {/* Reply Input Form */}
+        <AnimatePresence>
+          {showReplyInput && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-3"
+            >
+              <div className="flex gap-3">
+                <textarea
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  onInput={handleTextareaInput}
+                  rows="1"
+                  className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
+                />
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300 text-sm self-start"
+                >
+                  Reply
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Nested Replies */}
+      {/* Nested Replies Container */}
       {comment.replies && comment.replies.length > 0 && (
-        <div className="space-y-4">
+        <div className="mt-4 space-y-4">
           {comment.replies.map((reply) => (
+            // The recursive call now only needs to pass the reply and the color function.
             <Comment
               key={reply.id}
               comment={reply}
-              depth={depth + 1}
-              onToggleReply={onToggleReply}
-              replyForms={replyForms}
-              replyTexts={replyTexts}
-              setReplyTexts={setReplyTexts}
               getAvatarColor={getAvatarColor}
             />
           ))}
@@ -190,6 +184,7 @@ const Comment = ({
     </div>
   );
 };
+// --- END: New Comment Component ---
 
 export default function PostPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
