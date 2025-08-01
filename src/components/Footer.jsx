@@ -30,19 +30,30 @@ export const Footer = () => {
 
             {/* Navigation Links */}
             <nav className="flex flex-wrap justify-center gap-8 mb-12">
-              {["Reviews", "Trending", "Awards", "Community", "About"].map(
-                (link, index) => (
-                  <motion.a
-                    key={link}
-                    href={`/${link.toLowerCase()}`}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    transition={{ duration: 0.2 }}
-                    className="text-slate-400 hover:text-emerald-400 transition-colors duration-200 font-medium text-lg"
-                  >
-                    {link}
-                  </motion.a>
-                )
-              )}
+              {[
+                "Top Picks",
+                "Reviews",
+                "Trending",
+                "Login",
+                "Unpopular Opinions",
+                "Merchandise",
+              ].map((link, index) => (
+                <motion.a
+                  key={link}
+                  href={`/${
+                    link.startsWith("Top")
+                      ? "recommendations-page"
+                      : link.startsWith("Unpopular")
+                      ? "unpopular-opinions"
+                      : link.toLowerCase()
+                  }`}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  transition={{ duration: 0.2 }}
+                  className="text-slate-400 hover:text-emerald-400 transition-colors duration-200 font-medium text-lg"
+                >
+                  {link}
+                </motion.a>
+              ))}
             </nav>
 
             {/* Social Links */}

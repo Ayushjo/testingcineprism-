@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Star, TrendingUp } from "lucide-react";
-import SpiderManImage from "../assets/spiderman.jpeg";
+import SpiderManImage from "../assets/spiderman.jpg";
 import DangalImage from "../assets/dangal.jpg";
 import IdiotsImage from "../assets/3idiots.jpg";
 import RRRImage from "../assets/rrr.jpg";
@@ -23,9 +23,25 @@ import OldBoyImage from "../assets/oldboy.webp";
 import TrainToBusanImage from "../assets/traintobusan.webp";
 import TheHandMaidenImage from "../assets/thehandmaiden.webp";
 import BurningImage from "../assets/burning.webp";
+import AndhaDhunImage from "../assets/andhadhun.webp";
+import GangsOfWaseypurImage from "../assets/gangsof.webp";
+import KGFImage from "../assets/kgf.webp";
+import TheIntouchablesImage from "../assets/intouchables.webp";
+import PortraitOfALadyOnFire from "../assets/portraitofalady.webp";
+import MoonLightImage from "../assets/moonlight.webp";
+import LadyBirdImage from "../assets/ladybird.webp";
+import AfterSunImage from "../assets/aftersun.jpg";
+import TheFloridaProject from "../assets/thefloridaproject.webp";
+import SpiritedAwayImage from "../assets/spiritedaway.jpg";
+import YourNameImage from "../assets/yourname.webp";
+import AkiraImage from "../assets/akira.webp";
+import JJKImage from "../assets/jjk.webp";
+import GhostInTheShellImage from "../assets/ghostintheshell.webp";
+import FleabagImage from "../assets/fleebag.png";
+import ChernobylMovie from "../assets/chernobyl.webp";
 // --- CHANGE 1: Added 'origin' property to each movie object ---
 const trendingData = {
-  hollywood: [
+  english: [
     {
       id: 1,
       rank: "01",
@@ -33,7 +49,7 @@ const trendingData = {
       posterUrl:
         "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
       rating: 8.2,
-      origin: "Hollywood",
+      origin: "English",
     },
     {
       id: 2,
@@ -42,7 +58,7 @@ const trendingData = {
       posterUrl:
         "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
       rating: 9.0,
-      origin: "Hollywood",
+      origin: "English",
     },
     {
       id: 3,
@@ -51,7 +67,7 @@ const trendingData = {
       posterUrl:
         "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
       rating: 8.6,
-      origin: "Hollywood",
+      origin: "English",
     },
     {
       id: 4,
@@ -60,7 +76,7 @@ const trendingData = {
       posterUrl:
         "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
       rating: 8.8,
-      origin: "Hollywood",
+      origin: "English",
     },
     {
       id: 5,
@@ -68,136 +84,94 @@ const trendingData = {
       title: "Spider-Man: Into the Spider-Verse",
       posterUrl: SpiderManImage,
       rating: 8.4,
-      origin: "Hollywood",
+      origin: "English",
     },
   ],
-  bollywood: [
+  hindi: [
+    {
+      id: 1,
+      rank: "01",
+      title: "3 Idiots",
+      posterUrl: IdiotsImage,
+      rating: 8.4,
+      origin: "Hindi",
+    },
+    {
+      id: 2,
+      rank: "02",
+      title: "Dangal",
+      posterUrl: DangalImage,
+      rating: 8.3,
+      origin: "Hindi",
+    },
+    {
+      id: 3,
+      rank: "03",
+      title: "Zindagi Na Milegi Dobara",
+      posterUrl: ZNMDImage,
+      rating: 8.1,
+      origin: "Hindi",
+    },
+    {
+      id: 4,
+      rank: "04",
+      title: "Andhadhun",
+      posterUrl: AndhaDhunImage,
+      rating: 8.2,
+      origin: "Hindi",
+    },
+    {
+      id: 5,
+      rank: "05",
+      title: "Gangs of Wasseypur",
+      posterUrl: GangsOfWaseypurImage,
+      rating: 8.4,
+      origin: "Hindi",
+    },
+  ],
+  southIndian: [
     {
       id: 1,
       rank: "01",
       title: "RRR",
       posterUrl: RRRImage,
       rating: 8.8,
-      origin: "Bollywood",
+      origin: "South Indian",
     },
     {
       id: 2,
       rank: "02",
-      title: "3 Idiots",
-      posterUrl: IdiotsImage,
-      rating: 8.4,
-      origin: "Bollywood",
-    },
-    {
-      id: 3,
-      rank: "03",
-      title: "Dangal",
-      posterUrl: DangalImage,
-      rating: 8.3,
-      origin: "Bollywood",
-    },
-    {
-      id: 4,
-      rank: "04",
-      title: "Zindagi Na Milegi Dobara",
-      posterUrl: ZNMDImage,
-      rating: 8.1,
-      origin: "Bollywood",
-    },
-    {
-      id: 5,
-      rank: "05",
-      title: "Queen",
-      posterUrl: QueenImage,
-      rating: 8.2,
-      origin: "Bollywood",
-    },
-  ],
-  tollywood: [
-    {
-      id: 1,
-      rank: "01",
       title: "Baahubali 2: The Conclusion",
       posterUrl: BahubaliImage,
-      rating: 8.7,
-      origin: "Tollywood",
-    },
-    {
-      id: 2,
-      rank: "02",
-      title: "Pushpa: The Rise",
-      posterUrl: PushpaImage,
       rating: 7.6,
-      origin: "Tollywood",
+      origin: "South Indian",
     },
     {
       id: 3,
       rank: "03",
-      title: "Arjun Reddy",
-      posterUrl: ArjunReddyImage,
-      rating: 8.1,
-      origin: "Tollywood",
-    },
-    {
-      id: 4,
-      rank: "04",
-      title: "Eega",
-      posterUrl: EegaImage,
-      rating: 7.7,
-      origin: "Tollywood",
-    },
-    {
-      id: 5,
-      rank: "05",
-      title: "Magadheera",
-      posterUrl: MagdheeraImage,
-      rating: 7.9,
-      origin: "Tollywood",
-    },
-  ],
-  kollywood: [
-    {
-      id: 1,
-      rank: "01",
       title: "Vikram",
       posterUrl: VikramImage,
       rating: 8.4,
-      origin: "Kollywood",
-    },
-    {
-      id: 2,
-      rank: "02",
-      title: "96",
-      posterUrl: NinetySixImage,
-      rating: 8.5,
-      origin: "Kollywood",
-    },
-    {
-      id: 3,
-      rank: "03",
-      title: "Super Deluxe",
-      posterUrl: SuperDeluxeImage,
-      rating: 8.3,
-      origin: "Kollywood",
+      origin: "South Indian",
     },
     {
       id: 4,
       rank: "04",
-      title: "Kaaka Muttai",
-      posterUrl: KaakaMuttaiImage,
-      rating: 8.2,
-      origin: "Kollywood",
+      title: "K.G.F: Chapter 2",
+      posterUrl: KGFImage,
+      rating: 8.4,
+      origin: "South Indian",
     },
     {
       id: 5,
       rank: "05",
-      title: "Asuran",
-      posterUrl: AsuranImage,
-      rating: 8.4,
-      origin: "Kollywood",
+      title: "96",
+      posterUrl: NinetySixImage,
+      rating: 8.5,
+      origin: "South Indian",
     },
   ],
-  korean: [
+  worldCinema: [
     {
       id: 1,
       rank: "01",
@@ -205,7 +179,7 @@ const trendingData = {
       posterUrl:
         "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
       rating: 8.5,
-      origin: "Korean",
+      origin: "World Cinema",
     },
     {
       id: 2,
@@ -213,15 +187,15 @@ const trendingData = {
       title: "Oldboy",
       posterUrl: OldBoyImage,
       rating: 8.4,
-      origin: "Korean",
+      origin: "World Cinema",
     },
     {
       id: 3,
       rank: "03",
-      title: "Train to Busan",
-      posterUrl: TrainToBusanImage,
-      rating: 7.6,
-      origin: "Korean",
+      title: "The Intouchables",
+      posterUrl: TheIntouchablesImage,
+      rating: 8.5,
+      origin: "World Cinema",
     },
     {
       id: 4,
@@ -229,29 +203,161 @@ const trendingData = {
       title: "The Handmaiden",
       posterUrl: TheHandMaidenImage,
       rating: 8.1,
-      origin: "Korean",
+      origin: "World Cinema",
     },
     {
       id: 5,
       rank: "05",
-      title: "Burning",
-      posterUrl: BurningImage,
-      rating: 7.5,
-      origin: "Korean",
+      title: "Portrait of a Lady on Fire",
+      posterUrl: PortraitOfALadyOnFire,
+      rating: 8.1,
+      origin: "World Cinema",
+    },
+  ],
+  indieFilms: [
+    {
+      id: 1,
+      rank: "01",
+      title: "Everything Everywhere All at Once",
+      posterUrl:
+        "https://image.tmdb.org/t/p/w500/w3LxiVYdWWRvEVdn5RYq6jIqkb1.jpg",
+      rating: 8.0,
+      origin: "Indie Film",
+    },
+    {
+      id: 2,
+      rank: "02",
+      title: "Moonlight",
+      posterUrl: MoonLightImage,
+      rating: 7.2,
+      origin: "Indie Film",
+    },
+    {
+      id: 3,
+      rank: "03",
+      title: "Lady Bird",
+      posterUrl: LadyBirdImage,
+      rating: 7.3,
+      origin: "Indie Film",
+    },
+    {
+      id: 4,
+      rank: "04",
+      title: "Aftersun",
+      posterUrl: AfterSunImage,
+      rating: 7.7,
+      origin: "Indie Film",
+    },
+    {
+      id: 5,
+      rank: "05",
+      title: "The Florida Project",
+      posterUrl: TheFloridaProject,
+      rating: 7.4,
+      origin: "Indie Film",
+    },
+  ],
+  anime: [
+    {
+      id: 1,
+      rank: "01",
+      title: "Spirited Away",
+      posterUrl: SpiritedAwayImage,
+      rating: 8.5,
+      origin: "Anime",
+    },
+    {
+      id: 2,
+      rank: "02",
+      title: "Your Name.",
+      posterUrl: YourNameImage,
+      rating: 8.5,
+      origin: "Anime",
+    },
+    {
+      id: 3,
+      rank: "03",
+      title: "Akira",
+      posterUrl: AkiraImage,
+      rating: 8.1,
+      origin: "Anime",
+    },
+    {
+      id: 4,
+      rank: "04",
+      title: "Jujutsu Kaisen 0",
+      posterUrl: JJKImage,
+      rating: 7.8,
+      origin: "Anime",
+    },
+    {
+      id: 5,
+      rank: "05",
+      title: "Ghost in the Shell",
+      posterUrl: GhostInTheShellImage,
+      rating: 7.9,
+      origin: "Anime",
+    },
+  ],
+  tvShows: [
+    {
+      id: 1,
+      rank: "01",
+      title: "Breaking Bad",
+      posterUrl:
+        "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
+      rating: 9.5,
+      origin: "TV Show",
+    },
+    {
+      id: 2,
+      rank: "02",
+      title: "Game of Thrones",
+      posterUrl:
+        "https://image.tmdb.org/t/p/w500/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg",
+      rating: 8.4,
+      origin: "TV Show",
+    },
+    {
+      id: 3,
+      rank: "03",
+      title: "Fleabag",
+      posterUrl: FleabagImage,
+      rating: 8.2,
+      origin: "TV Show",
+    },
+    {
+      id: 4,
+      rank: "04",
+      title: "Chernobyl",
+      posterUrl: ChernobylMovie,
+      rating: 8.6,
+      origin: "TV Show",
+    },
+    {
+      id: 5,
+      rank: "05",
+      title: "Arcane",
+      posterUrl:
+        "https://image.tmdb.org/t/p/w500/fqldf2t8ztc9aiwn3k6mlX3tvRT.jpg",
+      rating: 8.7,
+      origin: "TV Show",
     },
   ],
 };
 
 const categories = [
-  { id: "hollywood", name: "Hollywood", flag: "🇺🇸" },
-  { id: "bollywood", name: "Bollywood", flag: "🇮🇳" },
-  { id: "tollywood", name: "Tollywood", flag: "🎬" },
-  { id: "kollywood", name: "Kollywood", flag: "🎭" },
-  { id: "korean", name: "Korean", flag: "🇰🇷" },
+  { id: "english", name: "English", flag: "🇺🇸" },
+  { id: "hindi", name: "Hindi", flag: "🇮🇳" },
+  { id: "southIndian", name: "South Indian", flag: "🎬" },
+  { id: "worldCinema", name: "World Cinema", flag: "🌍" },
+  { id: "indieFilms", name: "Indie Films", flag: "🎨" },
+  { id: "anime", name: "Anime", flag: "🇯🇵" },
+  { id: "tvShows", name: "TV Shows", flag: "📺" },
 ];
 
 export default function TrendingPage() {
-  const [activeCategory, setActiveCategory] = useState("hollywood");
+  const [activeCategory, setActiveCategory] = useState("english");
 
   return (
     <div className="min-h-screen bg-gradient-to-b pt-8 from-slate-950 to-slate-900 relative overflow-hidden">

@@ -1,5 +1,6 @@
 "use client";
-
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 import DuneImage from "../assets/Dune.jpg";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -221,19 +222,19 @@ export default function Homepage() {
                 transition={{ duration: 0.8, delay: 0.3 }}
                 className="text-center lg:text-left space-y-8"
               >
-                {/* Badge */}
+                {/* Badge --- CHANGE: Softer text, icon has the accent color --- */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.5 }}
                 >
-                  <span className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-xl text-emerald-400 px-4 py-2 rounded-2xl text-sm font-medium border border-white/10">
-                    <Film className="w-4 h-4" />
+                  <span className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-xl text-slate-300 px-4 py-2 rounded-full text-sm font-medium border border-white/10">
+                    <Film className="w-4 h-4 text-emerald-400" />
                     Cinema Reviews
                   </span>
                 </motion.div>
 
-                {/* Title - Single Line */}
+                {/* Title - Kept as is, it's perfect */}
                 <motion.h1
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -243,44 +244,41 @@ export default function Homepage() {
                   The Cinéprism
                 </motion.h1>
 
-                {/* Tagline */}
+                {/* Tagline --- CHANGE: Unified color and wider spacing for an airy, premium feel --- */}
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.9 }}
-                  className="text-xl md:text-2xl leading-relaxed"
+                  className="text-xl md:text-2xl text-slate-400 tracking-wider"
                 >
-                  <span className="text-emerald-400 font-semibold">
-                    Honest reviews.
-                  </span>{" "}
-                  <span className="text-white">Sharp takes.</span>{" "}
-                  <span className="text-slate-400">Cinematic insights.</span>
+                  Honest reviews. Sharp takes. Cinematic insights.
                 </motion.p>
 
-                {/* Buttons */}
+                {/* Buttons --- CHANGE: Modern pill shape and more elegant color scheme/hovers --- */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 1.1 }}
                   className="flex flex-col sm:flex-row gap-4"
                 >
+                  {/* Primary Button - Now an outline style that glows on hover */}
                   <motion.button
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
-                    className="group bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 flex items-center justify-center gap-2 backdrop-blur-sm"
+                    className="group border-2 border-emerald-500 text-emerald-400 hover:text-white hover:bg-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 font-semibold px-8 py-4 rounded-full text-lg transition-all duration-300 flex items-center justify-center gap-2"
                   >
                     <Play className="w-5 h-5 group-hover:scale-110 transition-transform" />
                     Explore Reviews
                   </motion.button>
 
+                  {/* Secondary Button - Softer border and a clean text color change on hover */}
                   <motion.button
                     whileHover={{
                       scale: 1.02,
                       y: -2,
-                      backgroundColor: "rgba(255, 255, 255, 0.1)",
                     }}
                     whileTap={{ scale: 0.98 }}
-                    className="border border-white/20 text-white hover:text-emerald-400 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 backdrop-blur-sm"
+                    className="border border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300"
                   >
                     Latest Posts
                   </motion.button>
@@ -493,7 +491,10 @@ export default function Homepage() {
                 {/* Background Image for Review Cards */}
                 {item.type === "review" || item.type === "featured" ? (
                   <div className="absolute inset-0">
-                    <img
+                    <LazyLoadImage
+                    effect="blur"
+                    width={"100%"}
+                    height={"100%"}
                       src={item.image || "/placeholder.svg"}
                       alt={item.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"

@@ -5,7 +5,7 @@ import { motion, useMotionValue } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import BladeRunnerImg from "../assets/bladerunner.jpg";
-import SpiderManImage from "../assets/spiderman.jpeg";
+import SpiderManImage from "../assets/spiderman.jpg";
 import BatmanImage from "../assets/batman.jpg";
 import ArrivalImage from "../assets/arrival.jpg";
 const latestReviewsData = [
@@ -216,6 +216,8 @@ export default function LatestReviews() {
                     effect="blur"
                       src={movie.posterUrl || "/placeholder.svg"}
                       alt={movie.title}
+                      width={"100%"}
+                      height={"100%"}
                       className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 ${
                         movie.title === "Arrival" ? "object-[100%_center]" : ""
                       }`}

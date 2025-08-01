@@ -14,6 +14,9 @@ import AnimationPage from "./components/AnimationPage";
 import TrendingPage from "./components/TrendingPage";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignUpPage";
+import UnpopularOpinionsPage from "./components/UnpopularOpinionsPage";
+import RecommendationsPage from "./components/RecommendationsPage";
+import Merchandise from "./components/Merchandise";
 const App = () => {
   return (
     <>
@@ -35,6 +38,9 @@ const App = () => {
           <Route path="/trending" element={<TrendingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/unpopular-opinions" element={<UnpopularOpinionsPage />} />
+          <Route path="/recommendations-page" element={<RecommendationsPage/>} />
+          <Route path="/merchandise" element={<Merchandise />} />
         </Routes>
         <Footer />
       </ParallaxProvider>

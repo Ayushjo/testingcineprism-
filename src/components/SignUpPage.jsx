@@ -91,7 +91,7 @@ export default function SignupPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="space-y-6"
+              className="space-y-6 z-20 relative "
             >
               {/* Name Fields Row */}
               <div className="grid grid-cols-2 gap-4">
@@ -303,7 +303,7 @@ export default function SignupPage() {
                 <p className="text-slate-400 text-sm">
                   Already have an account?{" "}
                   <a
-                    href="#"
+                    href="/login"
                     className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors duration-300"
                   >
                     Sign In

@@ -28,11 +28,13 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { href: "/", label: "Home" },
+    { href: "/recommendations-page", label: "Top Picks" },
     { href: "/reviews", label: "Reviews" },
     { href: "/trending", label: "Trending" },
     { href: "/login", label: "Login" },
-    { href: "/about", label: "About" },
+    { href: "/unpopular-opinions", label: "Unpopular Opinions" },{
+      href: "/merchandise", label: "Merchandise"
+    }
   ];
 
   return (
@@ -97,15 +99,6 @@ export default function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
-            {/* Search Button */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-2.5 bg-white/5 backdrop-blur-xl hover:bg-white/10 text-slate-300 hover:text-emerald-400 rounded-2xl border border-white/10 transition-all duration-300"
-            >
-              <Search className="h-4 w-4" />
-            </motion.button>
-
             {/* Twitter Link */}
             <motion.a
               href="https://twitter.com/thecineprism"
@@ -187,15 +180,6 @@ export default function Navbar() {
                 transition={{ duration: 0.3, delay: navLinks.length * 0.1 }}
                 className="flex items-center gap-3 pt-4 mt-4 border-t border-white/10"
               >
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-emerald-400 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 transition-all duration-300 flex-1"
-                >
-                  <Search className="h-4 w-4" />
-                  <span className="font-medium">Search</span>
-                </motion.button>
-
                 <motion.a
                   href="https://twitter.com/thecineprism"
                   target="_blank"

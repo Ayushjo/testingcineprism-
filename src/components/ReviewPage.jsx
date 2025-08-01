@@ -9,7 +9,7 @@ import OppenHeimerImage from "../assets/oppenheimer.jpg";
 import FleabagImage2 from "../assets/fleebag2.jpg";
 import DuneImage from "../assets/Dune.jpg";
 import BladeRunnerImg from "../assets/bladerunner.jpg";
-import SpiderManImage from "../assets/spiderman.jpeg";
+import SpiderManImage from "../assets/spiderman.jpg";
 import BatmanImage from "../assets/batman.jpg";
 import ArrivalImage from "../assets/arrival.jpg";
 import JohnWickImage from "../assets/JohnWick2.jpg";
