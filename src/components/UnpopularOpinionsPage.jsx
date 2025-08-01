@@ -52,7 +52,16 @@ const unpopularOpinionsData = [
             avatarInitial: "A",
             commentText:
               "I see your point, but Phoenix's version felt more like a real, tragic person to me.",
-            replies: [],
+            replies: [
+              {
+                id: 101,
+                username: "@film_fanatic",
+                avatarInitial: "F",
+                commentText:
+                  "Totally agree! The physical transformation alone was incredible.",
+                replies: [],
+              },
+            ],
           },
         ],
       },
@@ -123,38 +132,45 @@ const Comment = ({ comment }) => {
   };
 
   return (
-    <div className="flex gap-3">
-      <div
-        className={`w-8 h-8 rounded-full ${getAvatarColor(
-          comment.avatarInitial
-        )} flex items-center justify-center text-white text-sm font-semibold flex-shrink-0`}
-      >
-        {comment.avatarInitial}
-      </div>
-      <div className="flex-1">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-sm font-medium text-emerald-400">
-            {comment.username}
-          </span>
+    // The main container now uses padding to create space for the thread line and avatar
+    <div className="relative pl-12">
+      {/* The vertical thread line */}
+      <div className="absolute left-4 top-0 bottom-0 w-px bg-slate-700" />
+
+      {/* The Avatar, positioned absolutely within the padded area */}
+      <div className="absolute left-0 top-0">
+        <div
+          className={`w-8 h-8 rounded-full ${getAvatarColor(
+            comment.avatarInitial
+          )} flex items-center justify-center text-white text-sm font-semibold flex-shrink-0`}
+        >
+          {comment.avatarInitial}
         </div>
-        <p className="text-slate-300 text-sm leading-relaxed mb-2">
+      </div>
+
+      {/* The main content of the comment */}
+      <div className="flex-1">
+        <span className="text-sm font-medium text-emerald-400">
+          {comment.username}
+        </span>
+        <p className="text-slate-300 text-sm leading-relaxed mt-1 mb-2">
           {comment.commentText}
         </p>
         <button
           onClick={() => setShowReplyInput(!showReplyInput)}
-          className="text-xs text-slate-500 hover:text-emerald-400 transition-colors duration-200"
+          className="text-xs text-slate-500 hover:text-emerald-400 font-semibold transition-colors duration-200"
         >
           Reply
         </button>
 
-        {/* Reply Input */}
+        {/* Reply Input Box */}
         <AnimatePresence>
           {showReplyInput && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-2"
+              className="mt-3"
             >
               <div className="flex gap-3">
                 <textarea
@@ -162,7 +178,7 @@ const Comment = ({ comment }) => {
                   onChange={(e) => setReplyText(e.target.value)}
                   onInput={handleTextareaInput}
                   rows="1"
-                  placeholder="Write a reply..."
+                  
                   className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
                 />
                 <motion.button
@@ -176,16 +192,16 @@ const Comment = ({ comment }) => {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Nested Replies with fixed indentation */}
-        {comment.replies && comment.replies.length > 0 && (
-          <div className="mt-4 space-y-4 pl-4 border-l-2 border-slate-700">
-            {comment.replies.map((reply) => (
-              <Comment key={reply.id} comment={reply} />
-            ))}
-          </div>
-        )}
       </div>
+
+      {/* Nested Replies Container */}
+      {comment.replies && comment.replies.length > 0 && (
+        <div className="mt-4 space-y-4">
+          {comment.replies.map((reply) => (
+            <Comment key={reply.id} comment={reply} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
