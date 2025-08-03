@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Twitter, Search } from "lucide-react";
-import TheCineprismLogo from "../assets/thecineprismlogo.jpg"
+import { useAuth } from "../context/AuthContext";
+import TheCineprismLogo from "../assets/thecineprismlogo.jpg";
 import { useNavigate } from "react-router-dom";
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,11 +32,17 @@ export default function Navbar() {
     { href: "/recommendations-page", label: "Top Picks" },
     { href: "/reviews", label: "Reviews" },
     { href: "/trending", label: "Trending" },
-    { href: "/login", label: "Login" },
-    { href: "/unpopular-opinions", label: "Unpopular Opinions" },{
-      href: "/merchandise", label: "Merchandise"
-    }
+    
+    { href: "/unpopular-opinions", label: "Unpopular Opinions" },
+    {
+      href: "/merchandise",
+      label: "Merchandise",
+    },
   ];
+  const {user} = useAuth()
+  if(!user){
+    navLinks.push({ href: "/login", label: "Login" });
+  }
 
   return (
     <motion.nav

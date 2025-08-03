@@ -1,7 +1,7 @@
 import { ParallaxProvider } from "react-scroll-parallax";
 import Homepage from "./components/Home";
 import Navbar from "./components/Navbar";
-import { Routes,Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import ReviewPage from "./components/ReviewPage";
 import Footer from "./components/Footer";
 import PostPage from "./components/PostPage";
@@ -18,10 +18,13 @@ import UnpopularOpinionsPage from "./components/UnpopularOpinionsPage";
 import RecommendationsPage from "./components/RecommendationsPage";
 import Merchandise from "./components/Merchandise";
 import MeteorCursor from "./components/MeteorCursor";
+import RedirectIfAuth from "./components/RedirectIfAuth";
+import { Toaster } from "react-hot-toast";
 const App = () => {
   return (
     <>
       <ParallaxProvider>
+        <Toaster />
         <MeteorCursor />
         <Navbar />
         <Routes>
@@ -38,10 +41,19 @@ const App = () => {
           <Route path="/genre/Horror" element={<HorrorPage />} />
           <Route path="/genre/Animation" element={<AnimationPage />} />
           <Route path="/trending" element={<TrendingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/unpopular-opinions" element={<UnpopularOpinionsPage />} />
-          <Route path="/recommendations-page" element={<RecommendationsPage/>} />
+          <Route element={<RedirectIfAuth />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+          </Route>
+
+          <Route
+            path="/unpopular-opinions"
+            element={<UnpopularOpinionsPage />}
+          />
+          <Route
+            path="/recommendations-page"
+            element={<RecommendationsPage />}
+          />
           <Route path="/merchandise" element={<Merchandise />} />
         </Routes>
         <Footer />

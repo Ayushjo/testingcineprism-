@@ -1,20 +1,84 @@
-"use client";
-
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, User, Calendar } from "lucide-react";
-
+import axios from "axios";
+import { CheckCircle } from "lucide-react";
+import toast from "react-hot-toast";
+import { XCircle } from "lucide-react";
 export default function SignupPage() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading,setIsLoading]  = useState(false);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    username: "",
     email: "",
-    dateOfBirth: "",
     password: "",
     confirmPassword: "",
   });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      if (
+        !formData.username ||
+        !formData.email ||
+        !formData.password ||
+        !formData.confirmPassword
+      ) {
+        throw new Error("Please fill in all fields.");
+      }
+      if (formData.password !== formData.confirmPassword) {
+        throw new Error("Passwords do not match.");
+      }
+
+      const response = await axios.post("/api/v1/user/register", {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (response.status === 200) {
+        toast.custom((t) => (
+          <div
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } bg-slate-800/80 backdrop-blur-xl border border-slate-700 shadow-lg rounded-xl text-white px-6 py-4 flex items-center gap-4`}
+          >
+            <CheckCircle className="text-emerald-400" />
+            <span className="font-medium">
+              {response.data.message || "Registration successful!"}
+            </span>
+          </div>
+        ));
+        navigate("/login");
+      } else {
+        throw new Error(
+          response.data.message || "An unexpected error occurred."
+        );
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Registration failed. Please try again.";
+      toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? "animate-enter" : "animate-leave"
+          } bg-rose-900/80 backdrop-blur-xl border border-rose-700 shadow-lg rounded-xl text-white px-6 py-4 flex items-center gap-4`}
+        >
+          <XCircle className="text-rose-400" />
+          <span className="font-medium">{errorMessage}</span>
+        </div>
+      ));
+      console.error(error);
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
+  };
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -88,56 +152,32 @@ export default function SignupPage() {
 
             {/* Signup Form */}
             <motion.form
+              onSubmit={handleSubmit}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
               className="space-y-6 z-20 relative "
             >
               {/* Name Fields Row */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid  gap-4">
                 {/* First Name */}
                 <div className="space-y-2">
                   <label
-                    htmlFor="firstName"
+                    htmlFor="username"
                     className="text-sm font-medium text-slate-300 block"
                   >
-                    First Name
+                    Username
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                     <input
-                      id="firstName"
+                      id="username"
                       type="text"
-                      value={formData.firstName}
                       onChange={(e) =>
-                        handleInputChange("firstName", e.target.value)
+                        handleInputChange("username", e.target.value)
                       }
                       className="w-full bg-white/5 border border-white/10 rounded-2xl pl-10 pr-3 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-300 backdrop-blur-sm text-sm"
-                      placeholder="John"
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Last Name */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="lastName"
-                    className="text-sm font-medium text-slate-300 block"
-                  >
-                    Last Name
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-                    <input
-                      id="lastName"
-                      type="text"
-                      value={formData.lastName}
-                      onChange={(e) =>
-                        handleInputChange("lastName", e.target.value)
-                      }
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl pl-10 pr-3 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-300 backdrop-blur-sm text-sm"
-                      placeholder="Doe"
+                      placeholder="John Doe"
                       required
                     />
                   </div>
@@ -165,30 +205,6 @@ export default function SignupPage() {
                   />
                 </div>
               </div>
-
-              {/* Date of Birth Field */}
-              <div className="space-y-2">
-                <label
-                  htmlFor="dateOfBirth"
-                  className="text-sm font-medium text-slate-300 block"
-                >
-                  Date of Birth
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-                  <input
-                    id="dateOfBirth"
-                    type="date"
-                    value={formData.dateOfBirth}
-                    onChange={(e) =>
-                      handleInputChange("dateOfBirth", e.target.value)
-                    }
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-300 backdrop-blur-sm [color-scheme:dark]"
-                    required
-                  />
-                </div>
-              </div>
-
               {/* Password Field */}
               <div className="space-y-2">
                 <label
@@ -290,12 +306,18 @@ export default function SignupPage() {
 
               {/* Sign Up Button */}
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: isLoading ? 1 : 1.02 }}
+                whileTap={{ scale: isLoading ? 1 : 0.98 }}
                 type="submit"
-                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-emerald-500/25 focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
+                disabled={isLoading} // --- CHANGE 3: Disable button while loading ---
+                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-emerald-500/25 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Create Account
+                {/* --- CHANGE 4: Show spinner when loading --- */}
+                {isLoading ? (
+                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  "Create Account"
+                )}
               </motion.button>
 
               {/* Sign In Link */}

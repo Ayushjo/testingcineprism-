@@ -2,16 +2,70 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { CheckCircle } from "lucide-react";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // ✅ Your sign-in logic here (e.g. call API, validate fields)
-    console.log("Form submitted");
+    setIsLoading(true); // Start loading
+
+    try {
+      if (!email || !password) {
+        throw new Error("Please fill in all fields.");
+      }
+      const response = await axios.post("/api/v1/user/login", {
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        // --- CHANGE 3: Show success toast ---
+        toast.custom((t) => (
+          <div
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } bg-slate-800/80 backdrop-blur-xl border border-slate-700 shadow-lg rounded-xl text-white px-6 py-4 flex items-center gap-4`}
+          >
+            <CheckCircle className="text-emerald-400" />
+            <span className="font-medium">
+              {response.data.message || "Login Successful!"}
+            </span>
+          </div>
+        ));
+        navigate("/");
+      } else {
+        // This handles non-200 success codes if your API uses them
+        throw new Error(
+          response.data.message || "An unexpected error occurred."
+        );
+      }
+    } catch (error) {
+      // --- CHANGE 4: Show error toast ---
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Login failed. Please try again.";
+      toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? "animate-enter" : "animate-leave"
+          } bg-rose-900/80 backdrop-blur-xl border border-rose-700 shadow-lg rounded-xl text-white px-6 py-4 flex items-center gap-4`}
+        >
+          <XCircle className="text-rose-400" />
+          <span className="font-medium">{errorMessage}</span>
+        </div>
+      ));
+      console.error(error);
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
   };
   return (
     <div className="min-h-screen relative overflow-hidden bg-slate-950">
@@ -83,7 +137,7 @@ export default function LoginPage() {
             </motion.div>
             {/* Login Form */}
             <motion.form
-            onSubmit={handleSubmit}
+              onSubmit={handleSubmit}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -156,13 +210,18 @@ export default function LoginPage() {
 
               {/* Sign In Button */}
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: isLoading ? 1 : 1.02 }}
+                whileTap={{ scale: isLoading ? 1 : 0.98 }}
                 type="submit"
-                // --- CHANGE: Toned down the button gradient for a classier look ---
-                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-emerald-500/25 focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
+                disabled={isLoading} // --- CHANGE 5: Disable button while loading ---
+                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-emerald-500/25 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Sign In
+                {/* --- CHANGE 6: Show spinner when loading --- */}
+                {isLoading ? (
+                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  "Sign In"
+                )}
               </motion.button>
 
               {/* Sign Up Link */}
