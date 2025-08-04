@@ -19,6 +19,7 @@ import {
 import InterstellarImage from "../assets/Interstellar.jpg";
 import HowToLoseImage from "../assets/howtoloseaguys.jpg";
 import OppenHeimerImage from "../assets/oppenheimer.jpg";
+import OppenHeimerFireImage from "../assets/oppenheimerfire.jpg";
 import Tilt from "react-parallax-tilt";
 import { useParallax } from "react-scroll-parallax";
 import LatestReviews from "./LatestReviews";
@@ -30,6 +31,16 @@ import PastLivesImage from "../assets/pastlives.jpg";
 import SpiderManImage from "../assets/spiderman.jpg";
 import BatmanImage from "../assets/batman.jpg";
 import BladeRunnerImg from "../assets/bladerunner.jpg";
+import DuneFanImage from "../assets/dunefan.jpg";
+import SinnerImage from "../assets/sinners.jpg";
+import f4Image from "../assets/f4.jpg";
+import TennetImage from "../assets/tennet.jpg";
+import AliceImage from "../assets/alicedarling.jpg";
+import Marquee from "./Marquee";
+import Coverflow from "./Coverflow";
+import CoverflowMarquee from "./CoverflowMarquee";
+import DarkKnightImage from "../assets/darkknight.jpg";
+import DunkKirkImage from "../assets/dunkirk.jpg";
 export default function Homepage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeCard, setActiveCard] = useState(null);
@@ -82,16 +93,15 @@ export default function Homepage() {
       id: 2,
       title: "Dune: Part Two",
       subtitle: "The Sci-Fi Epic Continues",
-      posterUrl:
-        "https://image.tmdb.org/t/p/w342/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
+      posterUrl: DuneFanImage,
     },
     {
       id: 3,
-      title: "Oppenheimer",
-      subtitle: "Nolan's Atomic Masterpiece",
-      posterUrl:
-        "https://image.tmdb.org/t/p/w342/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
+      title: "Alice Darling",
+      subtitle: "A Heartbreaking Reunion",
+      posterUrl: AliceImage,
     },
+
     {
       id: 4,
       title: "Past Lives",
@@ -100,22 +110,22 @@ export default function Homepage() {
     },
     {
       id: 5,
-      title: "Interstellar",
+      title: "Sinners",
       subtitle: "A Heartbreaking Reunion",
-      posterUrl:
-        "https://image.tmdb.org/t/p/w342/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+      posterUrl: SinnerImage,
     },
+
     {
       id: 6,
-      title: "The Batman",
+      title: "Dark Knight",
       subtitle: "A Heartbreaking Reunion",
-      posterUrl: BatmanImage,
+      posterUrl: DarkKnightImage,
     },
     {
       id: 7,
-      title: "Spider-Man: Into the Spider-Verse",
+      title: "Dunkirk",
       subtitle: "A Heartbreaking Reunion",
-      posterUrl: SpiderManImage,
+      posterUrl: DunkKirkImage,
     },
     {
       id: 8,
@@ -126,17 +136,17 @@ export default function Homepage() {
     },
     {
       id: 9,
-      title: "Mad Max: Fury Road",
+      title: "Interstellar",
       subtitle: "A Heartbreaking Reunion",
       posterUrl:
-        "https://image.tmdb.org/t/p/w342/8tZYtuWezp8JbcsvHYO0O46tFbo.jpg",
+        "https://image.tmdb.org/t/p/w342/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
     },
+
     {
       id: 10,
-      title: "Blade Runner 2049",
+      title: "Tennet",
       subtitle: "A Heartbreaking Reunion",
-      posterUrl:
-        BladeRunnerImg,
+      posterUrl: TennetImage,
     },
     {
       id: 11,
@@ -147,10 +157,10 @@ export default function Homepage() {
     },
     {
       id: 12,
-      title: "The Dark Knight",
-      subtitle: "A Heartbreaking Reunion",
+      title: "Oppenheimer",
+      subtitle: "Nolan's Atomic Masterpiece",
       posterUrl:
-        "https://image.tmdb.org/t/p/w342/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+        OppenHeimerImage,
     },
   ];
   const [activeFilm, setActiveFilm] = useState(featuredCarouselData[0]);
@@ -162,7 +172,7 @@ export default function Homepage() {
       title: "Oppenheimer",
       subtitle: "Nolan's Atomic Masterpiece",
       rating: 9.2,
-      image: OppenHeimerImage,
+      image: OppenHeimerFireImage,
       likes: 1247,
       comments: 189,
       views: "12.4k",
@@ -261,162 +271,10 @@ export default function Homepage() {
     <>
       <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
         {/* Mobile-Only Interactive Film Strip Hero Section */}
-        <section className="block md:hidden pt-24 pb-16 bg-gradient-to-b from-slate-950 to-slate-900 relative overflow-hidden">
-          {/* Ambient Background */}
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(139,92,246,0.03),transparent_50%)]" />
-          </div>
-
-          <div className="relative z-10 px-6">
-            {/* Section Title with More Spacing */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-12"
-            >
-              <div className="inline-block mb-6">
-                <span className="bg-white/5 backdrop-blur-xl text-emerald-400 px-4 py-2 rounded-2xl text-sm font-semibold border border-white/10">
-                  🎬 Featured Reviews
-                </span>
-              </div>
-              <h2 className="text-3xl font-black text-white bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
-                Trending Cinema
-              </h2>
-            </motion.div>
-
-            {/* Enhanced Realistic Film Strip Container */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative mb-12"
-            >
-              {/* --- CHANGE 1: Added the subtle spotlight effect --- */}
-              <div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-64 pointer-events-none z-10"
-                style={{
-                  background:
-                    "radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 65%)",
-                }}
-              />
-
-              {/* Film Strip Background with Enhanced Realism */}
-              <div className="relative bg-gradient-to-r from-slate-800/60 via-slate-700/40 to-slate-800/60 rounded-xl p-5 transform rotate-1 shadow-2xl border border-slate-600/20">
-                {/* ... (All the film strip decorative elements like sprocket holes remain the same) ... */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-t-xl" />
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-b-xl" />
-                <div className="absolute top-3 left-6 right-6 flex justify-between">
-                  {Array.from({ length: 14 }).map((_, i) => (
-                    <div key={`top-${i}`} className="relative">
-                      <div className="w-2.5 h-2.5 bg-slate-900 rounded-full shadow-inner" />
-                      <div className="absolute inset-0.5 bg-slate-800 rounded-full" />
-                    </div>
-                  ))}
-                </div>
-                <div className="absolute bottom-3 left-6 right-6 flex justify-between">
-                  {Array.from({ length: 14 }).map((_, i) => (
-                    <div key={`bottom-${i}`} className="relative">
-                      <div className="w-2.5 h-2.5 bg-slate-900 rounded-full shadow-inner" />
-                      <div className="absolute inset-0.5 bg-slate-800 rounded-full" />
-                    </div>
-                  ))}
-                </div>
-
-                {/* Scrollable Film Strip */}
-                <div className="overflow-x-auto scrollbar-hide py-6 relative z-20">
-                  <div
-                    className="flex gap-5 px-3"
-                    style={{ width: "max-content" }}
-                  >
-                    {featuredCarouselData.map((movie, index) => (
-                      <motion.div
-                        key={movie.id}
-                        onClick={() => setActiveFilm(movie)} // --- CHANGE 2: Added onClick to update state ---
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, delay: index * 0.05 }}
-                        className="flex-shrink-0 cursor-pointer group"
-                      >
-                        {/* Enhanced Film Frame */}
-                        <div className="relative bg-gradient-to-br from-slate-900/90 to-slate-800/90 p-2.5 rounded-lg shadow-xl transform hover:scale-105 transition-all duration-300 border border-slate-700/50">
-                          <div className="absolute inset-2 border border-slate-600/30 rounded pointer-events-none shadow-inner" />
-                          <div className="w-24 h-36 relative rounded overflow-hidden shadow-lg">
-                            <img // Using LazyLoadImage for performance
-                              alt={movie.title}
-                              src={
-                                movie.posterUrl.src
-                                  ? movie.posterUrl.src
-                                  : movie.posterUrl
-                              }
-                              effect="blur"
-                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                              <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">
-                                <Play className="w-4 h-4 text-white ml-0.5" />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Dynamic Title and Button Area with More Spacing */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-center space-y-6"
-            >
-              {/* --- CHANGE 3: Title and subtitle are now dynamic and animated --- */}
-              <div className="min-h-[4rem]">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeFilm.id} // The key is crucial for the animation to trigger
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                  >
-                    <h3 className="text-xl font-bold text-white tracking-tight">
-                      {activeFilm.title}
-                    </h3>
-                    <p className="text-sm text-slate-400 mt-2">
-                      {activeFilm.subtitle}
-                    </p>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-              {/* Read Review Button */}
-              <motion.button
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 flex items-center gap-2 mx-auto"
-              >
-                <Film className="w-4 h-4" />
-                Read Review
-              </motion.button>
-            </motion.div>
-          </div>
-
-          <style jsx>{`
-            .scrollbar-hide {
-              -ms-overflow-style: none;
-              scrollbar-width: none;
-            }
-            .scrollbar-hide::-webkit-scrollbar {
-              display: none;
-            }
-          `}</style>
-        </section>
+        {/* --- ENHANCED & AUTOSCROLLING MOBILE HERO (FRAMER MOTION) --- */}
+        <div className="block md:hidden pt-28">
+          <Coverflow items={featuredCarouselData} />
+        </div>
 
         {/* Desktop Hero Section - Hidden on Mobile, Unchanged */}
         <section className="relative h-screen overflow-hidden pt-20 hidden md:block">
@@ -658,7 +516,6 @@ export default function Homepage() {
             </div>
           </div>
         </section>
-
         {/* Bento Grid Section */}
         <section className="py-24 bg-gradient-to-b from-slate-950 to-slate-900 relative overflow-hidden">
           {/* Ambient Background */}
@@ -707,7 +564,7 @@ export default function Homepage() {
                   {/* Background Image for Review Cards */}
                   {item.type === "review" || item.type === "featured" ? (
                     <div className="absolute inset-0">
-                      <LazyLoadImage
+                      <img
                         effect="blur"
                         width={"100%"}
                         height={"100%"}

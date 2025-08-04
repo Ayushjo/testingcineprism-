@@ -8,12 +8,15 @@ import BladeRunnerImg from "../assets/bladerunner.jpg";
 import SpiderManImage from "../assets/spiderman.jpg";
 import BatmanImage from "../assets/batman.jpg";
 import ArrivalImage from "../assets/arrival.jpg";
+import DarkKnightImage from "../assets/darkknight.jpg";
+import DunkKirkImage from "../assets/dunkirk.jpg";
+import OppenHeimerImage from "../assets/oppenheimer.jpg";
 const latestReviewsData = [
   {
     id: 1,
-    title: "Blade Runner 2049",
+    title: "Dunkirk",
     rating: 8.0,
-    posterUrl: BladeRunnerImg
+    posterUrl: DunkKirkImage
   },
   {
     id: 2,
@@ -30,16 +33,16 @@ const latestReviewsData = [
   },
   {
     id: 4,
-    title: "The Batman",
-    rating: 7.8,
-    posterUrl: BatmanImage,
+    title: "The Dark Knight",
+    rating: 9.0,
+    posterUrl: DarkKnightImage,
   },
   {
     id: 5,
-    title: "Mad Max: Fury Road",
-    rating: 8.1,
+    title: "Oppenheimer",
+    rating: 8.8,
     posterUrl:
-      "https://image.tmdb.org/t/p/original/8tZYtuWezp8JbcsvHYO0O46tFbo.jpg",
+     OppenHeimerImage,
   },
   {
     id: 6,

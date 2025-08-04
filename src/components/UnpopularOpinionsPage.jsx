@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Heart,
@@ -8,8 +8,13 @@ import {
   Send,
   ChevronDown,
   ChevronUp,
+  CheckCircle,
+  XCircle,
 } from "lucide-react";
-
+import axios from "axios";
+import toast from "react-hot-toast";
+import { comment } from "postcss";
+import { useAuth } from "../context/AuthContext";
 // Genres array for filtering and tagging
 const genres = [
   "Action",
@@ -19,92 +24,6 @@ const genres = [
   "Sci-Fi",
   "Thriller",
   "Superhero",
-];
-
-const unpopularOpinionsData = [
-  {
-    id: 1,
-    username: "@cinephile_alex",
-    avatarInitial: "A",
-    opinionText:
-      "The Joker's best performance wasn't Heath Ledger, it was Joaquin Phoenix. Ledger's was iconic chaos, but Phoenix's was a pure, devastating character study from the inside out.",
-    genres: ["Drama", "Thriller"],
-    likeCount: 128,
-    comments: [
-      {
-        id: 101,
-        username: "@film_fanatic",
-        avatarInitial: "F",
-        commentText:
-          "Totally agree! The physical transformation alone was incredible.",
-        replies: [],
-      },
-      {
-        id: 102,
-        username: "@ledger_legend",
-        avatarInitial: "L",
-        commentText:
-          "Respectfully disagree. Ledger's Joker defined a decade of cinema villains. It's not even a competition.",
-        replies: [
-          {
-            id: 103,
-            username: "@cinephile_alex",
-            avatarInitial: "A",
-            commentText:
-              "I see your point, but Phoenix's version felt more like a real, tragic person to me.",
-            replies: [
-              {
-                id: 101,
-                username: "@film_fanatic",
-                avatarInitial: "F",
-                commentText:
-                  "Totally agree! The physical transformation alone was incredible.",
-                replies: [],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 2,
-    username: "@story_first",
-    avatarInitial: "S",
-    opinionText:
-      "Blade Runner 2049 is visually stunning, but its story is far too slow and emotionally distant to be considered a true masterpiece. It's a beautiful, hollow painting.",
-    genres: ["Sci-Fi"],
-    likeCount: 256,
-    comments: [
-      {
-        id: 201,
-        username: "@vangelis_dream",
-        avatarInitial: "V",
-        commentText:
-          "The atmosphere IS the story. You have to let it wash over you.",
-        replies: [],
-      },
-    ],
-  },
-  {
-    id: 3,
-    username: "@mcu_realist",
-    avatarInitial: "M",
-    opinionText:
-      "Hot take: The Marvel Cinematic Universe peaked with *Captain America: The Winter Soldier*. It was the perfect blend of spy thriller and superhero action, and the franchise has been chasing that high ever since.",
-    genres: ["Action", "Superhero", "Thriller"],
-    likeCount: 512,
-    comments: [
-      {
-        id: 301,
-        username: "@endgame_fan",
-        avatarInitial: "E",
-        commentText:
-          "What about Infinity War and Endgame? The scale was unprecedented!",
-        replies: [],
-      },
-    ],
-  },
 ];
 
 // Recursive Comment Component
@@ -178,7 +97,6 @@ const Comment = ({ comment }) => {
                   onChange={(e) => setReplyText(e.target.value)}
                   onInput={handleTextareaInput}
                   rows="1"
-                  
                   className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
                 />
                 <motion.button
@@ -207,16 +125,117 @@ const Comment = ({ comment }) => {
 };
 
 export default function UnpopularOpinionsPage() {
+  const [unpopularOpinionsData, setUnpopularOpinionsData] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [activeFilter, setActiveFilter] = useState("All");
   const [expandedComments, setExpandedComments] = useState(new Set());
   const [likedOpinions, setLikedOpinions] = useState(new Set());
   const [newOpinion, setNewOpinion] = useState("");
   const [newComment, setNewComment] = useState("");
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth();
   const handleTextareaInput = (e) => {
     e.currentTarget.style.height = "auto";
     e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+  };
+
+  useEffect(() => {
+    const fetchOpinions = async () => {
+      try {
+        const response = await axios.get("/api/v1/user/fetch-opinions");
+        const opinionsFromApi = response.data.opinions;
+
+        // Map API response to your frontend state structure
+        const formattedOpinions = opinionsFromApi.map((opinion) => ({
+          id: opinion.id,
+          username: opinion.user.username,
+          avatarInitial: opinion.user.username[0].toUpperCase(),
+          opinionText: opinion.content,
+          genres: opinion.genres,
+          likeCount: opinion.likes.length,
+          comments: opinion.comments || [], // Ensure comments is an array
+          // Keep the raw likes array for initialization
+          likes: opinion.likes,
+        }));
+
+        setUnpopularOpinionsData(formattedOpinions);
+
+        // Initialize the set of opinions liked by the current user
+        if (user) {
+          const initialLiked = new Set();
+          formattedOpinions.forEach((opinion) => {
+            if (opinion.likes.some((like) => like.userId === user.id)) {
+              initialLiked.add(opinion.id);
+            }
+          });
+          setLikedOpinions(initialLiked);
+        }
+      } catch (error) {
+        console.error("Failed to fetch opinions:", error);
+        toast.error("Could not load opinions.");
+      }
+    };
+
+    fetchOpinions();
+  }, [user]); // Re-fetch opinions if the user logs in or out
+
+  const handlePost = async () => {
+    if (!newOpinion || selectedGenres.length === 0) {
+      toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? "animate-enter" : "animate-leave"
+          } bg-rose-900/80 backdrop-blur-xl border border-rose-700 shadow-lg rounded-xl text-white px-6 py-4 flex items-center gap-4`}
+        >
+          <XCircle className="text-rose-400" />
+          <span className="font-medium">
+            Please write an opinion and select at least one genre.
+          </span>
+        </div>
+      ));
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await axios.post("/api/v1/user/create-opinion", {
+        content: newOpinion,
+        genres: selectedGenres,
+      });
+
+      toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? "animate-enter" : "animate-leave"
+          } bg-slate-800/80 backdrop-blur-xl border border-slate-700 shadow-lg rounded-xl text-white px-6 py-4 flex items-center gap-4`}
+        >
+          <CheckCircle className="text-emerald-400" />
+          <span className="font-medium">
+            {response.data.message || "Opinion submitted successfully!"}
+          </span>
+        </div>
+      ));
+
+      // Clear the form on success
+      setNewOpinion("");
+      setSelectedGenres([]);
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to submit opinion.";
+      toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? "animate-enter" : "animate-leave"
+          } bg-rose-900/80 backdrop-blur-xl border border-rose-700 shadow-lg rounded-xl text-white px-6 py-4 flex items-center gap-4`}
+        >
+          <XCircle className="text-rose-400" />
+          <span className="font-medium">{errorMessage}</span>
+        </div>
+      ));
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const getTotalComments = (comments) => {
@@ -231,14 +250,54 @@ export default function UnpopularOpinionsPage() {
     );
   };
 
-  const toggleLike = (opinionId) => {
-    const newLiked = new Set(likedOpinions);
-    if (newLiked.has(opinionId)) {
-      newLiked.delete(opinionId);
-    } else {
-      newLiked.add(opinionId);
+  const toggleLike = async (opinionId) => {
+    if (!user) {
+      toast.error("Please log in to like an opinion.");
+      return;
     }
-    setLikedOpinions(newLiked);
+
+    // Save the original state in case the API call fails
+    const originalOpinions = [...unpopularOpinionsData];
+    const originalLikedSet = new Set(likedOpinions);
+
+    // --- Start Optimistic Update ---
+
+    // 1. Update the liked set for the icon color
+    const newLikedSet = new Set(likedOpinions);
+    const isCurrentlyLiked = newLikedSet.has(opinionId);
+    if (isCurrentlyLiked) {
+      newLikedSet.delete(opinionId);
+    } else {
+      newLikedSet.add(opinionId);
+    }
+    setLikedOpinions(newLikedSet);
+
+    // 2. Update the like count directly in the main data state
+    setUnpopularOpinionsData((currentOpinions) =>
+      currentOpinions.map((opinion) => {
+        if (opinion.id === opinionId) {
+          return {
+            ...opinion,
+            likeCount: isCurrentlyLiked
+              ? opinion.likeCount - 1
+              : opinion.likeCount + 1,
+          };
+        }
+        return opinion;
+      })
+    );
+    // --- End Optimistic Update ---
+
+    // API Call
+    try {
+      await axios.post("/api/v1/user/like", { opinionId });
+    } catch (error) {
+      // If the API call fails, revert both state changes
+      toast.error("Failed to update like. Please try again.");
+      setUnpopularOpinionsData(originalOpinions);
+      setLikedOpinions(originalLikedSet);
+      console.error("Failed to toggle like:", error);
+    }
   };
 
   const toggleComments = (opinionId) => {
@@ -268,8 +327,6 @@ export default function UnpopularOpinionsPage() {
   const filteredOpinions = unpopularOpinionsData.filter((opinion) =>
     activeFilter === "All" ? true : opinion.genres.includes(activeFilter)
   );
-
-  
 
   return (
     <div className="min-h-screen bg-slate-950 text-white pt-20">
@@ -348,13 +405,25 @@ export default function UnpopularOpinionsPage() {
 
             {/* Submit Button */}
             <div className="flex justify-end">
+              {/* --- CHANGE 5: Updated Submit Button with loading state --- */}
               <motion.button
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white px-8 py-3 rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 flex items-center gap-2"
+                onClick={handlePost}
+                disabled={isSubmitting}
+                whileHover={{
+                  scale: isSubmitting ? 1 : 1.02,
+                  y: isSubmitting ? 0 : -2,
+                }}
+                whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                className="bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white px-8 py-3 rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 flex items-center justify-center gap-2 min-w-[180px] disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <Send className="w-4 h-4" />
-                Submit Opinion
+                {isSubmitting ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    Submit Opinion
+                  </>
+                )}
               </motion.button>
             </div>
           </motion.div>
@@ -480,8 +549,7 @@ export default function UnpopularOpinionsPage() {
                         }`}
                       />
                       <span className="text-sm font-medium">
-                        {opinion.likeCount +
-                          (likedOpinions.has(opinion.id) ? 1 : 0)}
+                        {opinion.likeCount}
                       </span>
                     </motion.button>
 

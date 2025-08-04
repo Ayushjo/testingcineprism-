@@ -32,15 +32,15 @@ export default function Navbar() {
     { href: "/recommendations-page", label: "Top Picks" },
     { href: "/reviews", label: "Reviews" },
     { href: "/trending", label: "Trending" },
-    
+
     { href: "/unpopular-opinions", label: "Unpopular Opinions" },
     {
       href: "/merchandise",
       label: "Merchandise",
     },
   ];
-  const {user} = useAuth()
-  if(!user){
+  const { user } = useAuth();
+  if (!user) {
     navLinks.push({ href: "/login", label: "Login" });
   }
 
@@ -91,17 +91,27 @@ export default function Navbar() {
                   transition={{ duration: 0.2 }}
                 />
 
-                {/* Emerald Underline */}
-                <motion.div
-                  className="absolute -bottom-1 left-1/2 h-0.5 bg-emerald-400 origin-center"
-                  initial={{ width: 0, x: "-50%" }}
-                  whileHover={{ width: "60%" }}
-                  transition={{ duration: 0.3 }}
-                />
-
                 <span className="relative z-10">{link.label}</span>
               </motion.a>
             ))}
+            (
+            {user ? (
+              <motion.button
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 5 * 0.1 }}
+                className="relative px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-all duration-300 rounded-2xl group"
+              >
+                <motion.div
+                  className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 opacity-0 group-hover:opacity-100"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  whileHover={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.2 }}
+                />
+                <span className="relative z-10">Logout</span>
+              </motion.button>
+            ) : null}
+            )
           </div>
 
           {/* Desktop Actions */}
