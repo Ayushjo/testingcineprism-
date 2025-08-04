@@ -94,8 +94,8 @@ export default function Navbar() {
                 <span className="relative z-10">{link.label}</span>
               </motion.a>
             ))}
-            (
-            {user ? (
+            
+            {user ? 
               <motion.button
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -110,8 +110,8 @@ export default function Navbar() {
                 />
                 <span className="relative z-10">Logout</span>
               </motion.button>
-            ) : null}
-            )
+             : null}
+            
           </div>
 
           {/* Desktop Actions */}

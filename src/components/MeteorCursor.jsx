@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-export default function SaturnCursor() {
+export default function GradientCursor() {
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
 
   useEffect(() => {
@@ -18,46 +18,36 @@ export default function SaturnCursor() {
     };
   }, []);
 
-  // --- CHANGE: Increased all sizes for more presence ---
-  const outerRadius = 16;
-  const innerRadius = 4;
-  const flareWidth = 32;
+  const cursorSize = 20; // Size of the main dot
+  const glowSize = 150; // Size of the gradient glow
 
   return (
     <>
-      {/* The Circular Boundary (Saturn's Ring) */}
+      {/* The Gradient Glow (the large, soft, trailing element) */}
       <motion.div
-        // --- CHANGE: Added a larger, soft white shadow for a glow effect ---
-        className="pointer-events-none fixed left-0 top-0 z-[9999] rounded-full border border-white/30 shadow-lg shadow-white/10"
+        className="pointer-events-none fixed left-0 top-0 z-[9998] rounded-full"
         style={{
-          width: outerRadius * 2,
-          height: outerRadius * 2,
-          x: mousePosition.x - outerRadius,
-          y: mousePosition.y - outerRadius,
+          x: mousePosition.x - glowSize / 2,
+          y: mousePosition.y - glowSize / 2,
+          width: glowSize,
+          height: glowSize,
+          // This gradient uses your site's emerald and indigo colors
+          background:
+            "radial-gradient(circle, rgba(16,185,129,0.3), rgba(79,70,229,0.2), transparent 70%)",
+          filter: "blur(40px)",
         }}
-        transition={{ type: "spring", stiffness: 500, damping: 25 }}
+        // The transition creates the smooth, delayed "follow" effect
+        transition={{ type: "spring", stiffness: 150, damping: 20 }}
       />
 
-      {/* The Flare (The wider, fainter ring extension) */}
+      {/* The Main Dot (the small, precise pointer) */}
       <motion.div
-        // --- CHANGE: Made flare wider and added a white drop-shadow for a glow ---
-        className="pointer-events-none fixed left-0 top-0 z-[9998] h-px w-16 bg-gradient-to-r from-transparent via-white/50 to-transparent drop-shadow-[0_0_4px_rgba(255,255,255,0.5)]"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] h-2 w-2 rounded-full bg-white"
         style={{
-          x: mousePosition.x - flareWidth,
-          y: mousePosition.y,
+          x: mousePosition.x - 4, // Center the dot
+          y: mousePosition.y - 4,
         }}
-        transition={{ type: "spring", stiffness: 100, damping: 15 }}
-      />
-
-      {/* The Inner Dot (Saturn's core) */}
-      <motion.div
-        className="pointer-events-none fixed left-0 top-0 z-[9999] rounded-full bg-white"
-        style={{
-          width: innerRadius * 2,
-          height: innerRadius * 2,
-          x: mousePosition.x - innerRadius,
-          y: mousePosition.y - innerRadius,
-        }}
+        // This transition is very fast, so the dot feels responsive
         transition={{ type: "spring", stiffness: 800, damping: 30 }}
       />
     </>

@@ -336,9 +336,9 @@ export default function Homepage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.9 }}
-                    className=" text-xl md:text-2xl text-slate-400 tracking-wider"
+                    className=" text-xl md:text-2xl text-slate-400 tracking-wider pl-3"
                   >
-                    Honest reviews. Sharp takes. Cinematic insights.
+                    Good films make your life better.
                   </motion.p>
                   {/* Buttons --- CHANGE: Modern pill shape and more elegant color scheme/hovers --- */}
                   <motion.div
