@@ -265,11 +265,14 @@ const RecommendationCard = ({ movie }) => {
         />
       </div>
 
-      {/* Text Content Below Image */}
-      <div className="space-y-1">
+      {/* --- CHANGE: The text container is now a flex column with a fixed height --- */}
+      <div className="flex flex-col justify-between h-[72px]">
+        {/* The title no longer needs flex-grow */}
         <h3 className="text-lg font-medium text-white leading-tight line-clamp-2">
           {movie.title}
         </h3>
+
+        {/* This is now pushed to the bottom of the h-20 container */}
         <div className="flex items-center gap-1">
           <Star className="w-4 h-4 text-yellow-400 fill-current flex-shrink-0" />
           <span className="text-sm text-slate-400">{movie.rating}</span>
