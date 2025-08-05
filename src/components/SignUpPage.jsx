@@ -34,11 +34,14 @@ export default function SignupPage() {
         throw new Error("Passwords do not match.");
       }
 
-      const response = await axios.post("/api/v1/user/register", {
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-      });
+      const response = await axios.post(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/register",
+        {
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        }
+      );
 
       if (response.status === 200) {
         toast.custom((t) => (

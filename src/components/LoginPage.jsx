@@ -20,10 +20,13 @@ export default function LoginPage() {
       if (!email || !password) {
         throw new Error("Please fill in all fields.");
       }
-      const response = await axios.post("/api/v1/user/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/login",
+        {
+          email,
+          password,
+        }
+      );
 
       if (response.status === 200) {
         // --- CHANGE 3: Show success toast ---

@@ -142,7 +142,9 @@ export default function UnpopularOpinionsPage() {
   useEffect(() => {
     const fetchOpinions = async () => {
       try {
-        const response = await axios.get("/api/v1/user/fetch-opinions");
+        const response = await axios.get(
+          "https://testingcineprismbackend-production.up.railway.app/api/v1/user/fetch-opinions"
+        );
         const opinionsFromApi = response.data.opinions;
 
         // Map API response to your frontend state structure
@@ -198,10 +200,13 @@ export default function UnpopularOpinionsPage() {
 
     setIsSubmitting(true);
     try {
-      const response = await axios.post("/api/v1/user/create-opinion", {
-        content: newOpinion,
-        genres: selectedGenres,
-      });
+      const response = await axios.post(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/create-opinion",
+        {
+          content: newOpinion,
+          genres: selectedGenres,
+        }
+      );
 
       toast.custom((t) => (
         <div
@@ -290,7 +295,10 @@ export default function UnpopularOpinionsPage() {
 
     // API Call
     try {
-      await axios.post("/api/v1/user/like", { opinionId });
+      await axios.post(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/like",
+        { opinionId }
+      );
     } catch (error) {
       // If the API call fails, revert both state changes
       toast.error("Failed to update like. Please try again.");
