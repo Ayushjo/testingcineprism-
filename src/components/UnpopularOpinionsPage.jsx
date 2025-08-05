@@ -143,7 +143,7 @@ export default function UnpopularOpinionsPage() {
     const fetchOpinions = async () => {
       try {
         const response = await axios.get(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/user/fetch-opinions"
+          "/api/v1/user/fetch-opinions"
         );
         const opinionsFromApi = response.data.opinions;
 
@@ -201,7 +201,7 @@ export default function UnpopularOpinionsPage() {
     setIsSubmitting(true);
     try {
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/create-opinion",
+        "/api/v1/user/create-opinion",
         {
           content: newOpinion,
           genres: selectedGenres,
@@ -296,7 +296,7 @@ export default function UnpopularOpinionsPage() {
     // API Call
     try {
       await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/like",
+        "/api/v1/user/like",
         { opinionId }
       );
     } catch (error) {

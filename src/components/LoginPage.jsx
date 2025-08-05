@@ -21,7 +21,7 @@ export default function LoginPage() {
         throw new Error("Please fill in all fields.");
       }
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/login",
+        "/api/v1/user/login",
         {
           email,
           password,

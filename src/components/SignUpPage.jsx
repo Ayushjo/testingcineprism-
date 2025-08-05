@@ -35,7 +35,7 @@ export default function SignupPage() {
       }
 
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/register",
+        "/api/v1/user/register",
         {
           username: formData.username,
           email: formData.email,
