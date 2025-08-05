@@ -319,54 +319,38 @@ export default function Homepage() {
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.3 }}
-                  className="text-center lg:text-left space-y-8"
+                  // --- CHANGE: The container is now centered on all screen sizes ---
+                  className="text-center space-y-8"
                 >
-                  {/* Badge --- CHANGE: Softer text, icon has the accent color --- */}
-                  {/* Title - Kept as is, it's perfect */}
+                  {/* Title */}
                   <motion.h1
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.7 }}
-                    className="text-5xl md:text-7xl lg:text-6xl xl:text-7xl font-black leading-none tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent"
+                    className="text-6xl md:text-7xl lg:text-6xl xl:text-7xl font-black leading-none tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent"
                   >
                     The Cinéprism
                   </motion.h1>
-                  {/* Tagline --- CHANGE: Unified color and wider spacing for an airy, premium feel --- */}
+
+                  {/* Tagline */}
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.9 }}
-                    className=" text-xl md:text-2xl text-slate-400 tracking-wider pl-3"
+                    // --- CHANGE: Removed the pl-3 class ---
+                    className="text-xl md:text-2xl text-slate-400 tracking-wider"
                   >
                     Good films make your life better.
                   </motion.p>
-                  {/* Buttons --- CHANGE: Modern pill shape and more elegant color scheme/hovers --- */}
+
+                  {/* Buttons container (remains hidden as per your code) */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 1.1 }}
                     className="hidden"
                   >
-                    {/* Primary Button - Now an outline style that glows on hover */}
-                    <motion.button
-                      whileHover={{ scale: 1.02, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="group border-2 border-emerald-500 text-emerald-400 hover:text-white hover:bg-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 font-semibold px-8 py-4 rounded-full text-lg transition-all duration-300 flex items-center justify-center gap-2"
-                    >
-                      <Play className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                      Explore Reviews
-                    </motion.button>
-                    {/* Secondary Button - Softer border and a clean text color change on hover */}
-                    <motion.button
-                      whileHover={{
-                        scale: 1.02,
-                        y: -2,
-                      }}
-                      whileTap={{ scale: 0.98 }}
-                      className="border border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300"
-                    >
-                      Latest Posts
-                    </motion.button>
+                    {/* ... your buttons ... */}
                   </motion.div>
                 </motion.div>
                 {/* Right Side - Movie Card */}
