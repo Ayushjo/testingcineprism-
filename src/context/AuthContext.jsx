@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          "/api/v1/user/me",
+          "https://testingcineprismbackend-production.up.railway.app/api/v1/user/me",
           {
             withCredentials: true,
           }
