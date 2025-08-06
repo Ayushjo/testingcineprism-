@@ -25,6 +25,9 @@ export default function LoginPage() {
         {
           email,
           password,
+        },
+        {
+          withCredentials: true,
         }
       );
 
@@ -42,6 +45,7 @@ export default function LoginPage() {
             </span>
           </div>
         ));
+        // Cookies.set("token", response.data.token);
         navigate("/");
       } else {
         // This handles non-200 success codes if your API uses them
