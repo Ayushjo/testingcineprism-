@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Twitter, Search } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import TheCineprismLogo from "../assets/thecineprismlogo.jpg";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -21,7 +22,10 @@ export default function Navbar() {
   const logoutUser = async () => {
     try {
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/logout"
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/logout",
+        {
+         withCredentials: true
+        },
       );
     } catch (error) {
       console.log(error);
