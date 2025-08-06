@@ -117,7 +117,7 @@ export default function Navbar() {
               onClick={logoutUser}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 5 * 0.1 }}
+                transition={{ duration: 0.5, delay: navLinks.length * 0.1 }}
                 className="relative px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-all duration-300 rounded-2xl group"
               >
                 <motion.div
