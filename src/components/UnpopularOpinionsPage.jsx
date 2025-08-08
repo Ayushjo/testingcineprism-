@@ -138,6 +138,7 @@ export default function UnpopularOpinionsPage() {
     e.currentTarget.style.height = "auto";
     e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
   };
+  
 
   useEffect(() => {
     const fetchOpinions = async () => {
@@ -180,6 +181,75 @@ export default function UnpopularOpinionsPage() {
 
     fetchOpinions();
   }, [user]); // Re-fetch opinions if the user logs in or out
+
+  const fetchOpinions = async () => {
+    try {
+      const response = await axios.get(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/fetch-opinions"
+      );
+      const opinionsFromApi = response.data.opinions;
+
+      // Map API response to your frontend state structure
+      const formattedOpinions = opinionsFromApi.map((opinion) => ({
+        id: opinion.id,
+        username: opinion.user.username,
+        avatarInitial: opinion.user.username[0].toUpperCase(),
+        opinionText: opinion.content,
+        genres: opinion.genres,
+        likeCount: opinion.likes.length,
+        comments: opinion.comments || [], // Ensure comments is an array
+        // Keep the raw likes array for initialization
+        likes: opinion.likes,
+      }));
+
+      setUnpopularOpinionsData(formattedOpinions);
+
+      // Initialize the set of opinions liked by the current user
+      if (user) {
+        const initialLiked = new Set();
+        formattedOpinions.forEach((opinion) => {
+          if (opinion.likes.some((like) => like.userId === user.id)) {
+            initialLiked.add(opinion.id);
+          }
+        });
+        setLikedOpinions(initialLiked);
+      }
+    } catch (error) {
+      console.error("Failed to fetch opinions:", error);
+      toast.error("Could not load opinions.");
+    }
+  };
+
+  const handleComment = async (opinionId) => {
+    if (!newComment) {
+      toast.error("Please write a comment before posting.");
+      return;
+    }
+    if (!user) {
+      toast.error("Please log in to comment.");
+      return;
+    }
+
+    try {
+      await axios.post(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/opinion-comment",
+        {
+          content: newComment,
+          opinionId: opinionId,
+        },
+        { withCredentials: true }
+      );
+
+      toast.success("Comment posted successfully!");
+      setNewComment(""); // Clear the input field
+      await fetchOpinions(); // Refresh the opinions to show the new comment
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to post comment.";
+      toast.error(errorMessage);
+      console.error("Failed to post comment:", error);
+    }
+  };
 
   const handlePost = async () => {
     if (!newOpinion || selectedGenres.length === 0) {
@@ -614,6 +684,7 @@ export default function UnpopularOpinionsPage() {
                           className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
                         />
                         <motion.button
+                        onClick={()=>handleComment(opinion.id)}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-4 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300 self-start"
