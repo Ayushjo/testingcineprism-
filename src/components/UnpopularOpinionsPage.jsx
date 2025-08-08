@@ -205,7 +205,8 @@ export default function UnpopularOpinionsPage() {
         {
           content: newOpinion,
           genres: selectedGenres,
-        }
+        },
+        { withCredentials: true }
       );
 
       toast.custom((t) => (
@@ -297,7 +298,8 @@ export default function UnpopularOpinionsPage() {
     try {
       await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/user/like",
-        { opinionId }
+        { opinionId },
+        { withCredentials: true }
       );
     } catch (error) {
       // If the API call fails, revert both state changes
