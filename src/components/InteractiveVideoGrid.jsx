@@ -17,7 +17,8 @@ const gridItems = [
   { id: 4, poster: OppenHeimerImage },
 ];
 
-const backgroundVideo = duneVideo;
+const backgroundVideo =
+  "https://res.cloudinary.com/dapu22gee/video/upload/v1754631468/duneverylow_jzfvtk.mp4";
 const motto = "Good films make your life better.";
 
 export default function InteractiveVideoGrid() {
