@@ -21,6 +21,7 @@ import MeteorCursor from "./components/MeteorCursor";
 import RedirectIfAuth from "./components/RedirectIfAuth";
 import { Toaster } from "react-hot-toast";
 import RedirectIfUser from "./components/RedirectIfUser";
+import InteractiveVideoGrid from "./components/InteractiveVideoGrid";
 
 const App = () => {
   return (
