@@ -241,8 +241,7 @@ export default function UnpopularOpinionsPage() {
       );
 
       toast.success("Comment posted successfully!");
-      setNewComment(""); // Clear the input field
-      await fetchOpinions(); // Refresh the opinions to show the new comment
+      setNewComment(""); // Clear the input field // Refresh the opinions to show the new comment
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Failed to post comment.";
