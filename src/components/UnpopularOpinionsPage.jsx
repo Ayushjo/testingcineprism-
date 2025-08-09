@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { comment } from "postcss";
 import { useAuth } from "../context/AuthContext";
+
 // Genres array for filtering and tagging
 const genres = [
   "Action",
@@ -27,9 +27,10 @@ const genres = [
 ];
 
 // Recursive Comment Component
-const Comment = ({ comment }) => {
+const Comment = ({ comment, onReply }) => {
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyText, setReplyText] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const getAvatarColor = (initial) => {
     const colors = [
@@ -50,8 +51,25 @@ const Comment = ({ comment }) => {
     e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
   };
 
+  const handleReply = async () => {
+    if (!replyText.trim()) {
+      toast.error("Please write a reply before posting.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await onReply(comment.id, replyText);
+      setReplyText("");
+      setShowReplyInput(false);
+    } catch (error) {
+      console.error("Failed to post reply:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    // The main container now uses padding to create space for the thread line and avatar
     <div className="relative pl-12">
       {/* The vertical thread line */}
       <div className="absolute left-4 top-0 bottom-0 w-px bg-slate-700" />
@@ -97,14 +115,21 @@ const Comment = ({ comment }) => {
                   onChange={(e) => setReplyText(e.target.value)}
                   onInput={handleTextareaInput}
                   rows="1"
+                  placeholder="Write your reply..."
                   className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
                 />
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300 text-sm self-start"
+                  onClick={handleReply}
+                  disabled={isSubmitting}
+                  whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
+                  whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
+                  className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300 text-sm self-start disabled:opacity-50"
                 >
-                  Reply
+                  {isSubmitting ? (
+                    <div className="w-4 h-4 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
+                  ) : (
+                    "Reply"
+                  )}
                 </motion.button>
               </div>
             </motion.div>
@@ -116,7 +141,7 @@ const Comment = ({ comment }) => {
       {comment.replies && comment.replies.length > 0 && (
         <div className="mt-4 space-y-4">
           {comment.replies.map((reply) => (
-            <Comment key={reply.id} comment={reply} />
+            <Comment key={reply.id} comment={reply} onReply={onReply} />
           ))}
         </div>
       )}
@@ -133,12 +158,29 @@ export default function UnpopularOpinionsPage() {
   const [newOpinion, setNewOpinion] = useState("");
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loadingComments, setLoadingComments] = useState(new Set());
   const { user } = useAuth();
+
   const handleTextareaInput = (e) => {
     e.currentTarget.style.height = "auto";
     e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
   };
-  
+
+  // **FIXED: Added the missing fetchCommentsForOpinion function**
+  const fetchCommentsForOpinion = async (opinionId) => {
+    try {
+      const response = await axios.post(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/fetch-comments",
+        { opinionId },
+        { withCredentials: true }
+      );
+      return response.data.comments || [];
+    } catch (error) {
+      console.error("Failed to fetch comments:", error);
+      toast.error("Failed to load comments");
+      return [];
+    }
+  };
 
   useEffect(() => {
     const fetchOpinions = async () => {
@@ -156,7 +198,7 @@ export default function UnpopularOpinionsPage() {
           opinionText: opinion.content,
           genres: opinion.genres,
           likeCount: opinion.likes.length,
-          comments: opinion.comments || [], // Ensure comments is an array
+          comments: [], // Start with empty comments - we'll load them when needed
           // Keep the raw likes array for initialization
           likes: opinion.likes,
         }));
@@ -180,7 +222,7 @@ export default function UnpopularOpinionsPage() {
     };
 
     fetchOpinions();
-  }, [user]); // Re-fetch opinions if the user logs in or out
+  }, [user]);
 
   const fetchOpinions = async () => {
     try {
@@ -189,7 +231,6 @@ export default function UnpopularOpinionsPage() {
       );
       const opinionsFromApi = response.data.opinions;
 
-      // Map API response to your frontend state structure
       const formattedOpinions = opinionsFromApi.map((opinion) => ({
         id: opinion.id,
         username: opinion.user.username,
@@ -197,14 +238,12 @@ export default function UnpopularOpinionsPage() {
         opinionText: opinion.content,
         genres: opinion.genres,
         likeCount: opinion.likes.length,
-        comments: opinion.comments || [], // Ensure comments is an array
-        // Keep the raw likes array for initialization
+        comments: [], // Start with empty comments
         likes: opinion.likes,
       }));
 
       setUnpopularOpinionsData(formattedOpinions);
 
-      // Initialize the set of opinions liked by the current user
       if (user) {
         const initialLiked = new Set();
         formattedOpinions.forEach((opinion) => {
@@ -266,6 +305,67 @@ export default function UnpopularOpinionsPage() {
     }
   };
 
+  // **NEW: Handle reply to comments**
+  const handleReply = async (parentCommentId, replyText) => {
+    if (!user) {
+      toast.error("Please log in to reply.");
+      return;
+    }
+
+    // Find which opinion this comment belongs to
+    const opinion = unpopularOpinionsData.find((op) =>
+      findCommentInTree(op.comments, parentCommentId)
+    );
+
+    if (!opinion) {
+      toast.error("Could not find the comment to reply to.");
+      return;
+    }
+
+    try {
+      await axios.post(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/opinion-comment",
+        {
+          content: replyText,
+          opinionId: opinion.id,
+          parentCommentId: parentCommentId,
+        },
+        { withCredentials: true }
+      );
+
+      toast.success("Reply posted successfully!");
+
+      // Fetch updated comments for this specific opinion
+      const updatedComments = await fetchCommentsForOpinion(opinion.id);
+
+      // Update only this opinion's comments in the state
+      setUnpopularOpinionsData((prev) =>
+        prev.map((op) =>
+          op.id === opinion.id ? { ...op, comments: updatedComments } : op
+        )
+      );
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to post reply.";
+      toast.error(errorMessage);
+      throw error; // Re-throw to handle in Comment component
+    }
+  };
+
+  // Helper function to find a comment in the tree
+  const findCommentInTree = (comments, commentId) => {
+    for (const comment of comments) {
+      if (comment.id === commentId) {
+        return comment;
+      }
+      if (comment.replies && comment.replies.length > 0) {
+        const found = findCommentInTree(comment.replies, commentId);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
   const handlePost = async () => {
     if (!newOpinion || selectedGenres.length === 0) {
       toast.custom((t) => (
@@ -307,9 +407,11 @@ export default function UnpopularOpinionsPage() {
         </div>
       ));
 
-      // Clear the form on success
       setNewOpinion("");
       setSelectedGenres([]);
+
+      // Refresh opinions to show the new one
+      await fetchOpinions();
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Failed to submit opinion.";
@@ -347,13 +449,9 @@ export default function UnpopularOpinionsPage() {
       return;
     }
 
-    // Save the original state in case the API call fails
     const originalOpinions = [...unpopularOpinionsData];
     const originalLikedSet = new Set(likedOpinions);
 
-    // --- Start Optimistic Update ---
-
-    // 1. Update the liked set for the icon color
     const newLikedSet = new Set(likedOpinions);
     const isCurrentlyLiked = newLikedSet.has(opinionId);
     if (isCurrentlyLiked) {
@@ -363,7 +461,6 @@ export default function UnpopularOpinionsPage() {
     }
     setLikedOpinions(newLikedSet);
 
-    // 2. Update the like count directly in the main data state
     setUnpopularOpinionsData((currentOpinions) =>
       currentOpinions.map((opinion) => {
         if (opinion.id === opinionId) {
@@ -377,9 +474,7 @@ export default function UnpopularOpinionsPage() {
         return opinion;
       })
     );
-    // --- End Optimistic Update ---
 
-    // API Call
     try {
       await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/user/like",
@@ -387,7 +482,6 @@ export default function UnpopularOpinionsPage() {
         { withCredentials: true }
       );
     } catch (error) {
-      // If the API call fails, revert both state changes
       toast.error("Failed to update like. Please try again.");
       setUnpopularOpinionsData(originalOpinions);
       setLikedOpinions(originalLikedSet);
@@ -395,27 +489,54 @@ export default function UnpopularOpinionsPage() {
     }
   };
 
+  // **FIXED: Improved toggleComments with better error handling**
   const toggleComments = async (opinionId) => {
     const newExpanded = new Set(expandedComments);
 
     if (newExpanded.has(opinionId)) {
       // Collapse comments
       newExpanded.delete(opinionId);
-    } else {
-      // Expand comments and fetch them
-      newExpanded.add(opinionId);
-
-      // Fetch comments for this opinion if not already loaded
-      const opinion = unpopularOpinionsData.find((op) => op.id === opinionId);
-      if (!opinion.comments || opinion.comments.length === 0) {
-        const comments = await fetchCommentsForOpinion(opinionId);
-        setUnpopularOpinionsData((prev) =>
-          prev.map((op) => (op.id === opinionId ? { ...op, comments } : op))
-        );
-      }
+      setExpandedComments(newExpanded);
+      return;
     }
 
+    // Expand comments
+    newExpanded.add(opinionId);
     setExpandedComments(newExpanded);
+
+    // Check if we need to load comments
+    const opinion = unpopularOpinionsData.find((op) => op.id === opinionId);
+    if (!opinion) {
+      toast.error("Opinion not found");
+      return;
+    }
+
+    // If comments are already loaded, don't fetch again
+    if (opinion.comments && opinion.comments.length > 0) {
+      return;
+    }
+
+    // Add loading state
+    setLoadingComments((prev) => new Set(prev).add(opinionId));
+
+    try {
+      const comments = await fetchCommentsForOpinion(opinionId);
+      setUnpopularOpinionsData((prev) =>
+        prev.map((op) => (op.id === opinionId ? { ...op, comments } : op))
+      );
+    } catch (error) {
+      console.error("Failed to load comments:", error);
+      // Remove from expanded if failed to load
+      const failedExpanded = new Set(newExpanded);
+      failedExpanded.delete(opinionId);
+      setExpandedComments(failedExpanded);
+    } finally {
+      setLoadingComments((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(opinionId);
+        return newSet;
+      });
+    }
   };
 
   const getAvatarColor = (initial) => {
@@ -479,7 +600,6 @@ export default function UnpopularOpinionsPage() {
               Share Your Take
             </h2>
 
-            {/* Opinion Textarea */}
             <textarea
               value={newOpinion}
               onChange={(e) => setNewOpinion(e.target.value)}
@@ -487,7 +607,6 @@ export default function UnpopularOpinionsPage() {
               className="w-full h-32 bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-slate-800/70 transition-all duration-300 resize-none mb-6"
             />
 
-            {/* Genre Selector */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-white mb-3">
                 Select Genres
@@ -511,9 +630,7 @@ export default function UnpopularOpinionsPage() {
               </div>
             </div>
 
-            {/* Submit Button */}
             <div className="flex justify-end">
-              {/* --- CHANGE 5: Updated Submit Button with loading state --- */}
               <motion.button
                 onClick={handlePost}
                 disabled={isSubmitting}
@@ -545,7 +662,6 @@ export default function UnpopularOpinionsPage() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="bg-slate-900/30 backdrop-blur-xl border border-slate-700 rounded-2xl p-4"
           >
-            {/* Desktop Buttons */}
             <div className="hidden md:flex flex-wrap gap-2">
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -576,12 +692,10 @@ export default function UnpopularOpinionsPage() {
               ))}
             </div>
 
-            {/* Mobile Dropdown */}
             <div className="md:hidden relative">
               <select
                 value={activeFilter}
                 onChange={(e) => setActiveFilter(e.target.value)}
-                // The classes below are updated to match your site's glassmorphism style
                 className="w-full bg-slate-900/50 backdrop-blur-xl text-slate-300 border border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium appearance-none focus:outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/10 transition-all"
               >
                 <option className="bg-slate-900" value="All">
@@ -712,7 +826,7 @@ export default function UnpopularOpinionsPage() {
                           className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
                         />
                         <motion.button
-                        onClick={()=>handleComment(opinion.id)}
+                          onClick={() => handleComment(opinion.id)}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-4 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300 self-start"
