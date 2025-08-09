@@ -220,8 +220,8 @@ export default function UnpopularOpinionsPage() {
     }
   };
 
-  const handleComment = async (opinionId) => {
-    if (!newComment) {
+  const handleComment = async (opinionId, parentCommentId = null) => {
+    if (!newComment.trim()) {
       toast.error("Please write a comment before posting.");
       return;
     }
@@ -236,12 +236,28 @@ export default function UnpopularOpinionsPage() {
         {
           content: newComment,
           opinionId: opinionId,
+          ...(parentCommentId && { parentCommentId }),
         },
         { withCredentials: true }
       );
 
       toast.success("Comment posted successfully!");
-      setNewComment(""); // Clear the input field // Refresh the opinions to show the new comment
+      setNewComment("");
+
+      // Fetch updated comments for this specific opinion
+      const updatedComments = await fetchCommentsForOpinion(opinionId);
+
+      // Update only this opinion's comments in the state
+      setUnpopularOpinionsData((prev) =>
+        prev.map((opinion) =>
+          opinion.id === opinionId
+            ? { ...opinion, comments: updatedComments }
+            : opinion
+        )
+      );
+
+      // Keep comments section expanded
+      setExpandedComments((prev) => new Set(prev).add(opinionId));
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Failed to post comment.";
@@ -379,13 +395,26 @@ export default function UnpopularOpinionsPage() {
     }
   };
 
-  const toggleComments = (opinionId) => {
+  const toggleComments = async (opinionId) => {
     const newExpanded = new Set(expandedComments);
+
     if (newExpanded.has(opinionId)) {
+      // Collapse comments
       newExpanded.delete(opinionId);
     } else {
+      // Expand comments and fetch them
       newExpanded.add(opinionId);
+
+      // Fetch comments for this opinion if not already loaded
+      const opinion = unpopularOpinionsData.find((op) => op.id === opinionId);
+      if (!opinion.comments || opinion.comments.length === 0) {
+        const comments = await fetchCommentsForOpinion(opinionId);
+        setUnpopularOpinionsData((prev) =>
+          prev.map((op) => (op.id === opinionId ? { ...op, comments } : op))
+        );
+      }
     }
+
     setExpandedComments(newExpanded);
   };
 
