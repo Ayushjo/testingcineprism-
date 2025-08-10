@@ -1,7 +1,7 @@
-import { createContext,useState,useEffect,useContext } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
 
-const AuthContext =createContext();
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -28,12 +28,40 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
+  // Logout function
+  const logout = async () => {
+    try {
+      const response = await axios.post(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/logout",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      // Clear user from context after successful logout
+      setUser(null);
+
+      return response;
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Even if logout fails on server, clear user locally
+      setUser(null);
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, loading }}>
+    <AuthContext.Provider value={{ user, setUser, loading, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
 export const useAuth = () => {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };
