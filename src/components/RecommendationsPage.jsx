@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import { motion,AnimatePresence } from "framer-motion";
 import { Star } from "lucide-react";
 import SpiderManImage from "../assets/spiderman.jpg";
@@ -37,38 +37,36 @@ import JJKImage from "../assets/jjk.webp";
 import GhostInTheShellImage from "../assets/ghostintheshell.webp";
 import FleabagImage from "../assets/fleebag.png";
 import ChernobylMovie from "../assets/chernobyl.webp";
-function getScoreColor(score) {
-  if (score >= 90) return "emerald"; // Green
-  if (score >= 80) return "amber"; // Yellow
-  if (score >= 70) return "red"; // Red
-  return "gray"; // Gray
-}
-
-// Get score color classes
 function getScoreColorClasses(score) {
-  const color = getScoreColor(score);
-  return {
-    border: `border-${color}-500/40`,
-    bg: `bg-${color}-500/10`,
-    text: `text-${color}-400`,
-    shadow: `shadow-[0_0_30px_rgba(${
-      color === "emerald"
-        ? "16,185,129"
-        : color === "amber"
-        ? "245,158,11"
-        : color === "red"
-        ? "239,68,68"
-        : "156,163,175"
-    },0.2)]`,
-    glow:
-      color === "emerald"
-        ? "shadow-emerald-500/20"
-        : color === "amber"
-        ? "shadow-amber-500/20"
-        : color === "red"
-        ? "shadow-red-500/20"
-        : "shadow-gray-500/20",
-  };
+  if (score >= 90) {
+    return {
+      bg: "bg-emerald-500/20",
+      border: "border-emerald-400",
+      text: "text-emerald-400",
+      shadow: "shadow-emerald-500/20",
+    };
+  } else if (score >= 75) {
+    return {
+      bg: "bg-amber-500/20",
+      border: "border-amber-400",
+      text: "text-amber-400",
+      shadow: "shadow-amber-500/20",
+    };
+  } else if (score >= 60) {
+    return {
+      bg: "bg-orange-500/20",
+      border: "border-orange-400",
+      text: "text-orange-400",
+      shadow: "shadow-orange-500/20",
+    };
+  } else {
+    return {
+      bg: "bg-red-500/20",
+      border: "border-red-400",
+      text: "text-red-400",
+      shadow: "shadow-red-500/20",
+    };
+  }
 }
 
 // Score Circle Component
@@ -120,10 +118,8 @@ function ScoreCircle({ total, hovered }) {
   );
 }
 
-// Score Breakdown Component
 function ScoreBreakdown({ breakdown, hovered, totalScore }) {
   const entries = Object.entries(breakdown).slice(0, 3);
-  const colorClasses = getScoreColorClasses(totalScore);
 
   return (
     <AnimatePresence mode="wait">
@@ -134,9 +130,9 @@ function ScoreBreakdown({ breakdown, hovered, totalScore }) {
           animate={{ opacity: 1, x: 0, scale: 1 }}
           exit={{ opacity: 0, x: -10, scale: 0.95 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="w-full"
+          className="w-full px-1 sm:px-0"
         >
-          <div className="space-y-2">
+          <div className="space-y-1.5 sm:space-y-2">
             {entries.map(([category, score], index) => {
               const itemColorClasses = getScoreColorClasses(score);
               return (
@@ -149,19 +145,19 @@ function ScoreBreakdown({ breakdown, hovered, totalScore }) {
                     delay: index * 0.1,
                     ease: "easeOut",
                   }}
-                  className="flex items-center justify-between rounded-lg px-3 py-2 bg-slate-800/60 border border-slate-700/50 backdrop-blur-sm hover:bg-slate-800/80 transition-colors duration-200"
+                  className="flex items-center justify-between rounded-lg px-2.5 py-1.5 sm:px-3 sm:py-2 bg-slate-800/60 border border-slate-700/50 backdrop-blur-sm hover:bg-slate-800/80 transition-colors duration-200 min-h-[32px] sm:min-h-[36px]"
                 >
-                  <span className="text-slate-300 text-sm font-medium capitalize">
+                  <span className="text-slate-300 text-xs sm:text-sm font-medium capitalize truncate pr-2">
                     {category}
                   </span>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
                     <span
-                      className={`font-bold text-sm ${itemColorClasses.text}`}
+                      className={`font-bold text-xs sm:text-sm ${itemColorClasses.text}`}
                     >
                       {score}
                     </span>
                     <div
-                      className={`w-2 h-2 rounded-full ${itemColorClasses.bg} ${itemColorClasses.border}`}
+                      className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${itemColorClasses.bg} ${itemColorClasses.border}`}
                     />
                   </div>
                 </motion.div>
@@ -176,8 +172,13 @@ function ScoreBreakdown({ breakdown, hovered, totalScore }) {
 
 // Enhanced Recommendation Card
 function RecommendationCard({ movie }) {
-  const [hovered, setHovered] = React.useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [showBreakdown, setShowBreakdown] = useState(false);
   const colorClasses = getScoreColorClasses(movie.score.total);
+
+  const handleToggleBreakdown = () => {
+    setShowBreakdown(!showBreakdown);
+  };
 
   return (
     <motion.div
@@ -188,15 +189,21 @@ function RecommendationCard({ movie }) {
       className="flex-shrink-0 w-44 sm:w-52 cursor-pointer group"
     >
       {/* Poster Container */}
-      <div className="aspect-[2/3] mb-4 relative rounded-2xl overflow-hidden">
+      <div
+        className="aspect-[2/3] mb-4 relative rounded-2xl overflow-hidden"
+        onClick={handleToggleBreakdown}
+      >
         <img
           src={
-            typeof movie.poster === "string"
-              ? movie.poster
-              : "/placeholder.svg?height=300&width=200"
+            movie.poster ||
+            "https://via.placeholder.com/300x450/1e293b/64748b?text=No+Image"
           }
           alt={movie.title}
           className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+          onError={(e) => {
+            e.target.src =
+              "https://via.placeholder.com/300x450/1e293b/64748b?text=No+Image";
+          }}
         />
 
         {/* Enhanced overlay effects */}
@@ -204,25 +211,23 @@ function RecommendationCard({ movie }) {
 
         {/* Hover border glow */}
         <motion.div
-          className={`absolute inset-0 rounded-2xl border-2 border-transparent`}
+          className="absolute inset-0 rounded-2xl border-2"
           animate={{
             borderColor: hovered
-              ? `rgba(${
-                  colorClasses.border.includes("emerald")
-                    ? "16,185,129"
-                    : colorClasses.border.includes("amber")
-                    ? "245,158,11"
-                    : colorClasses.border.includes("red")
-                    ? "239,68,68"
-                    : "156,163,175"
-                }, 0.4)`
+              ? colorClasses.border.includes("emerald")
+                ? "rgba(16,185,129,0.4)"
+                : colorClasses.border.includes("amber")
+                ? "rgba(245,158,11,0.4)"
+                : colorClasses.border.includes("red")
+                ? "rgba(239,68,68,0.4)"
+                : "rgba(156,163,175,0.4)"
               : "transparent",
           }}
           transition={{ duration: 0.3 }}
         />
 
         {/* Score badge in top right */}
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-3 right-3" onClick={handleToggleBreakdown}>
           <div
             className={`
             px-2 py-1 rounded-lg backdrop-blur-md border
@@ -234,6 +239,17 @@ function RecommendationCard({ movie }) {
             </span>
           </div>
         </div>
+
+        {/* Mobile tap indicator */}
+        {!hovered && (
+          <div className="sm:hidden absolute bottom-3 left-3">
+            <div className="bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1 border border-white/10">
+              <span className="text-white/80 text-xs">
+                Tap score for details
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Content Section */}
@@ -248,16 +264,19 @@ function RecommendationCard({ movie }) {
         {/* Score Section - Fixed Height Container */}
         <div className="h-20 flex items-center gap-4">
           {/* Score Circle */}
-          <div className="flex-shrink-0">
-            <ScoreCircle total={movie.score.total} hovered={hovered} />
+          <div className="flex-shrink-0" onClick={handleToggleBreakdown}>
+            <ScoreCircle
+              total={movie.score.total}
+              hovered={hovered || showBreakdown}
+            />
           </div>
 
           {/* Score Info Area */}
           <div className="flex-1 min-w-0 h-full flex flex-col justify-center">
-            {/* Breakdown (shows on hover) */}
+            {/* Breakdown (shows on hover or click) */}
             <ScoreBreakdown
               breakdown={movie.score.breakdown}
-              hovered={hovered}
+              hovered={hovered || showBreakdown}
               totalScore={movie.score.total}
             />
           </div>
@@ -266,7 +285,6 @@ function RecommendationCard({ movie }) {
     </motion.div>
   );
 }
-
 // Updated recommendations data
 const recommendationsData = {
   hindi: [
@@ -287,7 +305,7 @@ const recommendationsData = {
       title: "RRR",
       poster: RRRImage,
       score: {
-        total: 94,
+        total: 3,
         breakdown: { Action: 98, Visuals: 95, Spectacle: 90 },
       },
     },
@@ -504,8 +522,6 @@ const recommendationsData = {
     },
   ],
 };
-
-// Updated genre display names mapping
 const genreDisplayNames = {
   hindi: "Top in Hindi",
   southIndian: "Top in South Indian",
@@ -602,7 +618,7 @@ export default function RecommendationsPage() {
       </div>
 
       {/* Custom scrollbar + line clamp styles */}
-      <style jsx global>{`
+      <style jsx>{`
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
