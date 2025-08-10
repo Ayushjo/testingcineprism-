@@ -46,6 +46,8 @@ export default function Homepage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeCard, setActiveCard] = useState(null);
   const [isHoveringCard, setIsHoveringCard] = useState(false);
+  const backgroundVideoUrl =
+    "https://res.cloudinary.com/dapu22gee/video/upload/v1754793790/bgvideo_xxx4qx.mp4";
 
   const heroPosters = [
     {
@@ -286,28 +288,19 @@ export default function Homepage() {
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
           </div>
-          {/* Parallax Background */}
-          <div
-            ref={useParallax({ speed: -20 }).ref}
-            className="absolute inset-0 z-0"
-          >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentSlide}
-                initial={{ opacity: 0, scale: 1.05 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 1.2, ease: "easeInOut" }}
-                className="absolute inset-0"
-              >
-                <img
-                  src={heroPosters[currentSlide].image || "/placeholder.svg"}
-                  alt={heroPosters[currentSlide].title}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-950/90 via-slate-950/70 to-slate-950/90" />
-              </motion.div>
-            </AnimatePresence>
+          {/* Background Video */}
+          <div className="absolute inset-0 z-0">
+            <video
+              src={backgroundVideoUrl}
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+            />
+            {/* Keep the overlay very light so the video stays visible */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-950/20 via-slate-950/15 to-slate-950/20" />
           </div>
           {/* Hero Content */}
           <div className="relative z-20 h-full flex items-center">
@@ -318,38 +311,65 @@ export default function Homepage() {
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.3 }}
-                  // --- CHANGE: The container is now centered on all screen sizes ---
-                  className="text-center space-y-8"
+                  className="text-center lg:text-left space-y-8"
                 >
-                  {/* Title */}
+                  {/* Badge --- CHANGE: Softer text, icon has the accent color --- */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                    className="hidden md:flex sm:flex-row sm:items-center sm:justify-center md:justify-start"
+                  >
+                    <span className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-xl text-slate-300 px-4 py-2 rounded-full text-sm font-medium border border-white/10">
+                      <Film className="w-4 h-4 text-emerald-400" />
+                      Cinema Reviews
+                    </span>
+                  </motion.div>
+                  {/* Title - Kept as is, it's perfect */}
                   <motion.h1
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.7 }}
-                    className="text-6xl md:text-7xl lg:text-6xl xl:text-7xl font-black leading-none tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent"
+                    className="text-5xl md:text-7xl lg:text-6xl xl:text-7xl font-black leading-none tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent"
                   >
                     The Cinéprism
                   </motion.h1>
-
-                  {/* Tagline */}
+                  {/* Tagline --- CHANGE: Unified color and wider spacing for an airy, premium feel --- */}
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.9 }}
-                    // --- CHANGE: Removed the pl-3 class ---
-                    className="text-xl md:text-2xl text-slate-400 tracking-wider"
+                    className=" text-xl md:text-2xl text-slate-400 tracking-wider"
                   >
-                    Good films make your life better.
+                    Honest reviews. Sharp takes. Cinematic insights.
                   </motion.p>
-
-                  {/* Buttons container (remains hidden as per your code) */}
+                  {/* Buttons --- CHANGE: Modern pill shape and more elegant color scheme/hovers --- */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 1.1 }}
                     className="hidden"
                   >
-                    {/* ... your buttons ... */}
+                    {/* Primary Button - Now an outline style that glows on hover */}
+                    <motion.button
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="group border-2 border-emerald-500 text-emerald-400 hover:text-white hover:bg-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 font-semibold px-8 py-4 rounded-full text-lg transition-all duration-300 flex items-center justify-center gap-2"
+                    >
+                      <Play className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                      Explore Reviews
+                    </motion.button>
+                    {/* Secondary Button - Softer border and a clean text color change on hover */}
+                    <motion.button
+                      whileHover={{
+                        scale: 1.02,
+                        y: -2,
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      className="border border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300"
+                    >
+                      Latest Posts
+                    </motion.button>
                   </motion.div>
                 </motion.div>
                 {/* Right Side - Movie Card */}
@@ -464,38 +484,6 @@ export default function Homepage() {
                   </Tilt>
                 </motion.div>
               </div>
-            </div>
-          </div>
-          {/* Refined Carousel Indicators */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30">
-            <div className="flex items-center gap-2 bg-white/5 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/10">
-              {heroPosters.map((_, index) => (
-                <motion.button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                  className={`relative overflow-hidden rounded-full transition-all duration-300 ${
-                    index === currentSlide ? "w-8 h-2" : "w-2 h-2"
-                  }`}
-                >
-                  <div
-                    className={`w-full h-full transition-all duration-300 ${
-                      index === currentSlide
-                        ? "bg-emerald-400"
-                        : "bg-white/30 hover:bg-white/50"
-                    }`}
-                  />
-                  {index === currentSlide && (
-                    <motion.div
-                      className="absolute inset-0 bg-emerald-300"
-                      initial={{ width: 0 }}
-                      animate={{ width: "100%" }}
-                      transition={{ duration: 6, ease: "linear" }}
-                    />
-                  )}
-                </motion.button>
-              ))}
             </div>
           </div>
         </section>
