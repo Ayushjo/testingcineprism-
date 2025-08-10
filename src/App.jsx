@@ -39,28 +39,30 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
           </Route>
-          {<Route element={<RedirectIfUser />}>
-            <Route
-              path="/genre/Science-Fiction"
-              element={<ScienceFictionPage />}
-            />
-            <Route path="/genre/Action" element={<ActionPage />} />
-            <Route path="/genre/Thriller" element={<ThrillerPage />} />
-            <Route path="/genre/Drama" element={<DramaPage />} />
-            <Route path="/genre/Horror" element={<HorrorPage />} />
-            <Route path="/genre/Animation" element={<AnimationPage />} />
-            <Route path="/trending" element={<TrendingPage />} />
-            <Route path="/reviews" element={<ReviewPage />} />
-            <Route
-              path="/unpopular-opinions"
-              element={<UnpopularOpinionsPage />}
-            />
-            <Route
-              path="/recommendations-page"
-              element={<RecommendationsPage />}
-            />
-          </Route> }
-          
+          {
+            <Route element={<RedirectIfUser />}>
+              <Route
+                path="/genre/Science-Fiction"
+                element={<ScienceFictionPage />}
+              />
+              <Route path="/genre/Action" element={<ActionPage />} />
+              <Route path="/genre/Thriller" element={<ThrillerPage />} />
+              <Route path="/genre/Drama" element={<DramaPage />} />
+              <Route path="/genre/Horror" element={<HorrorPage />} />
+              <Route path="/genre/Animation" element={<AnimationPage />} />
+              <Route path="/trending" element={<TrendingPage />} />
+              <Route path="/reviews" element={<ReviewPage />} />
+              <Route
+                path="/unpopular-opinions"
+                element={<UnpopularOpinionsPage />}
+              />
+            </Route>
+          }
+
+          <Route
+            path="/recommendations-page"
+            element={<RecommendationsPage />}
+          />
 
           <Route path="/merchandise" element={<Merchandise />} />
         </Routes>
