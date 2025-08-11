@@ -27,10 +27,12 @@ const genres = [
 ];
 
 // Recursive Comment Component
-const Comment = ({ comment, onReply }) => {
+const Comment = ({ comment, onReply, onLoadMoreReplies, level = 0 }) => {
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loadingReplies, setLoadingReplies] = useState(false);
+  const [showingAllReplies, setShowingAllReplies] = useState(false);
 
   const getAvatarColor = (initial) => {
     const colors = [
@@ -69,13 +71,39 @@ const Comment = ({ comment, onReply }) => {
     }
   };
 
-  return (
-    <div className="relative pl-12">
-      {/* The vertical thread line */}
-      <div className="absolute left-4 top-0 bottom-0 w-px bg-slate-700" />
+  const handleLoadMoreReplies = async () => {
+    setLoadingReplies(true);
+    try {
+      await onLoadMoreReplies(comment.id);
+      setShowingAllReplies(true);
+    } catch (error) {
+      console.error("Failed to load more replies:", error);
+      toast.error("Failed to load more replies");
+    } finally {
+      setLoadingReplies(false);
+    }
+  };
 
-      {/* The Avatar, positioned absolutely within the padded area */}
-      <div className="absolute left-0 top-0">
+  // Calculate indentation based on nesting level
+  const maxIndent = 6; // Maximum indentation levels
+  const indentLevel = Math.min(level, maxIndent);
+  const paddingLeft = `${indentLevel * 3}rem`; // 3rem per level
+
+  return (
+    <div className="relative" style={{ paddingLeft }}>
+      {/* The vertical thread line */}
+      {level > 0 && (
+        <div
+          className="absolute top-0 bottom-0 w-px bg-slate-700"
+          style={{ left: `${indentLevel * 3 - 2}rem` }}
+        />
+      )}
+
+      {/* The Avatar */}
+      <div
+        className="absolute top-0"
+        style={{ left: `${indentLevel * 3 - 2.5}rem` }}
+      >
         <div
           className={`w-8 h-8 rounded-full ${getAvatarColor(
             comment.avatarInitial
@@ -85,20 +113,25 @@ const Comment = ({ comment, onReply }) => {
         </div>
       </div>
 
-      {/* The main content of the comment */}
-      <div className="flex-1">
+      {/* Main content */}
+      <div className="ml-10">
         <span className="text-sm font-medium text-emerald-400">
           {comment.username}
         </span>
         <p className="text-slate-300 text-sm leading-relaxed mt-1 mb-2">
           {comment.commentText}
         </p>
-        <button
-          onClick={() => setShowReplyInput(!showReplyInput)}
-          className="text-xs text-slate-500 hover:text-emerald-400 font-semibold transition-colors duration-200"
-        >
-          Reply
-        </button>
+        <div className="flex items-center gap-4 mb-2">
+          <button
+            onClick={() => setShowReplyInput(!showReplyInput)}
+            className="text-xs text-slate-500 hover:text-emerald-400 font-semibold transition-colors duration-200"
+          >
+            Reply
+          </button>
+          <span className="text-xs text-slate-600">
+            {new Date(comment.createdAt).toLocaleDateString()}
+          </span>
+        </div>
 
         {/* Reply Input Box */}
         <AnimatePresence>
@@ -107,7 +140,7 @@ const Comment = ({ comment, onReply }) => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-3"
+              className="mb-4"
             >
               <div className="flex gap-3">
                 <textarea
@@ -135,16 +168,51 @@ const Comment = ({ comment, onReply }) => {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
 
-      {/* Nested Replies Container */}
-      {comment.replies && comment.replies.length > 0 && (
-        <div className="mt-4 space-y-4">
-          {comment.replies.map((reply) => (
-            <Comment key={reply.id} comment={reply} onReply={onReply} />
-          ))}
-        </div>
-      )}
+        {/* Nested Replies */}
+        {comment.replies && comment.replies.length > 0 && (
+          <div className="space-y-4">
+            {comment.replies.map((reply) => (
+              <Comment
+                key={reply.id}
+                comment={reply}
+                onReply={onReply}
+                onLoadMoreReplies={onLoadMoreReplies}
+                level={level + 1}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Load More Replies Button */}
+        {comment.hasMoreReplies && !showingAllReplies && (
+          <div className="mt-3">
+            <motion.button
+              onClick={handleLoadMoreReplies}
+              disabled={loadingReplies}
+              whileHover={{ scale: loadingReplies ? 1 : 1.02 }}
+              whileTap={{ scale: loadingReplies ? 1 : 0.98 }}
+              className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors duration-200 flex items-center gap-2"
+            >
+              {loadingReplies ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
+                  Loading replies...
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="w-4 h-4" />
+                  Load{" "}
+                  {comment.totalReplies > comment.replies.length
+                    ? `${comment.totalReplies - comment.replies.length} more`
+                    : "more"}{" "}
+                  replies
+                </>
+              )}
+            </motion.button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
@@ -171,7 +239,7 @@ export default function UnpopularOpinionsPage() {
     try {
       const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/user/fetch-comments",
-        { opinionId },
+        { opinionId, loadReplies: false },
         { withCredentials: true }
       );
       return response.data.comments || [];
@@ -180,6 +248,59 @@ export default function UnpopularOpinionsPage() {
       toast.error("Failed to load comments");
       return [];
     }
+  };
+
+  const loadMoreRepliesForComment = async (commentId) => {
+    try {
+      const response = await axios.post(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/load-more-replies",
+        { parentCommentId: commentId, page: 1, limit: 20 },
+        { withCredentials: true }
+      );
+
+      const newReplies = response.data.replies || [];
+
+      // Update the comment tree with new replies
+      setUnpopularOpinionsData((prevData) =>
+        prevData.map((opinion) => ({
+          ...opinion,
+          comments: updateCommentReplies(
+            opinion.comments,
+            commentId,
+            newReplies
+          ),
+        }))
+      );
+
+      return newReplies;
+    } catch (error) {
+      console.error("Failed to load more replies:", error);
+      toast.error("Failed to load more replies");
+      throw error;
+    }
+  };
+
+  const updateCommentReplies = (comments, targetCommentId, newReplies) => {
+    return comments.map((comment) => {
+      if (comment.id === targetCommentId) {
+        return {
+          ...comment,
+          replies: [...(comment.replies || []), ...newReplies],
+          hasMoreReplies: false, // Assume no more for now (could be improved)
+        };
+      }
+      if (comment.replies && comment.replies.length > 0) {
+        return {
+          ...comment,
+          replies: updateCommentReplies(
+            comment.replies,
+            targetCommentId,
+            newReplies
+          ),
+        };
+      }
+      return comment;
+    });
   };
 
   useEffect(() => {
@@ -323,7 +444,7 @@ export default function UnpopularOpinionsPage() {
     }
 
     try {
-      await axios.post(
+      const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/user/opinion-comment",
         {
           content: replyText,
@@ -335,21 +456,50 @@ export default function UnpopularOpinionsPage() {
 
       toast.success("Reply posted successfully!");
 
-      // Fetch updated comments for this specific opinion
-      const updatedComments = await fetchCommentsForOpinion(opinion.id);
-
-      // Update only this opinion's comments in the state
-      setUnpopularOpinionsData((prev) =>
-        prev.map((op) =>
-          op.id === opinion.id ? { ...op, comments: updatedComments } : op
-        )
+      // Add the new reply to the specific comment in the tree
+      const newReply = response.data.formattedComment;
+      setUnpopularOpinionsData((prevData) =>
+        prevData.map((op) => {
+          if (op.id === opinion.id) {
+            return {
+              ...op,
+              comments: addReplyToComment(
+                op.comments,
+                parentCommentId,
+                newReply
+              ),
+            };
+          }
+          return op;
+        })
       );
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Failed to post reply.";
       toast.error(errorMessage);
-      throw error; // Re-throw to handle in Comment component
+      throw error;
     }
+  };
+  const addReplyToComment = (comments, parentCommentId, newReply) => {
+    return comments.map((comment) => {
+      if (comment.id === parentCommentId) {
+        return {
+          ...comment,
+          replies: [...(comment.replies || []), newReply],
+        };
+      }
+      if (comment.replies && comment.replies.length > 0) {
+        return {
+          ...comment,
+          replies: addReplyToComment(
+            comment.replies,
+            parentCommentId,
+            newReply
+          ),
+        };
+      }
+      return comment;
+    });
   };
 
   // Helper function to find a comment in the tree
@@ -836,7 +986,13 @@ export default function UnpopularOpinionsPage() {
                       </div>
                       <div className="space-y-4">
                         {opinion.comments.map((comment) => (
-                          <Comment key={comment.id} comment={comment} />
+                          <Comment
+                            key={comment.id}
+                            comment={comment}
+                            onReply={handleReply}
+                            onLoadMoreReplies={loadMoreRepliesForComment}
+                            level={0}
+                          />
                         ))}
                       </div>
                     </motion.div>
