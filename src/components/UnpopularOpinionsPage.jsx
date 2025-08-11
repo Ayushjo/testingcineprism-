@@ -939,7 +939,7 @@ export default function UnpopularOpinionsPage() {
                     >
                       <MessageCircle className="w-5 h-5" />
                       <span className="text-sm font-medium">
-                        {getTotalComments(opinion.comments)}
+                        {getTotalComments(opinion.commentCount)}
                       </span>
                     </motion.button>
                   </div>
