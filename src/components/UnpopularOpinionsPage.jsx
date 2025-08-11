@@ -319,7 +319,7 @@ export default function UnpopularOpinionsPage() {
           opinionText: opinion.content,
           genres: opinion.genres,
           likeCount: opinion.likes.length,
-          comments: opinion.comments.length > 0 ? opinion.comments : [], // Start with empty comments - we'll load them when needed
+          comments: opinion.comments.length || [], // Start with empty comments - we'll load them when needed
           // Keep the raw likes array for initialization
           likes: opinion.likes,
         }));
@@ -359,7 +359,7 @@ export default function UnpopularOpinionsPage() {
         opinionText: opinion.content,
         genres: opinion.genres,
         likeCount: opinion.likes.length,
-        comments: [], // Start with empty comments
+        comments:opinion.comments.length || [], // Start with empty comments
         likes: opinion.likes,
       }));
 
