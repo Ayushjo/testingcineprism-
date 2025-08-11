@@ -319,8 +319,8 @@ export default function UnpopularOpinionsPage() {
           opinionText: opinion.content,
           genres: opinion.genres,
           likeCount: opinion.likes.length,
-          comments: opinion.comments.length || [], // Start with empty comments - we'll load them when needed
-          // Keep the raw likes array for initialization
+          comments: [], // Always start with empty array for lazy loading
+          commentCount: opinion.comments?.length || 0, // Store count separately if needed
           likes: opinion.likes,
         }));
 
@@ -359,7 +359,8 @@ export default function UnpopularOpinionsPage() {
         opinionText: opinion.content,
         genres: opinion.genres,
         likeCount: opinion.likes.length,
-        comments:opinion.comments.length || [], // Start with empty comments
+        comments: [], // Always start with empty array for lazy loading
+        commentCount: opinion.comments?.length || 0, // Store count separately if needed
         likes: opinion.likes,
       }));
 
@@ -582,6 +583,11 @@ export default function UnpopularOpinionsPage() {
   };
 
   const getTotalComments = (comments) => {
+    // If comments is empty array (lazy loading), return 0
+    if (!comments || !Array.isArray(comments)) {
+      return 0;
+    }
+
     return comments.reduce((total, comment) => {
       return total + 1 + getTotalComments(comment.replies || []);
     }, 0);
