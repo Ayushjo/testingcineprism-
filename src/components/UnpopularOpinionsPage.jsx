@@ -311,7 +311,14 @@ export default function UnpopularOpinionsPage() {
         );
         const opinionsFromApi = response.data.opinions;
 
-        // Map API response to your frontend state structure
+        // Helper function to count all nested comments
+        const countAllComments = (comments) => {
+          if (!comments || !Array.isArray(comments)) return 0;
+          return comments.reduce((total, comment) => {
+            return total + 1 + countAllComments(comment.replies || []);
+          }, 0);
+        };
+
         const formattedOpinions = opinionsFromApi.map((opinion) => ({
           id: opinion.id,
           username: opinion.user.username,
@@ -319,14 +326,13 @@ export default function UnpopularOpinionsPage() {
           opinionText: opinion.content,
           genres: opinion.genres,
           likeCount: opinion.likes.length,
-          comments: [], // Always start with empty array for lazy loading
-          commentCount: opinion.comments?.length || 0, // Store count separately if needed
+          comments: [], // Empty for lazy loading
+          commentCount: countAllComments(opinion.comments || []), // Calculate total count correctly
           likes: opinion.likes,
         }));
 
         setUnpopularOpinionsData(formattedOpinions);
 
-        // Initialize the set of opinions liked by the current user
         if (user) {
           const initialLiked = new Set();
           formattedOpinions.forEach((opinion) => {
@@ -344,6 +350,19 @@ export default function UnpopularOpinionsPage() {
 
     fetchOpinions();
   }, [user]);
+
+  const getCurrentCommentCount = (opinion) => {
+    // If comments are loaded (array has items), count them
+    if (
+      opinion.comments &&
+      Array.isArray(opinion.comments) &&
+      opinion.comments.length > 0
+    ) {
+      return getTotalComments(opinion.comments);
+    }
+    // Otherwise, show the stored count from initial load
+    return opinion.commentCount || 0;
+  };
 
   const fetchOpinions = async () => {
     try {
@@ -408,11 +427,15 @@ export default function UnpopularOpinionsPage() {
       // Fetch updated comments for this specific opinion
       const updatedComments = await fetchCommentsForOpinion(opinionId);
 
-      // Update only this opinion's comments in the state
+      // Update the opinion with new comments and updated count
       setUnpopularOpinionsData((prev) =>
         prev.map((opinion) =>
           opinion.id === opinionId
-            ? { ...opinion, comments: updatedComments }
+            ? {
+                ...opinion,
+                comments: updatedComments,
+                commentCount: getTotalComments(updatedComments), // Update the count
+              }
             : opinion
         )
       );
@@ -434,7 +457,6 @@ export default function UnpopularOpinionsPage() {
       return;
     }
 
-    // Find which opinion this comment belongs to
     const opinion = unpopularOpinionsData.find((op) =>
       findCommentInTree(op.comments, parentCommentId)
     );
@@ -457,18 +479,19 @@ export default function UnpopularOpinionsPage() {
 
       toast.success("Reply posted successfully!");
 
-      // Add the new reply to the specific comment in the tree
       const newReply = response.data.formattedComment;
       setUnpopularOpinionsData((prevData) =>
         prevData.map((op) => {
           if (op.id === opinion.id) {
+            const updatedComments = addReplyToComment(
+              op.comments,
+              parentCommentId,
+              newReply
+            );
             return {
               ...op,
-              comments: addReplyToComment(
-                op.comments,
-                parentCommentId,
-                newReply
-              ),
+              comments: updatedComments,
+              commentCount: getTotalComments(updatedComments), // Update count after reply
             };
           }
           return op;
