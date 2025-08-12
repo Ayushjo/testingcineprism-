@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -26,7 +25,6 @@ const genres = [
   "Superhero",
 ];
 
-// Recursive Comment Component
 const Comment = ({ comment, onReply, onLoadMoreReplies, level = 0 }) => {
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyText, setReplyText] = useState("");
@@ -58,7 +56,6 @@ const Comment = ({ comment, onReply, onLoadMoreReplies, level = 0 }) => {
       toast.error("Please write a reply before posting.");
       return;
     }
-
     setIsSubmitting(true);
     try {
       await onReply(comment.id, replyText);
@@ -84,94 +81,138 @@ const Comment = ({ comment, onReply, onLoadMoreReplies, level = 0 }) => {
     }
   };
 
-  // Calculate indentation based on nesting level
-  const maxIndent = 6; // Maximum indentation levels
+  const maxIndent = 4; // Reduced from 6 for mobile
   const indentLevel = Math.min(level, maxIndent);
-  const paddingLeft = `${indentLevel * 3}rem`; // 3rem per level
+  const mobileIndent = `${indentLevel * 1.5}rem`; // Reduced from 3rem to 1.5rem
+  const desktopIndent = `${indentLevel * 2.5}rem`; // 2.5rem for desktop
 
   return (
-    <div className="relative" style={{ paddingLeft }}>
-      {/* The vertical thread line */}
-      {level > 0 && (
-        <div
-          className="absolute top-0 bottom-0 w-px bg-slate-700"
-          style={{ left: `${indentLevel * 3 - 2}rem` }}
-        />
-      )}
-
-      {/* The Avatar */}
+    <div className="relative">
       <div
-        className="absolute top-0"
-        style={{ left: `${indentLevel * 3 - 2.5}rem` }}
+        className="pl-4 sm:pl-6 md:pl-8"
+        style={{
+          paddingLeft: level > 0 ? mobileIndent : "0",
+          "@media (min-width: 768px)": {
+            paddingLeft: level > 0 ? desktopIndent : "0",
+          },
+        }}
       >
-        <div
-          className={`w-8 h-8 rounded-full ${getAvatarColor(
-            comment.avatarInitial
-          )} flex items-center justify-center text-white text-sm font-semibold flex-shrink-0`}
-        >
-          {comment.avatarInitial}
-        </div>
-      </div>
+        {level > 0 && (
+          <div
+            className="absolute top-0 bottom-0 w-0.5 bg-slate-700/50 hidden sm:block"
+            style={{ left: level > 0 ? `calc(${mobileIndent} - 1rem)` : "0" }}
+          />
+        )}
 
-      {/* Main content */}
-      <div className="ml-10">
-        <span className="text-sm font-medium text-emerald-400">
-          {comment.username}
-        </span>
-        <p className="text-slate-300 text-sm leading-relaxed mt-1 mb-2">
-          {comment.commentText}
-        </p>
-        <div className="flex items-center gap-4 mb-2">
-          <button
-            onClick={() => setShowReplyInput(!showReplyInput)}
-            className="text-xs text-slate-500 hover:text-emerald-400 font-semibold transition-colors duration-200"
-          >
-            Reply
-          </button>
-          <span className="text-xs text-slate-600">
-            {new Date(comment.createdAt).toLocaleDateString()}
-          </span>
-        </div>
-
-        {/* Reply Input Box */}
-        <AnimatePresence>
-          {showReplyInput && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mb-4"
+        <div className="bg-slate-800/20 rounded-xl p-3 sm:p-4 mb-3 border border-slate-700/30">
+          {/* Comment header with avatar and username */}
+          <div className="flex items-start gap-3 mb-3">
+            <div
+              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full ${getAvatarColor(
+                comment.avatarInitial
+              )} flex items-center justify-center text-white text-sm font-semibold flex-shrink-0`}
             >
-              <div className="flex gap-3">
-                <textarea
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  onInput={handleTextareaInput}
-                  rows="1"
-                  placeholder="Write your reply..."
-                  className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
-                />
-                <motion.button
-                  onClick={handleReply}
-                  disabled={isSubmitting}
-                  whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
-                  whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
-                  className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300 text-sm self-start disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    <div className="w-4 h-4 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
-                  ) : (
-                    "Reply"
-                  )}
-                </motion.button>
+              {comment.avatarInitial}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-sm sm:text-base font-medium text-emerald-400 truncate">
+                  {comment.username}
+                </span>
+                <span className="text-xs text-slate-500 flex-shrink-0">
+                  {new Date(comment.createdAt).toLocaleDateString()}
+                </span>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+                {comment.commentText}
+              </p>
+            </div>
+          </div>
 
-        {/* Nested Replies */}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => setShowReplyInput(!showReplyInput)}
+              className="text-xs sm:text-sm text-slate-500 hover:text-emerald-400 font-medium transition-colors duration-200 px-2 py-1 rounded-md hover:bg-slate-700/30"
+            >
+              Reply
+            </button>
+
+            {/* Load more replies button */}
+            {comment.hasMoreReplies && !showingAllReplies && (
+              <motion.button
+                onClick={handleLoadMoreReplies}
+                disabled={loadingReplies}
+                whileHover={{ scale: loadingReplies ? 1 : 1.02 }}
+                whileTap={{ scale: loadingReplies ? 1 : 0.98 }}
+                className="text-xs sm:text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors duration-200 flex items-center gap-1 px-2 py-1 rounded-md hover:bg-emerald-500/10"
+              >
+                {loadingReplies ? (
+                  <>
+                    <div className="w-3 h-3 border border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
+                    <span className="hidden sm:inline">Loading...</span>
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="w-3 h-3" />
+                    <span>
+                      {comment.totalReplies > comment.replies.length
+                        ? `${
+                            comment.totalReplies - comment.replies.length
+                          } more`
+                        : "more"}
+                    </span>
+                  </>
+                )}
+              </motion.button>
+            )}
+          </div>
+
+          <AnimatePresence>
+            {showReplyInput && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-3 pt-3 border-t border-slate-700/50"
+              >
+                <div className="space-y-3">
+                  <textarea
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    onInput={handleTextareaInput}
+                    rows="2"
+                    placeholder="Write your reply..."
+                    className="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
+                  />
+                  <div className="flex gap-2 justify-end">
+                    <button
+                      onClick={() => setShowReplyInput(false)}
+                      className="px-3 py-1.5 text-xs sm:text-sm text-slate-400 hover:text-slate-300 transition-colors duration-200"
+                    >
+                      Cancel
+                    </button>
+                    <motion.button
+                      onClick={handleReply}
+                      disabled={isSubmitting}
+                      whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                      whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                      className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-lg border border-emerald-500/30 transition-all duration-300 text-xs sm:text-sm disabled:opacity-50 min-w-[60px] flex items-center justify-center"
+                    >
+                      {isSubmitting ? (
+                        <div className="w-3 h-3 border border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
+                      ) : (
+                        "Reply"
+                      )}
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
         {comment.replies && comment.replies.length > 0 && (
-          <div className="space-y-4">
+          <div className="space-y-2 sm:space-y-3">
             {comment.replies.map((reply) => (
               <Comment
                 key={reply.id}
@@ -181,35 +222,6 @@ const Comment = ({ comment, onReply, onLoadMoreReplies, level = 0 }) => {
                 level={level + 1}
               />
             ))}
-          </div>
-        )}
-
-        {/* Load More Replies Button */}
-        {comment.hasMoreReplies && !showingAllReplies && (
-          <div className="mt-3">
-            <motion.button
-              onClick={handleLoadMoreReplies}
-              disabled={loadingReplies}
-              whileHover={{ scale: loadingReplies ? 1 : 1.02 }}
-              whileTap={{ scale: loadingReplies ? 1 : 0.98 }}
-              className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors duration-200 flex items-center gap-2"
-            >
-              {loadingReplies ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
-                  Loading replies...
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="w-4 h-4" />
-                  Load{" "}
-                  {comment.totalReplies > comment.replies.length
-                    ? `${comment.totalReplies - comment.replies.length} more`
-                    : "more"}{" "}
-                  replies
-                </>
-              )}
-            </motion.button>
           </div>
         )}
       </div>
@@ -257,9 +269,7 @@ export default function UnpopularOpinionsPage() {
         { parentCommentId: commentId, page: 1, limit: 20 },
         { withCredentials: true }
       );
-
       const newReplies = response.data.replies || [];
-
       // Update the comment tree with new replies
       setUnpopularOpinionsData((prevData) =>
         prevData.map((opinion) => ({
@@ -271,7 +281,6 @@ export default function UnpopularOpinionsPage() {
           ),
         }))
       );
-
       return newReplies;
     } catch (error) {
       console.error("Failed to load more replies:", error);
@@ -310,7 +319,6 @@ export default function UnpopularOpinionsPage() {
           "https://testingcineprismbackend-production.up.railway.app/api/v1/user/fetch-opinions"
         );
         const opinionsFromApi = response.data.opinions;
-
         // Helper function to count all nested comments
         const countAllComments = (comments) => {
           if (!comments || !Array.isArray(comments)) return 0;
@@ -332,7 +340,6 @@ export default function UnpopularOpinionsPage() {
         }));
 
         setUnpopularOpinionsData(formattedOpinions);
-
         if (user) {
           const initialLiked = new Set();
           formattedOpinions.forEach((opinion) => {
@@ -370,7 +377,6 @@ export default function UnpopularOpinionsPage() {
         "https://testingcineprismbackend-production.up.railway.app/api/v1/user/fetch-opinions"
       );
       const opinionsFromApi = response.data.opinions;
-
       const formattedOpinions = opinionsFromApi.map((opinion) => ({
         id: opinion.id,
         username: opinion.user.username,
@@ -384,7 +390,6 @@ export default function UnpopularOpinionsPage() {
       }));
 
       setUnpopularOpinionsData(formattedOpinions);
-
       if (user) {
         const initialLiked = new Set();
         formattedOpinions.forEach((opinion) => {
@@ -420,13 +425,10 @@ export default function UnpopularOpinionsPage() {
         },
         { withCredentials: true }
       );
-
       toast.success("Comment posted successfully!");
       setNewComment("");
-
       // Fetch updated comments for this specific opinion
       const updatedComments = await fetchCommentsForOpinion(opinionId);
-
       // Update the opinion with new comments and updated count
       setUnpopularOpinionsData((prev) =>
         prev.map((opinion) =>
@@ -439,7 +441,6 @@ export default function UnpopularOpinionsPage() {
             : opinion
         )
       );
-
       // Keep comments section expanded
       setExpandedComments((prev) => new Set(prev).add(opinionId));
     } catch (error) {
@@ -460,7 +461,6 @@ export default function UnpopularOpinionsPage() {
     const opinion = unpopularOpinionsData.find((op) =>
       findCommentInTree(op.comments, parentCommentId)
     );
-
     if (!opinion) {
       toast.error("Could not find the comment to reply to.");
       return;
@@ -476,10 +476,9 @@ export default function UnpopularOpinionsPage() {
         },
         { withCredentials: true }
       );
-
       toast.success("Reply posted successfully!");
-
       const newReply = response.data.formattedComment;
+
       setUnpopularOpinionsData((prevData) =>
         prevData.map((op) => {
           if (op.id === opinion.id) {
@@ -504,6 +503,7 @@ export default function UnpopularOpinionsPage() {
       throw error;
     }
   };
+
   const addReplyToComment = (comments, parentCommentId, newReply) => {
     return comments.map((comment) => {
       if (comment.id === parentCommentId) {
@@ -567,7 +567,6 @@ export default function UnpopularOpinionsPage() {
         },
         { withCredentials: true }
       );
-
       toast.custom((t) => (
         <div
           className={`${
@@ -580,10 +579,8 @@ export default function UnpopularOpinionsPage() {
           </span>
         </div>
       ));
-
       setNewOpinion("");
       setSelectedGenres([]);
-
       // Refresh opinions to show the new one
       await fetchOpinions();
     } catch (error) {
@@ -610,7 +607,6 @@ export default function UnpopularOpinionsPage() {
     if (!comments || !Array.isArray(comments)) {
       return 0;
     }
-
     return comments.reduce((total, comment) => {
       return total + 1 + getTotalComments(comment.replies || []);
     }, 0);
@@ -630,16 +626,16 @@ export default function UnpopularOpinionsPage() {
 
     const originalOpinions = [...unpopularOpinionsData];
     const originalLikedSet = new Set(likedOpinions);
-
     const newLikedSet = new Set(likedOpinions);
     const isCurrentlyLiked = newLikedSet.has(opinionId);
+
     if (isCurrentlyLiked) {
       newLikedSet.delete(opinionId);
     } else {
       newLikedSet.add(opinionId);
     }
-    setLikedOpinions(newLikedSet);
 
+    setLikedOpinions(newLikedSet);
     setUnpopularOpinionsData((currentOpinions) =>
       currentOpinions.map((opinion) => {
         if (opinion.id === opinionId) {
@@ -671,7 +667,6 @@ export default function UnpopularOpinionsPage() {
   // **FIXED: Improved toggleComments with better error handling**
   const toggleComments = async (opinionId) => {
     const newExpanded = new Set(expandedComments);
-
     if (newExpanded.has(opinionId)) {
       // Collapse comments
       newExpanded.delete(opinionId);
@@ -778,14 +773,12 @@ export default function UnpopularOpinionsPage() {
             <h2 className="text-2xl font-bold text-white mb-6">
               Share Your Take
             </h2>
-
             <textarea
               value={newOpinion}
               onChange={(e) => setNewOpinion(e.target.value)}
               placeholder="What's your unpopular opinion about movies? Be specific and explain your reasoning..."
               className="w-full h-32 bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-slate-800/70 transition-all duration-300 resize-none mb-6"
             />
-
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-white mb-3">
                 Select Genres
@@ -808,7 +801,6 @@ export default function UnpopularOpinionsPage() {
                 ))}
               </div>
             </div>
-
             <div className="flex justify-end">
               <motion.button
                 onClick={handlePost}
@@ -870,7 +862,6 @@ export default function UnpopularOpinionsPage() {
                 </motion.button>
               ))}
             </div>
-
             <div className="md:hidden relative">
               <select
                 value={activeFilter}
@@ -953,7 +944,6 @@ export default function UnpopularOpinionsPage() {
                         {opinion.likeCount}
                       </span>
                     </motion.button>
-
                     <motion.button
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
@@ -966,7 +956,6 @@ export default function UnpopularOpinionsPage() {
                       </span>
                     </motion.button>
                   </div>
-
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
@@ -981,7 +970,6 @@ export default function UnpopularOpinionsPage() {
                   </motion.button>
                 </div>
 
-                {/* Section 4: Inline Nested Comments */}
                 <AnimatePresence>
                   {expandedComments.has(opinion.id) && (
                     <motion.div
@@ -994,26 +982,32 @@ export default function UnpopularOpinionsPage() {
                       exit={{ opacity: 0, height: 0, marginTop: 0 }}
                       className="pt-6 border-t border-slate-700"
                     >
-                      {/* --- CHANGE 3: The main comment input is now a growing textarea --- */}
-                      <div className="flex gap-3 mb-6">
-                        <textarea
-                          value={newComment}
-                          onChange={(e) => setNewComment(e.target.value)}
-                          onInput={handleTextareaInput}
-                          rows="1"
-                          placeholder="Add a comment..."
-                          className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
-                        />
-                        <motion.button
-                          onClick={() => handleComment(opinion.id)}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-4 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300 self-start"
-                        >
-                          Comment
-                        </motion.button>
+                      {/* Mobile-friendly comment input */}
+                      <div className="mb-6">
+                        <div className="space-y-3">
+                          <textarea
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            onInput={handleTextareaInput}
+                            rows="2"
+                            placeholder="Add a comment..."
+                            className="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
+                          />
+                          <div className="flex justify-end">
+                            <motion.button
+                              onClick={() => handleComment(opinion.id)}
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-4 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300"
+                            >
+                              Comment
+                            </motion.button>
+                          </div>
+                        </div>
                       </div>
-                      <div className="space-y-4">
+
+                      {/* Comments list */}
+                      <div className="space-y-3">
                         {opinion.comments.map((comment) => (
                           <Comment
                             key={comment.id}
