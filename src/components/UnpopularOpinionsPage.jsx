@@ -35,16 +35,7 @@ const Comment = ({ comment, onReply, onLoadMoreReplies, level = 0 }) => {
   const [showingAllReplies, setShowingAllReplies] = useState(false);
 
   const getAvatarColor = (initial) => {
-    const colors = [
-      "bg-emerald-500",
-      "bg-purple-500",
-      "bg-blue-500",
-      "bg-pink-500",
-      "bg-orange-500",
-      "bg-teal-500",
-      "bg-indigo-500",
-      "bg-rose-500",
-    ];
+    const colors = ["bg-emerald-500", "bg-purple-500", "bg-blue-500", "bg-pink-500", "bg-orange-500", "bg-teal-500", "bg-indigo-500", "bg-rose-500"];
     return colors[initial.charCodeAt(0) % colors.length];
   };
 
@@ -58,7 +49,6 @@ const Comment = ({ comment, onReply, onLoadMoreReplies, level = 0 }) => {
       toast.error("Please write a reply before posting.");
       return;
     }
-
     setIsSubmitting(true);
     try {
       await onReply(comment.id, replyText);
@@ -84,26 +74,13 @@ const Comment = ({ comment, onReply, onLoadMoreReplies, level = 0 }) => {
     }
   };
 
-  // Calculate indentation based on nesting level
-  const maxIndent = 6; // Maximum indentation levels
-  const indentLevel = Math.min(level, maxIndent);
-  const paddingLeft = `${indentLevel * 3}rem`; // 3rem per level
-
   return (
-    <div className="relative" style={{ paddingLeft }}>
-      {/* The vertical thread line */}
-      {level > 0 && (
-        <div
-          className="absolute top-0 bottom-0 w-px bg-slate-700"
-          style={{ left: `${indentLevel * 3 - 2}rem` }}
-        />
-      )}
+    <div className="relative pl-12">
+      {/* The vertical thread line connecting comments */}
+      <div className="absolute left-5 top-0 bottom-0 w-px bg-slate-700/50" />
 
-      {/* The Avatar */}
-      <div
-        className="absolute top-0"
-        style={{ left: `${indentLevel * 3 - 2.5}rem` }}
-      >
+      {/* The Avatar, positioned absolutely within the padded area */}
+      <div className="absolute left-0 top-1">
         <div
           className={`w-8 h-8 rounded-full ${getAvatarColor(
             comment.avatarInitial
@@ -113,8 +90,8 @@ const Comment = ({ comment, onReply, onLoadMoreReplies, level = 0 }) => {
         </div>
       </div>
 
-      {/* Main content */}
-      <div className="ml-10">
+      {/* The main content of the comment, which no longer indents */}
+      <div className="flex-1">
         <span className="text-sm font-medium text-emerald-400">
           {comment.username}
         </span>
@@ -171,7 +148,7 @@ const Comment = ({ comment, onReply, onLoadMoreReplies, level = 0 }) => {
 
         {/* Nested Replies */}
         {comment.replies && comment.replies.length > 0 && (
-          <div className="space-y-4">
+          <div className="space-y-4 mt-4">
             {comment.replies.map((reply) => (
               <Comment
                 key={reply.id}
@@ -202,11 +179,7 @@ const Comment = ({ comment, onReply, onLoadMoreReplies, level = 0 }) => {
               ) : (
                 <>
                   <ChevronDown className="w-4 h-4" />
-                  Load{" "}
-                  {comment.totalReplies > comment.replies.length
-                    ? `${comment.totalReplies - comment.replies.length} more`
-                    : "more"}{" "}
-                  replies
+                  Load {comment.totalReplies > comment.replies.length ? `${comment.totalReplies - comment.replies.length} more` : "more"} replies
                 </>
               )}
             </motion.button>
@@ -216,6 +189,7 @@ const Comment = ({ comment, onReply, onLoadMoreReplies, level = 0 }) => {
     </div>
   );
 };
+// ---
 
 export default function UnpopularOpinionsPage() {
   const [unpopularOpinionsData, setUnpopularOpinionsData] = useState([]);
