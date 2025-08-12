@@ -1,6 +1,10 @@
-import React,{useState} from "react";
-import { motion,AnimatePresence } from "framer-motion";
-import { Star } from "lucide-react";
+"use client";
+
+import React from "react";
+import RatingMeter from "./RatingMeter";
+import { motion } from "framer-motion";
+
+// Local asset imports
 import SpiderManImage from "../assets/spiderman.jpg";
 import DangalImage from "../assets/dangal.jpg";
 import IdiotsImage from "../assets/3idiots.jpg";
@@ -37,301 +41,44 @@ import JJKImage from "../assets/jjk.webp";
 import GhostInTheShellImage from "../assets/ghostintheshell.webp";
 import FleabagImage from "../assets/fleebag.png";
 import ChernobylMovie from "../assets/chernobyl.webp";
-function getScoreColorClasses(score) {
-  if (score >= 90) {
-    return {
-      bg: "bg-emerald-500/20",
-      border: "border-emerald-400",
-      text: "text-emerald-400",
-      shadow: "shadow-emerald-500/20",
-    };
-  } else if (score >= 75) {
-    return {
-      bg: "bg-amber-500/20",
-      border: "border-amber-400",
-      text: "text-amber-400",
-      shadow: "shadow-amber-500/20",
-    };
-  } else if (score >= 60) {
-    return {
-      bg: "bg-orange-500/20",
-      border: "border-orange-400",
-      text: "text-orange-400",
-      shadow: "shadow-orange-500/20",
-    };
-  } else {
-    return {
-      bg: "bg-red-500/20",
-      border: "border-red-400",
-      text: "text-red-400",
-      shadow: "shadow-red-500/20",
-    };
-  }
-}
 
-// Score Circle Component
-function ScoreCircle({ total, hovered }) {
-  const colorClasses = getScoreColorClasses(total);
-
-  return (
-    <motion.div
-      initial={{ opacity: 1, scale: 1 }}
-      animate={{
-        opacity: hovered ? 0 : 1,
-        scale: hovered ? 0.85 : 1,
-        rotateY: hovered ? 180 : 0,
-      }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-      className={`
-        h-16 w-16 rounded-full border-2 backdrop-blur-sm 
-        flex items-center justify-center relative
-        ${colorClasses.border} ${colorClasses.bg} ${colorClasses.shadow}
-      `}
-    >
-      {/* Inner glow ring */}
-      <div
-        className={`absolute inset-1 rounded-full border ${colorClasses.border} opacity-50`}
-      />
-
-      <span
-        className={`text-xl font-black tracking-tight ${colorClasses.text}`}
-      >
-        {total}
-      </span>
-
-      {/* Subtle pulse animation for high scores */}
-      {total >= 85 && (
-        <motion.div
-          className={`absolute inset-0 rounded-full border-2 ${colorClasses.border}`}
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.5, 0, 0.5],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-          }}
-        />
-      )}
-    </motion.div>
-  );
-}
-
-function ScoreBreakdown({ breakdown, hovered, totalScore }) {
-  const entries = Object.entries(breakdown).slice(0, 3);
-
-  return (
-    <AnimatePresence mode="wait">
-      {hovered && (
-        <motion.div
-          key="breakdown"
-          initial={{ opacity: 0, x: -10, scale: 0.95 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          exit={{ opacity: 0, x: -10, scale: 0.95 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          className="w-full px-1 sm:px-0"
-        >
-          <div className="space-y-1.5 sm:space-y-2">
-            {entries.map(([category, score], index) => {
-              const itemColorClasses = getScoreColorClasses(score);
-              return (
-                <motion.div
-                  key={category}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{
-                    duration: 0.3,
-                    delay: index * 0.1,
-                    ease: "easeOut",
-                  }}
-                  className="flex items-center justify-between rounded-lg px-2.5 py-1.5 sm:px-3 sm:py-2 bg-slate-800/60 border border-slate-700/50 backdrop-blur-sm hover:bg-slate-800/80 transition-colors duration-200 min-h-[32px] sm:min-h-[36px]"
-                >
-                  <span className="text-slate-300 text-xs sm:text-sm font-medium capitalize truncate pr-2">
-                    {category}
-                  </span>
-                  <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-                    <span
-                      className={`font-bold text-xs sm:text-sm ${itemColorClasses.text}`}
-                    >
-                      {score}
-                    </span>
-                    <div
-                      className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${itemColorClasses.bg} ${itemColorClasses.border}`}
-                    />
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
-
-// Enhanced Recommendation Card
-function RecommendationCard({ movie }) {
-  const [hovered, setHovered] = useState(false);
-  const [showBreakdown, setShowBreakdown] = useState(false);
-  const colorClasses = getScoreColorClasses(movie.score.total);
-
-  const handleToggleBreakdown = () => {
-    setShowBreakdown(!showBreakdown);
-  };
-
-  return (
-    <motion.div
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      whileHover={{ y: -8, scale: 1.02 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="flex-shrink-0 w-44 sm:w-52 cursor-pointer group"
-    >
-      {/* Poster Container */}
-      <div
-        className="aspect-[2/3] mb-4 relative rounded-2xl overflow-hidden"
-        onClick={handleToggleBreakdown}
-      >
-        <img
-          src={
-            movie.poster ||
-            "https://via.placeholder.com/300x450/1e293b/64748b?text=No+Image"
-          }
-          alt={movie.title}
-          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-          onError={(e) => {
-            e.target.src =
-              "https://via.placeholder.com/300x450/1e293b/64748b?text=No+Image";
-          }}
-        />
-
-        {/* Enhanced overlay effects */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-
-        {/* Hover border glow */}
-        <motion.div
-          className="absolute inset-0 rounded-2xl border-2"
-          animate={{
-            borderColor: hovered
-              ? colorClasses.border.includes("emerald")
-                ? "rgba(16,185,129,0.4)"
-                : colorClasses.border.includes("amber")
-                ? "rgba(245,158,11,0.4)"
-                : colorClasses.border.includes("red")
-                ? "rgba(239,68,68,0.4)"
-                : "rgba(156,163,175,0.4)"
-              : "transparent",
-          }}
-          transition={{ duration: 0.3 }}
-        />
-
-        {/* Score badge in top right */}
-        <div className="absolute top-3 right-3" onClick={handleToggleBreakdown}>
-          <div
-            className={`
-            px-2 py-1 rounded-lg backdrop-blur-md border
-            ${colorClasses.bg} ${colorClasses.border} ${colorClasses.shadow}
-          `}
-          >
-            <span className={`text-xs font-bold ${colorClasses.text}`}>
-              {movie.score.total}
-            </span>
-          </div>
-        </div>
-
-        {/* Mobile tap indicator */}
-        {!hovered && (
-          <div className="sm:hidden absolute bottom-3 left-3">
-            <div className="bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1 border border-white/10">
-              <span className="text-white/80 text-xs">
-                Tap score for details
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Content Section */}
-      <div className="space-y-3">
-        {/* Title */}
-        <div className="min-h-[3.5rem] flex items-start">
-          <h3 className="text-lg font-bold text-white leading-tight line-clamp-2 group-hover:text-slate-100 transition-colors duration-200">
-            {movie.title}
-          </h3>
-        </div>
-
-        {/* Score Section - Fixed Height Container */}
-        <div className="h-20 flex items-center gap-4">
-          {/* Score Circle */}
-          <div className="flex-shrink-0" onClick={handleToggleBreakdown}>
-            <ScoreCircle
-              total={movie.score.total}
-              hovered={hovered || showBreakdown}
-            />
-          </div>
-
-          {/* Score Info Area */}
-          <div className="flex-1 min-w-0 h-full flex flex-col justify-center">
-            {/* Breakdown (shows on hover or click) */}
-            <ScoreBreakdown
-              breakdown={movie.score.breakdown}
-              hovered={hovered || showBreakdown}
-              totalScore={movie.score.total}
-            />
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-// Updated recommendations data
 const recommendationsData = {
   hindi: [
     {
       id: "h1",
       title: "3 Idiots",
       poster: IdiotsImage,
-      score: { total: 92, breakdown: { Story: 95, Emotion: 90, Rewatch: 91 } },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "h2",
       title: "Dangal",
       poster: DangalImage,
-      score: { total: 90, breakdown: { Story: 92, Acting: 95, Impact: 88 } },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "h3",
       title: "RRR",
       poster: RRRImage,
-      score: {
-        total: 3,
-        breakdown: { Action: 98, Visuals: 95, Spectacle: 90 },
-      },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "h4",
       title: "Zindagi Na Milegi Dobara",
       poster: ZNMDImage,
-      score: {
-        total: 89,
-        breakdown: { Chemistry: 94, Scenery: 92, Story: 82 },
-      },
+      ratingCategory: "RECOMMENDED",
     },
     {
       id: "h5",
       title: "Andhadhun",
       poster: AndhaDhunImage,
-      score: { total: 91, breakdown: { Twist: 98, Pacing: 90, Acting: 88 } },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "h6",
       title: "Gangs of Wasseypur",
       poster: GangsOfWaseypurImage,
-      score: {
-        total: 93,
-        breakdown: { Dialogue: 96, Grit: 95, Characters: 90 },
-      },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
   ],
   southIndian: [
@@ -339,40 +86,37 @@ const recommendationsData = {
       id: "s1",
       title: "Baahubali 2",
       poster: BahubaliImage,
-      score: { total: 88, breakdown: { Visuals: 96, Scale: 92, Story: 78 } },
+      ratingCategory: "RECOMMENDED",
     },
     {
       id: "s2",
       title: "Vikram",
       poster: VikramImage,
-      score: { total: 91, breakdown: { Action: 94, Pacing: 90, Style: 90 } },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "s3",
       title: "K.G.F: Chapter 2",
       poster: KGFImage,
-      score: { total: 89, breakdown: { Action: 95, Style: 92, Story: 80 } },
+      ratingCategory: "RECOMMENDED",
     },
     {
       id: "s4",
       title: "96",
       poster: NinetySixImage,
-      score: {
-        total: 92,
-        breakdown: { Emotion: 98, Music: 95, Nostalgia: 90 },
-      },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "s5",
       title: "Pushpa: The Rise",
       poster: PushpaImage,
-      score: { total: 85, breakdown: { Style: 94, Action: 88, Music: 82 } },
+      ratingCategory: "RECOMMENDED",
     },
     {
       id: "s6",
       title: "Asuran",
       poster: AsuranImage,
-      score: { total: 90, breakdown: { Acting: 96, Impact: 92, Story: 85 } },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
   ],
   worldCinema: [
@@ -380,34 +124,31 @@ const recommendationsData = {
       id: "w1",
       title: "Parasite",
       poster: "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
-      score: { total: 98, breakdown: { Script: 100, Tension: 98, Social: 97 } },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "w2",
       title: "Oldboy",
       poster: OldBoyImage,
-      score: { total: 93, breakdown: { Twist: 99, Style: 95, Impact: 90 } },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "w3",
       title: "The Intouchables",
       poster: TheIntouchablesImage,
-      score: { total: 91, breakdown: { Heart: 96, Humor: 92, Chemistry: 90 } },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "w4",
       title: "Portrait of a Lady on Fire",
       poster: PortraitOfALadyOnFire,
-      score: {
-        total: 94,
-        breakdown: { Visuals: 98, Romance: 95, Tension: 92 },
-      },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "w5",
       title: "Train to Busan",
       poster: TrainToBusanImage,
-      score: { total: 87, breakdown: { Thrills: 94, Emotion: 88, Action: 85 } },
+      ratingCategory: "RECOMMENDED",
     },
   ],
   indieFilms: [
@@ -415,40 +156,31 @@ const recommendationsData = {
       id: "i1",
       title: "Everything Everywhere All at Once",
       poster: "https://image.tmdb.org/t/p/w500/w3LxiVYdWWRvEVdn5RYq6jIqkb1.jpg",
-      score: {
-        total: 95,
-        breakdown: { Creativity: 100, Emotion: 94, Action: 92 },
-      },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "i2",
       title: "Moonlight",
       poster: MoonLightImage,
-      score: {
-        total: 92,
-        breakdown: { Cinematography: 98, Acting: 95, Story: 89 },
-      },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "i3",
       title: "Lady Bird",
       poster: LadyBirdImage,
-      score: { total: 88, breakdown: { Script: 94, Acting: 90, Heart: 85 } },
+      ratingCategory: "RECOMMENDED",
     },
     {
       id: "i4",
       title: "Aftersun",
       poster: AfterSunImage,
-      score: {
-        total: 90,
-        breakdown: { Emotion: 96, Subtlety: 92, Acting: 88 },
-      },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "i5",
       title: "The Florida Project",
       poster: TheFloridaProject,
-      score: { total: 87, breakdown: { Realism: 94, Visuals: 90, Acting: 85 } },
+      ratingCategory: "RECOMMENDED",
     },
   ],
   anime: [
@@ -456,40 +188,31 @@ const recommendationsData = {
       id: "a1",
       title: "Spirited Away",
       poster: SpiritedAwayImage,
-      score: {
-        total: 96,
-        breakdown: { Imagination: 100, Art: 98, Wonder: 95 },
-      },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "a2",
       title: "Your Name.",
       poster: YourNameImage,
-      score: { total: 94, breakdown: { Visuals: 99, Emotion: 95, Music: 92 } },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "a3",
       title: "Akira",
       poster: AkiraImage,
-      score: { total: 91, breakdown: { Animation: 98, Impact: 92, Scale: 88 } },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "a4",
       title: "Jujutsu Kaisen 0",
       poster: JJKImage,
-      score: {
-        total: 89,
-        breakdown: { Action: 96, Animation: 92, Pacing: 85 },
-      },
+      ratingCategory: "RECOMMENDED",
     },
     {
       id: "a5",
       title: "Ghost in the Shell",
       poster: GhostInTheShellImage,
-      score: {
-        total: 93,
-        breakdown: { Philosophy: 98, Visuals: 95, Influence: 90 },
-      },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
   ],
   tvShows: [
@@ -497,31 +220,30 @@ const recommendationsData = {
       id: "t1",
       title: "Breaking Bad",
       poster: "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
-      score: {
-        total: 99,
-        breakdown: { Writing: 100, Tension: 99, Acting: 98 },
-      },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "t2",
       title: "Fleabag",
       poster: FleabagImage,
-      score: { total: 95, breakdown: { Script: 98, Humor: 96, Emotion: 94 } },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "t3",
       title: "Chernobyl",
       poster: ChernobylMovie,
-      score: { total: 96, breakdown: { Tension: 98, Realism: 97, Impact: 95 } },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
     {
       id: "t4",
       title: "Arcane",
       poster: "https://image.tmdb.org/t/p/w500/fqldf2t8ztc9aiwn3k6mlX3tvRT.jpg",
-      score: { total: 97, breakdown: { Animation: 100, Story: 98, World: 95 } },
+      ratingCategory: "HIGHLY_RECOMMENDED",
     },
   ],
 };
+
+// Genre display names mapping stays the same
 const genreDisplayNames = {
   hindi: "Top in Hindi",
   southIndian: "Top in South Indian",
@@ -530,6 +252,49 @@ const genreDisplayNames = {
   anime: "Top in Anime",
   tvShows: "Top TV Shows",
 };
+
+function RecommendationCard({ movie }) {
+  const [hovered, setHovered] = React.useState(false);
+
+  return (
+    <motion.div
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="flex-shrink-0 w-40 sm:w-48 cursor-pointer group"
+    >
+      {/* Poster Image */}
+      <div className="aspect-[2/3] mb-3 relative rounded-xl overflow-hidden">
+        <img
+          src={
+            typeof movie.poster === "string"
+              ? movie.poster
+              : "/placeholder.svg?height=300&width=200"
+          }
+          alt={movie.title}
+          className="w-full h-full object-cover rounded-xl transition-transform duration-500 group-hover:scale-105"
+        />
+        {/* Subtle overlay + border glow on hover */}
+        <div className="absolute inset-0 pointer-events-none rounded-xl ring-0 group-hover:ring-1 ring-emerald-400/30 transition-all duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-90" />
+      </div>
+
+      {/* Text Content Below Image */}
+      <div className="space-y-3">
+        <div className="h-14 flex items-start">
+          <h3 className="text-lg font-semibold text-white leading-tight line-clamp-2">
+            {movie.title}
+          </h3>
+        </div>
+
+        <div className="h-8 flex items-center justify-center">
+          <RatingMeter category={movie.ratingCategory} />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function RecommendationsPage() {
   return (
@@ -587,8 +352,8 @@ export default function RecommendationsPage() {
                   {/* Horizontal Carousel */}
                   <div className="relative">
                     <div className="overflow-x-auto scrollbar-hide">
-                      <div className="flex gap-6 px-4 sm:px-6 lg:px-8 pb-4">
-                        <div className="flex gap-6 mx-auto max-w-7xl">
+                      <div className="flex gap-4 px-4 sm:px-6 lg:px-8 pb-4">
+                        <div className="flex gap-4 mx-auto max-w-7xl">
                           {movies.map((movie, movieIndex) => (
                             <motion.div
                               key={movie.id}
@@ -617,8 +382,8 @@ export default function RecommendationsPage() {
         </section>
       </div>
 
-      {/* Custom scrollbar + line clamp styles */}
-      <style jsx>{`
+      {/* Custom scrollbar + line clamp (scoped) */}
+      <style jsx global>{`
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
