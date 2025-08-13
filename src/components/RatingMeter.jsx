@@ -2,22 +2,18 @@
 import { motion } from "framer-motion";
 
 const RatingMeter = ({ category }) => {
-  // Define the rating configurations with more elegant styling
   const ratingConfig = {
     LEAST_RECOMMENDED: {
-      needleAngle: -50, // Points to red section (left)
-      activeColor: "rgb(248 113 113)", // red-400 - softer red
-      glowColor: "rgba(248, 113, 113, 0.3)",
+      needleAngle: -50,
+      activeColor: "rgb(185 28 28)",
     },
     RECOMMENDED: {
-      needleAngle: 0, // Points to amber section (middle)
-      activeColor: "rgb(251 191 36)", // amber-400 - warmer amber
-      glowColor: "rgba(251, 191, 36, 0.3)",
+      needleAngle: 0,
+      activeColor: "rgb(180 83 9)",
     },
     HIGHLY_RECOMMENDED: {
-      needleAngle: 50, // Points to emerald section (right)
-      activeColor: "rgb(52 211 153)", // emerald-400 - matches site theme
-      glowColor: "rgba(52, 211, 153, 0.3)",
+      needleAngle: 50,
+      activeColor: "rgb(5 150 105)",
     },
   };
 
@@ -25,112 +21,177 @@ const RatingMeter = ({ category }) => {
 
   return (
     <div className="relative w-20 h-10 flex items-end justify-center">
-      {/* SVG Gauge with refined styling */}
-      <svg viewBox="0 0 140 70" className="w-full h-full">
-        {/* Subtle background glow */}
+      {/* SVG Gauge */}
+      <svg viewBox="0 0 140 70" className="w-full h-full overflow-visible">
         <defs>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
+          {/* Gradients */}
+          <linearGradient id="redGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="rgb(153 27 27)" />
+            <stop offset="50%" stopColor="rgb(185 28 28)" />
+            <stop offset="100%" stopColor="rgb(220 38 38)" />
+          </linearGradient>
 
-          {/* Gradient for active section */}
+          <linearGradient id="yellowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="rgb(161 98 7)" />
+            <stop offset="50%" stopColor="rgb(180 83 9)" />
+            <stop offset="100%" stopColor="rgb(217 119 6)" />
+          </linearGradient>
+
+          <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="rgb(6 95 70)" />
+            <stop offset="50%" stopColor="rgb(5 150 105)" />
+            <stop offset="100%" stopColor="rgb(16 185 129)" />
+          </linearGradient>
+
           <linearGradient id="activeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop
               offset="0%"
               stopColor={config.activeColor}
-              stopOpacity="0.8"
+              stopOpacity="0.9"
             />
             <stop offset="50%" stopColor={config.activeColor} stopOpacity="1" />
             <stop
               offset="100%"
               stopColor={config.activeColor}
-              stopOpacity="0.8"
+              stopOpacity="0.9"
             />
           </linearGradient>
         </defs>
 
-        {/* Background arc - more subtle */}
-        <path
-          d="M 20 55 A 50 50 0 0 1 120 55"
-          fill="none"
-          stroke="rgb(71 85 105)" // slate-600
-          strokeWidth="6"
-          strokeLinecap="round"
-          className="opacity-20"
-        />
-
-        {/* Red section (Least Recommended) - refined */}
+        {/* Sections */}
         <motion.path
           d="M 20 55 A 50 50 0 0 1 55 25"
           fill="none"
           stroke={
             category === "LEAST_RECOMMENDED"
               ? "url(#activeGradient)"
-              : "rgb(248 113 113)"
+              : "url(#redGradient)"
           }
-          strokeWidth="6"
+          strokeWidth="8"
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className={
-            category === "LEAST_RECOMMENDED" ? "opacity-100" : "opacity-25"
+            category === "LEAST_RECOMMENDED" ? "opacity-100" : "opacity-40"
           }
-          filter={category === "LEAST_RECOMMENDED" ? "url(#glow)" : "none"}
         />
 
-        {/* Amber section (Recommended) - refined */}
         <motion.path
           d="M 55 25 A 50 50 0 0 1 85 25"
           fill="none"
           stroke={
             category === "RECOMMENDED"
               ? "url(#activeGradient)"
-              : "rgb(251 191 36)"
+              : "url(#yellowGradient)"
           }
-          strokeWidth="6"
+          strokeWidth="8"
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
           transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-          className={category === "RECOMMENDED" ? "opacity-100" : "opacity-25"}
-          filter={category === "RECOMMENDED" ? "url(#glow)" : "none"}
+          className={category === "RECOMMENDED" ? "opacity-100" : "opacity-40"}
         />
 
-        {/* Emerald section (Highly Recommended) - refined */}
         <motion.path
           d="M 85 25 A 50 50 0 0 1 120 55"
           fill="none"
           stroke={
             category === "HIGHLY_RECOMMENDED"
               ? "url(#activeGradient)"
-              : "rgb(52 211 153)"
+              : "url(#greenGradient)"
           }
-          strokeWidth="6"
+          strokeWidth="8"
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           className={
-            category === "HIGHLY_RECOMMENDED" ? "opacity-100" : "opacity-25"
+            category === "HIGHLY_RECOMMENDED" ? "opacity-100" : "opacity-40"
           }
-          filter={category === "HIGHLY_RECOMMENDED" ? "url(#glow)" : "none"}
         />
+
+        {/* Emoji icons */}
+        <motion.circle
+          cx="38"
+          cy="48"
+          r="10"
+          fill="white"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.8 }}
+          className={
+            category === "LEAST_RECOMMENDED" ? "opacity-100" : "opacity-60"
+          }
+        />
+        <motion.text
+          x="38"
+          y="54"
+          textAnchor="middle"
+          fontSize="24"
+          fontWeight="bold"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.9 }}
+        >
+          😞
+        </motion.text>
+
+        <motion.circle
+          cx="70"
+          cy="25"
+          r="10"
+          fill="white"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.9 }}
+          className={category === "RECOMMENDED" ? "opacity-100" : "opacity-60"}
+        />
+        <motion.text
+          x="70"
+          y="31"
+          textAnchor="middle"
+          fontSize="24"
+          fontWeight="bold"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 1.0 }}
+        >
+          😐
+        </motion.text>
+
+        <motion.circle
+          cx="102"
+          cy="48"
+          r="10"
+          fill="white"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.5, delay: 1.0 }}
+          className={
+            category === "HIGHLY_RECOMMENDED" ? "opacity-100" : "opacity-60"
+          }
+        />
+        <motion.text
+          x="102"
+          y="54"
+          textAnchor="middle"
+          fontSize="24"
+          fontWeight="bold"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 1.1 }}
+        >
+          😊
+        </motion.text>
       </svg>
 
-      {/* Elegant needle design */}
+      {/* Clean Needle */}
       <motion.div
         className="absolute bottom-0 left-1/2"
         style={{ transformOrigin: "50% 100%" }}
-        initial={{ rotate: 0, scale: 0 }}
-        animate={{
-          rotate: config.needleAngle,
-          scale: 1,
-        }}
+        initial={{ rotate: -90, scale: 0 }}
+        animate={{ rotate: config.needleAngle, scale: 1 }}
         transition={{
           duration: 1.2,
           delay: 0.6,
@@ -139,33 +200,15 @@ const RatingMeter = ({ category }) => {
           damping: 12,
         }}
       >
-        {/* Simplified, elegant needle */}
         <div className="relative -translate-x-1/2">
-          {/* Main needle body */}
-          <div className="w-0.5 h-6 bg-gradient-to-t from-slate-400 to-slate-300 rounded-full shadow-lg" />
-
+          {/* Sleek needle shaft */}
+          <div className="w-0.5 h-7 bg-gradient-to-t from-gray-900 to-gray-500 rounded-full" />
           {/* Needle tip */}
-          <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-slate-300 rounded-full shadow-sm" />
-
-          {/* Center pivot - clean and minimal */}
-          <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-gradient-to-br from-slate-300 to-slate-400 rounded-full shadow-md border border-slate-500/30">
-            <div className="absolute top-0.5 left-0.5 w-1 h-1 bg-white/40 rounded-full" />
-          </div>
+          <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-800 rounded-full" />
+          {/* Needle base */}
+          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-gray-700 rounded-full border border-gray-900" />
         </div>
       </motion.div>
-
-      {/* Subtle active section glow effect */}
-      {category && (
-        <motion.div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background: `radial-gradient(ellipse at center bottom, ${config.glowColor} 0%, transparent 70%)`,
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-        />
-      )}
     </div>
   );
 };
