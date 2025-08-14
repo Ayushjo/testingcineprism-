@@ -1,10 +1,8 @@
 "use client";
-
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Upload, X, Image } from "lucide-react";
 import axios from "axios";
-
 
 export default function UploadPosterPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,10 +23,9 @@ export default function UploadPosterPage() {
       try {
         const response = await axios.post(
           "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
-          {withCredentials:true}
+          { withCredentials: true }
         );
         const data = await response.data;
-
         if (data.posts) {
           setPosts(data.posts);
         }
@@ -107,19 +104,18 @@ export default function UploadPosterPage() {
       const formData = new FormData();
       formData.append("file", selectedFile);
       formData.append("postId", selectedPost.id);
+
       console.log(formData);
-      
+
       const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/add-poster",
-        
-          formData
-        ,
-        {withCredentials:true}
+        formData,
+        { withCredentials: true }
       );
 
       const result = await response.data;
 
-      if (response.status===201) {
+      if (response.status === 201) {
         setUploadStatus("success");
         setUploadMessage(result.message || "Poster uploaded successfully!");
 
@@ -127,7 +123,11 @@ export default function UploadPosterPage() {
         setPosts((prevPosts) =>
           prevPosts.map((post) =>
             post.id === selectedPost.id
-              ? { ...post, posterImageId: result.poster?.id }
+              ? {
+                  ...post,
+                  posterImageId: result.poster?.id,
+                  posterImageUrl: result.poster?.url || post.posterImageUrl,
+                }
               : post
           )
         );
@@ -151,6 +151,11 @@ export default function UploadPosterPage() {
     } finally {
       setIsUploading(false);
     }
+  };
+
+  // Helper function to check if post has poster
+  const hasPoster = (post) => {
+    return post.posterImageId || post.posterImageUrl;
   };
 
   return (
@@ -266,14 +271,12 @@ export default function UploadPosterPage() {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           className={`px-4 py-2 rounded-lg border transition-all duration-300 font-medium ${
-                            post.posterImageId
-                              ? "bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border-amber-500/30"
+                            hasPoster(post)
+                              ? "bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 border-yellow-500/30"
                               : "bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border-emerald-500/30"
                           }`}
                         >
-                          {post.posterImageId
-                            ? "Update Poster"
-                            : "Upload Poster"}
+                          {hasPoster(post) ? "Update Poster" : "Upload Poster"}
                         </motion.button>
                       </td>
                     </motion.tr>
@@ -282,7 +285,6 @@ export default function UploadPosterPage() {
               </table>
             </div>
           )}
-
           {!isLoading && filteredPosts.length === 0 && (
             <div className="text-center py-12">
               <p className="text-slate-400">

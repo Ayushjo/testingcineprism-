@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { X, Save } from "lucide-react";
+import { X, Save, Search } from "lucide-react";
 import axios from "axios";
 
 const genres = [
@@ -51,6 +51,7 @@ export default function CreatePostPage() {
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
   const [submitStatus, setSubmitStatus] = useState(null); // success, error
   const [submitMessage, setSubmitMessage] = useState("");
+  const [relatedPostsSearch, setRelatedPostsSearch] = useState("");
 
   // Fetch posts for related posts selection
   useEffect(() => {
@@ -73,6 +74,11 @@ export default function CreatePostPage() {
 
     fetchPosts();
   }, []);
+
+  // Filter posts based on search term for related posts
+  const filteredRelatedPosts = posts.filter((post) =>
+    post.title.toLowerCase().includes(relatedPostsSearch.toLowerCase())
+  );
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -118,7 +124,7 @@ export default function CreatePostPage() {
         year: parseInt(formData.year),
       };
       console.log(submitData);
-      
+
       const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/create-post",
         submitData,
@@ -127,7 +133,7 @@ export default function CreatePostPage() {
 
       const result = await response.data;
 
-      if (response.status===201) {
+      if (response.status === 201) {
         setSubmitStatus("success");
         setSubmitMessage(
           `Post created successfully! Post ID: ${result.post?.id || "Unknown"}`
@@ -144,6 +150,9 @@ export default function CreatePostPage() {
           ratingCategory: "",
           relatedPostIds: [],
         });
+
+        // Clear related posts search
+        setRelatedPostsSearch("");
 
         // Refresh posts list to include the new post
         const refreshResponse = await axios.post(
@@ -358,15 +367,29 @@ export default function CreatePostPage() {
             <label className="text-sm font-medium text-slate-300">
               Related Posts
             </label>
+
+            {/* Search Bar for Related Posts */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+              <input
+                type="text"
+                value={relatedPostsSearch}
+                onChange={(e) => setRelatedPostsSearch(e.target.value)}
+                className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-lg pl-10 pr-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
+                placeholder="Search related posts by title..."
+                disabled={isSubmitting || isLoadingPosts}
+              />
+            </div>
+
             {isLoadingPosts ? (
               <div className="text-center py-4">
                 <div className="w-6 h-6 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin mx-auto mb-2" />
                 <p className="text-slate-400 text-sm">Loading posts...</p>
               </div>
-            ) : posts.length > 0 ? (
+            ) : filteredRelatedPosts.length > 0 ? (
               <div className="max-h-64 overflow-y-auto border border-slate-700 rounded-xl bg-slate-900/30">
                 <div className="p-4 space-y-2">
-                  {posts.map((post) => (
+                  {filteredRelatedPosts.map((post) => (
                     <motion.div
                       key={post.id}
                       whileHover={{ scale: 1.01 }}
@@ -399,9 +422,13 @@ export default function CreatePostPage() {
                   ))}
                 </div>
               </div>
-            ) : (
+            ) : posts.length === 0 ? (
               <p className="text-slate-400 text-sm py-4 text-center">
                 No posts available yet. Create your first post!
+              </p>
+            ) : (
+              <p className="text-slate-400 text-sm py-4 text-center">
+                No posts found matching your search.
               </p>
             )}
             {formData.relatedPostIds.length > 0 && (
@@ -429,7 +456,7 @@ export default function CreatePostPage() {
             ) : (
               <>
                 <Save className="w-5 h-5" />
-                Create Post & Get ID
+                Create Post
               </>
             )}
           </motion.button>
