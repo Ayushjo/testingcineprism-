@@ -7,6 +7,7 @@ const navigationItems = [
   { icon: FileText, label: "All Posts", id: "all-posts" },
   { icon: FilePlus2, label: "Create Post", id: "create-post" },
   { icon: ImageUp, label: "Upload Poster", id: "upload-poster" },
+  { icon: ImageUp, label: "Upload Reviews Poster", id: "upload-review-poster" },
   { icon: Images, label: "Upload Gallery", id: "upload-gallery" },
 ];
 

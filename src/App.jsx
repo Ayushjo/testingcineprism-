@@ -29,7 +29,7 @@ import UploadGalleryPage from "./components/UploadGalleryPage";
 import AllPostsPage from "./components/AllPostsPage";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import { useLocation } from "react-router-dom";
-
+import ReviewPosterPage from "./components/UploadReviewPoster";
 const App = () => {
   const location = useLocation();
 
@@ -81,6 +81,10 @@ const App = () => {
               <Route path="upload-poster" element={<UploadPosterPage />} />
               <Route path="upload-gallery" element={<UploadGalleryPage />} />
               <Route path="all-posts" element={<AllPostsPage />} />
+              <Route
+                path="upload-review-poster"
+                element={<ReviewPosterPage />}
+              />
             </Route>
           </Route>
         </Routes>

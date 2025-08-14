@@ -45,7 +45,7 @@ export default function ReviewPage() {
     year: post.year,
     genre: post.genres ? post.genres.join(", ") : "Unknown",
     rating: getRatingScore(post.ratingCategory),
-    image: post.posterImageUrl || "/placeholder-poster.jpg", // Fallback image
+    image: post.reviewPosterImageUrl || "/placeholder-poster.jpg", // Fallback image
     review: post.content,
     id: post.id,
   }));

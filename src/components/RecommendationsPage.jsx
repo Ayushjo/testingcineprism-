@@ -71,6 +71,7 @@ const recommendationsData = {
     {
       id: "h5",
       title: "Andhadhun",
+      rating:67,
       poster: AndhaDhunImage,
       ratingCategory: "HIGHLY_RECOMMENDED",
     },
@@ -289,7 +290,7 @@ function RecommendationCard({ movie }) {
         </div>
 
         <div className="h-8 flex items-center justify-center">
-          <RatingMeter category={movie.ratingCategory} />
+          <RatingMeter category={movie.ratingCategory} rating={movie.rating} />
         </div>
       </div>
     </motion.div>
