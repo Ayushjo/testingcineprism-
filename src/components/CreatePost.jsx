@@ -127,7 +127,7 @@ export default function CreatePostPage() {
 
       const result = await response.data;
 
-      if (response.ok) {
+      if (response.status===201) {
         setSubmitStatus("success");
         setSubmitMessage(
           `Post created successfully! Post ID: ${result.post?.id || "Unknown"}`

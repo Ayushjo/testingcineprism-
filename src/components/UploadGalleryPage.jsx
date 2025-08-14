@@ -165,7 +165,7 @@ export default function UploadGalleryPage() {
 
       const result = await response.data;
 
-      if (response.ok) {
+      if (response.status===201) {
         setUploadStatus("success");
         setUploadMessage(
           result.message ||
