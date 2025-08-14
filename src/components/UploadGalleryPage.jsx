@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Upload, X, Images } from "lucide-react";
+import axios from "axios";
 
 export default function UploadGalleryPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,8 +23,11 @@ export default function UploadGalleryPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts"
+        const response = await axios.get(
+          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",{
+            withCredentials:true
+            
+          }
         );
         const data = await response.json();
 
@@ -147,13 +151,14 @@ export default function UploadGalleryPage() {
         setUploadProgress((prev) => Math.min(prev + 10, 90));
       }, 200);
 
-      const response = await fetch(
+      const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/upload-images",
         {
           method: "POST",
           body: formData,
           // Don't set Content-Type header - let the browser set it with boundary for FormData
-        }
+        },
+        {withCredentials:true}
       );
 
       clearInterval(progressInterval);
@@ -171,15 +176,14 @@ export default function UploadGalleryPage() {
         );
 
         // Refresh posts data to reflect changes
-        const refreshResponse = await fetch(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts"
+        const refreshResponse = await axios.get(
+          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+          {withCredentials:true}
         );
         const refreshData = await refreshResponse.json();
         if (refreshData.posts) {
           setPosts(refreshData.posts);
         }
-
-        // Close modal after a short delay to show success message
         setTimeout(() => {
           handleCloseModal();
         }, 2500);

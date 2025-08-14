@@ -57,7 +57,8 @@ export default function CreatePostPage() {
     const fetchPosts = async () => {
       try {
         const response = await axios.get(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts"
+          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+          { withCredentials: true }
         );
         const data = await response.json();
         if (data.posts) {
@@ -117,7 +118,7 @@ export default function CreatePostPage() {
         year: parseInt(formData.year),
       };
 
-      const response = await fetch(
+      const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/create-post",
         {
           method: "POST",
@@ -125,7 +126,8 @@ export default function CreatePostPage() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(submitData),
-        }
+        },
+        { withCredentials: true }
       );
 
       const result = await response.json();

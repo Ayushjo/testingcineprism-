@@ -13,6 +13,7 @@ import {
   Image,
   X,
 } from "lucide-react";
+import axios from "axios";
 
 const ratingColors = {
   HIGHLY_RECOMMENDED:
@@ -43,8 +44,10 @@ export default function AllPostsPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:3500/api/v1/admin/fetch-posts"
+        const response = await axios.get(
+          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",{
+            withCredentials:true
+          }
         );
         const data = await response.json();
         if (data.posts) {

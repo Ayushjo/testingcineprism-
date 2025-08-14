@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Upload, X, Image } from "lucide-react";
+import axios from "axios";
 
 export default function UploadPosterPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,8 +22,9 @@ export default function UploadPosterPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts"
+        const response = await axios.get(
+          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+          {withCredentials:true}
         );
         const data = await response.json();
 
@@ -105,12 +107,13 @@ export default function UploadPosterPage() {
       formData.append("file", selectedFile);
       formData.append("postId", selectedPost.id);
 
-      const response = await fetch(
+      const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/add-poster",
         {
           method: "POST",
           body: formData,
-        }
+        },
+        {withCredentials:true}
       );
 
       const result = await response.json();
