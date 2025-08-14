@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { X, Save } from "lucide-react";
+import axios from "axios";
 
 const genres = [
   "Action",
@@ -148,7 +149,7 @@ export default function CreatePostPage() {
         });
 
         // Refresh posts list to include the new post
-        const refreshResponse = await fetch(
+        const refreshResponse = await axios.get(
           "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts"
         );
         const refreshData = await refreshResponse.json();
