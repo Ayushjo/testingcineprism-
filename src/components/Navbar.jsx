@@ -79,7 +79,9 @@ export default function Navbar() {
   const navLinks = user
     ? baseNavLinks
     : [...baseNavLinks, { href: "/login", label: "Login" }];
-
+  if (user?.role === "ADMIN") {
+    navLinks.push({ href: "/admin", label: "Admin" });
+  }
   return (
     <motion.nav
       initial={{ y: -100 }}
