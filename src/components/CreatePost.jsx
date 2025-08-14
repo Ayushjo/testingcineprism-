@@ -56,7 +56,7 @@ export default function CreatePostPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(
+        const response = await axios.get(
           "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts"
         );
         const data = await response.json();
