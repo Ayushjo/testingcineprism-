@@ -111,8 +111,7 @@ export default function UploadPosterPage() {
       const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/add-poster",
         {
-          method: "POST",
-          body: formData,
+          formData
         },
         {withCredentials:true}
       );

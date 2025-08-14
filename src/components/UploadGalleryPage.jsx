@@ -154,8 +154,7 @@ export default function UploadGalleryPage() {
       const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/upload-images",
         {
-          method: "POST",
-          body: formData,
+          formData
         },
         {withCredentials:true}
       );
