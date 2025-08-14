@@ -8,7 +8,6 @@ const navigationItems = [
   { icon: FilePlus2, label: "Create Post", id: "create-post" },
   { icon: ImageUp, label: "Upload Poster", id: "upload-poster" },
   { icon: Images, label: "Upload Gallery", id: "upload-gallery" },
-  { icon: LogOut, label: "Logout", id: "logout" },
 ];
 
 export default function Sidebar({ activeView, onViewChange }) {
