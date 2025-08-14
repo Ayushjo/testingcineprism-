@@ -29,7 +29,7 @@ export default function UploadGalleryPage() {
             
           }
         );
-        const data = await response.json();
+        const data = await response.data;
 
         if (data.posts) {
           setPosts(data.posts);
@@ -156,7 +156,6 @@ export default function UploadGalleryPage() {
         {
           method: "POST",
           body: formData,
-          // Don't set Content-Type header - let the browser set it with boundary for FormData
         },
         {withCredentials:true}
       );
@@ -164,7 +163,7 @@ export default function UploadGalleryPage() {
       clearInterval(progressInterval);
       setUploadProgress(100);
 
-      const result = await response.json();
+      const result = await response.data;
 
       if (response.ok) {
         setUploadStatus("success");
@@ -180,7 +179,7 @@ export default function UploadGalleryPage() {
           "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
           {withCredentials:true}
         );
-        const refreshData = await refreshResponse.json();
+        const refreshData = await refreshResponse.data;
         if (refreshData.posts) {
           setPosts(refreshData.posts);
         }

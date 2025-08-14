@@ -60,7 +60,7 @@ export default function CreatePostPage() {
           "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
           { withCredentials: true }
         );
-        const data = await response.json();
+        const data = await response.data;
         if (data.posts) {
           setPosts(data.posts);
         }
@@ -130,7 +130,7 @@ export default function CreatePostPage() {
         { withCredentials: true }
       );
 
-      const result = await response.json();
+      const result = await response.data;
 
       if (response.ok) {
         setSubmitStatus("success");
@@ -154,7 +154,7 @@ export default function CreatePostPage() {
         const refreshResponse = await axios.post(
           "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts"
         );
-        const refreshData = await refreshResponse.json();
+        const refreshData = await refreshResponse.data;
         if (refreshData.posts) {
           setPosts(refreshData.posts);
         }

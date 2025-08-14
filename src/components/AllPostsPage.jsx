@@ -49,7 +49,7 @@ export default function AllPostsPage() {
             withCredentials:true
           }
         );
-        const data = await response.json();
+        const data = await response.data
         if (data.posts) {
           setPosts(data.posts);
         }
