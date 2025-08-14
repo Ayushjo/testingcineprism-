@@ -202,9 +202,9 @@ export default function AllPostsPage() {
               >
                 {/* Poster Image */}
                 <div className="relative h-64 bg-slate-800 overflow-hidden">
-                  {post.posterImageUrl ? (
+                  {post.reviewPosterImageUrl ? (
                     <img
-                      src={post.posterImageUrl}
+                      src={post.reviewPosterImageUrl}
                       alt={post.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
