@@ -8,7 +8,7 @@ export default function AdminLayout() {
   const navigate = useNavigate();
 
   // 2. This state now controls which child route is shown
-  const [activeView, setActiveView] = useState("create-post");
+  const [activeView, setActiveView] = useState("all-posts");
 
   const handleNavigate = (viewId) => {
     setActiveView(viewId);

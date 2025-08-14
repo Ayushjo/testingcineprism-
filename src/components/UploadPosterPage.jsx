@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, Upload, X, Image } from "lucide-react";
 import axios from "axios";
 
+
 export default function UploadPosterPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPost, setSelectedPost] = useState(null);
