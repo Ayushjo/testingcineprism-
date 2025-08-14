@@ -117,7 +117,8 @@ export default function CreatePostPage() {
         duration: parseInt(formData.duration),
         year: parseInt(formData.year),
       };
-
+      console.log(submitData);
+      
       const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/create-post",
         submitData,

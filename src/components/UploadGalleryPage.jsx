@@ -150,7 +150,8 @@ export default function UploadGalleryPage() {
       const progressInterval = setInterval(() => {
         setUploadProgress((prev) => Math.min(prev + 10, 90));
       }, 200);
-
+      console.log(formData);
+      
       const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/upload-images",
         {
