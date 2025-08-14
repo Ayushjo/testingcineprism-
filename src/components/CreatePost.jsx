@@ -120,9 +120,7 @@ export default function CreatePostPage() {
 
       const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/create-post",
-        {
-          submitData
-        },
+        submitData,
         { withCredentials: true }
       );
 
