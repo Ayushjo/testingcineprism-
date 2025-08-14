@@ -23,7 +23,7 @@ export default function UploadGalleryPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.post(
           "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",{
             withCredentials:true
             
@@ -176,7 +176,7 @@ export default function UploadGalleryPage() {
         );
 
         // Refresh posts data to reflect changes
-        const refreshResponse = await axios.get(
+        const refreshResponse = await axios.post(
           "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
           {withCredentials:true}
         );

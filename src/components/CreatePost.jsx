@@ -56,7 +56,7 @@ export default function CreatePostPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.post(
           "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
           { withCredentials: true }
         );
@@ -151,7 +151,7 @@ export default function CreatePostPage() {
         });
 
         // Refresh posts list to include the new post
-        const refreshResponse = await axios.get(
+        const refreshResponse = await axios.post(
           "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts"
         );
         const refreshData = await refreshResponse.json();

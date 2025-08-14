@@ -22,7 +22,7 @@ export default function UploadPosterPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.post(
           "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
           {withCredentials:true}
         );
