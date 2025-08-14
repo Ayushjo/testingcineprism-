@@ -1,107 +1,68 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Star, Calendar, Tag, Search, Filter, ArrowRight } from "lucide-react";
-import InterstellarImage from "../assets/Interstellar.jpg";
-import HowToLoseImage from "../assets/howtoloseaguys.jpg";
-import OppenHeimerImage from "../assets/oppenheimer.jpg";
-import FleabagImage2 from "../assets/fleebag2.jpg";
-import DuneImage from "../assets/Dune.jpg";
-import BladeRunnerImg from "../assets/bladerunner.jpg";
-import SpiderManImage from "../assets/spiderman.jpg";
-import BatmanImage from "../assets/batman.jpg";
-import ArrivalImage from "../assets/arrival.jpg";
-import JohnWickImage from "../assets/JohnWick2.jpg";
-
-const reviews = [
-  {
-    title: "Arrival",
-    year: 2016,
-    genre: "Sci-Fi, Drama",
-    rating: 8.3,
-    image: ArrivalImage,
-    review:
-      "Denis Villeneuve's *Arrival* is a masterclass in emotional storytelling within the sci-fi genre. The film balances intelligent alien-contact concepts with deeply human themes of loss, communication, and destiny. Amy Adams delivers a hauntingly powerful performance, and Jóhann Jóhannsson's score elevates the atmosphere to a whole new level. This isn't your typical alien movie—it's a meditation on time, language, and the choices we make.",
-  },
-  {
-    title: "Blade Runner 2049",
-    year: 2017,
-    genre: "Sci-Fi, Action",
-    rating: 8.0,
-    image: BladeRunnerImg,
-    review:
-      "*Blade Runner 2049* is a visual symphony and a philosophical triumph. The cinematography by Roger Deakins is spellbinding, creating a bleak yet beautiful dystopia. Ryan Gosling anchors the narrative with restraint, and Harrison Ford's return adds depth. This sequel not only respects Ridley Scott's original but expands on its themes of identity, humanity, and reality. A slow-burn epic that rewards patience.",
-  },
-  {
-    title: "Fleabag",
-    year: 2016,
-    genre: "Drama, Comedy",
-    rating: 9.0,
-    image: FleabagImage2,
-    review:
-      "Phoebe Waller-Bridge's *Fleabag* is a groundbreaking series that blends dark humor, raw emotion, and fourth-wall-breaking brilliance. With biting wit and vulnerability, the show delves into grief, guilt, and self-worth in a way few series dare to. Each episode peels back another layer of the protagonist's psyche, leaving you laughing one moment and gutted the next. It's comedy—and storytelling—at its most fearless.",
-  },
-  {
-    title: "How to Lose a Guy in 10 Days",
-    year: 2003,
-    genre: "Romantic Comedy",
-    rating: 6.4,
-    image: HowToLoseImage,
-    review:
-      "*How to Lose a Guy in 10 Days* is a quintessential early-2000s rom-com. Kate Hudson and Matthew McConaughey have undeniable chemistry that fuels the film's charm. The plot is delightfully ridiculous but manages to find genuine moments of warmth and humor. While predictable, its vibrant energy, memorable outfits, and classic 'love vs. bet' trope make it an entertaining comfort watch.",
-  },
-  {
-    title: "Interstellar",
-    year: 2014,
-    genre: "Sci-Fi, Drama",
-    rating: 8.6,
-    image: InterstellarImage,
-    review:
-      "Christopher Nolan's *Interstellar* is a visually stunning and emotionally resonant exploration of time, space, and love. The film dives into complex scientific concepts like relativity and wormholes while grounding the story in a father's desperate journey to save humanity and reconnect with his daughter. Hans Zimmer's score is transcendent, and the visuals—especially the black hole—are awe-inspiring. A cinematic experience that lingers in your mind.",
-  },
-  {
-    title: "Spiderman: No Way Home",
-    year: 2021,
-    genre: "Action, Superhero",
-    rating: 8.4,
-    image: SpiderManImage,
-    review:
-      "*Spiderman: No Way Home* is both a fan-service juggernaut and an emotional rollercoaster. It unites generations of Spider-Men while giving Tom Holland's Peter Parker a rich and transformative arc. The film masterfully blends action, humor, and heartbreak, solidifying its place as one of the best superhero films in recent memory. An unforgettable love letter to Spidey fans.",
-  },
-  {
-    title: "Dune: Part One",
-    year: 2021,
-    genre: "Sci-Fi, Adventure",
-    rating: 8.1,
-    image: DuneImage,
-    review:
-      "Denis Villeneuve's *Dune* is a monumental adaptation of Frank Herbert's dense novel. With a hypnotic score by Hans Zimmer and stunning visuals, the film creates a believable alien world rich in culture and politics. Timothée Chalamet leads an ensemble cast with subtle strength. While it's only the first half of the story, it lays an epic foundation that leaves you wanting more.",
-  },
-  {
-    title: "John Wick",
-    year: 2014,
-    genre: "Action, Crime",
-    rating: 7.4,
-    image: JohnWickImage,
-    review:
-      "*John Wick* reinvigorated action cinema with its sleek style and brutal choreography. Keanu Reeves' stoic, grieving assassin is iconic, and the film's \"gun-fu\" combat scenes are meticulously crafted. More than just a revenge thriller, it builds a compelling underworld mythology that would grow with each sequel. It's fast-paced, tightly directed, and endlessly watchable.",
-  },
-  {
-    title: "Batman Begins",
-    year: 2005,
-    genre: "Action, Superhero",
-    rating: 8.2,
-    image: BatmanImage,
-    review:
-      "With *Batman Begins*, Christopher Nolan redefined the superhero genre, grounding Gotham's vigilante in psychological realism. Christian Bale's brooding portrayal, paired with a strong supporting cast and Hans Zimmer's intense score, delivers a rich origin story. It's a mature, layered take that paves the way for one of cinema's greatest trilogies.",
-  },
-];
+import axios from "axios";
 
 export default function ReviewPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("All");
   const [sortBy, setSortBy] = useState("rating");
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch posts from API
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.post(
+          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+          {},
+          { withCredentials: true }
+        );
+
+        const data = response.data;
+        if (data.posts) {
+          setPosts(data.posts);
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+        setError("Failed to load reviews. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  // Convert API data to match the original review format
+  const reviews = posts.map((post) => ({
+    title: post.title,
+    year: post.year,
+    genre: post.genres ? post.genres.join(", ") : "Unknown",
+    rating: getRatingScore(post.ratingCategory),
+    image: post.posterImageUrl || "/placeholder-poster.jpg", // Fallback image
+    review: post.content,
+    id: post.id,
+  }));
+
+  // Convert rating category to numeric score
+  function getRatingScore(ratingCategory) {
+    switch (ratingCategory) {
+      case "HIGHLY_RECOMMENDED":
+        return 9.0;
+      case "RECOMMENDED":
+        return 7.5;
+      case "LEAST_RECOMMENDED":
+        return 6.0;
+      default:
+        return 7.0;
+    }
+  }
 
   // Get unique genres
   const genres = [
@@ -122,6 +83,38 @@ export default function ReviewPage() {
       if (sortBy === "title") return a.title.localeCompare(b.title);
       return 0;
     });
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-white pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-400 text-lg">Loading reviews...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-white pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-8 max-w-md mx-auto">
+            <h3 className="text-2xl font-bold text-red-400 mb-4">Error</h3>
+            <p className="text-slate-400 mb-6">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-gradient-to-r from-red-500/80 to-red-600/80 hover:from-red-500 hover:to-red-600 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-white pt-20">
@@ -149,8 +142,7 @@ export default function ReviewPage() {
               Reviews
             </h1>
             <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              Our complete collection of honest takes, sharp insights, and
-              cinematic deep dives
+              With every good film I see, I feel reborn.
             </p>
           </motion.div>
 
@@ -218,7 +210,7 @@ export default function ReviewPage() {
             {filteredReviews.map((review, index) => (
               // --- START: NEW FULL-BLEED CARD ---
               <motion.article
-                key={review.title}
+                key={review.id || review.title}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -228,9 +220,11 @@ export default function ReviewPage() {
                 <img
                   src={review.image}
                   alt={review.title}
-                  className={`absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 ${
-                    review.title === "Arrival" ? "object-[100%_center]" : ""
-                  }`}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  onError={(e) => {
+                    e.target.src =
+                      "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMUUyOTNGIi8+CjxwYXRoIGQ9Ik0xNzUgMTIwSDE3MFYxNjBIMTc1VjEyMFpNMjMwIDEyMEgyMjVWMTYwSDIzMFYxMjBaTTIwMCAxODBDMTgzLjQzMiAxODAgMTcwIDE2Ni41NjggMTcwIDE1MEMxNzAgMTMzLjQzMiAxODMuNDMyIDEyMCAyMDAgMTIwQzIxNi41NjggMTIwIDIzMCAxMzMuNDMyIDIzMCAxNTBDMjMwIDE2Ni41NjggMjE2LjU2OCAxODAgMjAwIDE4MFoiIGZpbGw9IiM0RjQ2RTUiLz4KPHBhdGggZD0iTTIwMCAxNDBDMjA4LjI4NCAxNDAgMjE1IDE0Ni43MTYgMjE1IDE1NUMyMTUgMTYzLjI4NCAyMDguMjg0IDE3MCAyMDAgMTcwQzE5MS43MTYgMTcwIDE4NSAxNjMuMjg0IDE4NSAxNTVDMTg1IDE0Ni43MTYgMTkxLjcxNiAxNDAgMjAwIDE0MFoiIGZpbGw9IiM5QTgyRkIiLz4KPC9zdmc+";
+                  }}
                 />
 
                 {/* Gradient Overlay for Text Readability */}
@@ -281,7 +275,7 @@ export default function ReviewPage() {
           </div>
 
           {/* No Results Message */}
-          {filteredReviews.length === 0 && (
+          {filteredReviews.length === 0 && !isLoading && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -304,6 +298,24 @@ export default function ReviewPage() {
                 >
                   Clear Filters
                 </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Empty State when no posts exist */}
+          {posts.length === 0 && !isLoading && !error && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center py-16"
+            >
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-12 max-w-md mx-auto">
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  No reviews available
+                </h3>
+                <p className="text-slate-400 mb-6">
+                  Check back soon for the latest movie reviews and insights.
+                </p>
               </div>
             </motion.div>
           )}
