@@ -66,8 +66,8 @@ const TopPicksPage = () => {
       try {
         const response = await axios.post(
           `https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-top-picks`,
-          { genre: "All" }, // Fetch all genres at once
-          { withCredentials: true }
+          {},
+          { withCredentials:true }
         );
 
         if (response.data && response.data.topPicks) {
