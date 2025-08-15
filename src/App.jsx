@@ -30,6 +30,7 @@ import AllPostsPage from "./components/AllPostsPage";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import { useLocation } from "react-router-dom";
 import ReviewPosterPage from "./components/UploadReviewPoster";
+import TopPicksPage from "./components/TopPicksPage";
 const App = () => {
   const location = useLocation();
 
@@ -69,7 +70,7 @@ const App = () => {
 
           <Route
             path="/recommendations-page"
-            element={<RecommendationsPage />}
+            element={<TopPicksPage />}
           />
           <Route path="/merchandise" element={<Merchandise />} />
 
