@@ -1,11 +1,19 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { FilePlus2, ImageUp, Images, LogOut, FileText } from "lucide-react";
+import {
+  FilePlus2,
+  ImageUp,
+  Images,
+  LogOut,
+  FileText,
+  Star,
+} from "lucide-react";
 
 const navigationItems = [
   { icon: FileText, label: "All Posts", id: "all-posts" },
   { icon: FilePlus2, label: "Create Post", id: "create-post" },
+  { icon: Star, label: "Add Top Picks", id: "add-top-picks" },
   { icon: ImageUp, label: "Upload Poster", id: "upload-poster" },
   { icon: ImageUp, label: "Upload Reviews Poster", id: "upload-review-poster" },
   { icon: Images, label: "Upload Gallery", id: "upload-gallery" },

@@ -31,6 +31,7 @@ import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import { useLocation } from "react-router-dom";
 import ReviewPosterPage from "./components/UploadReviewPoster";
 import TopPicksPage from "./components/TopPicksPage";
+import AddTopPicksPage from "./components/AddTopPicksPage";
 const App = () => {
   const location = useLocation();
 
@@ -86,6 +87,7 @@ const App = () => {
                 path="upload-review-poster"
                 element={<ReviewPosterPage />}
               />
+              <Route path="add-top-picks" element={<AddTopPicksPage />} />
             </Route>
           </Route>
         </Routes>
