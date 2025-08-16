@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star, Calendar, Tag, Search, Filter, ArrowRight } from "lucide-react";
 import axios from "axios";
@@ -12,6 +13,7 @@ export default function ReviewPage() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   // Fetch posts from API
   useEffect(() => {
@@ -210,6 +212,9 @@ export default function ReviewPage() {
             {filteredReviews.map((review, index) => (
               // --- START: NEW FULL-BLEED CARD ---
               <motion.article
+                onClick={() => {
+                  navigate(`/post/${review.id}`);
+                }}
                 key={review.id || review.title}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}

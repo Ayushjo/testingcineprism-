@@ -44,7 +44,7 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="/post" element={<PostPage />} />
+          <Route path="/post/:id" element={<PostPage /> } />
 
           <Route element={<RedirectIfAuth />}>
             <Route path="/login" element={<LoginPage />} />
