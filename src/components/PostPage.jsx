@@ -433,12 +433,12 @@ export default function PostPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section 1: Hero & Review Section */}
-        <section className="py-16">
-          <div className="relative">
-            <div className="flex flex-col lg:flex-row items-start gap-8">
+        <section className="py-12 lg:py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-5 gap-8 lg:gap-12">
               {/* Poster Image */}
-              <div className="lg:w-1/3 flex-shrink-0">
-                <div className="aspect-[2/3] relative rounded-2xl overflow-hidden shadow-2xl">
+              <div className="lg:col-span-2">
+                <div className="aspect-[2/3] relative rounded-3xl overflow-hidden shadow-2xl">
                   <img
                     src={
                       post.posterImageUrl ||
@@ -447,94 +447,132 @@ export default function PostPage() {
                     alt={post.title}
                     className="w-full h-full object-cover"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                 </div>
               </div>
 
-              {/* Overlapping Content Block */}
-              <div className="lg:w-2/3 lg:-ml-16 lg:mt-16 relative z-10">
-                <div className="bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-8 lg:p-12 shadow-2xl">
-                  {/* Title */}
-                  <h1 className="text-4xl lg:text-6xl font-black text-white mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
+              {/* Content */}
+              <div className="lg:col-span-3 space-y-8">
+                {/* Title */}
+                <div>
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-4 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight leading-tight">
                     {post.title}
                   </h1>
+                </div>
 
-                  {/* Metadata Pills */}
-                  <div className="flex flex-wrap gap-3 mb-8">
-                    <div className="flex items-center gap-1 bg-black/40 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/10">
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="text-white font-semibold text-sm">
-                        {post.ratingCategory === "HIGHLY_RECOMMENDED"
-                          ? "9.5"
-                          : post.ratingCategory === "RECOMMENDED"
-                          ? "8.0"
-                          : "6.5"}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1 bg-white/5 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/10">
-                      <Calendar className="w-4 h-4 text-slate-400" />
-                      <span className="text-slate-300 text-sm">
-                        {post.year}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1 bg-white/5 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/10">
-                      <Tag className="w-4 h-4 text-slate-400" />
-                      <span className="text-slate-300 text-sm">
-                        {post.genres?.join(", ") || "N/A"}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1 bg-white/5 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/10">
-                      <User className="w-4 h-4 text-slate-400" />
-                      <span className="text-slate-300 text-sm">
-                        Directed by {post.directedBy}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1 bg-white/5 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/10">
-                      <Play className="w-4 h-4 text-slate-400" />
-                      <span className="text-slate-300 text-sm">
-                        Streaming on {post.streamingAt}
-                      </span>
-                    </div>
+                {/* Primary Info - Rating & Year */}
+                <div className="flex flex-wrap gap-3">
+                  {/* <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 backdrop-blur-xl px-4 py-3 rounded-2xl border border-yellow-500/20">
+                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
+                    <span className="text-white font-bold text-base">
+                      {post.ratingCategory === "HIGHLY_RECOMMENDED"
+                        ? "9.5"
+                        : post.ratingCategory === "RECOMMENDED"
+                        ? "8.0"
+                        : "6.5"}
+                    </span>
+                  </div> */}
+                  <div className="flex items-center gap-2 bg-white/5 backdrop-blur-xl px-4 py-3 rounded-2xl border border-white/10">
+                    <Calendar className="w-5 h-5 text-slate-400" />
+                    <span className="text-slate-200 font-medium text-base">
+                      {post.year}
+                    </span>
                   </div>
+                </div>
 
-                  {/* Action Bar */}
-                  <div className="flex items-center gap-6 mb-8 pt-4 border-t border-white/10">
-                    <button
-                      onClick={handleLikeClick}
-                      className="flex items-center gap-2 text-slate-400 hover:text-pink-500 transition-colors duration-200"
+                {/* Secondary Info - Genres */}
+                <div className="flex flex-wrap gap-2">
+                  {post.genres?.map((genre, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 bg-gray-500/10 backdrop-blur-xl px-4 py-2 rounded-xl border border-gray-500/20"
                     >
+                      <Tag className="w-4 h-4 text-gray-400" />
+                      <span className="text-gray-300 font-medium text-sm">
+                        {genre}
+                      </span>
+                    </div>
+                  )) || (
+                    <div className="flex items-center gap-2 bg-emerald-500/10 backdrop-blur-xl px-4 py-2 rounded-xl border border-emerald-500/20">
+                      <Tag className="w-4 h-4 text-emerald-400" />
+                      <span className="text-emerald-300 font-medium text-sm">
+                        N/A
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Tertiary Info - Director & Streaming */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10">
+                    <User className="w-5 h-5 text-gray-400" />
+                    <span className="text-slate-200 font-medium">
+                      Directed :
+                    </span>
+                    <span className="text-white font-semibold">
+                      {post.directedBy}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10">
+                    <Play className="w-5 h-5 text-gray-400" />
+                    <span className="text-slate-200 font-medium">
+                      Streaming :
+                    </span>
+                    <span className="text-white font-semibold">
+                      {post.streamingAt}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Action Bar */}
+                <div className="flex items-center gap-8 py-6 border-t border-white/10">
+                  <button
+                    onClick={handleLikeClick}
+                    className="flex items-center gap-3 text-slate-400 hover:text-pink-500 transition-all duration-300 group"
+                  >
+                    <div className="p-2 rounded-xl bg-white/5 group-hover:bg-pink-500/10 transition-colors duration-300">
                       <Heart
-                        className={`w-5 h-5 ${
+                        className={`w-6 h-6 ${
                           isLiked ? "fill-pink-500 text-pink-500" : ""
                         }`}
                       />
-                      <span className="font-medium">
-                        {likeCount.toLocaleString()} Likes
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <span className="font-bold text-lg">
+                        {likeCount.toLocaleString()}
                       </span>
-                    </button>
+                      <span className="text-sm text-slate-500">Likes</span>
+                    </div>
+                  </button>
 
-                    <button
-                      onClick={scrollToDiscussion}
-                      className="flex items-center gap-2 text-slate-400 hover:text-emerald-400 transition-colors duration-200"
-                    >
-                      <MessageCircle className="w-5 h-5" />
-                      <span className="font-medium">
-                        {post.commentCount}{" "}
+                  <button
+                    onClick={scrollToDiscussion}
+                    className="flex items-center gap-3 text-slate-400 hover:text-emerald-400 transition-all duration-300 group"
+                  >
+                    <div className="p-2 rounded-xl bg-white/5 group-hover:bg-emerald-500/10 transition-colors duration-300">
+                      <MessageCircle className="w-6 h-6" />
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <span className="font-bold text-lg">
+                        {post.commentCount}
+                      </span>
+                      <span className="text-sm text-slate-500">
                         {post.commentCount === 1 ? "Comment" : "Comments"}
                       </span>
-                    </button>
-                  </div>
+                    </div>
+                  </button>
+                </div>
 
-                  {/* Review Text */}
-                  <div className="prose prose-invert prose-lg max-w-none">
-                    {post.content.split("\n\n").map((paragraph, index) => (
-                      <p
-                        key={index}
-                        className="text-slate-300 leading-relaxed mb-6 text-lg"
-                      >
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
+                {/* Review Text */}
+                <div className="prose prose-invert prose-xl max-w-none">
+                  {post.content.split("\n\n").map((paragraph, index) => (
+                    <p
+                      key={index}
+                      className="text-slate-300 leading-relaxed mb-6 text-lg lg:text-xl font-light"
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
                 </div>
               </div>
             </div>

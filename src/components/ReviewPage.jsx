@@ -210,7 +210,6 @@ export default function ReviewPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {filteredReviews.map((review, index) => (
-              // --- START: NEW FULL-BLEED CARD ---
               <motion.article
                 onClick={() => {
                   navigate(`/post/${review.id}`);
@@ -219,11 +218,10 @@ export default function ReviewPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="group relative aspect-[4/3] rounded-3xl overflow-hidden"
+                className="group relative aspect-[5/4] sm:aspect-[4/3] lg:aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer"
               >
-                {/* Use a dedicated img tag for the background. This is more reliable. */}
                 <img
-                  src={review.image}
+                  src={review.image || "/placeholder.svg"}
                   alt={review.title}
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   onError={(e) => {
@@ -232,98 +230,51 @@ export default function ReviewPage() {
                   }}
                 />
 
-                {/* Gradient Overlay for Text Readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20 sm:from-black/80 sm:via-black/40 sm:to-transparent" />
 
-                {/* Rating Badge (Top Right) */}
-                <div className="absolute top-6 right-6">
-                  <div className="flex items-center gap-1 bg-black/60 backdrop-blur-xl px-3 py-1.5 rounded-2xl border border-white/10">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span className="text-white font-semibold text-sm">
+                <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+                  <div className="flex items-center gap-1 bg-black/70 backdrop-blur-xl px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-2xl border border-white/20">
+                    <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 fill-current" />
+                    <span className="text-white font-semibold text-xs sm:text-sm">
                       {review.rating}
                     </span>
                   </div>
                 </div>
 
-                {/* Content Container */}
-                <div className="relative h-full flex flex-col justify-end p-8">
+                <div className="relative h-full flex flex-col justify-end p-5 sm:p-6 lg:p-8">
                   <div>
-                    <h2 className="text-2xl font-bold text-white mb-2 tracking-tight group-hover:text-emerald-300 transition-colors duration-300">
+                    <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-2 tracking-tight group-hover:text-emerald-300 transition-colors duration-300 leading-tight">
                       {review.title}
                     </h2>
-                    <div className="flex items-center gap-4 text-sm text-slate-300 mb-4">
+
+                    <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-slate-300 mb-3 sm:mb-4">
                       <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
+                        <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         <span>{review.year}</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <Tag className="w-4 h-4" />
-                        <span>{review.genre}</span>
+                        <Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        <span className="truncate">{review.genre}</span>
                       </div>
                     </div>
-                    <p className="text-slate-300 leading-relaxed mb-6 line-clamp-2">
+
+                    <p className="text-slate-300 leading-relaxed mb-4 sm:mb-6 line-clamp-2 sm:line-clamp-2 text-sm sm:text-base">
                       {review.review}
                     </p>
+
                     <motion.button
                       whileHover={{ scale: 1.02, x: 5 }}
                       whileTap={{ scale: 0.98 }}
-                      className="group/btn inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold transition-all duration-300"
+                      className="group/btn inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold transition-all duration-300 text-sm sm:text-base"
                     >
                       Read Full Review
-                      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                      <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:translate-x-1 transition-transform" />
                     </motion.button>
                   </div>
                 </div>
               </motion.article>
-              // --- END: NEW FULL-BLEED CARD ---
             ))}
           </div>
-
-          {/* No Results Message */}
-          {filteredReviews.length === 0 && !isLoading && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-16"
-            >
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-12 max-w-md mx-auto">
-                <h3 className="text-2xl font-bold text-white mb-4">
-                  No reviews found
-                </h3>
-                <p className="text-slate-400 mb-6">
-                  Try adjusting your search terms or filters to find what you're
-                  looking for.
-                </p>
-                <button
-                  onClick={() => {
-                    setSearchTerm("");
-                    setSelectedGenre("All");
-                  }}
-                  className="bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300"
-                >
-                  Clear Filters
-                </button>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Empty State when no posts exist */}
-          {posts.length === 0 && !isLoading && !error && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-16"
-            >
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-12 max-w-md mx-auto">
-                <h3 className="text-2xl font-bold text-white mb-4">
-                  No reviews available
-                </h3>
-                <p className="text-slate-400 mb-6">
-                  Check back soon for the latest movie reviews and insights.
-                </p>
-              </div>
-            </motion.div>
-          )}
         </div>
       </section>
     </div>
