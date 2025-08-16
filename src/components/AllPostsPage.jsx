@@ -216,15 +216,6 @@ export default function AllPostsPage() {
                     </div>
                   )}
 
-                  {/* Rating Badge */}
-                  <div
-                    className={`absolute top-3 right-3 px-2 py-1 rounded-lg text-xs font-medium border backdrop-blur-sm ${
-                      ratingColors[post.ratingCategory]
-                    }`}
-                  >
-                    {ratingLabels[post.ratingCategory]}
-                  </div>
-
                   {/* Gallery Count Badge */}
                   {post.images && post.images.length > 0 && (
                     <div className="absolute bottom-3 right-3 px-2 py-1 rounded-lg text-xs font-medium bg-slate-900/80 backdrop-blur-sm text-slate-300 border border-slate-700">

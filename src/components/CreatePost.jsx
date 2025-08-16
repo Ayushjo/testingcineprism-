@@ -28,11 +28,7 @@ const genres = [
   "Western",
 ];
 
-const ratingOptions = [
-  { value: "HIGHLY_RECOMMENDED", label: "Highly Recommended" },
-  { value: "RECOMMENDED", label: "Recommended" },
-  { value: "LEAST_RECOMMENDED", label: "Least Recommended" },
-];
+
 
 export default function CreatePostPage() {
   const [formData, setFormData] = useState({
@@ -42,7 +38,6 @@ export default function CreatePostPage() {
     streamingAt: "",
     year: "",
     genres: [],
-    ratingCategory: "",
     relatedPostIds: [],
   });
 
@@ -146,7 +141,6 @@ export default function CreatePostPage() {
           streamingAt: "",
           year: "",
           genres: [],
-          ratingCategory: "",
           relatedPostIds: [],
         });
 
@@ -337,32 +331,7 @@ export default function CreatePostPage() {
             )}
           </div>
 
-          {/* Rating Category */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-300">
-              Rating Category
-            </label>
-            <select
-              value={formData.ratingCategory}
-              onChange={(e) =>
-                handleInputChange("ratingCategory", e.target.value)
-              }
-              className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
-              required
-              disabled={isSubmitting}
-            >
-              <option value="">Select rating...</option>
-              {ratingOptions.map((option) => (
-                <option
-                  key={option.value}
-                  value={option.value}
-                  className="bg-slate-900"
-                >
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
+      
 
           {/* Related Posts */}
           <div className="space-y-3">
