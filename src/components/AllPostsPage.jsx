@@ -7,8 +7,8 @@ import {
   Filter,
   Eye,
   Calendar,
-  Clock,
-  MapPin,
+  Play,
+  User,
   Star,
   Image,
   X,
@@ -45,11 +45,12 @@ export default function AllPostsPage() {
     const fetchPosts = async () => {
       try {
         const response = await axios.post(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",{
-            withCredentials:true
+          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+          {
+            withCredentials: true,
           }
         );
-        const data = await response.data
+        const data = await response.data;
         if (data.posts) {
           setPosts(data.posts);
         }
@@ -245,13 +246,15 @@ export default function AllPostsPage() {
                       {post.year}
                     </div>
                     <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {post.duration}min
+                      <User className="w-4 h-4" />
+                      {post.directedBy}
                     </div>
-                    <div className="flex items-center gap-1">
-                      <MapPin className="w-4 h-4" />
-                      {post.origin}
-                    </div>
+                  </div>
+
+                  {/* Streaming Platform */}
+                  <div className="flex items-center gap-1 text-sm text-slate-400 mb-3">
+                    <Play className="w-4 h-4" />
+                    <span>Streaming on {post.streamingAt}</span>
                   </div>
 
                   {/* Genres */}
@@ -329,8 +332,8 @@ export default function AllPostsPage() {
                     </h2>
                     <div className="flex items-center gap-4 text-sm text-slate-400 mt-1">
                       <span>{selectedPost.year}</span>
-                      <span>{selectedPost.duration} minutes</span>
-                      <span>{selectedPost.origin}</span>
+                      <span>Directed by {selectedPost.directedBy}</span>
+                      <span>Streaming on {selectedPost.streamingAt}</span>
                     </div>
                   </div>
                   <button
@@ -496,4 +499,3 @@ export default function AllPostsPage() {
     </div>
   );
 }
-

@@ -38,8 +38,8 @@ export default function CreatePostPage() {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    origin: "",
-    duration: "",
+    directedBy: "",
+    streamingAt: "",
     year: "",
     genres: [],
     ratingCategory: "",
@@ -120,7 +120,6 @@ export default function CreatePostPage() {
       // Prepare data for API
       const submitData = {
         ...formData,
-        duration: parseInt(formData.duration),
         year: parseInt(formData.year),
       };
       console.log(submitData);
@@ -143,8 +142,8 @@ export default function CreatePostPage() {
         setFormData({
           title: "",
           content: "",
-          origin: "",
-          duration: "",
+          directedBy: "",
+          streamingAt: "",
           year: "",
           genres: [],
           ratingCategory: "",
@@ -251,18 +250,20 @@ export default function CreatePostPage() {
             />
           </div>
 
-          {/* Origin and Duration Row */}
+          {/* Directed By and Streaming At Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-300">
-                Origin
+                Directed By
               </label>
               <input
                 type="text"
-                value={formData.origin}
-                onChange={(e) => handleInputChange("origin", e.target.value)}
+                value={formData.directedBy}
+                onChange={(e) =>
+                  handleInputChange("directedBy", e.target.value)
+                }
                 className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
-                placeholder="e.g., Hollywood, Bollywood..."
+                placeholder="e.g., Christopher Nolan..."
                 required
                 disabled={isSubmitting}
               />
@@ -270,15 +271,16 @@ export default function CreatePostPage() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-300">
-                Duration (minutes)
+                Streaming At
               </label>
               <input
-                type="number"
-                value={formData.duration}
-                onChange={(e) => handleInputChange("duration", e.target.value)}
+                type="text"
+                value={formData.streamingAt}
+                onChange={(e) =>
+                  handleInputChange("streamingAt", e.target.value)
+                }
                 className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
-                placeholder="120"
-                min="1"
+                placeholder="e.g., Netflix, Amazon Prime..."
                 required
                 disabled={isSubmitting}
               />
@@ -405,7 +407,7 @@ export default function CreatePostPage() {
                       <div className="flex-1">
                         <p className="font-medium">{post.title}</p>
                         <p className="text-xs opacity-75">
-                          {post.year} • {post.origin}
+                          {post.year} • {post.directedBy}
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
