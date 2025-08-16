@@ -3,17 +3,15 @@
 import axios from "axios";
 import { useState, useEffect, useCallback } from "react";
 
-// Detect environment and use appropriate URL
 const API_BASE_URL =
   "https://testingcineprismbackend-production.up.railway.app/api/v1";
 
-// Create axios instance with default config INCLUDING withCredentials
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // THIS IS THE KEY FIX - must be true for cookie auth
+  withCredentials: true,
 });
 
 // ============================================================================

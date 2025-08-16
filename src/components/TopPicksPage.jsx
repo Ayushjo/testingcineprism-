@@ -157,7 +157,7 @@ const TopPicksPage = () => {
               Top Picks
             </h1>
             <p className="mx-auto max-w-2xl text-xl leading-relaxed text-slate-400">
-              Handpicked selections just for the discerning cinema lover.
+              It's been a pleasure chatting with a fellow cinema lover.
             </p>
           </motion.div>
         </div>

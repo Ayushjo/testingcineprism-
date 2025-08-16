@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-
+import { useNavigate } from "react-router-dom";
 const RecommendationCard = ({ movie, index }) => {
   // Helper function to get primary genre
   const getPrimaryGenre = () => {
@@ -8,9 +8,12 @@ const RecommendationCard = ({ movie, index }) => {
     if (movie.genres && movie.genres.length > 0) return movie.genres[0];
     return null;
   };
-
+  const navigate = useNavigate();
   return (
     <motion.div
+      onClick={() => {
+        navigate(`/post/${movie.id}`)
+      }}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.08 }}
@@ -52,12 +55,6 @@ const RecommendationCard = ({ movie, index }) => {
         <div className="flex items-center justify-between text-gray-400">
           {movie.year && (
             <span className="text-sm font-light">{movie.year}</span>
-          )}
-
-          {movie.origin && (
-            <span className="text-xs font-light opacity-70 truncate ml-2">
-              {movie.origin}
-            </span>
           )}
         </div>
       </div>
