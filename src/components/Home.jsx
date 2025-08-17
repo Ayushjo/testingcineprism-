@@ -1,4 +1,3 @@
-"use client";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import DuneImage from "../assets/Dune.jpg";
@@ -42,6 +41,7 @@ import CoverflowMarquee from "./CoverflowMarquee";
 import DarkKnightImage from "../assets/darkknight.jpg";
 import DunkKirkImage from "../assets/dunkirk.jpg";
 import InteractiveVideoGrid from "./InteractiveVideoGrid";
+import ArticleSection from "./ArticleSection";
 export default function Homepage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeCard, setActiveCard] = useState(null);
@@ -460,6 +460,7 @@ export default function Homepage() {
             </div>
           </div>
         </section>
+        <ArticleSection />
         {/* Bento Grid Section */}
         <section className="py-24 bg-gradient-to-b from-slate-950 to-slate-900 relative overflow-hidden">
           {/* Ambient Background */}

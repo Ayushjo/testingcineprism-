@@ -10,9 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "@react-three/drei": "^10.7.2",
+    "@react-three/fiber": "^9.3.0",
+    "@tabler/icons-react": "^3.34.1",
     "axios": "^1.11.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.513.0",
+    "motion": "^12.23.12",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",
@@ -20,6 +27,9 @@
     "react-parallax-tilt": "^1.7.301",
     "react-router-dom": "^7.7.0",
     "react-scroll-parallax": "^3.4.5",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.179.1",
     "tone": "^15.1.22"
   },
   "devDependencies": {

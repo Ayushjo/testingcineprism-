@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star, Calendar, Tag, Search, Filter, ArrowRight } from "lucide-react";
 import axios from "axios";
+import ReviewCardsWithFocus from "./ReviewCardsWithFocus";
 
 export default function ReviewPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -208,7 +209,7 @@ export default function ReviewPage() {
       {/* Reviews Grid */}
       <section className="pb-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {filteredReviews.map((review, index) => (
               <motion.article
                 onClick={() => {
@@ -274,7 +275,8 @@ export default function ReviewPage() {
                 </div>
               </motion.article>
             ))}
-          </div>
+          </div> */}
+          <ReviewCardsWithFocus filteredReviews={filteredReviews} />
         </div>
       </section>
     </div>
