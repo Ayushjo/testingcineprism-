@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+
 import { FilePlus2, ImageUp, Images, LogOut } from "lucide-react";
 import {
   Sidebar,

@@ -2,7 +2,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import DuneImage from "../assets/Dune.jpg";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+
 import {
   Star,
   Heart,
@@ -20,7 +20,7 @@ import HowToLoseImage from "../assets/howtoloseaguys.jpg";
 import OppenHeimerImage from "../assets/oppenheimer.jpg";
 import OppenHeimerFireImage from "../assets/oppenheimerfire.jpg";
 import Tilt from "react-parallax-tilt";
-import { useParallax } from "react-scroll-parallax";
+
 import LatestReviews from "./LatestReviews";
 import TrendingThisWeek from "./TrendingThisWeek";
 import ExploreByGenre from "./ExploreByGenre";
@@ -32,7 +32,7 @@ import BatmanImage from "../assets/batman.jpg";
 import BladeRunnerImg from "../assets/bladerunner.jpg";
 import DuneFanImage from "../assets/dunefan.jpg";
 import SinnerImage from "../assets/sinners.jpg";
-import f4Image from "../assets/f4.jpg";
+
 import TennetImage from "../assets/tennet.jpg";
 import AliceImage from "../assets/alicedarling.jpg";
 import Marquee from "./Marquee";
@@ -45,11 +45,9 @@ import ArticleSection from "./ArticleSection";
 import CinematicHeroSection from "./CinematicHeroSection";
 import MobileCinematicHeroSection from "./MobileCinematicHeroSection";
 export default function Homepage() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  
   const [activeCard, setActiveCard] = useState(null);
-  const [isHoveringCard, setIsHoveringCard] = useState(false);
-  const backgroundVideoUrl =
-    "https://res.cloudinary.com/dapu22gee/video/upload/v1754793790/bgvideo_xxx4qx.mp4";
+  
 
   const heroPosters = [
     {
@@ -167,7 +165,7 @@ export default function Homepage() {
       posterUrl: OppenHeimerImage,
     },
   ];
-  const [activeFilm, setActiveFilm] = useState(featuredCarouselData[0]);
+
 
   const bentoItems = [
     {
@@ -242,7 +240,7 @@ export default function Homepage() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroPosters.length);
+      
     }, 6000);
     return () => clearInterval(interval);
   }, [heroPosters.length]);
@@ -316,7 +314,7 @@ export default function Homepage() {
               viewport={{ once: true, margin: "-100px" }}
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
             >
-              {bentoItems.map((item, index) => (
+              {bentoItems.map((item) => (
                 <motion.div
                   key={item.id}
                   variants={itemVariants}

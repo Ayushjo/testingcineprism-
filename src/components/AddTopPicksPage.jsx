@@ -1,7 +1,6 @@
 "use client";
-
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+
 import { Star, Save, Search, Trophy, Film } from "lucide-react";
 import axios from "axios";
 
@@ -118,8 +117,6 @@ export default function AddTopPicksPage() {
           }),
         }
       );
-
-      const result = await response.json();
 
       if (response.status === 201) {
         setSubmitStatus("success");

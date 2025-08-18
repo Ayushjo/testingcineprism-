@@ -1,6 +1,4 @@
 "use client";
-
-import { motion } from "framer-motion";
 import { Star, Calendar, Tag, ArrowRight } from "lucide-react";
 import GoodWillHuntingImage from "../assets/goodwillhunting.jpg";
 import ForestGumpImage from "../assets/forestgump.jpg";

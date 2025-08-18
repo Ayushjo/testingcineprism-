@@ -19,6 +19,8 @@ export const AuthProvider = ({ children }) => {
         );
         setUser(response.data.user);
       } catch (error) {
+        console.log(error);
+
         // Not logged in
         setUser(null);
       } finally {
