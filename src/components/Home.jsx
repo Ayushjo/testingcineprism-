@@ -2,7 +2,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import DuneImage from "../assets/Dune.jpg";
 import { useState, useEffect } from "react";
-
+import { motion } from "framer-motion";
 import {
   Star,
   Heart,

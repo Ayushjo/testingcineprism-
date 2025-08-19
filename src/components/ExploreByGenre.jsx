@@ -1,5 +1,5 @@
 "use client";
-
+import { motion } from "framer-motion";
 import { Film } from "lucide-react";
 import ActionImage from "../assets/action.jpg";
 import ThrillerImage from "../assets/thriller.jpg"

@@ -14,7 +14,7 @@ function MoviePoster({
   isHovered,
 }) {
   const meshRef = useRef();
-  const { camera, mouse } = useThree();
+  const { mouse } = useThree();
 
   useFrame((state) => {
     if (meshRef.current) {
