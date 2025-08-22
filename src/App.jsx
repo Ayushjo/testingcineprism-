@@ -32,6 +32,7 @@ import { useLocation } from "react-router-dom";
 import ReviewPosterPage from "./components/UploadReviewPoster";
 import TopPicksPage from "./components/TopPicksPage";
 import AddTopPicksPage from "./components/AddTopPicksPage";
+import CinemaSchoolPage from "./components/CinemaSchoolPage";
 const App = () => {
   const location = useLocation();
 
@@ -44,7 +45,7 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="/post/:id" element={<PostPage /> } />
+          <Route path="/post/:id" element={<PostPage />} />
 
           <Route element={<RedirectIfAuth />}>
             <Route path="/login" element={<LoginPage />} />
@@ -63,16 +64,14 @@ const App = () => {
             <Route path="/genre/Animation" element={<AnimationPage />} />
             <Route path="/trending" element={<TrendingPage />} />
             <Route path="/reviews" element={<ReviewPage />} />
+            <Route path="/cinema-school" element={<CinemaSchoolPage />} />
             <Route
               path="/unpopular-opinions"
               element={<UnpopularOpinionsPage />}
             />
           </Route>
 
-          <Route
-            path="/recommendations-page"
-            element={<TopPicksPage />}
-          />
+          <Route path="/recommendations-page" element={<TopPicksPage />} />
           <Route path="/merchandise" element={<Merchandise />} />
 
           {/* Protected Admin Routes */}
