@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
 
-import { Star, Save, Search, Trophy, Film } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Star, Save, Upload, Trophy, Film, Image } from "lucide-react";
 import axios from "axios";
 
 const genres = [
@@ -25,41 +26,32 @@ const genres = [
 
 export default function AddTopPicksPage() {
   const [selectedGenre, setSelectedGenre] = useState("");
-  const [selectedPostId, setSelectedPostId] = useState("");
-  const [posts, setPosts] = useState([]);
+  const [title, setTitle] = useState("");
+  const [year, setYear] = useState("");
+  const [posterFile, setPosterFile] = useState(null);
+  const [posterPreview, setPosterPreview] = useState(null);
   const [topPicks, setTopPicks] = useState([]);
-  const [isLoadingPosts, setIsLoadingPosts] = useState(true);
   const [isLoadingTopPicks, setIsLoadingTopPicks] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
   const [submitMessage, setSubmitMessage] = useState("");
-  const [postsSearch, setPostsSearch] = useState("");
   const [viewMode, setViewMode] = useState("add");
 
-  // Fetch all posts on component mount
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await axios.post(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
-          { withCredentials: true }
-        );
-        const data = await response.data;
-        if (data.posts) {
-          setPosts(data.posts);
-        }
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      } finally {
-        setIsLoadingPosts(false);
-      }
-    };
-
-    fetchPosts();
-  }, []);
+  // Handle file upload
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPosterFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPosterPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Fetch existing top picks when viewing
-  const fetchTopPicks = async (genre = "All") => {
+  const fetchTopPicks = async (genre = "all") => {
     setIsLoadingTopPicks(true);
     try {
       const response = await fetch(
@@ -85,16 +77,11 @@ export default function AddTopPicksPage() {
     }
   };
 
-  // Filter posts based on search term
-  const filteredPosts = posts.filter((post) =>
-    post.title.toLowerCase().includes(postsSearch.toLowerCase())
-  );
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedPostId || !selectedGenre) {
+    if (!title || !year || !selectedGenre || !posterFile) {
       setSubmitStatus("error");
-      setSubmitMessage("Please select both a post and a genre.");
+      setSubmitMessage("Please fill in all fields and upload a poster image.");
       return;
     }
 
@@ -103,37 +90,47 @@ export default function AddTopPicksPage() {
     setSubmitMessage("");
 
     try {
-      const response = await fetch(
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("year", year);
+      formData.append("genre", selectedGenre);
+      formData.append("file", posterFile);
+
+      const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/create-top-picks",
+        formData,
         {
-          method: "POST",
-          credentials: "include",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
-          body: JSON.stringify({
-            postId: selectedPostId,
-            genre: selectedGenre,
-          }),
+          withCredentials: true,
         }
       );
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         setSubmitStatus("success");
         setSubmitMessage(
-          `Successfully added to top picks for ${
+          `Successfully added "${title}" to top picks for ${
             genres.find((g) => g.key === selectedGenre)?.label || selectedGenre
           }!`
         );
 
         // Reset form
-        setSelectedPostId("");
+        setTitle("");
+        setYear("");
         setSelectedGenre("");
-        setPostsSearch("");
+        setPosterFile(null);
+        setPosterPreview(null);
+
+        // Reset file input
+        const fileInput = document.querySelector('input[type="file"]');
+        if (fileInput) {
+          fileInput.value = "";
+        }
 
         // Refresh top picks if we're viewing them
         if (viewMode === "view") {
-          fetchTopPicks("All");
+          fetchTopPicks("all");
         }
       }
     } catch (error) {
@@ -152,16 +149,12 @@ export default function AddTopPicksPage() {
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
     if (mode === "view") {
-      fetchTopPicks("All");
+      fetchTopPicks("all");
     }
     // Clear status when switching modes
     setSubmitStatus(null);
     setSubmitMessage("");
   };
-
-  const selectedPost = posts.find(
-    (post) => post.id === Number.parseInt(selectedPostId)
-  );
 
   return (
     <section className="min-h-screen bg-gradient-to-b from-slate-950 to-slate-900 relative overflow-hidden">
@@ -251,7 +244,6 @@ export default function AddTopPicksPage() {
         )}
 
         {viewMode === "add" ? (
-          /* Updated form with glassmorphic styling throughout */
           <motion.form
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -259,6 +251,39 @@ export default function AddTopPicksPage() {
             onSubmit={handleSubmit}
             className="space-y-8"
           >
+            {/* Movie Title */}
+            <div className="space-y-4">
+              <label className="text-lg font-semibold text-white">
+                Movie Title
+              </label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-400/50 focus:bg-white/10 transition-all duration-300"
+                placeholder="Enter movie title..."
+                disabled={isSubmitting}
+              />
+            </div>
+
+            {/* Release Year */}
+            <div className="space-y-4">
+              <label className="text-lg font-semibold text-white">
+                Release Year
+              </label>
+              <input
+                type="number"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-400/50 focus:bg-white/10 transition-all duration-300"
+                placeholder="e.g., 2024"
+                min="1900"
+                max="2030"
+                disabled={isSubmitting}
+              />
+            </div>
+
+            {/* Genre Selection */}
             <div className="space-y-4">
               <label className="text-lg font-semibold text-white">
                 Select Genre
@@ -277,8 +302,10 @@ export default function AddTopPicksPage() {
                       scale: isSubmitting ? 1 : 1.05,
                       y: isSubmitting ? 0 : -2,
                     }}
-                    whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
-                    className={`p-4 rounded-2xl font-medium transition-all duration-300 backdrop-blur-xl border disabled:opacity-50 ${
+                    whileTap={{
+                      scale: isSubmitting ? 1 : 0.95,
+                    }}
+                    className={`p-4 rounded-2xl font-medium transition-all duration-300 backdrop-blur-xl border ${
                       selectedGenre === genre.key
                         ? "bg-emerald-500/20 text-emerald-300 border-emerald-400/50 shadow-lg shadow-emerald-500/20"
                         : "bg-white/5 text-slate-300 border-white/10 hover:bg-white/10 hover:border-white/20 hover:text-white"
@@ -290,132 +317,86 @@ export default function AddTopPicksPage() {
               </div>
             </div>
 
+            {/* Poster Upload */}
             <div className="space-y-4">
               <label className="text-lg font-semibold text-white">
-                Select Movie Post
+                Movie Poster
               </label>
+              <div className="space-y-4">
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    disabled={isSubmitting}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    id="poster-upload"
+                  />
+                  <div className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="p-4 bg-emerald-500/20 rounded-2xl border border-emerald-400/30">
+                        <Upload className="w-8 h-8 text-emerald-400" />
+                      </div>
+                      <div>
+                        <p className="text-white font-semibold text-lg mb-2">
+                          {posterFile ? posterFile.name : "Upload Movie Poster"}
+                        </p>
+                        <p className="text-slate-400">
+                          Click to browse or drag and drop your poster image
+                        </p>
+                        <p className="text-slate-500 text-sm mt-2">
+                          Supported formats: JPG, PNG, WebP
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-                <input
-                  type="text"
-                  value={postsSearch}
-                  onChange={(e) => setPostsSearch(e.target.value)}
-                  className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl pl-12 pr-6 py-4 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-400/50 focus:bg-white/10 transition-all duration-300"
-                  placeholder="Search movies by title..."
-                  disabled={isSubmitting || isLoadingPosts}
-                />
+                {posterPreview && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="relative max-w-sm mx-auto"
+                  >
+                    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-4">
+                      <img
+                        src={posterPreview}
+                        alt="Poster preview"
+                        className="w-full h-auto rounded-2xl shadow-2xl"
+                      />
+                      <div className="flex items-center gap-3 mt-4 p-3 bg-emerald-500/10 rounded-2xl border border-emerald-400/30">
+                        <Image className="w-5 h-5 text-emerald-400" />
+                        <span className="text-emerald-300 font-medium">
+                          Poster ready for upload
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
               </div>
-
-              {isLoadingPosts ? (
-                <div className="text-center py-12">
-                  <div className="w-8 h-8 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
-                  <p className="text-slate-300 text-lg">
-                    Loading cinematic collection...
-                  </p>
-                </div>
-              ) : filteredPosts.length > 0 ? (
-                <div className="max-h-96 overflow-y-auto bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl">
-                  <div className="p-6 space-y-3">
-                    {filteredPosts.map((post, index) => (
-                      <motion.div
-                        key={post.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        whileHover={{ scale: 1.02, x: 4 }}
-                        className={`flex items-center justify-between p-5 rounded-2xl border transition-all duration-300 cursor-pointer backdrop-blur-xl ${
-                          selectedPostId === post.id
-                            ? "bg-emerald-500/20 border-emerald-400/50 text-emerald-300 shadow-lg shadow-emerald-500/20"
-                            : "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-white/20 hover:text-white"
-                        }`}
-                        onClick={() =>
-                          !isSubmitting && setSelectedPostId(post.id)
-                        }
-                      >
-                        <div className="flex items-center gap-4">
-                          <div
-                            className={`p-3 rounded-xl ${
-                              selectedPostId === post.id
-                                ? "bg-emerald-500/30"
-                                : "bg-white/10"
-                            }`}
-                          >
-                            <Film className="w-5 h-5" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-semibold text-lg">
-                              {post.title}
-                            </p>
-                            <p className="text-sm opacity-75 mb-2">
-                              {post.year} • {post.origin} • {post.duration} min
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              {post.genres?.slice(0, 3).map((genre) => (
-                                <span
-                                  key={genre}
-                                  className="text-xs px-3 py-1 bg-white/10 backdrop-blur-xl rounded-full border border-white/20"
-                                >
-                                  {genre}
-                                </span>
-                              ))}
-                              {post.genres?.length > 3 && (
-                                <span className="text-xs px-3 py-1 bg-white/10 backdrop-blur-xl rounded-full border border-white/20">
-                                  +{post.genres.length - 3}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="text-xs px-3 py-1 rounded-full bg-white/10 backdrop-blur-xl border border-white/20">
-                            ID: {post.id}
-                          </span>
-                          {selectedPostId === post.id && (
-                            <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/50">
-                              <div className="w-2.5 h-2.5 bg-white rounded-full" />
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-12 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl">
-                  <div className="p-4 bg-white/10 rounded-full w-fit mx-auto mb-4">
-                    <Film className="w-8 h-8 text-slate-400" />
-                  </div>
-                  <p className="text-slate-300 text-lg">
-                    {postsSearch
-                      ? "No movies found matching your search."
-                      : "No movies available in the collection."}
-                  </p>
-                </div>
-              )}
             </div>
 
-            {selectedPost && (
+            {/* Preview Card */}
+            {title && year && selectedGenre && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl"
               >
                 <h3 className="text-slate-300 font-semibold mb-4 text-lg">
-                  Selected Movie:
+                  Preview:
                 </h3>
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-emerald-500/20 rounded-2xl border border-emerald-400/30">
                     <Star className="w-6 h-6 text-emerald-400" />
                   </div>
                   <div>
-                    <p className="text-white font-bold text-xl">
-                      {selectedPost.title}
-                    </p>
+                    <p className="text-white font-bold text-xl">{title}</p>
                     <p className="text-slate-300">
-                      {selectedPost.year} • {selectedPost.origin} • Rating:{" "}
+                      {year} • Genre:{" "}
                       <span className="text-emerald-400 font-semibold">
-                        {selectedPost.ratingCategory}
+                        {genres.find((g) => g.key === selectedGenre)?.label ||
+                          selectedGenre}
                       </span>
                     </p>
                   </div>
@@ -425,15 +406,24 @@ export default function AddTopPicksPage() {
 
             <motion.button
               type="submit"
-              disabled={isSubmitting || !selectedPostId || !selectedGenre}
+              disabled={
+                isSubmitting || !title || !year || !selectedGenre || !posterFile
+              }
               whileHover={{
                 scale:
-                  !isSubmitting && selectedPostId && selectedGenre ? 1.02 : 1,
-                y: !isSubmitting && selectedPostId && selectedGenre ? -2 : 0,
+                  !isSubmitting && title && year && selectedGenre && posterFile
+                    ? 1.02
+                    : 1,
+                y:
+                  !isSubmitting && title && year && selectedGenre && posterFile
+                    ? -2
+                    : 0,
               }}
               whileTap={{
                 scale:
-                  !isSubmitting && selectedPostId && selectedGenre ? 0.98 : 1,
+                  !isSubmitting && title && year && selectedGenre && posterFile
+                    ? 0.98
+                    : 1,
               }}
               className="w-full bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-600/90 hover:to-teal-700/90 text-white font-bold py-6 px-8 rounded-3xl transition-all duration-300 shadow-2xl hover:shadow-emerald-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 backdrop-blur-xl border border-emerald-400/30"
             >
@@ -451,7 +441,7 @@ export default function AddTopPicksPage() {
             </motion.button>
           </motion.form>
         ) : (
-          /* Updated view mode with glassmorphic styling */
+          /* View Mode */
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -478,37 +468,39 @@ export default function AddTopPicksPage() {
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-6">
-                        <div className="p-4 bg-emerald-500/20 rounded-2xl border border-emerald-400/30">
-                          <Star className="w-8 h-8 text-emerald-400" />
-                        </div>
-                        <div>
-                          <h3 className="text-2xl font-bold text-white mb-2">
-                            {topPick.post.title}
-                          </h3>
-                          <p className="text-slate-300 mb-4 text-lg">
-                            {topPick.post.year} • {topPick.post.origin} •{" "}
-                            {topPick.post.duration} min
-                          </p>
-                          <div className="flex items-center gap-4">
-                            <span className="px-4 py-2 bg-gradient-to-r from-amber-500/20 to-amber-600/20 text-amber-300 rounded-2xl font-semibold border border-amber-400/30">
-                              {genres.find((g) => g.key === topPick.genre)
-                                ?.label || topPick.genre}
-                            </span>
-                            <span className="px-4 py-2 bg-white/10 text-slate-300 rounded-2xl font-medium border border-white/20">
-                              {topPick.post.ratingCategory}
-                            </span>
+                        {topPick.posterImageUrl && (
+                          <div className="w-20 h-28 rounded-xl overflow-hidden border border-white/20 shadow-lg">
+                            <img
+                              src={topPick.posterImageUrl}
+                              alt={topPick.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
+                        <div className="flex items-center gap-4">
+                          <div className="p-4 bg-emerald-500/20 rounded-2xl border border-emerald-400/30">
+                            <Star className="w-8 h-8 text-emerald-400" />
+                          </div>
+                          <div>
+                            <h3 className="text-2xl font-bold text-white mb-2">
+                              {topPick.title}
+                            </h3>
+                            <p className="text-slate-300 mb-4 text-lg">
+                              {topPick.year}
+                            </p>
+                            <div className="flex items-center gap-4">
+                              <span className="px-4 py-2 bg-gradient-to-r from-amber-500/20 to-amber-600/20 text-amber-300 rounded-2xl font-semibold border border-amber-400/30">
+                                {genres.find((g) => g.key === topPick.genre)
+                                  ?.label || topPick.genre}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
                       <div className="text-slate-400 font-mono bg-white/5 px-3 py-1 rounded-xl border border-white/10">
-                        ID: {topPick.post.id}
+                        ID: {topPick.id}
                       </div>
                     </div>
-                    {topPick.post.content && (
-                      <p className="text-slate-300 mt-6 text-base leading-relaxed line-clamp-2 bg-white/5 p-4 rounded-2xl border border-white/10">
-                        {topPick.post.content.substring(0, 200)}...
-                      </p>
-                    )}
                   </motion.div>
                 ))}
               </div>
