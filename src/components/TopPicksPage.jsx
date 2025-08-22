@@ -1,22 +1,17 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Search } from "lucide-react";
 import axios from "axios";
-import GenreSidebar from "./GenreSidebar.jsx";
-import GenreDropdown from "./GenreDropdown.jsx";
-import MovieGrid from "./MovieGrid.jsx";
+import MovieGrid from "./MovieGrid";
 
 const TopPicksPage = () => {
-  // State for the active genre, loading transitions, and error handling
   const [activeGenre, setActiveGenre] = useState("all");
-  const [isLoading, setIsLoading] = useState(false); // For genre change transitions
-  const [initialLoading, setInitialLoading] = useState(true); // For the initial page load
+  const [isLoading, setIsLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // A single state to hold ALL movies fetched initially
   const [allMovies, setAllMovies] = useState([]);
 
-  // List of available genres
   const genres = [
     { key: "all", label: "All" },
     { key: "action", label: "Action" },
@@ -73,7 +68,7 @@ const TopPicksPage = () => {
 
         if (response.data && response.data.topPicks) {
           const transformedMovies = transformMovieData(response.data.topPicks);
-          setAllMovies(transformedMovies); // Store all movies in one state
+          setAllMovies(transformedMovies);
         }
       } catch (err) {
         console.error("Error fetching top picks:", err);
@@ -85,9 +80,9 @@ const TopPicksPage = () => {
     };
 
     fetchAllTopPicks();
-  }, []); // Empty dependency array ensures this runs only once
+  }, []);
 
-  // Memoized calculation for movie counts per genre
+  // Calculate movie counts for each genre
   const movieCounts = useMemo(() => {
     const counts = { all: allMovies.length };
     genres.forEach((genre) => {
@@ -97,9 +92,9 @@ const TopPicksPage = () => {
       ).length;
     });
     return counts;
-  }, [allMovies]); // Recalculates only when allMovies state changes
+  }, [allMovies]);
 
-  // Memoized filtering of movies based on the active genre
+  // Filter movies based on active genre
   const filteredMovies = useMemo(() => {
     if (activeGenre === "all") {
       return allMovies;
@@ -107,18 +102,20 @@ const TopPicksPage = () => {
     return allMovies.filter(
       (movie) => movie.topPickGenre.toLowerCase() === activeGenre.toLowerCase()
     );
-  }, [activeGenre, allMovies]); // Recalculates when genre or movies change
+  }, [activeGenre, allMovies]);
 
-  // Handles genre selection. No API call is made here.
   const handleGenreSelect = (genreKey) => {
-    setIsLoading(true); // Show a loading state for a smooth transition
+    setIsLoading(true);
     setActiveGenre(genreKey);
 
-    // Simulate a brief loading period for better UX
     setTimeout(() => {
       setIsLoading(false);
     }, 300);
   };
+
+  const activeGenreLabel =
+    genres.find((g) => g.key === activeGenre)?.label || "All";
+  const movieCount = filteredMovies.length;
 
   // Initial loading screen
   if (initialLoading) {
@@ -133,32 +130,27 @@ const TopPicksPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 pt-20 text-white">
+    <div className="min-h-screen bg-slate-950 pt-20">
       {/* Ambient Background */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(139,92,246,0.03),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(245,158,11,0.03),transparent_50%)]" />
       </div>
 
-      {/* Header Section */}
       <section className="relative py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="mb-12 text-center"
+            className="text-center"
           >
-            <div className="mb-6 inline-block">
-              <span className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-emerald-400 backdrop-blur-xl">
-                🎬 Curated Collection
-              </span>
-            </div>
             <h1 className="mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-5xl font-black tracking-tight text-transparent md:text-7xl">
               Top Picks
             </h1>
-            <p className="mx-auto max-w-2xl text-xl leading-relaxed text-slate-400">
-              It's been a pleasure chatting with a fellow cinema lover.
+            <p className="mx-auto max-w-3xl text-xl leading-relaxed text-slate-400">
+              The Greatest Films in Cinema History - Curated by Leading Film
+              Scholars
             </p>
           </motion.div>
         </div>
@@ -175,54 +167,107 @@ const TopPicksPage = () => {
         </section>
       )}
 
-      {/* Main Content */}
-      <section className="relative pb-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-12">
-            {/* Desktop Sidebar */}
-            <div className="hidden flex-shrink-0 lg:block">
-              <div className="sticky top-8">
-                <GenreSidebar
-                  genres={genres}
-                  activeGenre={activeGenre}
-                  onGenreSelect={handleGenreSelect}
-                  movieCounts={movieCounts}
-                />
-              </div>
-            </div>
-
-            {/* Main Content Area */}
-            <div className="flex-1">
-              {/* Mobile Dropdown */}
-              <div className="mb-8 lg:hidden">
-                <GenreDropdown
-                  genres={genres}
-                  activeGenre={activeGenre}
-                  onGenreSelect={handleGenreSelect}
-                  movieCounts={movieCounts}
-                />
-              </div>
-
-              {/* Results Header */}
-              <motion.div
-                className="mb-10"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
-                <h2 className="mb-2 text-3xl font-bold tracking-tight text-white">
-                  {genres.find((g) => g.key === activeGenre)?.label}
-                </h2>
-                <p className="text-lg text-slate-400">
-                  {filteredMovies.length}{" "}
-                  {filteredMovies.length === 1 ? "title" : "titles"}
-                </p>
-              </motion.div>
-
-              {/* Movie Grid */}
-              <MovieGrid movies={filteredMovies} isLoading={isLoading} />
-            </div>
+      <section className="relative border-t border-b border-slate-800/50 bg-slate-900/20 backdrop-blur-sm">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex justify-center">
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex items-center gap-3 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 px-6 py-3 text-slate-300 transition-all duration-300 hover:bg-white/10 hover:text-white"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Search className="h-5 w-5" />
+              <span className="font-medium">Search Films</span>
+            </motion.button>
           </div>
+        </div>
+      </section>
+
+      <section className="relative py-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="flex flex-wrap justify-center gap-3"
+          >
+            {genres.map((genre, index) => (
+              <motion.button
+                key={genre.key}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.5 + index * 0.05 }}
+                onClick={() => handleGenreSelect(genre.key)}
+                className={`rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300 ${
+                  activeGenre === genre.key
+                    ? "bg-amber-400 text-black shadow-lg shadow-amber-400/25"
+                    : "border border-slate-600/50 bg-slate-800/30 text-slate-300 backdrop-blur-sm hover:border-slate-500 hover:bg-slate-700/50 hover:text-white"
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {genre.label}
+                {movieCounts[genre.key] !== undefined && (
+                  <span className="ml-2 text-xs opacity-75">
+                    ({movieCounts[genre.key]})
+                  </span>
+                )}
+              </motion.button>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="relative pb-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            key={activeGenre}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center"
+          >
+            <h2 className="text-3xl font-bold text-white">
+              {movieCount > 0
+                ? `Top ${movieCount} ${activeGenreLabel} Films`
+                : `No ${activeGenreLabel} Films Found`}
+            </h2>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Movie Grid */}
+      <section className="relative pb-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <MovieGrid movies={filteredMovies} isLoading={isLoading} />
+
+          {!isLoading && filteredMovies.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="mt-12 text-center"
+            >
+              <button className="rounded-xl bg-gradient-to-r from-emerald-500/20 to-amber-500/20 backdrop-blur-xl border border-white/10 px-8 py-4 text-white font-semibold transition-all duration-300 hover:from-emerald-500/30 hover:to-amber-500/30 hover:scale-105">
+                View All {movieCount} {activeGenreLabel} Films
+              </button>
+            </motion.div>
+          )}
+
+          {!isLoading && filteredMovies.length === 0 && !error && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center py-16"
+            >
+              <div className="text-slate-400 text-lg">
+                No films found for {activeGenreLabel.toLowerCase()} genre.
+              </div>
+            </motion.div>
+          )}
         </div>
       </section>
     </div>
