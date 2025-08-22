@@ -72,7 +72,7 @@ export default function Navbar() {
     { href: "/reviews", label: "Reviews" },
     { href: "/trending", label: "Trending" },
     { href: "/unpopular-opinions", label: "Unpopular Opinions" },
-    { href: "/merchandise", label: "Merchandise" },
+    
     {href:"/cinema-school",label:"Cinema School"},
   ];
 
