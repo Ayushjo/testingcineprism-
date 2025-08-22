@@ -73,6 +73,7 @@ export default function Navbar() {
     { href: "/trending", label: "Trending" },
     { href: "/unpopular-opinions", label: "Unpopular Opinions" },
     { href: "/merchandise", label: "Merchandise" },
+    {href:"/cinema-school",label:"Cinema School"},
   ];
 
   // Conditionally add auth-related links
