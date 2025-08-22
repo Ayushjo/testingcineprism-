@@ -6,22 +6,22 @@ import { Star, Save, Upload, Trophy, Film, Image } from "lucide-react";
 import axios from "axios";
 
 const genres = [
-  { key: "action", label: "Action" },
-  { key: "adventure", label: "Adventure" },
-  { key: "biography", label: "Biography" },
-  { key: "comedy", label: "Comedy" },
-  { key: "crime", label: "Crime" },
-  { key: "drama", label: "Drama" },
-  { key: "fantasy", label: "Fantasy" },
-  { key: "history", label: "History" },
-  { key: "horror", label: "Horror" },
-  { key: "music", label: "Music" },
-  { key: "mystery", label: "Mystery" },
-  { key: "romance", label: "Romance" },
-  { key: "scifi", label: "Sci-Fi" },
-  { key: "thriller", label: "Thriller" },
-  { key: "war", label: "War" },
-  { key: "western", label: "Western" },
+  { key: "Action", label: "Action" },
+  { key: "Adventure", label: "Adventure" },
+  { key: "Biography", label: "Biography" },
+  { key: "Comedy", label: "Comedy" },
+  { key: "Crime", label: "Crime" },
+  { key: "Drama", label: "Drama" },
+  { key: "Fantasy", label: "Fantasy" },
+  { key: "History", label: "History" },
+  { key: "Horror", label: "Horror" },
+  { key: "Music", label: "Music" },
+  { key: "Mystery", label: "Mystery" },
+  { key: "Romance", label: "Romance" },
+  { key: "Scifi", label: "Sci-Fi" },
+  { key: "Thriller", label: "Thriller" },
+  { key: "War", label: "War" },
+  { key: "Western", label: "Western" },
 ];
 
 export default function AddTopPicksPage() {
