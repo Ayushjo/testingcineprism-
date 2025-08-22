@@ -97,7 +97,7 @@ export default function AddTopPicksPage() {
       formData.append("file", posterFile);
 
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/create-top-picks",
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/add-top-picks",
         formData,
         {
           headers: {
@@ -323,34 +323,35 @@ export default function AddTopPicksPage() {
                 Movie Poster
               </label>
               <div className="space-y-4">
-                <div className="relative">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    disabled={isSubmitting}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    id="poster-upload"
-                  />
-                  <div className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center hover:bg-white/10 hover:border-white/20 transition-all duration-300">
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="p-4 bg-emerald-500/20 rounded-2xl border border-emerald-400/30">
-                        <Upload className="w-8 h-8 text-emerald-400" />
-                      </div>
-                      <div>
-                        <p className="text-white font-semibold text-lg mb-2">
-                          {posterFile ? posterFile.name : "Upload Movie Poster"}
-                        </p>
-                        <p className="text-slate-400">
-                          Click to browse or drag and drop your poster image
-                        </p>
-                        <p className="text-slate-500 text-sm mt-2">
-                          Supported formats: JPG, PNG, WebP
-                        </p>
-                      </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  disabled={isSubmitting}
+                  className="hidden"
+                  id="poster-upload"
+                />
+                <label
+                  htmlFor="poster-upload"
+                  className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer block"
+                >
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="p-4 bg-emerald-500/20 rounded-2xl border border-emerald-400/30">
+                      <Upload className="w-8 h-8 text-emerald-400" />
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold text-lg mb-2">
+                        {posterFile ? posterFile.name : "Upload Movie Poster"}
+                      </p>
+                      <p className="text-slate-400">
+                        Click to browse or drag and drop your poster image
+                      </p>
+                      <p className="text-slate-500 text-sm mt-2">
+                        Supported formats: JPG, PNG, WebP
+                      </p>
                     </div>
                   </div>
-                </div>
+                </label>
 
                 {posterPreview && (
                   <motion.div
