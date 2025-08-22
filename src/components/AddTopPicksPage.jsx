@@ -97,7 +97,7 @@ export default function AddTopPicksPage() {
       formData.append("file", posterFile);
 
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/add-top-picks",
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/create-top-picks",
         formData,
         {
           headers: {
