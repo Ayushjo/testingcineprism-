@@ -40,21 +40,22 @@ const TopPicksPage = () => {
   // Helper function to transform the API response into a consistent movie object structure
   const transformMovieData = (topPicks) => {
     return topPicks.map((item) => ({
-      id: item.post.id,
-      title: item.post.title,
-      content: item.post.content,
-      origin: item.post.origin,
-      duration: item.post.duration,
-      genres: item.post.genres,
-      year: item.post.year,
-      posterImageUrl: item.post.posterImageUrl,
-      reviewPosterImageUrl: item.post.reviewPosterImageUrl,
-      ratingCategory: item.post.ratingCategory,
-      relatedPostIds: item.post.relatedPostIds,
-      createdAt: item.post.createdAt,
-      updatedAt: item.post.updatedAt,
+      id: item.id,
+      title: item.title,
+      year: item.year,
+      posterImageUrl: item.posterImageUrl,
       // The specific genre this was a "top pick" for, used for filtering
       topPickGenre: item.genre,
+      // Adding default values for fields that might be expected elsewhere
+      content: "",
+      origin: "",
+      duration: 0,
+      genres: [item.genre],
+      reviewPosterImageUrl: "",
+      ratingCategory: "",
+      relatedPostIds: [],
+      createdAt: item.createdAt || new Date().toISOString(),
+      updatedAt: item.updatedAt || new Date().toISOString(),
     }));
   };
 
@@ -67,7 +68,7 @@ const TopPicksPage = () => {
         const response = await axios.post(
           `https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-top-picks`,
           {},
-          { withCredentials:true }
+          { withCredentials: true }
         );
 
         if (response.data && response.data.topPicks) {
@@ -157,7 +158,7 @@ const TopPicksPage = () => {
               Top Picks
             </h1>
             <p className="mx-auto max-w-2xl text-xl leading-relaxed text-slate-400">
-              It's been a pleasure chatting with a fellow cinema lover.
+              It's been a pleasure chatting with a fellow cinema lover.
             </p>
           </motion.div>
         </div>
