@@ -92,7 +92,7 @@ export default function AddTopPicksPage() {
     try {
       const formData = new FormData();
       formData.append("title", title);
-      formData.append("year", year);
+      formData.append("year", parseInt(year));
       formData.append("genre", selectedGenre);
       formData.append("file", posterFile);
 
