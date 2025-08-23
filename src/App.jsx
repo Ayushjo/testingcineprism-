@@ -33,6 +33,9 @@ import ReviewPosterPage from "./components/UploadReviewPoster";
 import TopPicksPage from "./components/TopPicksPage";
 import AddTopPicksPage from "./components/AddTopPicksPage";
 import CinemaSchoolPage from "./components/CinemaSchoolPage";
+import ArticlePageLayout from "./components/ArticlePageLayout";
+import AIInsightsArticlePage from "./components/AIInsightsArticlePage";
+import NewsArticlePage from "./components/NewsArticlePage";
 const App = () => {
   const location = useLocation();
 
@@ -70,6 +73,8 @@ const App = () => {
               element={<UnpopularOpinionsPage />}
             />
           </Route>
+          <Route path="/ai-insights/:id" element={<AIInsightsArticlePage />} />
+          <Route path="/news/:id" element={<NewsArticlePage />} />
 
           <Route path="/recommendations-page" element={<TopPicksPage />} />
           <Route path="/merchandise" element={<Merchandise />} />
