@@ -501,7 +501,7 @@ export default function TrendingPage() {
           transition={{ duration: 0.8 }}
           className="text-center mb-8 sm:mb-12 md:mb-16"
         >
-          <div className="inline-block mb-4 sm:mb-6">
+          <div className="inline-block mb-4 sm:mb-6 pt-12 sm:pt-0">
             <motion.span
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
