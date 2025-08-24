@@ -14,6 +14,7 @@ import {
   Loader2,
   MoreHorizontal,
   X,
+  Reply,
 } from "lucide-react";
 import {
   usePost,
@@ -26,13 +27,16 @@ import {
 } from "../utils/api.js";
 import { useAuth } from "@/context/AuthContext.jsx";
 
+// Enhanced Comment component with unlimited nesting support
 const Comment = ({
   comment,
   onReplyAdded,
   onCommentUpdated,
   onCommentDeleted,
+  depth = 0,
+  maxDepth = 8, // Maximum visual nesting depth
 }) => {
-  const { user } = useAuth(); // Use AuthContext
+  const { user } = useAuth();
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [replyText, setReplyText] = useState("");
@@ -40,13 +44,16 @@ const Comment = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.content);
 
+  // For nested replies, we can use the enhanced useReplies hook
   const {
     replies,
     pagination: replyPagination,
     loading: repliesLoading,
     addReply,
     loadMore: loadMoreReplies,
-  } = useReplies(showReplies ? comment.id : null);
+    updateReply,
+    removeReply,
+  } = useReplies(showReplies ? comment.id : null, true); // Enable nested fetching
 
   const handleSubmitReply = async (e) => {
     e.preventDefault();
@@ -115,176 +122,238 @@ const Comment = ({
     e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
   };
 
+  // Handle nested reply events
+  const handleNestedReplyAdded = (parentCommentId, reply) => {
+    // If this is a direct reply to this comment, handle it
+    if (parentCommentId === comment.id) {
+      // Already handled by addReply above
+      return;
+    }
+    // Otherwise, pass it up to parent
+    onReplyAdded(parentCommentId, reply);
+  };
+
+  const handleNestedCommentUpdated = (updatedComment) => {
+    if (updatedComment.id === comment.id) {
+      onCommentUpdated(updatedComment);
+    } else {
+      updateReply(updatedComment.id, updatedComment);
+    }
+  };
+
+  const handleNestedCommentDeleted = (commentId) => {
+    if (commentId === comment.id) {
+      onCommentDeleted(commentId);
+    } else {
+      removeReply(commentId);
+    }
+  };
+
   // Check if current user owns this comment
   const isOwner =
     user &&
     comment.user &&
     (user.id === comment.user.id || user._id === comment.user._id);
 
+  // Calculate visual depth (cap it for better UI)
+  const visualDepth = Math.min(depth, maxDepth);
+  const leftMargin = visualDepth * 24; // 24px per level
+
+  // Different styling for deeply nested comments
+  const isDeepNest = visualDepth >= maxDepth;
+
   return (
-    <div className="relative pl-12">
-      <div className="absolute left-4 top-0 bottom-0 w-px bg-slate-700" />
+    <div className="relative" style={{ marginLeft: `${leftMargin}px` }}>
+      {/* Threading line for nested comments */}
+      {depth > 0 && (
+        <div className="absolute left-[-12px] top-0 bottom-0 w-px bg-slate-700/50" />
+      )}
 
-      <div className="absolute left-[-2px] top-1">
-        <div
-          className={`w-8 h-8 rounded-full ${getAvatarColor(
-            comment.user.username[0]
-          )} flex items-center justify-center text-white text-sm font-semibold`}
-        >
-          {comment.user.username[0].toUpperCase()}
-        </div>
-      </div>
-
-      <div className="flex-1">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-sm font-medium text-emerald-400">
-            @{comment.user.username}
-          </span>
-          <span className="text-xs text-slate-500">
-            {formatDate(comment.createdAt)}
-          </span>
-          {comment.updatedAt !== comment.createdAt && (
-            <span className="text-xs text-slate-500">(edited)</span>
-          )}
-        </div>
-
-        {isEditing ? (
-          <div className="mb-2">
-            <textarea
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              onInput={handleTextareaInput}
-              className="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none"
-              rows={2}
-            />
-            <div className="flex gap-2 mt-2">
-              <button
-                onClick={handleEditComment}
-                className="text-xs bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-1 rounded border border-emerald-500/30 transition-all duration-200"
-              >
-                Save
-              </button>
-              <button
-                onClick={() => {
-                  setIsEditing(false);
-                  setEditText(comment.content);
-                }}
-                className="text-xs text-slate-500 hover:text-slate-400 px-3 py-1 transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        ) : (
-          <p className="text-slate-300 text-sm leading-relaxed mb-2">
-            {comment.content}
-          </p>
-        )}
-
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => setShowReplyInput(!showReplyInput)}
-            className="text-xs text-slate-500 hover:text-emerald-400 font-semibold transition-colors duration-200"
+      <div className="flex gap-3 mb-4">
+        {/* Avatar */}
+        <div className="flex-shrink-0">
+          <div
+            className={`w-8 h-8 rounded-full ${getAvatarColor(
+              comment.user.username[0]
+            )} flex items-center justify-center text-white text-sm font-semibold ${
+              isDeepNest ? "w-6 h-6 text-xs" : ""
+            }`}
           >
-            Reply
-          </button>
-
-          {comment.replyCount > 0 && (
-            <button
-              onClick={() => setShowReplies(!showReplies)}
-              className="text-xs text-slate-500 hover:text-emerald-400 font-semibold transition-colors duration-200"
-            >
-              {showReplies ? "Hide" : "Show"} {comment.replyCount}{" "}
-              {comment.replyCount === 1 ? "reply" : "replies"}
-            </button>
-          )}
-
-          {/* Comment actions - only show for comment owner */}
-          {isOwner && (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setIsEditing(true)}
-                className="text-xs text-slate-500 hover:text-slate-400 transition-colors"
-              >
-                Edit
-              </button>
-              <button
-                onClick={handleDeleteComment}
-                className="text-xs text-slate-500 hover:text-red-400 transition-colors"
-              >
-                Delete
-              </button>
-            </div>
-          )}
+            {comment.user.username[0].toUpperCase()}
+          </div>
         </div>
 
-        {/* Reply Input Form */}
-        {showReplyInput && (
-          <form onSubmit={handleSubmitReply} className="mt-3">
-            <div className="flex gap-3">
+        {/* Comment content */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-sm font-medium text-emerald-400">
+              @{comment.user.username}
+            </span>
+            <span className="text-xs text-slate-500">
+              {formatDate(comment.createdAt)}
+            </span>
+            {comment.updatedAt !== comment.createdAt && (
+              <span className="text-xs text-slate-500">(edited)</span>
+            )}
+            {depth > 0 && (
+              <span className="text-xs text-slate-600">• Depth {depth}</span>
+            )}
+          </div>
+
+          {isEditing ? (
+            <div className="mb-2">
               <textarea
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
                 onInput={handleTextareaInput}
-                rows={1}
-                placeholder="Write a reply..."
-                className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
-                disabled={isSubmittingReply}
+                className="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none"
+                rows={2}
               />
-              <button
-                type="submit"
-                disabled={!replyText.trim() || isSubmittingReply}
-                className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300 text-sm self-start disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
-              >
-                {isSubmittingReply ? (
-                  <Loader2 className="w-3 h-3 animate-spin" />
-                ) : (
-                  <Send className="w-3 h-3" />
-                )}
-                Reply
-              </button>
-            </div>
-          </form>
-        )}
-
-        {/* Replies Section */}
-        {showReplies && (
-          <div className="mt-4 space-y-4">
-            {repliesLoading && replies.length === 0 ? (
-              <div className="flex items-center gap-2 text-slate-500 text-sm">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Loading replies...
+              <div className="flex gap-2 mt-2">
+                <button
+                  onClick={handleEditComment}
+                  className="text-xs bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-1 rounded border border-emerald-500/30 transition-all duration-200"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => {
+                    setIsEditing(false);
+                    setEditText(comment.content);
+                  }}
+                  className="text-xs text-slate-500 hover:text-slate-400 px-3 py-1 transition-colors"
+                >
+                  Cancel
+                </button>
               </div>
-            ) : (
-              <>
-                {replies.map((reply) => (
-                  <Comment
-                    key={reply.id}
-                    comment={reply}
-                    onReplyAdded={onReplyAdded}
-                    onCommentUpdated={onCommentUpdated}
-                    onCommentDeleted={onCommentDeleted}
-                  />
-                ))}
+            </div>
+          ) : (
+            <div
+              className={`text-slate-300 leading-relaxed mb-2 ${
+                isDeepNest ? "text-sm" : "text-sm"
+              }`}
+            >
+              {comment.content}
+            </div>
+          )}
 
-                {replyPagination?.hasMore && (
-                  <button
-                    onClick={loadMoreReplies}
-                    disabled={repliesLoading}
-                    className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition-colors flex items-center gap-1"
-                  >
-                    {repliesLoading ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <MoreHorizontal className="w-3 h-3" />
-                    )}
-                    Load more replies
-                  </button>
-                )}
+          {/* Comment actions */}
+          <div className="flex items-center gap-4 text-xs">
+            <button
+              onClick={() => setShowReplyInput(!showReplyInput)}
+              className="text-slate-500 hover:text-emerald-400 font-medium transition-colors duration-200 flex items-center gap-1"
+            >
+              <Reply className="w-3 h-3" />
+              Reply
+            </button>
+
+            {comment.replyCount > 0 && (
+              <button
+                onClick={() => setShowReplies(!showReplies)}
+                className="text-slate-500 hover:text-emerald-400 font-medium transition-colors duration-200"
+              >
+                {showReplies ? "Hide" : "Show"} {comment.replyCount}{" "}
+                {comment.replyCount === 1 ? "reply" : "replies"}
+              </button>
+            )}
+
+            {/* Comment owner actions */}
+            {isOwner && (
+              <>
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="text-slate-500 hover:text-slate-400 transition-colors"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={handleDeleteComment}
+                  className="text-slate-500 hover:text-red-400 transition-colors"
+                >
+                  Delete
+                </button>
               </>
             )}
           </div>
-        )}
+
+          {/* Reply Input Form */}
+          {showReplyInput && (
+            <div className="mt-3">
+              <form onSubmit={handleSubmitReply}>
+                <div className="flex gap-3">
+                  <textarea
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    onInput={handleTextareaInput}
+                    rows={1}
+                    placeholder={`Reply to @${comment.user.username}...`}
+                    className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
+                    disabled={isSubmittingReply}
+                  />
+                  <button
+                    type="submit"
+                    disabled={!replyText.trim() || isSubmittingReply}
+                    className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300 text-sm self-start disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                  >
+                    {isSubmittingReply ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <Send className="w-3 h-3" />
+                    )}
+                    Reply
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Nested Replies Section */}
+          {showReplies && (
+            <div className="mt-4">
+              {repliesLoading && replies.length === 0 ? (
+                <div className="flex items-center gap-2 text-slate-500 text-sm">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Loading replies...
+                </div>
+              ) : (
+                <>
+                  {replies.map((reply) => (
+                    <Comment
+                      key={reply.id}
+                      comment={reply}
+                      onReplyAdded={handleNestedReplyAdded}
+                      onCommentUpdated={handleNestedCommentUpdated}
+                      onCommentDeleted={handleNestedCommentDeleted}
+                      depth={depth + 1}
+                      maxDepth={maxDepth}
+                    />
+                  ))}
+
+                  {replyPagination?.hasMore && (
+                    <div
+                      style={{
+                        marginLeft: `${Math.min(depth + 1, maxDepth) * 24}px`,
+                      }}
+                    >
+                      <button
+                        onClick={loadMoreReplies}
+                        disabled={repliesLoading}
+                        className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition-colors flex items-center gap-1 mb-2"
+                      >
+                        {repliesLoading ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                          <MoreHorizontal className="w-3 h-3" />
+                        )}
+                        Load more replies
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -293,7 +362,7 @@ const Comment = ({
 export default function PostPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth(); // Use AuthContext
+  const { user } = useAuth();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [newComment, setNewComment] = useState("");
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
@@ -460,18 +529,8 @@ export default function PostPage() {
                   </h1>
                 </div>
 
-                {/* Primary Info - Rating & Year */}
+                {/* Primary Info - Year */}
                 <div className="flex flex-wrap gap-3">
-                  {/* <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 backdrop-blur-xl px-4 py-3 rounded-2xl border border-yellow-500/20">
-                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                    <span className="text-white font-bold text-base">
-                      {post.ratingCategory === "HIGHLY_RECOMMENDED"
-                        ? "9.5"
-                        : post.ratingCategory === "RECOMMENDED"
-                        ? "8.0"
-                        : "6.5"}
-                    </span>
-                  </div> */}
                   <div className="flex items-center gap-2 bg-white/5 backdrop-blur-xl px-4 py-3 rounded-2xl border border-white/10">
                     <Calendar className="w-5 h-5 text-slate-400" />
                     <span className="text-slate-200 font-medium text-base">
@@ -590,7 +649,6 @@ export default function PostPage() {
 
             <div className="relative max-w-4xl mx-auto">
               {post.images.length === 1 ? (
-                // Static image if only one image
                 <div className="aspect-video relative rounded-2xl overflow-hidden shadow-2xl">
                   <img
                     src={
@@ -602,9 +660,7 @@ export default function PostPage() {
                   />
                 </div>
               ) : (
-                // Carousel if multiple images
                 <div className="relative">
-                  {/* Main Image */}
                   <div className="aspect-video relative rounded-2xl overflow-hidden shadow-2xl">
                     <img
                       src={
@@ -616,7 +672,6 @@ export default function PostPage() {
                     />
                   </div>
 
-                  {/* Navigation Arrows */}
                   <button
                     onClick={prevImage}
                     className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/60 backdrop-blur-xl hover:bg-black/80 text-white p-3 rounded-full border border-white/10 transition-all duration-300 hover:scale-110"
@@ -630,7 +685,6 @@ export default function PostPage() {
                     <ChevronRight className="w-6 h-6" />
                   </button>
 
-                  {/* Dot Indicators */}
                   <div className="flex justify-center gap-2 mt-6">
                     {post.images.map((_, index) => (
                       <button
@@ -650,12 +704,15 @@ export default function PostPage() {
           </section>
         )}
 
-        {/* Section 3: Discussion */}
+        {/* Section 3: Discussion with Enhanced Nested Comments */}
         <section id="discussion-section" className="py-16">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-black text-white mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
               Discussion
             </h2>
+            <p className="text-slate-400 text-sm">
+              Join the conversation with unlimited nested replies
+            </p>
           </div>
 
           <div className="max-w-4xl mx-auto">
@@ -692,8 +749,8 @@ export default function PostPage() {
               </form>
             </div>
 
-            {/* Comments List */}
-            <div className="space-y-6">
+            {/* Enhanced Comments List with Nested Support */}
+            <div className="space-y-8">
               {commentsLoading && comments.length === 0 ? (
                 <div className="flex items-center justify-center gap-3 py-8">
                   <Loader2 className="w-6 h-6 animate-spin text-emerald-400" />
@@ -708,10 +765,11 @@ export default function PostPage() {
                       onReplyAdded={handleReplyAdded}
                       onCommentUpdated={updateComment}
                       onCommentDeleted={removeComment}
+                      depth={0}
+                      maxDepth={8}
                     />
                   ))}
 
-                  {/* Load More Comments Button */}
                   {commentPagination?.hasMore && (
                     <div className="flex justify-center pt-6">
                       <button
@@ -762,10 +820,8 @@ export default function PostPage() {
                   className="group relative h-96 rounded-2xl overflow-hidden shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer"
                   onClick={() => navigate(`/post/${relatedPost.id}`)}
                 >
-                  {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-                  {/* Background Image with Hover Effect */}
                   <div
                     className="absolute inset-0 transition-transform duration-300 group-hover:scale-105"
                     style={{
@@ -778,7 +834,6 @@ export default function PostPage() {
                     }}
                   />
 
-                  {/* Content - Bottom */}
                   <div className="absolute inset-0 flex flex-col justify-end p-6 z-10">
                     <h3 className="text-2xl font-bold text-white mb-2 tracking-tight group-hover:text-emerald-300 transition-colors duration-300">
                       {relatedPost.title}

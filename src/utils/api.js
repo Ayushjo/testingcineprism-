@@ -1,4 +1,4 @@
-// utils/api.js - Fixed API integration with proper withCredentials
+// utils/api.js - Enhanced API integration with nested comments support
 
 import axios from "axios";
 import { useState, useEffect, useCallback } from "react";
@@ -48,7 +48,7 @@ export const postApi = {
 };
 
 // ============================================================================
-// COMMENT API FUNCTIONS
+// ENHANCED COMMENT API FUNCTIONS WITH NESTED SUPPORT
 // ============================================================================
 
 export const commentApi = {
@@ -66,10 +66,10 @@ export const commentApi = {
     };
   },
 
-  // Get replies for a comment
-  async fetchReplies(commentId, page = 1, limit = 5) {
+  // Get replies for a comment with nested support
+  async fetchReplies(commentId, page = 1, limit = 5, nested = false) {
     const response = await api.get(`/posts/comments/${commentId}/replies`, {
-      params: { page, limit },
+      params: { page, limit, nested },
     });
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed to fetch replies");
@@ -80,6 +80,17 @@ export const commentApi = {
     };
   },
 
+  // Get complete comment thread (new function)
+  async fetchCommentThread(commentId) {
+    const response = await api.get(`/posts/comments/${commentId}/thread`);
+    if (!response.data.success) {
+      throw new Error(
+        response.data.message || "Failed to fetch comment thread"
+      );
+    }
+    return response.data.thread;
+  },
+
   // Create new comment - with explicit withCredentials
   async createComment(postId, content) {
     try {
@@ -87,7 +98,7 @@ export const commentApi = {
         `/posts/${postId}/comments`,
         { content },
         {
-          withCredentials: true, // Explicitly ensure cookies are sent
+          withCredentials: true,
         }
       );
 
@@ -96,7 +107,6 @@ export const commentApi = {
       }
       return response.data.comment;
     } catch (error) {
-      // Better error handling
       if (error.response?.status === 401) {
         throw new Error("Please login to comment");
       }
@@ -108,14 +118,14 @@ export const commentApi = {
     }
   },
 
-  // Create reply to comment - with explicit withCredentials
+  // Create reply to comment (now supports unlimited nesting)
   async createReply(commentId, content) {
     try {
       const response = await api.post(
         `/posts/comments/${commentId}/replies`,
         { content },
         {
-          withCredentials: true, // Explicitly ensure cookies are sent
+          withCredentials: true,
         }
       );
 
@@ -142,7 +152,7 @@ export const commentApi = {
         `/posts/comments/${commentId}`,
         { content },
         {
-          withCredentials: true, // Explicitly ensure cookies are sent
+          withCredentials: true,
         }
       );
 
@@ -166,7 +176,7 @@ export const commentApi = {
   async deleteComment(commentId) {
     try {
       const response = await api.delete(`/posts/comments/${commentId}`, {
-        withCredentials: true, // Explicitly ensure cookies are sent
+        withCredentials: true,
       });
 
       if (!response.data.success) {
@@ -198,7 +208,7 @@ export const likeApi = {
         `/posts/${postId}/like`,
         {},
         {
-          withCredentials: true, // Explicitly ensure cookies are sent
+          withCredentials: true,
         }
       );
 
@@ -235,7 +245,7 @@ export const likeApi = {
 };
 
 // ============================================================================
-// REACT HOOKS FOR DATA FETCHING
+// ENHANCED REACT HOOKS FOR DATA FETCHING
 // ============================================================================
 
 // Hook for post data
@@ -256,20 +266,15 @@ export const usePost = (postId) => {
       setLoading(true);
       setError(null);
 
-      console.log("Fetching post data for ID:", postId); // Debug log
-
       const [postData, relatedData] = await Promise.all([
         postApi.fetchPost(postId),
         postApi.fetchRelatedPosts(postId),
       ]);
 
-      console.log("Post data received:", postData); // Debug log
-      console.log("Related posts received:", relatedData); // Debug log
-
       setPost(postData);
       setRelatedPosts(relatedData);
     } catch (err) {
-      console.error("Error fetching post data:", err); // Debug log
+      console.error("Error fetching post data:", err);
       setError(err.message || "Failed to fetch post data");
     } finally {
       setLoading(false);
@@ -298,11 +303,7 @@ export const useComments = (postId) => {
         setLoading(true);
         setError(null);
 
-        console.log("Fetching comments for post:", postId, "page:", page); // Debug log
-
         const data = await commentApi.fetchComments(postId, page);
-
-        console.log("Comments received:", data); // Debug log
 
         if (append) {
           setComments((prev) => [...prev, ...data.comments]);
@@ -312,7 +313,7 @@ export const useComments = (postId) => {
 
         setPagination(data.pagination);
       } catch (err) {
-        console.error("Error fetching comments:", err); // Debug log
+        console.error("Error fetching comments:", err);
         setError(err.message || "Failed to fetch comments");
       } finally {
         setLoading(false);
@@ -334,15 +335,38 @@ export const useComments = (postId) => {
   }, []);
 
   const updateComment = useCallback((commentId, updatedComment) => {
-    setComments((prev) =>
-      prev.map((comment) =>
-        comment.id === commentId ? updatedComment : comment
-      )
-    );
+    const updateCommentRecursive = (comments) => {
+      return comments.map((comment) => {
+        if (comment.id === commentId) {
+          return { ...comment, ...updatedComment };
+        }
+        if (comment.replies && comment.replies.length > 0) {
+          return {
+            ...comment,
+            replies: updateCommentRecursive(comment.replies),
+          };
+        }
+        return comment;
+      });
+    };
+
+    setComments((prev) => updateCommentRecursive(prev));
   }, []);
 
   const removeComment = useCallback((commentId) => {
-    setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+    const removeCommentRecursive = (comments) => {
+      return comments.filter((comment) => {
+        if (comment.id === commentId) {
+          return false;
+        }
+        if (comment.replies && comment.replies.length > 0) {
+          comment.replies = removeCommentRecursive(comment.replies);
+        }
+        return true;
+      });
+    };
+
+    setComments((prev) => removeCommentRecursive(prev));
     setPagination((prev) =>
       prev
         ? {
@@ -379,22 +403,22 @@ export const useComments = (postId) => {
   };
 };
 
-// Hook for replies with pagination
-export const useReplies = (commentId) => {
+// Enhanced hook for nested replies
+export const useReplies = (commentId, enableNested = false) => {
   const [replies, setReplies] = useState([]);
   const [pagination, setPagination] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const fetchReplies = useCallback(
-    async (page = 1, append = false) => {
+    async (page = 1, append = false, nested = enableNested) => {
       if (!commentId) return;
 
       try {
         setLoading(true);
         setError(null);
 
-        const data = await commentApi.fetchReplies(commentId, page);
+        const data = await commentApi.fetchReplies(commentId, page, 5, nested);
 
         if (append) {
           setReplies((prev) => [...prev, ...data.replies]);
@@ -409,7 +433,7 @@ export const useReplies = (commentId) => {
         setLoading(false);
       }
     },
-    [commentId]
+    [commentId, enableNested]
   );
 
   const addReply = useCallback((newReply) => {
@@ -425,13 +449,38 @@ export const useReplies = (commentId) => {
   }, []);
 
   const updateReply = useCallback((replyId, updatedReply) => {
-    setReplies((prev) =>
-      prev.map((reply) => (reply.id === replyId ? updatedReply : reply))
-    );
+    const updateReplyRecursive = (replies) => {
+      return replies.map((reply) => {
+        if (reply.id === replyId) {
+          return { ...reply, ...updatedReply };
+        }
+        if (reply.replies && reply.replies.length > 0) {
+          return {
+            ...reply,
+            replies: updateReplyRecursive(reply.replies),
+          };
+        }
+        return reply;
+      });
+    };
+
+    setReplies((prev) => updateReplyRecursive(prev));
   }, []);
 
   const removeReply = useCallback((replyId) => {
-    setReplies((prev) => prev.filter((reply) => reply.id !== replyId));
+    const removeReplyRecursive = (replies) => {
+      return replies.filter((reply) => {
+        if (reply.id === replyId) {
+          return false;
+        }
+        if (reply.replies && reply.replies.length > 0) {
+          reply.replies = removeReplyRecursive(reply.replies);
+        }
+        return true;
+      });
+    };
+
+    setReplies((prev) => removeReplyRecursive(prev));
     setPagination((prev) =>
       prev
         ? {
@@ -515,8 +564,6 @@ export const useLike = (postId) => {
         setLikeCount(data.likeCount);
       } catch (err) {
         console.error("Error fetching like status:", err);
-        // Don't set error for like status, just log it
-        // This prevents showing errors on initial load for non-authenticated users
       }
     };
 
@@ -572,6 +619,36 @@ export const getAvatarColor = (initial) => {
 export const truncateText = (text, maxLength) => {
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength).trim() + "...";
+};
+
+// Helper function to flatten nested comments for display
+export const flattenComments = (comments) => {
+  const flattened = [];
+
+  const flatten = (commentList, depth = 0) => {
+    commentList.forEach((comment) => {
+      flattened.push({ ...comment, depth });
+      if (comment.replies && comment.replies.length > 0) {
+        flatten(comment.replies, depth + 1);
+      }
+    });
+  };
+
+  flatten(comments);
+  return flattened;
+};
+
+// Helper function to calculate comment depth
+export const getCommentDepth = (comment) => {
+  return comment.depth || 0;
+};
+
+// Helper function to format nested comments for display
+export const formatNestedComments = (comments, maxDepth = 5) => {
+  return comments.map((comment) => ({
+    ...comment,
+    displayDepth: Math.min(comment.depth || 0, maxDepth),
+  }));
 };
 
 // Export default API instance for custom requests
