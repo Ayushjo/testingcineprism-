@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import ArticlePageLayout from "./ArticlePageLayout"; // Adjust path as needed
+import ArticlePageLayout from "../components/ArticlePageLayout"; // Adjust path as needed
 
-export default function AIInsightsArticlePage() {
+export default function NewsArticlePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [article, setArticle] = useState(null);
@@ -52,7 +52,7 @@ export default function AIInsightsArticlePage() {
     return (
       <div className="min-h-screen bg-gradient-to-b from-slate-950 to-slate-900 flex items-center justify-center">
         <div className="text-white text-center">
-          <h2 className="text-2xl font-bold mb-2">AI Insight Not Found</h2>
+          <h2 className="text-2xl font-bold mb-2">Article Not Found</h2>
           <p className="text-slate-400">Please return to the trending page.</p>
         </div>
       </div>

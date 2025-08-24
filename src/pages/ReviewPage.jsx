@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star, Calendar, Tag, Search, Filter, ArrowRight } from "lucide-react";
 import axios from "axios";
-import ReviewCardsWithFocus from "./ReviewCardsWithFocus";
+import ReviewCardsWithFocus from "../components/ReviewCardsWithFocus";
 
 export default function ReviewPage() {
   const [searchTerm, setSearchTerm] = useState("");

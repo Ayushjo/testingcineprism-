@@ -21,10 +21,10 @@ import OppenHeimerImage from "../assets/oppenheimer.jpg";
 import OppenHeimerFireImage from "../assets/oppenheimerfire.jpg";
 import Tilt from "react-parallax-tilt";
 
-import LatestReviews from "./LatestReviews";
-import TrendingThisWeek from "./TrendingThisWeek";
-import ExploreByGenre from "./ExploreByGenre";
-import NewsletterCTA from "./NewsLetterCTA";
+import LatestReviews from "../components/LatestReviews";
+import TrendingThisWeek from "../components/TrendingThisWeek";
+import ExploreByGenre from "../components/ExploreByGenre";
+import NewsletterCTA from "../components/NewsLetterCTA";
 import FleabagImage2 from "../assets/fleebag2.jpg";
 import PastLivesImage from "../assets/pastlives.jpg";
 import SpiderManImage from "../assets/spiderman.jpg";
@@ -35,19 +35,17 @@ import SinnerImage from "../assets/sinners.jpg";
 
 import TennetImage from "../assets/tennet.jpg";
 import AliceImage from "../assets/alicedarling.jpg";
-import Marquee from "./Marquee";
-import Coverflow from "./Coverflow";
-import CoverflowMarquee from "./CoverflowMarquee";
+import Marquee from "../components/Marquee";
+import Coverflow from "../components/Coverflow";
+import CoverflowMarquee from "../components/CoverflowMarquee";
 import DarkKnightImage from "../assets/darkknight.jpg";
 import DunkKirkImage from "../assets/dunkirk.jpg";
-import InteractiveVideoGrid from "./InteractiveVideoGrid";
-import ArticleSection from "./ArticleSection";
-import CinematicHeroSection from "./CinematicHeroSection";
-import MobileCinematicHeroSection from "./MobileCinematicHeroSection";
+import InteractiveVideoGrid from "../components/InteractiveVideoGrid";
+import ArticleSection from "../components/ArticleSection";
+import CinematicHeroSection from "../components/CinematicHeroSection";
+import MobileCinematicHeroSection from "../components/MobileCinematicHeroSection";
 export default function Homepage() {
-  
   const [activeCard, setActiveCard] = useState(null);
-  
 
   const heroPosters = [
     {
@@ -166,7 +164,6 @@ export default function Homepage() {
     },
   ];
 
-
   const bentoItems = [
     {
       id: 1,
@@ -239,9 +236,7 @@ export default function Homepage() {
   ];
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      
-    }, 6000);
+    const interval = setInterval(() => {}, 6000);
     return () => clearInterval(interval);
   }, [heroPosters.length]);
 
@@ -274,7 +269,9 @@ export default function Homepage() {
       <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
         {/* Mobile-Only Interactive Film Strip Hero Section */}
         {/* --- ENHANCED & AUTOSCROLLING MOBILE HERO (FRAMER MOTION) --- */}
-        <MobileCinematicHeroSection featuredCarouselData={featuredCarouselData}/>
+        <MobileCinematicHeroSection
+          featuredCarouselData={featuredCarouselData}
+        />
         {/* Desktop Hero Section - Hidden on Mobile, Unchanged */}
         <CinematicHeroSection />
         <ArticleSection />

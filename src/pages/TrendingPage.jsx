@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import MovieDetailsModal from "./MovieDetailsModal"; // Adjust path as needed
-import TrendingNewsLayout from "./TrendingNewsLayout"; // Adjust path as needed
+import MovieDetailsModal from "../components/MovieDetailsModal"; // Adjust path as needed
+import TrendingNewsLayout from "../components/TrendingNewsLayout"; // Adjust path as needed
 
 const aiInsightsData = [
   {
