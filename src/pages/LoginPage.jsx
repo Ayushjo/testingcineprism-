@@ -1,25 +1,141 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { CheckCircle } from "lucide-react";
-import { XCircle } from "lucide-react";
+
+// Detect if device is iOS
+const isIOS = () => {
+  return (
+    /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  );
+};
+
+// Auth service for handling tokens
+class AuthService {
+  static setAuth(token) {
+    // Store in multiple places for redundancy
+    localStorage.setItem("authToken", token);
+    sessionStorage.setItem("authToken", token);
+
+    // Try to store in IndexedDB for better persistence
+    this.storeInIndexedDB(token);
+
+    // Configure axios defaults
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  }
+
+  static getToken() {
+    // Try to get from multiple sources
+    return (
+      localStorage.getItem("authToken") ||
+      sessionStorage.getItem("authToken") ||
+      this.getFromIndexedDB()
+    );
+  }
+
+  static clearAuth() {
+    localStorage.removeItem("authToken");
+    sessionStorage.removeItem("authToken");
+    delete axios.defaults.headers.common["Authorization"];
+  }
+
+  static async storeInIndexedDB(token) {
+    if (!("indexedDB" in window)) return;
+
+    try {
+      const request = indexedDB.open("CineprismAuth", 1);
+
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains("auth")) {
+          db.createObjectStore("auth", { keyPath: "id" });
+        }
+      };
+
+      request.onsuccess = (event) => {
+        const db = event.target.result;
+        const transaction = db.transaction(["auth"], "readwrite");
+        const store = transaction.objectStore("auth");
+        store.put({ id: "token", value: token, timestamp: Date.now() });
+      };
+    } catch (error) {
+      console.error("IndexedDB error:", error);
+    }
+  }
+
+  static async getFromIndexedDB() {
+    // Implementation for getting from IndexedDB
+    return null;
+  }
+
+  static checkCookiesEnabled() {
+    // Test if cookies are working
+    document.cookie = "testcookie=1; SameSite=None; Secure";
+    const cookiesEnabled = document.cookie.includes("testcookie");
+    // Clean up test cookie
+    document.cookie =
+      "testcookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    return cookiesEnabled;
+  }
+}
+
+// Configure axios interceptor for auth
+axios.interceptors.request.use(
+  (config) => {
+    const token = AuthService.getToken();
+    if (token && !config.headers["Authorization"]) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [cookieWarning, setCookieWarning] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if we're on iOS and cookies might be problematic
+    if (isIOS() && !AuthService.checkCookiesEnabled()) {
+      setCookieWarning(true);
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
 
     try {
       if (!email || !password) {
         throw new Error("Please fill in all fields.");
       }
+
+      // Detect device info for debugging
+      const deviceInfo = {
+        isIOS: isIOS(),
+        userAgent: navigator.userAgent,
+        cookiesEnabled: AuthService.checkCookiesEnabled(),
+        platform: navigator.platform,
+      };
+
+      console.log("Device Info:", deviceInfo);
+
       const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/user/login",
         {
@@ -28,11 +144,32 @@ export default function LoginPage() {
         },
         {
           withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
         }
       );
 
       if (response.status === 200) {
-        // --- CHANGE 3: Show success toast ---
+        const { token, user, debug } = response.data;
+
+        // Store token for iOS fallback
+        if (token) {
+          AuthService.setAuth(token);
+          console.log("Token stored in localStorage/sessionStorage");
+        }
+
+        // Check if cookies were actually set
+        const cookiesSet = document.cookie.length > 0;
+        console.log("Cookies set:", cookiesSet);
+        console.log("Debug info from server:", debug);
+
+        // Show appropriate success message
+        const successMessage = cookiesSet
+          ? "Login Successful!"
+          : "Login Successful! (Using token authentication)";
+
         toast.custom((t) => (
           <div
             className={`${
@@ -40,25 +177,32 @@ export default function LoginPage() {
             } bg-slate-800/80 backdrop-blur-xl border border-slate-700 shadow-lg rounded-xl text-white px-6 py-4 flex items-center gap-4`}
           >
             <CheckCircle className="text-emerald-400" />
-            <span className="font-medium">
-              {response.data.message || "Login Successful!"}
-            </span>
+            <div>
+              <span className="font-medium block">{successMessage}</span>
+              {!cookiesSet && isIOS() && (
+                <span className="text-xs text-slate-400 mt-1 block">
+                  iOS detected - using secure token storage
+                </span>
+              )}
+            </div>
           </div>
         ));
-        // Cookies.set("token", response.data.token);
-        navigate("/");
+
+        // Small delay to ensure storage is complete
+        setTimeout(() => {
+          navigate("/");
+        }, 100);
       } else {
-        // This handles non-200 success codes if your API uses them
         throw new Error(
           response.data.message || "An unexpected error occurred."
         );
       }
     } catch (error) {
-      // --- CHANGE 4: Show error toast ---
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
         "Login failed. Please try again.";
+
       toast.custom((t) => (
         <div
           className={`${
@@ -69,30 +213,28 @@ export default function LoginPage() {
           <span className="font-medium">{errorMessage}</span>
         </div>
       ));
-      console.error(error);
+
+      console.error("Login error:", error);
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
+
   return (
     <div className="min-h-screen relative overflow-hidden bg-slate-950">
-      {" "}
-      {/* --- CHANGE: Added base bg for consistency --- */}
       {/* Cinematic Background */}
       <div className="absolute inset-0">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            // --- CHANGE: Using a real, atmospheric poster ---
             backgroundImage: `url('https://image.tmdb.org/t/p/original/gajva2L0rPYkscC26CsW2MvbcAc.jpg')`,
           }}
         />
-        {/* Dark overlay and blur effect */}
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-        {/* --- CHANGE: Toned down the background gradient to be more neutral --- */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-transparent to-slate-900/20" />
       </div>
-      {/* Floating Particles Effect (This is fine, no changes needed) */}
+
+      {/* Floating Particles Effect */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(20)].map((_, i) => (
           <motion.div
@@ -108,12 +250,13 @@ export default function LoginPage() {
             }}
             transition={{
               duration: 3 + Math.random() * 2,
-              repeat: Number.POSITIVE_INFINITY,
+              repeat: Infinity,
               delay: Math.random() * 2,
             }}
           />
         ))}
       </div>
+
       {/* Main Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
         <motion.div
@@ -122,12 +265,28 @@ export default function LoginPage() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="w-full max-w-md"
         >
+          {/* Cookie Warning for iOS */}
+          {cookieWarning && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-amber-900/50 backdrop-blur-xl border border-amber-600/30 rounded-2xl p-4 mb-4 flex items-start gap-3"
+            >
+              <AlertCircle className="text-amber-400 w-5 h-5 mt-0.5 flex-shrink-0" />
+              <div className="text-sm text-amber-100">
+                <p className="font-medium mb-1">iOS Safari Detected</p>
+                <p className="text-amber-200/80 text-xs">
+                  For the best experience, we'll use secure token
+                  authentication. Your session is fully protected.
+                </p>
+              </div>
+            </motion.div>
+          )}
+
           {/* Glassmorphism Login Panel */}
           <div className="bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-3xl p-12 shadow-2xl relative overflow-hidden">
-            {" "}
-            {/* --- CHANGE: bg-black to bg-slate-900 for better theme match --- */}
-            {/* Subtle glow effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-emerald-500/5 rounded-3xl" />
+
             {/* Header */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -142,6 +301,7 @@ export default function LoginPage() {
                 Sign in to continue to The Cineprism
               </p>
             </motion.div>
+
             {/* Login Form */}
             <motion.form
               onSubmit={handleSubmit}
@@ -168,6 +328,8 @@ export default function LoginPage() {
                     className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-300 backdrop-blur-sm"
                     placeholder="Enter your email"
                     required
+                    autoComplete="email"
+                    autoCapitalize="off"
                   />
                 </div>
               </div>
@@ -190,6 +352,7 @@ export default function LoginPage() {
                     className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-12 py-4 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-300 backdrop-blur-sm"
                     placeholder="Enter your password"
                     required
+                    autoComplete="current-password"
                   />
                   <button
                     type="button"
@@ -220,10 +383,9 @@ export default function LoginPage() {
                 whileHover={{ scale: isLoading ? 1 : 1.02 }}
                 whileTap={{ scale: isLoading ? 1 : 0.98 }}
                 type="submit"
-                disabled={isLoading} // --- CHANGE 5: Disable button while loading ---
+                disabled={isLoading}
                 className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-emerald-500/25 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                {/* --- CHANGE 6: Show spinner when loading --- */}
                 {isLoading ? (
                   <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
@@ -235,22 +397,21 @@ export default function LoginPage() {
               <div className="text-center pt-4">
                 <p className="text-slate-400 text-sm">
                   Not a member yet?{" "}
-                  <a
+                  <span
                     onClick={() => navigate("/signup")}
-                    href="/signup"
                     className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors duration-300 cursor-pointer"
                   >
                     Sign Up
-                  </a>
+                  </span>
                 </p>
               </div>
             </motion.form>
           </div>
         </motion.div>
       </div>
+
       {/* Ambient Light Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* --- CHANGE: Changed one glow to indigo to match the homepage's multi-color glow --- */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
       </div>
