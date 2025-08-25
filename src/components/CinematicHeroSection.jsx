@@ -438,7 +438,7 @@ const CinematicHeroSection = () => {
         {/* Background Video */}
         <div className="absolute inset-0 z-0">
           <video
-            src="https://res.cloudinary.com/dapu22gee/video/upload/v1754793790/bgvideo_xxx4qx.mp4"
+            src="https://res.cloudinary.com/dapu22gee/video/upload/v1756057983/A_cinematic_montage_202508242322_upscaled_eorqqp.mp4"
             className="w-full h-full object-cover"
             autoPlay
             muted
@@ -652,7 +652,6 @@ const CinematicHeroSection = () => {
         </div>
 
         {/* Carousel Indicators */}
-        
 
         {/* Scroll indicator */}
         <motion.div

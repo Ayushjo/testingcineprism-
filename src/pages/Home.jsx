@@ -27,6 +27,7 @@ import ExploreByGenre from "../components/ExploreByGenre";
 import NewsletterCTA from "../components/NewsLetterCTA";
 import FleabagImage2 from "../assets/fleebag2.jpg";
 import PastLivesImage from "../assets/pastlives.jpg";
+import { AnimatePresence } from "framer-motion";
 import SpiderManImage from "../assets/spiderman.jpg";
 import BatmanImage from "../assets/batman.jpg";
 import BladeRunnerImg from "../assets/bladerunner.jpg";
@@ -44,6 +45,7 @@ import InteractiveVideoGrid from "../components/InteractiveVideoGrid";
 import ArticleSection from "../components/ArticleSection";
 import CinematicHeroSection from "../components/CinematicHeroSection";
 import MobileCinematicHeroSection from "../components/MobileCinematicHeroSection";
+import FloatingPosterHero from "@/components/FloatingPosterHero";
 export default function Homepage() {
   const [activeCard, setActiveCard] = useState(null);
 
@@ -164,6 +166,8 @@ export default function Homepage() {
     },
   ];
 
+  const [activeFilm, setActiveFilm] = useState(featuredCarouselData[0]);
+
   const bentoItems = [
     {
       id: 1,
@@ -234,9 +238,14 @@ export default function Homepage() {
       gradient: "from-yellow-500/10 to-orange-600/10",
     },
   ];
+  
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isHoveringCard, setIsHoveringCard] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {}, 6000);
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroPosters.length);
+    }, 6000);
     return () => clearInterval(interval);
   }, [heroPosters.length]);
 
@@ -267,13 +276,7 @@ export default function Homepage() {
   return (
     <>
       <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
-        {/* Mobile-Only Interactive Film Strip Hero Section */}
-        {/* --- ENHANCED & AUTOSCROLLING MOBILE HERO (FRAMER MOTION) --- */}
-        <MobileCinematicHeroSection
-          featuredCarouselData={featuredCarouselData}
-        />
-        {/* Desktop Hero Section - Hidden on Mobile, Unchanged */}
-        <CinematicHeroSection />
+        <FloatingPosterHero />
         <ArticleSection />
         {/* Bento Grid Section */}
         <section className="py-24 bg-gradient-to-b from-slate-950 to-slate-900 relative overflow-hidden">
