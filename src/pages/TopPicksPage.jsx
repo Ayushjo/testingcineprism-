@@ -130,15 +130,16 @@ const TopPicksPage = () => {
     return filtered;
   }, [activeGenre, searchQuery, allMovies]);
 
-  const handleGenreSelect = (genreKey) => {
-    setIsLoading(true);
-    setActiveGenre(genreKey);
-    setShowGenreDropdown(false);
+ const handleGenreSelect = (genreKey) => {
+   console.log("handleGenreSelect called with:", genreKey); // Debug log
+   setIsLoading(true);
+   setActiveGenre(genreKey);
+   setShowGenreDropdown(false);
 
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 300);
-  };
+   // Remove the setTimeout and just set loading to false immediately
+   // The genre change should be instant
+   setIsLoading(false);
+ };
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -235,10 +236,14 @@ const TopPicksPage = () => {
               </div>
             </div>
 
-            {/* Genre Dropdown */}
-            <div className="relative z-50">
+            {/* Fixed Genre Dropdown */}
+            <div className="relative">
               <button
-                onClick={() => setShowGenreDropdown(!showGenreDropdown)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowGenreDropdown(!showGenreDropdown);
+                }}
                 className="w-full sm:w-auto flex items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300 min-w-[200px]"
               >
                 <span className="font-medium text-sm sm:text-base truncate">
@@ -256,33 +261,37 @@ const TopPicksPage = () => {
                 />
               </button>
 
-              {/* Dropdown Menu */}
+              {/* Fixed Dropdown Menu */}
               {showGenreDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-[60] max-h-80 overflow-y-auto scrollbar-thin scrollbar-track-slate-800/50 scrollbar-thumb-slate-600/50 hover:scrollbar-thumb-slate-500/70">
-                  {genres.map((genre) => (
-                    <button
-                      key={genre.key}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleGenreSelect(genre.key);
-                      }}
-                      className={`w-full text-left px-4 py-3 hover:bg-white/10 transition-colors duration-200 first:rounded-t-xl last:rounded-b-xl text-sm sm:text-base border-none cursor-pointer ${
-                        activeGenre === genre.key
-                          ? "bg-emerald-500/20 text-emerald-300"
-                          : "text-slate-300 hover:text-white"
-                      }`}
-                    >
-                      <span className="flex items-center justify-between w-full">
-                        <span>{genre.label}</span>
-                        {movieCounts[genre.key] !== undefined && (
-                          <span className="text-xs opacity-75 ml-2">
-                            ({movieCounts[genre.key]})
-                          </span>
-                        )}
-                      </span>
-                    </button>
-                  ))}
+                <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800/98 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-[9999] max-h-80 overflow-y-auto">
+                  <div className="py-1">
+                    {genres.map((genre) => (
+                      <button
+                        key={genre.key}
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          console.log("Genre clicked:", genre.key); // Debug log
+                          handleGenreSelect(genre.key);
+                        }}
+                        className={`w-full text-left px-4 py-3 hover:bg-white/10 transition-colors duration-200 text-sm sm:text-base block ${
+                          activeGenre === genre.key
+                            ? "bg-emerald-500/20 text-emerald-300"
+                            : "text-slate-300 hover:text-white"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <span>{genre.label}</span>
+                          {movieCounts[genre.key] !== undefined && (
+                            <span className="text-xs opacity-75 ml-2">
+                              ({movieCounts[genre.key]})
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -306,6 +315,18 @@ const TopPicksPage = () => {
           )}
         </div>
       </section>
+
+      {/* Fixed Click Outside Handler */}
+      {showGenreDropdown && (
+        <div
+          className="fixed inset-0 z-[9998]"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setShowGenreDropdown(false);
+          }}
+        />
+      )}
 
       {/* Results Header */}
       <section className="relative py-6 sm:py-8">
