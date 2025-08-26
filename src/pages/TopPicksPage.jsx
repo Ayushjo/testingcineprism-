@@ -1,9 +1,10 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Search, ChevronDown, X } from "lucide-react";
 import axios from "axios";
 import MovieGrid from "../components/MovieGrid";
+
 const TopPicksPage = () => {
   const [activeGenre, setActiveGenre] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -12,10 +13,14 @@ const TopPicksPage = () => {
   const [error, setError] = useState(null);
   const [allMovies, setAllMovies] = useState([]);
   const [showGenreDropdown, setShowGenreDropdown] = useState(false);
+
+  // Ref for dropdown container
+  const dropdownRef = useRef(null);
+
   const token =
     localStorage.getItem("cineprism_auth_token") ||
     sessionStorage.getItem("cineprism_auth_token");
-  
+
   const genres = [
     { key: "all", label: "All Genres" },
     { key: "action", label: "Action" },
@@ -35,6 +40,22 @@ const TopPicksPage = () => {
     { key: "war", label: "War" },
     { key: "western", label: "Western" },
   ];
+
+  // Click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowGenreDropdown(false);
+      }
+    };
+
+    if (showGenreDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [showGenreDropdown]);
 
   // Helper function to transform the API response into a consistent movie object structure
   const transformMovieData = (topPicks) => {
@@ -70,7 +91,7 @@ const TopPicksPage = () => {
           {
             withCredentials: true,
             headers: {
-              Authorization: `Bearer ${token}`, // <-- sending token here
+              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           }
@@ -90,7 +111,7 @@ const TopPicksPage = () => {
     };
 
     fetchAllTopPicks();
-  }, []);
+  }, [token]);
 
   // Calculate movie counts for each genre
   const movieCounts = useMemo(() => {
@@ -130,16 +151,12 @@ const TopPicksPage = () => {
     return filtered;
   }, [activeGenre, searchQuery, allMovies]);
 
- const handleGenreSelect = (genreKey) => {
-   console.log("handleGenreSelect called with:", genreKey); // Debug log
-   setIsLoading(true);
-   setActiveGenre(genreKey);
-   setShowGenreDropdown(false);
-
-   // Remove the setTimeout and just set loading to false immediately
-   // The genre change should be instant
-   setIsLoading(false);
- };
+  const handleGenreSelect = (genreKey) => {
+    console.log("handleGenreSelect called with:", genreKey);
+    setActiveGenre(genreKey);
+    setShowGenreDropdown(false);
+    setIsLoading(false);
+  };
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -147,6 +164,10 @@ const TopPicksPage = () => {
 
   const clearSearch = () => {
     setSearchQuery("");
+  };
+
+  const toggleDropdown = () => {
+    setShowGenreDropdown(!showGenreDropdown);
   };
 
   const activeGenreLabel =
@@ -237,13 +258,9 @@ const TopPicksPage = () => {
             </div>
 
             {/* Fixed Genre Dropdown */}
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowGenreDropdown(!showGenreDropdown);
-                }}
+                onClick={toggleDropdown}
                 className="w-full sm:w-auto flex items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300 min-w-[200px]"
               >
                 <span className="font-medium text-sm sm:text-base truncate">
@@ -261,21 +278,16 @@ const TopPicksPage = () => {
                 />
               </button>
 
-              {/* Fixed Dropdown Menu */}
+              {/* Dropdown Menu */}
               {showGenreDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800/98 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-[9999] max-h-80 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800/98 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-50 max-h-80 overflow-y-auto">
                   <div className="py-1">
                     {genres.map((genre) => (
                       <button
                         key={genre.key}
                         type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          console.log("Genre clicked:", genre.key); // Debug log
-                          handleGenreSelect(genre.key);
-                        }}
-                        className={`w-full text-left px-4 py-3 hover:bg-white/10 transition-colors duration-200 text-sm sm:text-base block ${
+                        onClick={() => handleGenreSelect(genre.key)}
+                        className={`w-full text-left px-4 py-3 hover:bg-white/10 transition-colors duration-200 text-sm sm:text-base ${
                           activeGenre === genre.key
                             ? "bg-emerald-500/20 text-emerald-300"
                             : "text-slate-300 hover:text-white"
@@ -315,18 +327,6 @@ const TopPicksPage = () => {
           )}
         </div>
       </section>
-
-      {/* Fixed Click Outside Handler */}
-      {showGenreDropdown && (
-        <div
-          className="fixed inset-0 z-[9998]"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setShowGenreDropdown(false);
-          }}
-        />
-      )}
 
       {/* Results Header */}
       <section className="relative py-6 sm:py-8">
@@ -402,14 +402,6 @@ const TopPicksPage = () => {
           )}
         </div>
       </section>
-
-      {/* Click outside to close dropdown */}
-      {showGenreDropdown && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setShowGenreDropdown(false)}
-        />
-      )}
     </div>
   );
 };
