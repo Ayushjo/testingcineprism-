@@ -28,14 +28,13 @@ import {
 import { useAuth } from "@/context/AuthContext.jsx";
 
 // Enhanced Comment component with unlimited nesting support
-
 const Comment = ({
   comment,
   onReplyAdded,
   onCommentUpdated,
   onCommentDeleted,
   depth = 0,
-  parentUsername = null, // Username of the comment being replied to
+  maxDepth = 8,
 }) => {
   const { user } = useAuth();
   const [showReplyInput, setShowReplyInput] = useState(false);
@@ -153,26 +152,47 @@ const Comment = ({
     comment.user &&
     (user.id === comment.user.id || user._id === comment.user._id);
 
+  // Twitter-like responsive indentation
+  // Mobile: minimal indentation (8px per level, max 3 levels)
+  // Desktop: more generous indentation (20px per level, max 6 levels)
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const mobileMaxDepth = 3;
+  const desktopMaxDepth = 6;
+  const actualMaxDepth = isMobile ? mobileMaxDepth : desktopMaxDepth;
+  const visualDepth = Math.min(depth, actualMaxDepth);
+
+  // Responsive indentation
+  const indentSize = isMobile ? 8 : 20;
+  const leftMargin = visualDepth * indentSize;
+
+  // Different styling for deeply nested comments
+  const isDeepNest = depth >= actualMaxDepth;
+
   return (
-    <div className="mb-4">
-      {/* "Replying to" indicator for nested comments */}
-      {parentUsername && depth > 0 && (
-        <div className="mb-2">
-          <span className="text-xs text-slate-500">
-            Replying to{" "}
-            <span className="text-emerald-400 font-medium">@{parentUsername}</span>
-          </span>
-        </div>
+    <div className="relative">
+      {/* Threading line for nested comments - thinner on mobile */}
+      {depth > 0 && (
+        <div
+          className={`absolute top-0 bottom-0 bg-slate-700/30 ${
+            isMobile ? "w-0.5 left-[-6px]" : "w-px left-[-10px]"
+          }`}
+        />
       )}
 
-      {/* Main comment container - no indentation */}
-      <div className="flex gap-3 mb-4">
-        {/* Avatar */}
+      <div
+        className="flex gap-2 sm:gap-3 mb-3 sm:mb-4"
+        style={{ marginLeft: `${leftMargin}px` }}
+      >
+        {/* Avatar - smaller on mobile for deep nests */}
         <div className="flex-shrink-0">
           <div
-            className={`w-8 h-8 rounded-full ${getAvatarColor(
+            className={`rounded-full ${getAvatarColor(
               comment.user.username[0]
-            )} flex items-center justify-center text-white text-sm font-semibold`}
+            )} flex items-center justify-center text-white font-semibold ${
+              isDeepNest || isMobile
+                ? "w-6 h-6 text-xs sm:w-7 sm:h-7 sm:text-sm"
+                : "w-8 h-8 text-sm"
+            }`}
           >
             {comment.user.username[0].toUpperCase()}
           </div>
@@ -181,15 +201,21 @@ const Comment = ({
         {/* Comment content */}
         <div className="flex-1 min-w-0">
           {/* User info and metadata */}
-          <div className="flex flex-wrap items-center gap-2 mb-1">
-            <span className="text-sm font-medium text-emerald-400">
+          <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
+            <span className="text-xs sm:text-sm font-medium text-emerald-400 truncate max-w-[120px] sm:max-w-none">
               @{comment.user.username}
             </span>
-            <span className="text-xs text-slate-500">
+            <span className="text-xs text-slate-500 flex-shrink-0">
               {formatDate(comment.createdAt)}
             </span>
             {comment.updatedAt !== comment.createdAt && (
               <span className="text-xs text-slate-500">(edited)</span>
+            )}
+            {/* Show depth indicator only on desktop for deep comments */}
+            {depth > 2 && !isMobile && (
+              <span className="text-xs text-slate-600 hidden sm:inline">
+                • L{depth}
+              </span>
             )}
           </div>
 
@@ -222,19 +248,19 @@ const Comment = ({
               </div>
             </div>
           ) : (
-            <div className="text-slate-300 leading-relaxed mb-2 text-sm break-words">
+            <div className="text-slate-300 leading-relaxed mb-2 text-sm sm:text-base break-words">
               {comment.content}
             </div>
           )}
 
-          {/* Comment actions */}
-          <div className="flex items-center gap-4 text-xs">
+          {/* Comment actions - more compact on mobile */}
+          <div className="flex items-center gap-3 sm:gap-4 text-xs">
             <button
               onClick={() => setShowReplyInput(!showReplyInput)}
               className="text-slate-500 hover:text-emerald-400 font-medium transition-colors duration-200 flex items-center gap-1"
             >
               <Reply className="w-3 h-3" />
-              Reply
+              <span className="hidden sm:inline">Reply</span>
             </button>
 
             {comment.replyCount > 0 && (
@@ -242,105 +268,110 @@ const Comment = ({
                 onClick={() => setShowReplies(!showReplies)}
                 className="text-slate-500 hover:text-emerald-400 font-medium transition-colors duration-200"
               >
-                {showReplies ? "Hide" : "Show"} {comment.replyCount}{" "}
-                {comment.replyCount === 1 ? "reply" : "replies"}
+                {showReplies ? "Hide" : "Show"} {comment.replyCount}
+                <span className="hidden sm:inline">
+                  {" "}
+                  {comment.replyCount === 1 ? "reply" : "replies"}
+                </span>
               </button>
             )}
 
             {/* Comment owner actions */}
             {isOwner && (
-              <>
+              <div className="flex items-center gap-2 sm:gap-3">
                 <button
                   onClick={() => setIsEditing(true)}
                   className="text-slate-500 hover:text-slate-400 transition-colors"
                 >
-                  Edit
+                  <span className="hidden sm:inline">Edit</span>
+                  <span className="sm:hidden">✏️</span>
                 </button>
                 <button
                   onClick={handleDeleteComment}
                   className="text-slate-500 hover:text-red-400 transition-colors"
                 >
-                  Delete
+                  <span className="hidden sm:inline">Delete</span>
+                  <span className="sm:hidden">🗑️</span>
                 </button>
-              </>
+              </div>
             )}
           </div>
 
-          {/* Reply Input Form */}
+          {/* Reply Input Form - full width on mobile */}
           {showReplyInput && (
             <div className="mt-3">
               <form onSubmit={handleSubmitReply}>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                   <textarea
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                     onInput={handleTextareaInput}
                     rows={1}
-                    placeholder={`Reply to @${comment.user.username}...`}
+                    
                     className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
                     disabled={isSubmittingReply}
                   />
                   <button
                     type="submit"
                     disabled={!replyText.trim() || isSubmittingReply}
-                    className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300 text-sm self-start disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                    className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300 text-sm self-start sm:self-auto disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1 w-full sm:w-auto"
                   >
                     {isSubmittingReply ? (
                       <Loader2 className="w-3 h-3 animate-spin" />
                     ) : (
                       <Send className="w-3 h-3" />
                     )}
-                    Reply
+                    <span className="sm:inline">Reply</span>
                   </button>
                 </div>
               </form>
             </div>
           )}
-        </div>
-      </div>
 
-      {/* Nested Replies Section - All at the same level */}
-      {showReplies && (
-        <div className="space-y-4">
-          {repliesLoading && replies.length === 0 ? (
-            <div className="flex items-center gap-2 text-slate-500 text-sm">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Loading replies...
-            </div>
-          ) : (
-            <>
-              {replies.map((reply) => (
-                <Comment
-                  key={reply.id}
-                  comment={reply}
-                  onReplyAdded={handleNestedReplyAdded}
-                  onCommentUpdated={handleNestedCommentUpdated}
-                  onCommentDeleted={handleNestedCommentDeleted}
-                  depth={depth + 1}
-                  parentUsername={comment.user.username} // Pass parent username
-                />
-              ))}
-
-              {replyPagination?.hasMore && (
-                <div className="flex justify-start">
-                  <button
-                    onClick={loadMoreReplies}
-                    disabled={repliesLoading}
-                    className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition-colors flex items-center gap-1 py-2"
-                  >
-                    {repliesLoading ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <MoreHorizontal className="w-3 h-3" />
-                    )}
-                    Load more replies
-                  </button>
+          {/* Nested Replies Section */}
+          {showReplies && (
+            <div className="mt-3 sm:mt-4">
+              {repliesLoading && replies.length === 0 ? (
+                <div className="flex items-center gap-2 text-slate-500 text-sm">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Loading replies...
                 </div>
+              ) : (
+                <>
+                  {replies.map((reply) => (
+                    <Comment
+                      key={reply.id}
+                      comment={reply}
+                      onReplyAdded={handleNestedReplyAdded}
+                      onCommentUpdated={handleNestedCommentUpdated}
+                      onCommentDeleted={handleNestedCommentDeleted}
+                      depth={depth + 1}
+                      maxDepth={actualMaxDepth}
+                    />
+                  ))}
+
+                  {replyPagination?.hasMore && (
+                    <div className="mt-3">
+                      <button
+                        onClick={loadMoreReplies}
+                        disabled={repliesLoading}
+                        className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition-colors flex items-center gap-1 py-2"
+                      >
+                        {repliesLoading ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                          <MoreHorizontal className="w-3 h-3" />
+                        )}
+                        Load more replies
+                      </button>
+                    </div>
+                  )}
+                </>
               )}
-            </>
+            </div>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
