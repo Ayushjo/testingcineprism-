@@ -29,7 +29,7 @@ const clearStoredToken = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const token = getStoredToken();
   useEffect(() => {
     const initializeAuth = () => {
       const token = getStoredToken();
@@ -96,6 +96,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         loginWithGoogle,
         handleAuthCallback,
+        token,
       }}
     >
       {children}

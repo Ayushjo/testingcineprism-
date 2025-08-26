@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { Search, Upload, X, Image } from "lucide-react";
 import axios from "axios";
-
+import { useAuth } from "@/context/AuthContext";
 export default function UploadPosterPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPost, setSelectedPost] = useState(null);
@@ -15,14 +15,20 @@ export default function UploadPosterPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [uploadStatus, setUploadStatus] = useState(null);
   const [uploadMessage, setUploadMessage] = useState("");
-
+  const { token } = useAuth();
   // Fetch posts from API
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await axios.post(
           "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
-          { withCredentials: true }
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${token}`, // <-- sending token here
+              "Content-Type": "application/json",
+            },
+          }
         );
         const data = await response.data;
         if (data.posts) {
