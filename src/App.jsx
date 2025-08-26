@@ -1,3 +1,4 @@
+// App.jsx - Updated for Google OAuth only
 import { ParallaxProvider } from "react-scroll-parallax";
 import Homepage from "./pages/Home";
 import Navbar from "./components/Navbar";
@@ -13,7 +14,7 @@ import HorrorPage from "./components/HorroPage";
 import AnimationPage from "./components/AnimationPage";
 import TrendingPage from "./pages/TrendingPage";
 import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignUpPage";
+// REMOVE: import SignupPage from "./pages/SignUpPage";
 import UnpopularOpinionsPage from "./pages/UnpopularOpinionsPage";
 import Merchandise from "./pages/Merchandise";
 import MeteorCursor from "./components/MeteorCursor";
@@ -34,10 +35,14 @@ import CinemaSchoolPage from "./pages/CinemaSchoolPage";
 import ArticlePageLayout from "./components/ArticlePageLayout";
 import AIInsightsArticlePage from "./pages/AIInsightsArticlePage";
 import NewsArticlePage from "./pages/NewsArticlePage";
+
+// ADD: Import the AuthCallback component
+import AuthCallback from "./components/AuthCallback";
+
 const App = () => {
   const location = useLocation();
-
   const hideFooter = location.pathname.startsWith("/admin");
+
   return (
     <>
       <ParallaxProvider>
@@ -50,8 +55,11 @@ const App = () => {
 
           <Route element={<RedirectIfAuth />}>
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
+            {/* REMOVE: <Route path="/signup" element={<SignupPage />} /> */}
           </Route>
+
+          {/* ADD: OAuth callback route */}
+          <Route path="/auth/callback" element={<AuthCallback />} />
 
           <Route element={<RedirectIfUser />}>
             <Route
@@ -71,9 +79,9 @@ const App = () => {
               element={<UnpopularOpinionsPage />}
             />
           </Route>
+
           <Route path="/ai-insights/:id" element={<AIInsightsArticlePage />} />
           <Route path="/news/:id" element={<NewsArticlePage />} />
-
           <Route path="/recommendations-page" element={<TopPicksPage />} />
           <Route path="/merchandise" element={<Merchandise />} />
 
