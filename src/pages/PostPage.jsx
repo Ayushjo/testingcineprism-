@@ -28,13 +28,14 @@ import {
 import { useAuth } from "@/context/AuthContext.jsx";
 
 // Enhanced Comment component with unlimited nesting support
+
 const Comment = ({
   comment,
   onReplyAdded,
   onCommentUpdated,
   onCommentDeleted,
   depth = 0,
-  maxDepth = 8, // Maximum visual nesting depth
+  parentUsername = null, // Username of the comment being replied to
 }) => {
   const { user } = useAuth();
   const [showReplyInput, setShowReplyInput] = useState(false);
@@ -53,7 +54,7 @@ const Comment = ({
     loadMore: loadMoreReplies,
     updateReply,
     removeReply,
-  } = useReplies(showReplies ? comment.id : null, true); // Enable nested fetching
+  } = useReplies(showReplies ? comment.id : null, true);
 
   const handleSubmitReply = async (e) => {
     e.preventDefault();
@@ -124,12 +125,9 @@ const Comment = ({
 
   // Handle nested reply events
   const handleNestedReplyAdded = (parentCommentId, reply) => {
-    // If this is a direct reply to this comment, handle it
     if (parentCommentId === comment.id) {
-      // Already handled by addReply above
       return;
     }
-    // Otherwise, pass it up to parent
     onReplyAdded(parentCommentId, reply);
   };
 
@@ -155,29 +153,26 @@ const Comment = ({
     comment.user &&
     (user.id === comment.user.id || user._id === comment.user._id);
 
-  // Calculate visual depth (cap it for better UI)
-  const visualDepth = Math.min(depth, maxDepth);
-  const leftMargin = visualDepth * 24; // 24px per level
-
-  // Different styling for deeply nested comments
-  const isDeepNest = visualDepth >= maxDepth;
-
   return (
-    <div className="relative" style={{ marginLeft: `${leftMargin}px` }}>
-      {/* Threading line for nested comments */}
-      {depth > 0 && (
-        <div className="absolute left-[-12px] top-0 bottom-0 w-px bg-slate-700/50" />
+    <div className="mb-4">
+      {/* "Replying to" indicator for nested comments */}
+      {parentUsername && depth > 0 && (
+        <div className="mb-2">
+          <span className="text-xs text-slate-500">
+            Replying to{" "}
+            <span className="text-emerald-400 font-medium">@{parentUsername}</span>
+          </span>
+        </div>
       )}
 
+      {/* Main comment container - no indentation */}
       <div className="flex gap-3 mb-4">
         {/* Avatar */}
         <div className="flex-shrink-0">
           <div
             className={`w-8 h-8 rounded-full ${getAvatarColor(
               comment.user.username[0]
-            )} flex items-center justify-center text-white text-sm font-semibold ${
-              isDeepNest ? "w-6 h-6 text-xs" : ""
-            }`}
+            )} flex items-center justify-center text-white text-sm font-semibold`}
           >
             {comment.user.username[0].toUpperCase()}
           </div>
@@ -185,7 +180,8 @@ const Comment = ({
 
         {/* Comment content */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
+          {/* User info and metadata */}
+          <div className="flex flex-wrap items-center gap-2 mb-1">
             <span className="text-sm font-medium text-emerald-400">
               @{comment.user.username}
             </span>
@@ -195,11 +191,9 @@ const Comment = ({
             {comment.updatedAt !== comment.createdAt && (
               <span className="text-xs text-slate-500">(edited)</span>
             )}
-            {depth > 0 && (
-              <span className="text-xs text-slate-600">• Depth {depth}</span>
-            )}
           </div>
 
+          {/* Comment content */}
           {isEditing ? (
             <div className="mb-2">
               <textarea
@@ -228,11 +222,7 @@ const Comment = ({
               </div>
             </div>
           ) : (
-            <div
-              className={`text-slate-300 leading-relaxed mb-2 ${
-                isDeepNest ? "text-sm" : "text-sm"
-              }`}
-            >
+            <div className="text-slate-300 leading-relaxed mb-2 text-sm break-words">
               {comment.content}
             </div>
           )}
@@ -306,55 +296,51 @@ const Comment = ({
               </form>
             </div>
           )}
-
-          {/* Nested Replies Section */}
-          {showReplies && (
-            <div className="mt-4">
-              {repliesLoading && replies.length === 0 ? (
-                <div className="flex items-center gap-2 text-slate-500 text-sm">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Loading replies...
-                </div>
-              ) : (
-                <>
-                  {replies.map((reply) => (
-                    <Comment
-                      key={reply.id}
-                      comment={reply}
-                      onReplyAdded={handleNestedReplyAdded}
-                      onCommentUpdated={handleNestedCommentUpdated}
-                      onCommentDeleted={handleNestedCommentDeleted}
-                      depth={depth + 1}
-                      maxDepth={maxDepth}
-                    />
-                  ))}
-
-                  {replyPagination?.hasMore && (
-                    <div
-                      style={{
-                        marginLeft: `${Math.min(depth + 1, maxDepth) * 24}px`,
-                      }}
-                    >
-                      <button
-                        onClick={loadMoreReplies}
-                        disabled={repliesLoading}
-                        className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition-colors flex items-center gap-1 mb-2"
-                      >
-                        {repliesLoading ? (
-                          <Loader2 className="w-3 h-3 animate-spin" />
-                        ) : (
-                          <MoreHorizontal className="w-3 h-3" />
-                        )}
-                        Load more replies
-                      </button>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Nested Replies Section - All at the same level */}
+      {showReplies && (
+        <div className="space-y-4">
+          {repliesLoading && replies.length === 0 ? (
+            <div className="flex items-center gap-2 text-slate-500 text-sm">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Loading replies...
+            </div>
+          ) : (
+            <>
+              {replies.map((reply) => (
+                <Comment
+                  key={reply.id}
+                  comment={reply}
+                  onReplyAdded={handleNestedReplyAdded}
+                  onCommentUpdated={handleNestedCommentUpdated}
+                  onCommentDeleted={handleNestedCommentDeleted}
+                  depth={depth + 1}
+                  parentUsername={comment.user.username} // Pass parent username
+                />
+              ))}
+
+              {replyPagination?.hasMore && (
+                <div className="flex justify-start">
+                  <button
+                    onClick={loadMoreReplies}
+                    disabled={repliesLoading}
+                    className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition-colors flex items-center gap-1 py-2"
+                  >
+                    {repliesLoading ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <MoreHorizontal className="w-3 h-3" />
+                    )}
+                    Load more replies
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };
