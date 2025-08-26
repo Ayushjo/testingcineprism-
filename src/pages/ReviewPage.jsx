@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Star, Calendar, Tag, Search, Filter, ArrowRight } from "lucide-react";
 import axios from "axios";
 import ReviewCardsWithFocus from "../components/ReviewCardsWithFocus";
-
+import { useAuth } from "@/context/AuthContext";
 export default function ReviewPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("All");
@@ -15,7 +15,9 @@ export default function ReviewPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  const token =
+    localStorage.getItem("cineprism_auth_token") ||
+    sessionStorage.getItem("cineprism_auth_token");
   // Fetch posts from API
   useEffect(() => {
     const fetchPosts = async () => {
@@ -24,7 +26,13 @@ export default function ReviewPage() {
         const response = await axios.post(
           "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
           {},
-          { withCredentials: true }
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${token}`, // <-- sending token here
+              "Content-Type": "application/json",
+            },
+          }
         );
 
         const data = response.data;

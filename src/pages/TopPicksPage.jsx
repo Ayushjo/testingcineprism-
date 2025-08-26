@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Search, ChevronDown, X } from "lucide-react";
 import axios from "axios";
 import MovieGrid from "../components/MovieGrid";
-
 const TopPicksPage = () => {
   const [activeGenre, setActiveGenre] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,7 +12,10 @@ const TopPicksPage = () => {
   const [error, setError] = useState(null);
   const [allMovies, setAllMovies] = useState([]);
   const [showGenreDropdown, setShowGenreDropdown] = useState(false);
-
+  const token =
+    localStorage.getItem("cineprism_auth_token") ||
+    sessionStorage.getItem("cineprism_auth_token");
+  
   const genres = [
     { key: "all", label: "All Genres" },
     { key: "action", label: "Action" },
@@ -65,7 +67,13 @@ const TopPicksPage = () => {
         const response = await axios.post(
           `https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-top-picks`,
           {},
-          { withCredentials: true }
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${token}`, // <-- sending token here
+              "Content-Type": "application/json",
+            },
+          }
         );
 
         if (response.data && response.data.topPicks) {
