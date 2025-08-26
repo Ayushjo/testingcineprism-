@@ -10,11 +10,6 @@ const RedirectIfAuth = () => {
     return <ThemedLoader />;
   }
 
-  // Don't redirect if on auth callback page (let it handle the token)
-  if (location.pathname === "/auth/callback") {
-    return <Outlet />;
-  }
-
   if (user) {
     return <Navigate to="/" replace />;
   }
