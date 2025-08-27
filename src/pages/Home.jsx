@@ -335,7 +335,7 @@ const backgroundVideoUrl =
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.7 }}
-                    className="text-7xl md:text-8xl lg:text-6xl xl:text-7xl font-light leading-[0.9] tracking-tight"
+                    className="text-8xl md:text-8xl lg:text-8xl xl:text-8xl font-light leading-[0.9] tracking-tight"
                   >
                     <span className="text-slate-100 font-extralight">The</span>
                     <br />
