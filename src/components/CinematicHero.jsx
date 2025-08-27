@@ -8,6 +8,8 @@ import OppenHeimerFire from "../assets/oppenheimerfire.jpg";
 import OppenheimerImage from "../assets/oppenheimer.jpg";
 import DunePoster from "../assets/dunefan.jpg";
 import Dune from "../assets/Dune.jpg";
+import AvatarPoster from "../assets/AvatarPoster.jpg"
+import AvatarBackdrop from "../assets/AvatarBackdrop.jpg"
 export default function CinematicHeroSection() {
   const [currentFrame, setCurrentFrame] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -41,15 +43,15 @@ export default function CinematicHeroSection() {
     },
     {
       id: 3,
-      title: "Everything Everywhere All at Once",
-      director: "Daniels",
+      title: "Avatar: The Way of Water",
+      director: "James Cameron",
       year: "2022",
-      rating: 7.8,
-      genre: "Multiverse Adventure",
-      poster: "/eeaao-poster.png",
-      backdrop: "/multiverse-colorful-abstract-cinematic.png",
-      tagline: "The universe is so much bigger than you realize",
-      color: "from-purple-500/20 to-pink-600/20",
+      rating: 7.6,
+      genre: "Epic Science Fiction",
+      poster: AvatarPoster,
+      backdrop: AvatarBackdrop,
+      tagline: "Return to Pandora",
+      color: "from-blue-500/20 to-cyan-600/20",
     },
   ];
 
