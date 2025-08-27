@@ -346,10 +346,12 @@ export default function Homepage() {
                     transition={{ duration: 0.6, delay: 0.9 }}
                     className="text-lg md:text-xl text-slate-300 font-light leading-relaxed max-w-2xl tracking-wider"
                   >
-                    A curated collection of cinematic masterpieces, where artistry meets storytelling in the most refined viewing experience.
+                    A curated collection of cinematic masterpieces, where
+                    artistry meets storytelling in the most refined viewing
+                    experience.
                   </motion.p>
                 </motion.div>
-                
+
                 {/* Right Side - Movie Card */}
                 <motion.div
                   initial={{ opacity: 0, x: 50 }}
@@ -529,7 +531,8 @@ export default function Homepage() {
                   transition={{ duration: 0.6, delay: 0.7 }}
                   className="text-base text-slate-300 font-light leading-relaxed tracking-wide px-4"
                 >
-                  A curated collection of cinematic masterpieces, where artistry meets storytelling in the most refined viewing experience.
+                  A curated collection of cinematic masterpieces, where artistry
+                  meets storytelling in the most refined viewing experience.
                 </motion.p>
 
                 {/* Mobile Featured Content Card */}
@@ -549,7 +552,8 @@ export default function Homepage() {
                           {heroPosters[currentSlide].title}
                         </h3>
                         <p className="text-slate-400 text-xs">
-                          {heroPosters[currentSlide].year} • {heroPosters[currentSlide].genre}
+                          {heroPosters[currentSlide].year} •{" "}
+                          {heroPosters[currentSlide].genre}
                         </p>
                       </div>
 
@@ -587,7 +591,8 @@ export default function Homepage() {
             </div>
           </div>
         </section>
-        <ArticleSection />
+        <TrendingThisWeek />
+        <LatestReviews />
         {/* Bento Grid Section */}
         <section className="py-24 bg-gradient-to-b from-slate-950 to-slate-900 relative overflow-hidden">
           {/* Ambient Background */}
@@ -727,9 +732,10 @@ export default function Homepage() {
             </motion.div>
           </div>
         </section>
+        <ArticleSection />
+
         {/* New Sections */}
-        <LatestReviews />
-        <TrendingThisWeek />
+
         <ExploreByGenre />
         <NewsletterCTA />
       </div>

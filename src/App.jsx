@@ -61,6 +61,7 @@ const App = () => {
 
           {/* ADD: OAuth callback route */}
           <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/reviews" element={<ReviewPage />} />
 
           <Route element={<RedirectIfUser />}>
             <Route
@@ -73,7 +74,7 @@ const App = () => {
             <Route path="/genre/Horror" element={<HorrorPage />} />
             <Route path="/genre/Animation" element={<AnimationPage />} />
             <Route path="/trending" element={<TrendingPage />} />
-            <Route path="/reviews" element={<ReviewPage />} />
+
             <Route path="/cinema-school" element={<CinemaSchoolPage />} />
             <Route
               path="/unpopular-opinions"
