@@ -84,7 +84,8 @@ export default function Homepage() {
       genre: "Romance/Comedy",
     },
   ];
-
+const backgroundVideoUrl =
+  "https://res.cloudinary.com/dapu22gee/video/upload/v1754809621/bgvideo1_ynn0u1.mp4";
   // Extended featured carousel data for mobile film strip (increased length)
   const featuredCarouselData = [
     {
@@ -239,7 +240,7 @@ export default function Homepage() {
       gradient: "from-yellow-500/10 to-orange-600/10",
     },
   ];
-  
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHoveringCard, setIsHoveringCard] = useState(false);
 
@@ -277,6 +278,225 @@ export default function Homepage() {
   return (
     <>
       <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
+        <div className="block md:hidden pt-28">
+          <CinematicHeroSections />
+        </div>
+        {/* Desktop Hero Section - Hidden on Mobile, Unchanged */}
+        <section className="relative h-screen overflow-hidden pt-20 hidden md:block">
+          {/* Subtle Background Pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:60px_60px]" />
+          </div>
+          {/* Ambient Glow Effects */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+          </div>
+          {/* Background Video */}
+          <div className="absolute inset-0 z-0">
+            <video
+              src={backgroundVideoUrl}
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+            />
+            {/* Keep the overlay very light so the video stays visible */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-950/20 via-slate-950/15 to-slate-950/20" />
+          </div>
+          {/* Hero Content */}
+          <div className="relative z-20 h-full flex items-center">
+            <div className="max-w-7xl mx-auto px-4 w-full">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                {/* Left Side - Brand */}
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                  className="text-center lg:text-left space-y-8"
+                >
+                  {/* Badge --- Updated to match cinema hero --- */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                    className="hidden md:flex sm:flex-row sm:items-center sm:justify-center md:justify-start"
+                  >
+                    <span className="inline-flex items-center gap-3 bg-slate-800/30 backdrop-blur-sm/60 border border-slate-700/30 px-5 py-2.5 rounded-full text-sm font-medium text-slate-300">
+                      <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                      Premium Cinema Experience
+                      <Film className="w-4 h-4 text-emerald-400" />
+                    </span>
+                  </motion.div>
+                  {/* Title - Updated to match cinema hero style */}
+                  <motion.h1
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.7 }}
+                    className="text-7xl md:text-8xl lg:text-6xl xl:text-7xl font-light leading-[0.9] tracking-tight"
+                  >
+                    <span className="text-slate-100 font-extralight">The</span>
+                    <br />
+                    <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-emerald-500 bg-clip-text text-transparent font-normal">
+                      Cinéprism
+                    </span>
+                  </motion.h1>
+                  {/* Tagline --- Updated to match cinema hero --- */}
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.9 }}
+                    className="text-lg md:text-xl text-slate-400 font-light leading-relaxed max-w-md tracking-wider"
+                  >
+                    Where every frame tells a story, and every story shapes
+                    cinema.
+                  </motion.p>
+                  {/* Buttons --- CHANGE: Modern pill shape and more elegant color scheme/hovers --- */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 1.1 }}
+                    className="hidden"
+                  >
+                    {/* Primary Button - Now an outline style that glows on hover */}
+                    <motion.button
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="group border-2 border-emerald-500 text-emerald-400 hover:text-white hover:bg-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 font-semibold px-8 py-4 rounded-full text-lg transition-all duration-300 flex items-center justify-center gap-2"
+                    >
+                      <Play className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                      Explore Reviews
+                    </motion.button>
+                    {/* Secondary Button - Softer border and a clean text color change on hover */}
+                    <motion.button
+                      whileHover={{
+                        scale: 1.02,
+                        y: -2,
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      className="border border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300"
+                    >
+                      Latest Posts
+                    </motion.button>
+                  </motion.div>
+                </motion.div>
+                {/* Right Side - Movie Card */}
+                <motion.div
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                  className="hidden lg:block"
+                >
+                  <Tilt
+                    glareEnable={true}
+                    glareMaxOpacity={0.1}
+                    glareColor="#10b981"
+                    tiltMaxAngleX={10}
+                    tiltMaxAngleY={10}
+                    scale={1.02}
+                  >
+                    <div
+                      className="relative group cursor-pointer"
+                      onMouseEnter={() => setIsHoveringCard(true)}
+                      onMouseLeave={() => setIsHoveringCard(false)}
+                    >
+                      {/* "Now Featuring" Badge */}
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.8 }}
+                        className="absolute -top-4 left-4 z-20"
+                      >
+                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-xl text-emerald-400 px-4 py-2 rounded-2xl text-sm font-medium border border-white/10">
+                          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                          Now Featuring
+                        </div>
+                      </motion.div>
+                      {/* Movie Poster */}
+                      <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl">
+                        <AnimatePresence mode="wait">
+                          <motion.img
+                            key={currentSlide}
+                            src={
+                              heroPosters[currentSlide].image ||
+                              "/placeholder.svg"
+                            }
+                            alt={heroPosters[currentSlide].title}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.5 }}
+                          />
+                        </AnimatePresence>
+                        {/* Rating Badge */}
+                        <div className="absolute top-4 right-4 z-10">
+                          <div className="flex items-center gap-1 bg-black/40 backdrop-blur-xl px-3 py-1.5 rounded-2xl border border-white/10">
+                            <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                            <span className="text-white font-semibold text-sm">
+                              {heroPosters[currentSlide].rating}
+                            </span>
+                          </div>
+                        </div>
+                        {/* Information Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                          <motion.h3
+                            key={`title-${currentSlide}`}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="text-2xl font-bold mb-2 tracking-tight"
+                          >
+                            {heroPosters[currentSlide].title}
+                          </motion.h3>
+                          <motion.p
+                            key={`subtitle-${currentSlide}`}
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                            className="text-slate-300 mb-3 leading-relaxed"
+                          >
+                            {heroPosters[currentSlide].subtitle}
+                          </motion.p>
+                          <motion.div
+                            key={`meta-${currentSlide}`}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                            className="flex items-center gap-3 text-sm text-slate-400"
+                          >
+                            <span>{heroPosters[currentSlide].year}</span>
+                            <span>•</span>
+                            <span>{heroPosters[currentSlide].genre}</span>
+                          </motion.div>
+                        </div>
+                        {/* Hover Play Button */}
+                        <AnimatePresence>
+                          {isHoveringCard && (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.8 }}
+                              transition={{ duration: 0.2 }}
+                              className="absolute inset-0 flex items-center justify-center"
+                            >
+                              <div className="w-16 h-16 bg-white/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/20 shadow-lg">
+                                <Play className="w-6 h-6 text-white ml-1" />
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  </Tilt>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </section>
         <CinematicHeroSections />
         <ArticleSection />
         {/* Bento Grid Section */}

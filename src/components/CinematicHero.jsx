@@ -2,17 +2,25 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Star, Film, Award, ChevronDown } from "lucide-react";
+import {
+  Play,
+  Star,
+  Film,
+  Award,
+  ChevronDown,
+  Calendar,
+  Clock,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import OppenHeimerFire from "../assets/oppenheimerfire.jpg";
 import OppenheimerImage from "../assets/oppenheimer.jpg";
 import DunePoster from "../assets/dunefan.jpg";
 import Dune from "../assets/Dune.jpg";
-import AvatarPoster from "../assets/AvatarPoster.jpg"
-import AvatarBackdrop from "../assets/AvatarBackdrop.jpg"
-export default function CinematicHeroSection() {
+import AvatarPoster from "../assets/AvatarPoster.jpg";
+import AvatarBackdrop from "../assets/AvatarBackdrop.jpg";
+export default function ElegantCinemaHeroSection() {
   const [currentFrame, setCurrentFrame] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef(null);
 
@@ -24,10 +32,12 @@ export default function CinematicHeroSection() {
       year: "2024",
       rating: 8.8,
       genre: "Sci-Fi Epic",
+      runtime: "166 min",
       poster: DunePoster,
       backdrop: Dune,
       tagline: "Power belongs to those who take it",
-      color: "from-orange-500/20 to-amber-600/20",
+      color: "from-amber-500/10 via-orange-500/5 to-transparent",
+      accent: "border-amber-500/20 text-amber-400",
     },
     {
       id: 2,
@@ -36,10 +46,12 @@ export default function CinematicHeroSection() {
       year: "2023",
       rating: 8.3,
       genre: "Historical Drama",
+      runtime: "180 min",
       poster: OppenheimerImage,
       backdrop: OppenHeimerFire,
       tagline: "The world forever changes",
-      color: "from-red-500/20 to-orange-600/20",
+      color: "from-red-500/10 via-orange-500/5 to-transparent",
+      accent: "border-red-500/20 text-red-400",
     },
     {
       id: 3,
@@ -48,22 +60,16 @@ export default function CinematicHeroSection() {
       year: "2022",
       rating: 7.6,
       genre: "Epic Science Fiction",
+      runtime: "192 min",
       poster: AvatarPoster,
       backdrop: AvatarBackdrop,
       tagline: "Return to Pandora",
-      color: "from-blue-500/20 to-cyan-600/20",
+      color: "from-cyan-500/10 via-blue-500/5 to-transparent",
+      accent: "border-cyan-500/20 text-cyan-400",
     },
   ];
 
-  // Film strip frames for background animation
-  const filmFrames = Array.from({ length: 20 }, (_, i) => ({
-    id: i,
-    image: `/placeholder.svg?height=120&width=80&query=vintage film frame ${
-      i + 1
-    }`,
-  }));
-
-  // Mouse tracking for parallax
+  // Refined mouse tracking for subtle parallax
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (containerRef.current) {
@@ -82,11 +88,11 @@ export default function CinematicHeroSection() {
     }
   }, []);
 
-  // Auto-advance frames
+  // Auto-advance frames with longer intervals for elegance
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentFrame((prev) => (prev + 1) % featuredFilms.length);
-    }, 8000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [featuredFilms.length]);
 
@@ -95,97 +101,80 @@ export default function CinematicHeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative h-screen overflow-hidden bg-background cinema-vignette"
+      className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 pt-12"
     >
-      {/* Animated Film Strip Background */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-0 w-[200%] h-full flex film-strip">
-          {[...filmFrames, ...filmFrames].map((frame, index) => (
-            <div
-              key={`${frame.id}-${index}`}
-              className="flex-shrink-0 w-20 h-full border-r border-white/10 relative"
-            >
-              <div className="absolute top-4 left-2 right-2 bottom-4 bg-white/5 rounded-sm">
-                <img
-                  src={frame.image || "/placeholder.svg"}
-                  alt={`Film frame ${frame.id}`}
-                  className="w-full h-full object-cover rounded-sm opacity-30"
-                />
-              </div>
-              {/* Film perforations */}
-              <div className="absolute left-0 top-0 bottom-0 w-1 bg-white/10">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute w-full h-4 bg-background"
-                    style={{ top: `${i * 12.5}%` }}
-                  />
-                ))}
-              </div>
-            </div>
+      {/* Subtle Grid Pattern */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:40px_40px]" />
+      </div>
+
+      {/* Refined Film Strip Decoration */}
+      <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-slate-800/20 to-transparent opacity-30">
+        <div className="absolute left-2 top-0 bottom-0 w-1 bg-gradient-to-b from-slate-600/30 via-slate-500/20 to-slate-600/30">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0.3 }}
+              animate={{ opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: 3, delay: i * 0.1, repeat: Infinity }}
+              className="absolute w-full h-6 bg-slate-900/50"
+              style={{ top: `${i * 5}%` }}
+            />
           ))}
         </div>
       </div>
 
-      {/* Film Grain Texture */}
-      <div className="absolute inset-0 film-grain opacity-30" />
-
-      {/* Dynamic Background */}
+      {/* Dynamic Background with Subtle Animation */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentFilm.id}
-          initial={{ opacity: 0, scale: 1.1 }}
+          initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 2, ease: "easeInOut" }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 2.5, ease: "easeInOut" }}
           className="absolute inset-0"
         >
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/95 to-slate-950/80" />
           <img
-            src={currentFilm.backdrop || "/placeholder.svg"}
+            src={currentFilm.backdrop}
             alt={currentFilm.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover opacity-20"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
           <div
-            className={`absolute inset-0 bg-gradient-to-t ${currentFilm.color}`}
+            className={`absolute inset-0 bg-gradient-to-br ${currentFilm.color}`}
           />
         </motion.div>
       </AnimatePresence>
 
-      {/* Main Content */}
-      <div className="relative z-20 h-full flex items-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="space-y-8"
-            >
-              {/* Cinema Badge */}
+      {/* Main Content Container */}
+      <div className="relative z-20 min-h-screen flex items-center">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
+          <div className="grid lg:grid-cols-12 gap-16 items-center">
+            {/* Left Content - 7 columns */}
+            <div className="lg:col-span-7 space-y-10">
+              {/* Refined Cinema Badge */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.7 }}
-                className="inline-flex items-center gap-2 bg-card backdrop-blur-xl border border-border px-4 py-2 rounded-full text-sm font-medium text-accent"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="inline-flex items-center gap-3 bg-slate-800/30 backdrop-blur-xl border border-slate-700/30 px-5 py-2.5 rounded-full text-sm font-medium text-slate-300"
               >
-                <Film className="w-4 h-4" />
-                <span>Curating Cinema Since 2024</span>
-                <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                <span>Premium Cinema Experience</span>
+                <Film className="w-4 h-4 text-emerald-400" />
               </motion.div>
 
-              {/* Main Title */}
-              <div className="space-y-4">
+              {/* Elegant Main Title */}
+              <div className="space-y-6">
                 <motion.h1
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.8 }}
-                  className="text-6xl md:text-7xl lg:text-8xl font-black leading-none tracking-tight"
+                  transition={{ duration: 1, delay: 0.4 }}
+                  className="text-7xl md:text-8xl lg:text-9xl font-light leading-[0.9] tracking-tight"
                 >
-                  <span className="text-slate-200">The</span>
+                  <span className="text-slate-100 font-extralight">The</span>
                   <br />
-                  <span className="bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-emerald-500 bg-clip-text text-transparent font-normal">
                     Cinéprism
                   </span>
                 </motion.h1>
@@ -193,168 +182,225 @@ export default function CinematicHeroSection() {
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 1 }}
-                  className="text-xl md:text-2xl text-muted-foreground font-light tracking-wide max-w-lg"
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  className="text-lg md:text-xl text-slate-400 font-light leading-relaxed max-w-2xl"
                 >
                   Where every frame tells a story, and every story shapes
                   cinema.
                 </motion.p>
               </div>
 
-              {/* Featured Film Info */}
+              {/* Sophisticated Featured Film Card */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentFilm.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.8 }}
-                  className="bg-card/50 backdrop-blur-xl border border-border rounded-2xl p-6 space-y-4"
+                  exit={{ opacity: 0, y: -30 }}
+                  transition={{ duration: 1 }}
+                  className="relative group"
+                  onHoverStart={() => setIsHovered(true)}
+                  onHoverEnd={() => setIsHovered(false)}
                 >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-bold text-foreground">
-                        Featured Review
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Now Screening
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-1 bg-accent/20 px-3 py-1 rounded-full">
-                      <Star className="w-4 h-4 text-accent fill-current" />
-                      <span className="text-sm font-semibold text-accent">
-                        {currentFilm.rating}
-                      </span>
-                    </div>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
 
-                  <div>
-                    <h4 className="text-xl font-bold text-foreground mb-1">
-                      {currentFilm.title}
-                    </h4>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      Directed by {currentFilm.director} • {currentFilm.year} •{" "}
-                      {currentFilm.genre}
-                    </p>
-                    <p className="text-sm text-foreground/80 italic">
+                  <div className="relative bg-slate-800/20 backdrop-blur-2xl border border-slate-700/30 rounded-3xl p-8 transition-all duration-500 group-hover:border-emerald-500/20">
+                    <div className="flex items-start justify-between mb-6">
+                      <div>
+                        <p className="text-sm text-emerald-400 font-medium mb-2 uppercase tracking-wider">
+                          Featured Review
+                        </p>
+                        <h3 className="text-2xl font-light text-slate-100 mb-1">
+                          {currentFilm.title}
+                        </h3>
+                        <p className="text-slate-400 text-sm">
+                          {currentFilm.director} • {currentFilm.year}
+                        </p>
+                      </div>
+
+                      <div
+                        className={`flex items-center gap-2 bg-slate-800/40 backdrop-blur-xl border ${currentFilm.accent} px-4 py-2 rounded-full`}
+                      >
+                        <Star
+                          className={`w-4 h-4 fill-current ${
+                            currentFilm.accent.split(" ")[1]
+                          }`}
+                        />
+                        <span
+                          className={`text-sm font-semibold ${
+                            currentFilm.accent.split(" ")[1]
+                          }`}
+                        >
+                          {currentFilm.rating}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-6 text-sm text-slate-400 mb-4">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        <span>{currentFilm.genre}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        <span>{currentFilm.runtime}</span>
+                      </div>
+                    </div>
+
+                    <p className="text-slate-300 italic text-base leading-relaxed">
                       "{currentFilm.tagline}"
                     </p>
                   </div>
                 </motion.div>
               </AnimatePresence>
 
-              {/* Action Buttons */}
+              {/* Refined Action Buttons */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 1.2 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
                 className="flex flex-col sm:flex-row gap-4"
               >
                 <Button
                   size="lg"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-primary/25 transition-all duration-300"
+                  className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-8 py-4 rounded-2xl font-medium text-base shadow-lg hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-105"
                 >
-                  <Play className="w-5 h-5 mr-2" />
-                  Explore Reviews
+                  <Play className="w-5 h-5 mr-3 fill-current" />
+                  Explore Collection
                 </Button>
 
                 <Button
                   variant="outline"
                   size="lg"
-                  className="bg-card/50 hover:bg-card border-border hover:border-accent/50 text-foreground px-8 py-4 rounded-2xl font-semibold text-lg backdrop-blur-xl transition-all duration-300"
+                  className="bg-slate-800/20 hover:bg-slate-800/40 border-slate-600/30 hover:border-emerald-500/30 text-slate-200 px-8 py-4 rounded-2xl font-medium text-base backdrop-blur-xl transition-all duration-300"
                 >
-                  <Award className="w-5 h-5 mr-2" />
-                  Latest Articles
+                  <Award className="w-5 h-5 mr-3" />
+                  Critics' Choice
                 </Button>
               </motion.div>
 
-              {/* Film Strip Navigation */}
+              {/* Minimalist Film Navigation */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1.5 }}
-                className="flex items-center gap-2"
+                transition={{ delay: 1 }}
+                className="flex items-center gap-3"
               >
                 {featuredFilms.map((film, index) => (
-                  <button
+                  <motion.button
                     key={film.id}
                     onClick={() => setCurrentFrame(index)}
-                    className={`w-12 h-8 rounded border-2 transition-all duration-300 ${
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`relative w-16 h-10 rounded-lg border-2 transition-all duration-500 overflow-hidden group ${
                       index === currentFrame
-                        ? "border-accent bg-accent/20"
-                        : "border-border bg-card/30 hover:border-accent/50"
+                        ? "border-emerald-400 shadow-lg shadow-emerald-400/20"
+                        : "border-slate-600/40 hover:border-slate-500/60"
                     }`}
                   >
                     <img
-                      src={film.poster || "/placeholder.svg"}
+                      src={film.poster}
                       alt={film.title}
-                      className="w-full h-full object-cover rounded-sm opacity-60"
+                      className="w-full h-full object-cover transition-all duration-300 group-hover:scale-110"
                     />
-                  </button>
+                    <div
+                      className={`absolute inset-0 transition-opacity duration-300 ${
+                        index === currentFrame
+                          ? "bg-emerald-400/20"
+                          : "bg-slate-900/40 group-hover:bg-slate-900/20"
+                      }`}
+                    />
+                  </motion.button>
                 ))}
               </motion.div>
-            </motion.div>
+            </div>
 
-            {/* Right Content - Featured Poster */}
-            <motion.div
-              initial={{ opacity: 0, x: 50, rotateY: -15 }}
-              animate={{ opacity: 1, x: 0, rotateY: 0 }}
-              transition={{ duration: 1, delay: 0.8 }}
-              className="relative hidden lg:block"
-            >
+            {/* Right Content - Floating Poster - 5 columns */}
+            <div className="lg:col-span-5 relative hidden lg:block">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentFilm.id}
-                  initial={{ opacity: 0, scale: 0.8, rotateY: 15 }}
-                  animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-                  exit={{ opacity: 0, scale: 0.8, rotateY: -15 }}
-                  transition={{ duration: 1, ease: "easeInOut" }}
-                  className="relative"
+                  initial={{ opacity: 0, scale: 0.9, rotateY: 10 }}
+                  animate={{
+                    opacity: 1,
+                    scale: 1,
+                    rotateY: 0,
+                    x: mousePosition.x * 10,
+                    y: mousePosition.y * 10,
+                  }}
+                  exit={{ opacity: 0, scale: 0.9, rotateY: -10 }}
+                  transition={{
+                    duration: 1.2,
+                    ease: "easeOut",
+                    x: { type: "spring", stiffness: 50, damping: 20 },
+                    y: { type: "spring", stiffness: 50, damping: 20 },
+                  }}
+                  className="relative mx-auto w-80"
                 >
-                  <div className="aspect-[2/3] w-80 mx-auto relative">
-                    {/* Poster Shadow */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-secondary/20 rounded-3xl blur-2xl transform translate-y-8 scale-105" />
+                  <div className="aspect-[2/3] relative">
+                    {/* Elegant Glow Effect */}
+                    <div className="absolute -inset-4 bg-gradient-to-br from-emerald-400/20 via-transparent to-slate-600/20 rounded-3xl blur-2xl opacity-60" />
 
-                    {/* Poster Frame */}
-                    <div className="relative bg-card/20 backdrop-blur-xl border border-border rounded-3xl p-4 shadow-2xl">
+                    {/* Main Poster Container */}
+                    <motion.div
+                      className="relative bg-slate-800/10 backdrop-blur-2xl border border-slate-700/20 rounded-3xl p-3 shadow-2xl"
+                      whileHover={{
+                        scale: 1.02,
+                        borderColor: "rgba(52, 211, 153, 0.3)",
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
                       <img
-                        src={currentFilm.poster || "/placeholder.svg"}
+                        src={currentFilm.poster}
                         alt={currentFilm.title}
-                        className="w-full h-full object-cover rounded-2xl"
+                        className="w-full h-full object-cover rounded-2xl shadow-xl"
                       />
 
-                      {/* Film Strip Decoration */}
-                      <div className="absolute -left-2 top-0 bottom-0 w-4 bg-gradient-to-b from-accent/30 to-secondary/30 rounded-l-lg">
-                        {Array.from({ length: 12 }).map((_, i) => (
+                      {/* Subtle Film Strip Edge */}
+                      <div className="absolute -left-1 top-4 bottom-4 w-2 bg-gradient-to-b from-emerald-400/30 via-emerald-500/20 to-emerald-400/30 rounded-l-sm">
+                        {Array.from({ length: 8 }).map((_, i) => (
                           <div
                             key={i}
-                            className="absolute w-full h-4 bg-background/50"
-                            style={{ top: `${i * 8.33}%` }}
+                            className="absolute w-full h-3 bg-slate-900/60"
+                            style={{ top: `${i * 12.5}%` }}
                           />
                         ))}
                       </div>
-                    </div>
+
+                      {/* Rating Badge */}
+                      <div className="absolute top-6 right-6 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-full px-3 py-1.5">
+                        <div className="flex items-center gap-1">
+                          <Star className="w-3 h-3 text-emerald-400 fill-current" />
+                          <span className="text-xs font-semibold text-emerald-400">
+                            {currentFilm.rating}
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
                   </div>
                 </motion.div>
               </AnimatePresence>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Refined Scroll Indicator */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 2 }}
+        transition={{ delay: 1.5 }}
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center"
       >
-        <p className="text-sm text-muted-foreground mb-2">Discover More</p>
         <motion.div
           animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+          className="flex flex-col items-center gap-2"
         >
-          <ChevronDown className="w-6 h-6 text-accent mx-auto" />
+          <p className="text-xs text-slate-500 uppercase tracking-wider">
+            Discover
+          </p>
+          <ChevronDown className="w-5 h-5 text-emerald-400" />
         </motion.div>
       </motion.div>
     </section>
