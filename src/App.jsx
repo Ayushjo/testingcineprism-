@@ -38,6 +38,7 @@ import NewsArticlePage from "./pages/NewsArticlePage";
 
 // ADD: Import the AuthCallback component
 import AuthCallback from "./components/AuthCallback";
+import EditPostPage from "./pages/EditPostPage";
 
 const App = () => {
   const location = useLocation();
@@ -98,6 +99,7 @@ const App = () => {
                 element={<ReviewPosterPage />}
               />
               <Route path="add-top-picks" element={<AddTopPicksPage />} />
+              <Route path="edit-post" element={<EditPostPage />} />
             </Route>
           </Route>
         </Routes>

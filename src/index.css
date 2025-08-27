@@ -3,6 +3,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
 body {
   font-family: "Inter", sans-serif;
 }
@@ -248,4 +252,149 @@ button, a {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+:root {
+  --background: #0f172a; /* Slate-950 for deep cinematic feel */
+  --foreground: #ffffff; /* Pure white for contrast */
+  --card: rgba(255, 255, 255, 0.05); /* Subtle glassmorphic cards */
+  --card-foreground: #ffffff; /* White text on cards */
+  --popover: rgba(255, 255, 255, 0.08); /* Slightly more opaque popovers */
+  --popover-foreground: #ffffff; /* White popover text */
+  --primary: #10b981; /* Emerald-500 for primary actions */
+  --primary-foreground: #ffffff; /* White text on primary */
+  --secondary: #8b5cf6; /* Purple-500 for secondary accents */
+  --secondary-foreground: #ffffff; /* White text on secondary */
+  --muted: #1e293b; /* Slate-800 for muted backgrounds */
+  --muted-foreground: #94a3b8; /* Slate-400 for muted text */
+  --accent: #10b981; /* Emerald accent matching primary */
+  --accent-foreground: #ffffff; /* White accent text */
+  --destructive: #ef4444; /* Red-500 for destructive actions */
+  --destructive-foreground: #ffffff; /* White destructive text */
+  --border: rgba(255, 255, 255, 0.1); /* Subtle white borders */
+  --input: #1e293b; /* Slate-800 for input backgrounds */
+  --ring: rgba(16, 185, 129, 0.3); /* Emerald focus ring */
+  --chart-1: #10b981; /* Emerald chart color */
+  --chart-2: #8b5cf6; /* Purple chart color */
+  --chart-3: #06b6d4; /* Cyan chart color */
+  --chart-4: #f59e0b; /* Amber chart color */
+  --chart-5: #ec4899; /* Pink chart color */
+  --radius: 0.75rem; /* Rounded corners */
+  --sidebar: #1e293b; /* Slate-800 sidebar */
+  --sidebar-foreground: #ffffff; /* White sidebar text */
+  --sidebar-primary: #0f172a; /* Slate-950 sidebar primary */
+  --sidebar-primary-foreground: #ffffff; /* White sidebar primary text */
+  --sidebar-accent: #10b981; /* Emerald sidebar accent */
+  --sidebar-accent-foreground: #ffffff; /* White sidebar accent text */
+  --sidebar-border: rgba(255, 255, 255, 0.1); /* Subtle sidebar borders */
+  --sidebar-ring: rgba(16, 185, 129, 0.3); /* Emerald sidebar ring */
+}
+
+.dark {
+  --background: #0f172a; /* Slate-950 */
+  --foreground: #ffffff; /* White */
+  --card: rgba(255, 255, 255, 0.05); /* Glassmorphic cards */
+  --card-foreground: #ffffff; /* White card text */
+  --popover: rgba(255, 255, 255, 0.08); /* Glassmorphic popovers */
+  --popover-foreground: #ffffff; /* White popover text */
+  --primary: #10b981; /* Emerald-500 */
+  --primary-foreground: #ffffff; /* White on primary */
+  --secondary: #8b5cf6; /* Purple-500 */
+  --secondary-foreground: #ffffff; /* White on secondary */
+  --muted: #1e293b; /* Slate-800 */
+  --muted-foreground: #94a3b8; /* Slate-400 */
+  --accent: #10b981; /* Emerald accent */
+  --accent-foreground: #ffffff; /* White accent text */
+  --destructive: #ef4444; /* Red-500 */
+  --destructive-foreground: #ffffff; /* White destructive text */
+  --border: rgba(255, 255, 255, 0.1); /* Subtle borders */
+  --input: #1e293b; /* Slate-800 inputs */
+  --ring: rgba(16, 185, 129, 0.3); /* Emerald focus ring */
+  --chart-1: #10b981; /* Emerald */
+  --chart-2: #8b5cf6; /* Purple */
+  --chart-3: #06b6d4; /* Cyan */
+  --chart-4: #f59e0b; /* Amber */
+  --chart-5: #ec4899; /* Pink */
+  --sidebar: #1e293b; /* Slate-800 */
+  --sidebar-foreground: #ffffff; /* White */
+  --sidebar-primary: #0f172a; /* Slate-950 */
+  --sidebar-primary-foreground: #ffffff; /* White */
+  --sidebar-accent: #10b981; /* Emerald */
+  --sidebar-accent-foreground: #ffffff; /* White */
+  --sidebar-border: rgba(255, 255, 255, 0.1); /* Subtle borders */
+  --sidebar-ring: rgba(16, 185, 129, 0.3); /* Emerald ring */
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom film strip animation */
+@keyframes filmStrip {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.film-strip {
+  animation: filmStrip 60s linear infinite;
+}
+
+/* Custom film grain texture */
+.film-grain {
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+}
+
+/* Vintage cinema vignette */
+.cinema-vignette {
+  box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.8);
 }

@@ -46,6 +46,7 @@ import ArticleSection from "../components/ArticleSection";
 import CinematicHeroSection from "../components/CinematicHeroSection";
 import MobileCinematicHeroSection from "../components/MobileCinematicHeroSection";
 import FloatingPosterHero from "@/components/FloatingPosterHero";
+import CinematicHeroSections from "@/components/CinematicHero";
 export default function Homepage() {
   const [activeCard, setActiveCard] = useState(null);
 
@@ -276,7 +277,7 @@ export default function Homepage() {
   return (
     <>
       <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
-        <FloatingPosterHero />
+        <CinematicHeroSections />
         <ArticleSection />
         {/* Bento Grid Section */}
         <section className="py-24 bg-gradient-to-b from-slate-950 to-slate-900 relative overflow-hidden">
