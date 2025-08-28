@@ -17,7 +17,7 @@ const navigationItems = [
   { icon: ImageUp, label: "Upload Poster", id: "upload-poster" },
   { icon: ImageUp, label: "Upload Reviews Poster", id: "upload-review-poster" },
   { icon: Images, label: "Upload Gallery", id: "upload-gallery" },
-  {icone:FilePlus2,label:"Edit Post",id:"edit-post"}
+  {icon:FilePlus2,label:"Edit Post",id:"edit-post"}
 ];
 
 export default function AdminLayout() {
