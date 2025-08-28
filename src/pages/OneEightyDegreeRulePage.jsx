@@ -16,6 +16,7 @@ import {
   AlertTriangle,
   Lightbulb,
   Target,
+  Award,
   ChevronRight,
   ExternalLink,
 } from "lucide-react";
@@ -30,6 +31,7 @@ const Rule180Page = () => {
     { id: "breaking", title: "When to Break It", icon: AlertTriangle },
     { id: "practice", title: "Practice Tips", icon: Lightbulb },
     { id: "resources", title: "Resources", icon: BookOpen },
+    { id: "quiz", title: "Quiz", icon: Award },
   ];
 
   const InteractiveDiagram = () => {
