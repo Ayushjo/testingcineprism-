@@ -16,6 +16,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import axios from "axios";
+import { useAuth } from "@/context/AuthContext";
 
 const ratingColors = {
   HIGHLY_RECOMMENDED:
@@ -46,7 +47,7 @@ export default function AllPostsPage() {
     title: "",
   });
   const [isDeleting, setIsDeleting] = useState(false);
-
+  const { token } = useAuth();
   // Extract unique genres from posts
   const uniqueGenres = [...new Set(posts.flatMap((post) => post.genres || []))];
 
@@ -134,6 +135,7 @@ export default function AllPostsPage() {
         {
           withCredentials: true,
           headers: {
+            Authorization: `Bearer ${token}`, // <-- sending token here
             "Content-Type": "application/json",
           },
         }
