@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { X, Save, Search } from "lucide-react";
+import { X, Save, Search, Plus, Trash2 } from "lucide-react";
 import axios from "axios";
 
 const genres = [
@@ -28,8 +28,6 @@ const genres = [
   "Western",
 ];
 
-
-
 export default function CreatePostPage() {
   const [formData, setFormData] = useState({
     title: "",
@@ -39,6 +37,7 @@ export default function CreatePostPage() {
     year: "",
     genres: [],
     relatedPostIds: [],
+    ratingCategories: [{ category: "", score: 0 }], // Initialize with one empty rating
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -105,6 +104,37 @@ export default function CreatePostPage() {
     }));
   };
 
+  // Rating Categories handlers
+  const handleRatingChange = (index, field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      ratingCategories: prev.ratingCategories.map((rating, i) =>
+        i === index
+          ? {
+              ...rating,
+              [field]: field === "score" ? parseFloat(value) || 0 : value,
+            }
+          : rating
+      ),
+    }));
+  };
+
+  const addRatingCategory = () => {
+    setFormData((prev) => ({
+      ...prev,
+      ratingCategories: [...prev.ratingCategories, { category: "", score: 0 }],
+    }));
+  };
+
+  const removeRatingCategory = (index) => {
+    if (formData.ratingCategories.length > 1) {
+      setFormData((prev) => ({
+        ...prev,
+        ratingCategories: prev.ratingCategories.filter((_, i) => i !== index),
+      }));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -112,10 +142,16 @@ export default function CreatePostPage() {
     setSubmitMessage("");
 
     try {
+      // Filter out empty rating categories
+      const validRatingCategories = formData.ratingCategories.filter(
+        (rating) => rating.category.trim() !== "" && rating.score > 0
+      );
+
       // Prepare data for API
       const submitData = {
         ...formData,
         year: parseInt(formData.year),
+        ratingCategories: validRatingCategories,
       };
       console.log(submitData);
 
@@ -142,6 +178,7 @@ export default function CreatePostPage() {
           year: "",
           genres: [],
           relatedPostIds: [],
+          ratingCategories: [{ category: "", score: 0 }],
         });
 
         // Clear related posts search
@@ -299,6 +336,99 @@ export default function CreatePostPage() {
             />
           </div>
 
+          {/* Rating Categories */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium text-slate-300">
+                Rating Categories
+              </label>
+              <motion.button
+                type="button"
+                onClick={addRatingCategory}
+                disabled={isSubmitting}
+                whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
+                whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
+                className="flex items-center gap-1 px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-sm hover:bg-emerald-500/30 transition-all duration-200 disabled:opacity-50"
+              >
+                <Plus className="w-4 h-4" />
+                Add Category
+              </motion.button>
+            </div>
+
+            <div className="space-y-3">
+              {formData.ratingCategories.map((rating, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex gap-3 items-end"
+                >
+                  <div className="flex-1 space-y-1">
+                    <label className="text-xs text-slate-400">Category</label>
+                    <input
+                      type="text"
+                      value={rating.category}
+                      onChange={(e) =>
+                        handleRatingChange(index, "category", e.target.value)
+                      }
+                      className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
+                      placeholder="e.g., Acting, Plot, Visual Effects..."
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  <div className="w-24 space-y-1">
+                    <label className="text-xs text-slate-400">Score</label>
+                    <input
+                      type="number"
+                      value={rating.score}
+                      onChange={(e) =>
+                        handleRatingChange(index, "score", e.target.value)
+                      }
+                      className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
+                      placeholder="0-10"
+                      min="0"
+                      max="10"
+                      step="0.1"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  {formData.ratingCategories.length > 1 && (
+                    <motion.button
+                      type="button"
+                      onClick={() => removeRatingCategory(index)}
+                      disabled={isSubmitting}
+                      whileHover={{ scale: isSubmitting ? 1 : 1.1 }}
+                      whileTap={{ scale: isSubmitting ? 1 : 0.9 }}
+                      className="p-2 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all duration-200 disabled:opacity-50"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </motion.button>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+
+            {formData.ratingCategories.some(
+              (rating) => rating.category && rating.score > 0
+            ) && (
+              <div className="p-3 bg-slate-800/30 rounded-lg border border-slate-700">
+                <p className="text-xs text-slate-400 mb-2">Preview:</p>
+                <div className="flex flex-wrap gap-2">
+                  {formData.ratingCategories
+                    .filter((rating) => rating.category && rating.score > 0)
+                    .map((rating, index) => (
+                      <span
+                        key={index}
+                        className="px-2 py-1 bg-emerald-500/20 text-emerald-300 rounded text-xs border border-emerald-400/30"
+                      >
+                        {rating.category}: {rating.score}/10
+                      </span>
+                    ))}
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Genres */}
           <div className="space-y-3">
             <label className="text-sm font-medium text-slate-300">Genres</label>
@@ -330,8 +460,6 @@ export default function CreatePostPage() {
               </p>
             )}
           </div>
-
-      
 
           {/* Related Posts */}
           <div className="space-y-3">
