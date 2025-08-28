@@ -20,106 +20,106 @@ const getScoreColor = (score) => {
   if (score >= 55) return "#b91c1c"; // Red-700
   return "#991b1b"; // Red-800
 };
-const dummyPosts = [
-  {
-    id: "1",
-    title: "Dune: Part Two",
-    content:
-      "Denis Villeneuve masterfully continues Paul Atreides' epic journey in this visually stunning sequel that surpasses its predecessor in every way.",
-    year: 2024,
-    genres: ["Sci-Fi", "Adventure", "Drama"],
-    reviewPosterImageUrl:
-      "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=800&h=1200&fit=crop",
-    ratingCriteria: [
-      { name: "Cinematography", score: 100 },
-      { name: "Acting", score: 100 },
-      { name: "Story", score: 100 },
-      { name: "Sound Design", score: 100 },
-      { name: "Visual Effects", score: 100 },
-    ],
-  },
-  {
-    id: "2",
-    title: "The Substance",
-    content:
-      "A provocative body horror that challenges beauty standards with shocking imagery and brilliant performances.",
-    year: 2024,
-    genres: ["Horror", "Thriller", "Drama"],
-    reviewPosterImageUrl:
-      "https://images.unsplash.com/photo-1489599162567-f4b6586c72ad?w=800&h=1200&fit=crop",
-    ratingCriteria: [
-      { name: "Performance", score: 94 },
-      { name: "Direction", score: 89 },
-      { name: "Cinematography", score: 87 },
-      { name: "Makeup/Effects", score: 96 },
-    ],
-  },
-  {
-    id: "3",
-    title: "Oppenheimer",
-    content:
-      "Christopher Nolan's biographical thriller about the father of the atomic bomb is both intimate and epic.",
-    year: 2023,
-    genres: ["Biography", "Drama", "History"],
-    reviewPosterImageUrl:
-      "https://images.unsplash.com/photo-1594736797933-d0fbaa9fea0d?w=800&h=1200&fit=crop",
-    ratingCriteria: [
-      { name: "Acting", score: 97 },
-      { name: "Direction", score: 95 },
-      { name: "Cinematography", score: 91 },
-      { name: "Score", score: 88 },
-      { name: "Writing", score: 93 },
-    ],
-  },
-  {
-    id: "4",
-    title: "Poor Things",
-    content:
-      "Yorgos Lanthimos creates a whimsical yet profound tale of self-discovery with Emma Stone's fearless performance.",
-    year: 2023,
-    genres: ["Comedy", "Drama", "Sci-Fi"],
-    reviewPosterImageUrl:
-      "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=1200&fit=crop",
-    ratingCriteria: [
-      { name: "Performance", score: 96 },
-      { name: "Production Design", score: 98 },
-      { name: "Costume Design", score: 94 },
-      { name: "Direction", score: 89 },
-    ],
-  },
-  {
-    id: "5",
-    title: "Past Lives",
-    content:
-      "A tender meditation on love, memory, and the paths not taken, beautifully crafted with quiet emotional depth.",
-    year: 2023,
-    genres: ["Romance", "Drama"],
-    reviewPosterImageUrl:
-      "https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=800&h=1200&fit=crop",
-    ratingCriteria: [
-      { name: "Writing", score: 92 },
-      { name: "Acting", score: 88 },
-      { name: "Direction", score: 90 },
-      { name: "Cinematography", score: 85 },
-    ],
-  },
-  {
-    id: "6",
-    title: "The Menu",
-    content:
-      "A darkly comedic thriller that serves up social commentary with a side of horror in an unforgettable dining experience.",
-    year: 2022,
-    genres: ["Horror", "Comedy", "Thriller"],
-    reviewPosterImageUrl:
-      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=1200&fit=crop",
-    ratingCriteria: [
-      { name: "Performance", score: 50 },
-      { name: "Writing", score: 60 },
-      { name: "Direction", score: 73 },
-      { name: "Production Design", score: 47 },
-    ],
-  },
-];
+// const dummyPosts = [
+//   {
+//     id: "1",
+//     title: "Dune: Part Two",
+//     content:
+//       "Denis Villeneuve masterfully continues Paul Atreides' epic journey in this visually stunning sequel that surpasses its predecessor in every way.",
+//     year: 2024,
+//     genres: ["Sci-Fi", "Adventure", "Drama"],
+//     reviewPosterImageUrl:
+//       "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=800&h=1200&fit=crop",
+//     ratingCriteria: [
+//       { name: "Cinematography", score: 100 },
+//       { name: "Acting", score: 100 },
+//       { name: "Story", score: 100 },
+//       { name: "Sound Design", score: 100 },
+//       { name: "Visual Effects", score: 100 },
+//     ],
+//   },
+//   {
+//     id: "2",
+//     title: "The Substance",
+//     content:
+//       "A provocative body horror that challenges beauty standards with shocking imagery and brilliant performances.",
+//     year: 2024,
+//     genres: ["Horror", "Thriller", "Drama"],
+//     reviewPosterImageUrl:
+//       "https://images.unsplash.com/photo-1489599162567-f4b6586c72ad?w=800&h=1200&fit=crop",
+//     ratingCriteria: [
+//       { name: "Performance", score: 94 },
+//       { name: "Direction", score: 89 },
+//       { name: "Cinematography", score: 87 },
+//       { name: "Makeup/Effects", score: 96 },
+//     ],
+//   },
+//   {
+//     id: "3",
+//     title: "Oppenheimer",
+//     content:
+//       "Christopher Nolan's biographical thriller about the father of the atomic bomb is both intimate and epic.",
+//     year: 2023,
+//     genres: ["Biography", "Drama", "History"],
+//     reviewPosterImageUrl:
+//       "https://images.unsplash.com/photo-1594736797933-d0fbaa9fea0d?w=800&h=1200&fit=crop",
+//     ratingCriteria: [
+//       { name: "Acting", score: 97 },
+//       { name: "Direction", score: 95 },
+//       { name: "Cinematography", score: 91 },
+//       { name: "Score", score: 88 },
+//       { name: "Writing", score: 93 },
+//     ],
+//   },
+//   {
+//     id: "4",
+//     title: "Poor Things",
+//     content:
+//       "Yorgos Lanthimos creates a whimsical yet profound tale of self-discovery with Emma Stone's fearless performance.",
+//     year: 2023,
+//     genres: ["Comedy", "Drama", "Sci-Fi"],
+//     reviewPosterImageUrl:
+//       "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=1200&fit=crop",
+//     ratingCriteria: [
+//       { name: "Performance", score: 96 },
+//       { name: "Production Design", score: 98 },
+//       { name: "Costume Design", score: 94 },
+//       { name: "Direction", score: 89 },
+//     ],
+//   },
+//   {
+//     id: "5",
+//     title: "Past Lives",
+//     content:
+//       "A tender meditation on love, memory, and the paths not taken, beautifully crafted with quiet emotional depth.",
+//     year: 2023,
+//     genres: ["Romance", "Drama"],
+//     reviewPosterImageUrl:
+//       "https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=800&h=1200&fit=crop",
+//     ratingCriteria: [
+//       { name: "Writing", score: 92 },
+//       { name: "Acting", score: 88 },
+//       { name: "Direction", score: 90 },
+//       { name: "Cinematography", score: 85 },
+//     ],
+//   },
+//   {
+//     id: "6",
+//     title: "The Menu",
+//     content:
+//       "A darkly comedic thriller that serves up social commentary with a side of horror in an unforgettable dining experience.",
+//     year: 2022,
+//     genres: ["Horror", "Comedy", "Thriller"],
+//     reviewPosterImageUrl:
+//       "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=1200&fit=crop",
+//     ratingCriteria: [
+//       { name: "Performance", score: 50 },
+//       { name: "Writing", score: 60 },
+//       { name: "Direction", score: 73 },
+//       { name: "Production Design", score: 47 },
+//     ],
+//   },
+// ];
 
 // Mini circular progress for individual criteria
 const MiniRatingCircle = ({ score, delay = 0 }) => {
@@ -489,7 +489,7 @@ export default function ReviewPage() {
     sessionStorage.getItem("cineprism_auth_token");
 
   // Comment out API call for now, using dummy data
-  /*
+  
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -520,7 +520,7 @@ export default function ReviewPage() {
 
     fetchPosts();
   }, []);
-  */
+  
 
   // Convert API data to match the original review format
   const reviews = posts.map((post) => ({
