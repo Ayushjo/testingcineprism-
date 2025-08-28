@@ -37,7 +37,7 @@ const Rule180Page = () => {
     const [showLine, setShowLine] = useState(true);
 
     return (
-      <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 mb-8 pt-12">
+      <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 mb-8">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-2xl font-bold text-white">
             Interactive 180° Diagram
@@ -514,7 +514,7 @@ const Rule180Page = () => {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
