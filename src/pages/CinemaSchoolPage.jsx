@@ -26,9 +26,12 @@ const CinemaSchoolPage = () => {
       difficulty: "Beginner",
       icon: "Camera",
       description:
-        "Maintains spatial orientation by keeping the camera on one side of an action axis.",
-      example: "The Godfather conversation scenes.",
+        "The 180° Rule is a core filmmaking principle that keeps your audience oriented. Imagine an invisible line (the 'axis of action') drawn between two characters.",
+      example:
+        "In Michael Mann's Heat (1995), the famous Pacino–De Niro diner scene perfectly respects the 180° line, keeping audience orientation intact throughout.",
+      route: "/180-degree-rule",
     },
+    ,
     {
       id: 2,
       title: "Rule of Thirds",
@@ -116,57 +119,72 @@ const CinemaSchoolPage = () => {
     return categoryMatch && difficultyMatch;
   });
 
-  const LessonCard = ({ lesson, index }) => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group relative bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 hover:border-emerald-500/30 hover:bg-slate-800/50 transition-all duration-300"
-    >
-      <div className="flex items-start gap-4 mb-4">
-        <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors">
-          {getIcon(lesson.icon)}
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="px-2 py-1 text-xs font-medium bg-slate-800/50 text-slate-300 rounded-full">
-              {lesson.category}
-            </span>
-            <span
-              className={`px-2 py-1 text-xs font-medium rounded-full ${
-                lesson.difficulty === "Beginner"
-                  ? "bg-green-500/20 text-green-300"
-                  : lesson.difficulty === "Intermediate"
-                  ? "bg-yellow-500/20 text-yellow-300"
-                  : "bg-red-500/20 text-red-300"
-              }`}
-            >
-              {lesson.difficulty}
-            </span>
+  const LessonCard = ({ lesson, index }) => {
+    const handleLearnMore = () => {
+      if (lesson.route) {
+        // In a real app, you'd use your router here (e.g., Next.js router.push or React Router navigate)
+        window.location.href = lesson.route;
+      } else {
+        // Fallback for lessons without dedicated pages
+        alert(`${lesson.title} detailed page coming soon!`);
+      }
+    };
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: index * 0.1 }}
+        className="group relative bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 hover:border-emerald-500/30 hover:bg-slate-800/50 transition-all duration-300"
+      >
+        <div className="flex items-start gap-4 mb-4">
+          <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors">
+            {getIcon(lesson.icon)}
           </div>
-          <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-emerald-300 transition-colors">
-            {lesson.title}
-          </h3>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-2 py-1 text-xs font-medium bg-slate-800/50 text-slate-300 rounded-full">
+                {lesson.category}
+              </span>
+              <span
+                className={`px-2 py-1 text-xs font-medium rounded-full ${
+                  lesson.difficulty === "Beginner"
+                    ? "bg-green-500/20 text-green-300"
+                    : lesson.difficulty === "Intermediate"
+                    ? "bg-yellow-500/20 text-yellow-300"
+                    : "bg-red-500/20 text-red-300"
+                }`}
+              >
+                {lesson.difficulty}
+              </span>
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-emerald-300 transition-colors">
+              {lesson.title}
+            </h3>
+          </div>
         </div>
-      </div>
 
-      <p className="text-slate-300 mb-3 leading-relaxed">
-        {lesson.description}
-      </p>
-
-      <div className="mb-6">
-        <p className="text-sm text-slate-400">
-          <span className="font-medium text-emerald-300">Example:</span>{" "}
-          {lesson.example}
+        <p className="text-slate-300 mb-3 leading-relaxed">
+          {lesson.description}
         </p>
-      </div>
 
-      <button className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-3 text-white font-medium hover:bg-emerald-500/20 hover:border-emerald-500/30 hover:text-emerald-300 transition-all duration-300 flex items-center justify-center gap-2 group">
-        Learn More
-        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-      </button>
-    </motion.div>
-  );
+        <div className="mb-6">
+          <p className="text-sm text-slate-400">
+            <span className="font-medium text-emerald-300">Example:</span>{" "}
+            {lesson.example}
+          </p>
+        </div>
+
+        <button
+          onClick={handleLearnMore}
+          className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-3 text-white font-medium hover:bg-emerald-500/20 hover:border-emerald-500/30 hover:text-emerald-300 transition-all duration-300 flex items-center justify-center gap-2 group"
+        >
+          Learn More
+          <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </button>
+      </motion.div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-slate-950">

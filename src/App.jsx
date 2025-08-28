@@ -39,6 +39,7 @@ import NewsArticlePage from "./pages/NewsArticlePage";
 // ADD: Import the AuthCallback component
 import AuthCallback from "./components/AuthCallback";
 import EditPostPage from "./pages/EditPostPage";
+import Rule180Page from "./pages/OneEightyDegreeRulePage";
 
 const App = () => {
   const location = useLocation();
@@ -80,6 +81,7 @@ const App = () => {
               path="/unpopular-opinions"
               element={<UnpopularOpinionsPage />}
             />
+            <Route path="/180-degree-rule" element={<Rule180Page />} />
           </Route>
 
           <Route path="/ai-insights/:id" element={<AIInsightsArticlePage />} />
