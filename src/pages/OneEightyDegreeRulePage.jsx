@@ -7,26 +7,21 @@ import {
   Pause,
   Volume2,
   VolumeX,
-  ArrowLeft,
   BookOpen,
   Video,
   FileText,
-  CheckCircle,
-  Circle,
   Eye,
   Users,
   Move,
   AlertTriangle,
   Lightbulb,
   Target,
-  Award,
   ChevronRight,
   ExternalLink,
 } from "lucide-react";
 
 const Rule180Page = () => {
   const [activeSection, setActiveSection] = useState("basics");
-  const [completedSections, setCompletedSections] = useState(new Set());
   const [showDiagram, setShowDiagram] = useState(false);
 
   const sections = [
@@ -36,10 +31,6 @@ const Rule180Page = () => {
     { id: "practice", title: "Practice Tips", icon: Lightbulb },
     { id: "resources", title: "Resources", icon: BookOpen },
   ];
-
-  const markSectionComplete = (sectionId) => {
-    setCompletedSections((prev) => new Set([...prev, sectionId]));
-  };
 
   const InteractiveDiagram = () => {
     const [cameraPosition, setCameraPosition] = useState(1);
@@ -283,15 +274,6 @@ const Rule180Page = () => {
                 color="blue"
               />
             </div>
-
-            <div className="mt-8">
-              <button
-                onClick={() => markSectionComplete("basics")}
-                className="bg-emerald-500/20 text-emerald-300 px-6 py-3 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors font-medium"
-              >
-                Mark as Complete
-              </button>
-            </div>
           </div>
         );
 
@@ -306,36 +288,16 @@ const Rule180Page = () => {
               <h3 className="text-xl font-semibold text-emerald-300 mb-4">
                 Perfect Execution: Heat (1995)
               </h3>
-              <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 mb-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                  <span className="text-green-300 font-medium">
-                    Masterclass Example
-                  </span>
-                </div>
-                <p className="text-slate-300 leading-relaxed mb-4">
-                  Michael Mann's famous diner scene between De Niro and Pacino
-                  is a textbook example. Throughout their intense conversation,
-                  the camera respects the 180° line perfectly, keeping Pacino
-                  consistently on the left and De Niro on the right.
-                </p>
-                <div className="aspect-video bg-slate-800 rounded-xl flex items-center justify-center mb-4">
-                  <div className="text-center">
-                    <Play className="w-12 h-12 text-slate-500 mb-2 mx-auto" />
-                    <p className="text-slate-500 text-sm">
-                      Heat - Diner Scene Analysis
-                    </p>
-                    <p className="text-xs text-slate-600 mt-1">
-                      [Scene breakdown would go here]
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <VideoPlayer
+                title="Heat - Diner Scene Analysis"
+                embedId="xlNTDEtYX9k"
+                description="Analysis of the famous diner scene between De Niro and Pacino, showing perfect adherence to the 180° rule throughout their intense conversation."
+              />
             </div>
 
             <VideoPlayer
-              title="The 180 Degree Rule Explained - StudioBinder"
-              embedId="BBA8nXTUAw8"
+              title="The 180 Degree Rule Explained"
+              embedId="iW0bKUfvH2c"
               description="A comprehensive breakdown of the rule with visual examples from famous films."
             />
 
@@ -344,13 +306,6 @@ const Rule180Page = () => {
               embedId="wLfZL9PZI9k"
               description="Practical techniques for maintaining the 180° rule during dialogue scenes."
             />
-
-            <button
-              onClick={() => markSectionComplete("examples")}
-              className="bg-emerald-500/20 text-emerald-300 px-6 py-3 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors font-medium mt-6"
-            >
-              Mark as Complete
-            </button>
           </div>
         );
 
@@ -424,13 +379,6 @@ const Rule180Page = () => {
                 color="purple"
               />
             </div>
-
-            <button
-              onClick={() => markSectionComplete("breaking")}
-              className="bg-emerald-500/20 text-emerald-300 px-6 py-3 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors font-medium"
-            >
-              Mark as Complete
-            </button>
           </div>
         );
 
@@ -482,13 +430,6 @@ const Rule180Page = () => {
                 </p>
               </div>
             </div>
-
-            <button
-              onClick={() => markSectionComplete("practice")}
-              className="bg-emerald-500/20 text-emerald-300 px-6 py-3 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors font-medium"
-            >
-              Mark as Complete
-            </button>
           </div>
         );
 
@@ -563,13 +504,6 @@ const Rule180Page = () => {
                 </a>
               </div>
             </div>
-
-            <button
-              onClick={() => markSectionComplete("resources")}
-              className="bg-emerald-500/20 text-emerald-300 px-6 py-3 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors font-medium"
-            >
-              Mark as Complete
-            </button>
           </div>
         );
 
@@ -589,14 +523,6 @@ const Rule180Page = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <button
-            onClick={() => window.history.back()}
-            className="flex items-center gap-2 text-slate-400 hover:text-emerald-300 transition-colors mb-6"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Cinema School
-          </button>
-
           <div className="flex items-center gap-4 mb-6">
             <div className="p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
               <Camera className="w-8 h-8 text-emerald-300" />
@@ -615,26 +541,6 @@ const Rule180Page = () => {
               </div>
             </div>
           </div>
-
-          {/* Progress Bar */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-slate-300">
-                Progress
-              </span>
-              <span className="text-sm text-emerald-300">
-                {Math.round(progress)}% Complete
-              </span>
-            </div>
-            <div className="w-full bg-slate-800 rounded-full h-2">
-              <motion.div
-                className="bg-gradient-to-r from-emerald-500 to-emerald-400 h-2 rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.5 }}
-              />
-            </div>
-          </div>
         </motion.div>
 
         <div className="grid lg:grid-cols-4 gap-8">
@@ -649,7 +555,6 @@ const Rule180Page = () => {
                   {sections.map((section) => {
                     const Icon = section.icon;
                     const isActive = activeSection === section.id;
-                    const isCompleted = completedSections.has(section.id);
 
                     return (
                       <button
@@ -665,11 +570,6 @@ const Rule180Page = () => {
                         <span className="flex-1 text-left">
                           {section.title}
                         </span>
-                        {isCompleted ? (
-                          <CheckCircle className="w-5 h-5 text-emerald-400" />
-                        ) : (
-                          <Circle className="w-5 h-5 text-slate-600" />
-                        )}
                       </button>
                     );
                   })}
@@ -690,32 +590,6 @@ const Rule180Page = () => {
             </motion.div>
           </div>
         </div>
-
-        {/* Achievement Popup */}
-        {completedSections.size === sections.length && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-          >
-            <div className="bg-slate-900 border border-emerald-500/30 rounded-2xl p-8 text-center max-w-md mx-4">
-              <Award className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-white mb-2">
-                Congratulations!
-              </h3>
-              <p className="text-slate-300 mb-6">
-                You've completed the 180-Degree Rule lesson. You're now ready to
-                maintain spatial consistency in your films!
-              </p>
-              <button
-                onClick={() => window.history.back()}
-                className="bg-emerald-500/20 text-emerald-300 px-6 py-3 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors font-medium"
-              >
-                Continue Learning
-              </button>
-            </div>
-          </motion.div>
-        )}
       </div>
     </div>
   );
