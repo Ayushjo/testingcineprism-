@@ -19,11 +19,21 @@ import {
   Award,
   ChevronRight,
   ExternalLink,
+  CheckCircle,
+  XCircle,
+  RotateCcw,
+  Trophy,
 } from "lucide-react";
 
 const Rule180Page = () => {
   const [activeSection, setActiveSection] = useState("basics");
   const [showDiagram, setShowDiagram] = useState(false);
+  const [quizState, setQuizState] = useState({
+    currentQuestion: 0,
+    selectedAnswers: {},
+    showResults: false,
+    score: 0,
+  });
 
   const sections = [
     { id: "basics", title: "The Basics", icon: Target },
@@ -33,6 +43,388 @@ const Rule180Page = () => {
     { id: "resources", title: "Resources", icon: BookOpen },
     { id: "quiz", title: "Quiz", icon: Award },
   ];
+
+  const quizQuestions = [
+    {
+      id: 1,
+      question:
+        "What does the 180-degree rule primarily help with in a film scene?",
+      options: [
+        {
+          id: "a",
+          text: "Making the actors look more dramatic",
+          correct: false,
+        },
+        {
+          id: "b",
+          text: "Ensuring consistent spatial orientation for the audience",
+          correct: true,
+        },
+        { id: "c", text: "Keeping the lighting balanced", correct: false },
+        {
+          id: "d",
+          text: "Allowing the editor to use fancy transitions",
+          correct: false,
+        },
+      ],
+      explanation:
+        "The 180-degree rule maintains spatial consistency, helping the audience understand where characters are positioned relative to each other throughout a scene.",
+    },
+    {
+      id: 2,
+      question:
+        "Why should the camera stay on one side of the axis of action between two characters?",
+      options: [
+        {
+          id: "a",
+          text: "To keep their screen direction and eyelines consistent",
+          correct: true,
+        },
+        {
+          id: "b",
+          text: "To make them look equally important",
+          correct: false,
+        },
+        {
+          id: "c",
+          text: "To keep both characters in sharp focus",
+          correct: false,
+        },
+        { id: "d", text: "Because it looks more symmetrical", correct: false },
+      ],
+      explanation:
+        "Staying on one side ensures that each character's eyeline direction remains consistent, making the conversation feel natural and connected.",
+    },
+    {
+      id: 3,
+      question:
+        "Which is a reason a director might intentionally break the 180-degree rule?",
+      options: [
+        {
+          id: "a",
+          text: "To create audience confusion and mirror chaos",
+          correct: true,
+        },
+        { id: "b", text: "To save memory card space", correct: false },
+        { id: "c", text: "To avoid using multiple lights", correct: false },
+        {
+          id: "d",
+          text: "Because it's easier than following the rule",
+          correct: false,
+        },
+      ],
+      explanation:
+        "Breaking the rule can be a powerful storytelling tool to show confusion, psychological states, or dramatic power shifts in a scene.",
+    },
+    {
+      id: 4,
+      question:
+        "In the famous diner scene from 'Heat' (1995), how is the 180-degree rule applied?",
+      options: [
+        {
+          id: "a",
+          text: "It is constantly broken to show tension",
+          correct: false,
+        },
+        {
+          id: "b",
+          text: "It is perfectly maintained throughout the conversation",
+          correct: true,
+        },
+        { id: "c", text: "It only applies to wide shots", correct: false },
+        { id: "d", text: "The rule is ignored completely", correct: false },
+      ],
+      explanation:
+        "The Heat diner scene is a masterclass in maintaining the 180-degree rule, keeping both characters' positions clear throughout their intense dialogue.",
+    },
+    {
+      id: 5,
+      question: "What is the 'axis of action' in the 180-degree rule?",
+      options: [
+        { id: "a", text: "The path actors take when moving", correct: false },
+        {
+          id: "b",
+          text: "The imaginary line between two subjects",
+          correct: true,
+        },
+        { id: "c", text: "The camera movement path", correct: false },
+        { id: "d", text: "The lighting setup boundary", correct: false },
+      ],
+      explanation:
+        "The axis of action is the imaginary straight line drawn between two subjects or along the path of movement that cameras should not cross.",
+    },
+  ];
+
+  const handleAnswerSelect = (questionIndex, optionId) => {
+    setQuizState((prev) => ({
+      ...prev,
+      selectedAnswers: {
+        ...prev.selectedAnswers,
+        [questionIndex]: optionId,
+      },
+    }));
+  };
+
+  const handleNextQuestion = () => {
+    if (quizState.currentQuestion < quizQuestions.length - 1) {
+      setQuizState((prev) => ({
+        ...prev,
+        currentQuestion: prev.currentQuestion + 1,
+      }));
+    } else {
+      // Calculate score and show results
+      const correctAnswers = quizQuestions.reduce((count, question, index) => {
+        const selectedOption = quizState.selectedAnswers[index];
+        const correctOption = question.options.find((opt) => opt.correct);
+        return selectedOption === correctOption.id ? count + 1 : count;
+      }, 0);
+
+      setQuizState((prev) => ({
+        ...prev,
+        showResults: true,
+        score: correctAnswers,
+      }));
+    }
+  };
+
+  const resetQuiz = () => {
+    setQuizState({
+      currentQuestion: 0,
+      selectedAnswers: {},
+      showResults: false,
+      score: 0,
+    });
+  };
+
+  const QuizComponent = () => {
+    const currentQuestion = quizQuestions[quizState.currentQuestion];
+    const selectedAnswer = quizState.selectedAnswers[quizState.currentQuestion];
+    const hasAnswered = selectedAnswer !== undefined;
+
+    if (quizState.showResults) {
+      const percentage = Math.round(
+        (quizState.score / quizQuestions.length) * 100
+      );
+
+      return (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
+          <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", delay: 0.2 }}
+              className="w-24 h-24 mx-auto mb-6 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-full flex items-center justify-center border-2 border-emerald-500/30"
+            >
+              <Trophy className="w-12 h-12 text-emerald-300" />
+            </motion.div>
+
+            <h3 className="text-3xl font-bold text-white mb-4">
+              Quiz Complete!
+            </h3>
+            <div className="mb-6">
+              <div className="text-5xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent mb-2">
+                {quizState.score}/{quizQuestions.length}
+              </div>
+              <div className="text-xl text-slate-300">{percentage}% Score</div>
+            </div>
+
+            <div className="mb-8">
+              {percentage >= 80 ? (
+                <div className="text-emerald-300">
+                  <CheckCircle className="w-8 h-8 mx-auto mb-2" />
+                  <p className="text-lg font-semibold">Excellent work!</p>
+                  <p className="text-sm opacity-75">
+                    You've mastered the 180-degree rule!
+                  </p>
+                </div>
+              ) : percentage >= 60 ? (
+                <div className="text-blue-300">
+                  <Award className="w-8 h-8 mx-auto mb-2" />
+                  <p className="text-lg font-semibold">Good job!</p>
+                  <p className="text-sm opacity-75">
+                    You have a solid understanding of the basics.
+                  </p>
+                </div>
+              ) : (
+                <div className="text-purple-300">
+                  <Lightbulb className="w-8 h-8 mx-auto mb-2" />
+                  <p className="text-lg font-semibold">Keep learning!</p>
+                  <p className="text-sm opacity-75">
+                    Review the material and try again.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={resetQuiz}
+              className="flex items-center gap-2 mx-auto px-6 py-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-semibold rounded-lg border border-emerald-500/30 transition-all duration-300"
+            >
+              <RotateCcw className="w-5 h-5" />
+              Retake Quiz
+            </button>
+          </div>
+        </motion.div>
+      );
+    }
+
+    return (
+      <motion.div
+        key={quizState.currentQuestion}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -20 }}
+        transition={{ duration: 0.3 }}
+      >
+        {/* Progress Bar */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm text-slate-400">
+              Question {quizState.currentQuestion + 1} of {quizQuestions.length}
+            </span>
+            <span className="text-sm text-emerald-300 font-medium">
+              {Math.round(
+                ((quizState.currentQuestion + 1) / quizQuestions.length) * 100
+              )}
+              %
+            </span>
+          </div>
+          <div className="w-full bg-slate-800 rounded-full h-2">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{
+                width: `${
+                  ((quizState.currentQuestion + 1) / quizQuestions.length) * 100
+                }%`,
+              }}
+              className="h-2 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full"
+              transition={{ duration: 0.5 }}
+            />
+          </div>
+        </div>
+
+        {/* Question */}
+        <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 mb-6">
+          <h3 className="text-xl font-semibold text-white mb-6">
+            {currentQuestion.question}
+          </h3>
+
+          {/* Options */}
+          <div className="space-y-3">
+            {currentQuestion.options.map((option, index) => {
+              const isSelected = selectedAnswer === option.id;
+              const isCorrect = option.correct;
+              const showCorrectAnswer = hasAnswered;
+
+              let buttonClass =
+                "w-full p-4 rounded-xl border text-left transition-all duration-300 ";
+
+              if (showCorrectAnswer) {
+                if (isCorrect) {
+                  buttonClass +=
+                    "bg-emerald-500/20 border-emerald-500/50 text-emerald-300";
+                } else if (isSelected && !isCorrect) {
+                  buttonClass += "bg-red-500/20 border-red-500/50 text-red-300";
+                } else {
+                  buttonClass +=
+                    "bg-slate-800/50 border-slate-700/50 text-slate-400";
+                }
+              } else if (isSelected) {
+                buttonClass +=
+                  "bg-blue-500/20 border-blue-500/50 text-blue-300";
+              } else {
+                buttonClass +=
+                  "bg-slate-800/30 border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50 hover:text-white";
+              }
+
+              return (
+                <motion.button
+                  key={option.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  onClick={() =>
+                    !hasAnswered &&
+                    handleAnswerSelect(quizState.currentQuestion, option.id)
+                  }
+                  className={buttonClass}
+                  disabled={hasAnswered}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="w-8 h-8 rounded-full border-2 border-current flex items-center justify-center font-semibold">
+                        {option.id.toUpperCase()}
+                      </span>
+                      <span>{option.text}</span>
+                    </div>
+                    {showCorrectAnswer && (
+                      <div>
+                        {isCorrect && <CheckCircle className="w-5 h-5" />}
+                        {isSelected && !isCorrect && (
+                          <XCircle className="w-5 h-5" />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </motion.button>
+              );
+            })}
+          </div>
+
+          {/* Explanation */}
+          {hasAnswered && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              transition={{ delay: 0.3 }}
+              className="mt-6 p-4 bg-slate-800/30 rounded-lg border border-slate-700/30"
+            >
+              <div className="flex items-start gap-3">
+                <Lightbulb className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h4 className="font-medium text-white mb-1">Explanation</h4>
+                  <p className="text-slate-300 text-sm">
+                    {currentQuestion.explanation}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Next Button */}
+        {hasAnswered && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="text-center"
+          >
+            <button
+              onClick={handleNextQuestion}
+              className="px-6 py-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-semibold rounded-lg border border-emerald-500/30 transition-all duration-300 flex items-center gap-2 mx-auto"
+            >
+              {quizState.currentQuestion < quizQuestions.length - 1 ? (
+                <>
+                  Next Question
+                  <ChevronRight className="w-5 h-5" />
+                </>
+              ) : (
+                <>
+                  View Results
+                  <Trophy className="w-5 h-5" />
+                </>
+              )}
+            </button>
+          </motion.div>
+        )}
+      </motion.div>
+    );
+  };
 
   const InteractiveDiagram = () => {
     const [cameraPosition, setCameraPosition] = useState(1);
@@ -506,6 +898,23 @@ const Rule180Page = () => {
                 </a>
               </div>
             </div>
+          </div>
+        );
+
+      case "quiz":
+        return (
+          <div>
+            <h2 className="text-3xl font-bold text-white mb-6">
+              Test Your Knowledge
+            </h2>
+            <div className="mb-6">
+              <p className="text-slate-300 leading-relaxed">
+                Put your understanding of the 180-degree rule to the test! This
+                interactive quiz covers the basics, practical applications, and
+                creative uses of this fundamental cinematography principle.
+              </p>
+            </div>
+            <QuizComponent />
           </div>
         );
 
