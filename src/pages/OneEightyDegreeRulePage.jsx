@@ -37,7 +37,7 @@ const Rule180Page = () => {
     const [showLine, setShowLine] = useState(true);
 
     return (
-      <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 mb-8">
+      <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 mb-8 pt-12">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-2xl font-bold text-white">
             Interactive 180° Diagram
