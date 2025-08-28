@@ -512,8 +512,6 @@ const Rule180Page = () => {
     }
   };
 
-  const progress = (completedSections.size / sections.length) * 100;
-
   return (
     <div className="min-h-screen bg-slate-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
