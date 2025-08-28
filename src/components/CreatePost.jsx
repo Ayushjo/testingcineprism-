@@ -385,9 +385,9 @@ export default function CreatePostPage() {
                         handleRatingChange(index, "score", e.target.value)
                       }
                       className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
-                      placeholder="0-10"
+                      placeholder="0-100"
                       min="0"
-                      max="10"
+                      max="100"
                       step="0.1"
                       disabled={isSubmitting}
                     />
@@ -421,7 +421,7 @@ export default function CreatePostPage() {
                         key={index}
                         className="px-2 py-1 bg-emerald-500/20 text-emerald-300 rounded text-xs border border-emerald-400/30"
                       >
-                        {rating.category}: {rating.score}/10
+                        {rating.category}: {rating.score}/100
                       </span>
                     ))}
                 </div>
