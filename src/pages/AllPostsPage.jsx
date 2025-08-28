@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import {  AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import {
   Search,
   Filter,
@@ -12,6 +12,8 @@ import {
   Star,
   Image,
   X,
+  Trash2,
+  AlertTriangle,
 } from "lucide-react";
 import axios from "axios";
 
@@ -37,6 +39,13 @@ export default function AllPostsPage() {
   const [selectedPost, setSelectedPost] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [deleteConfirmation, setDeleteConfirmation] = useState({
+    isOpen: false,
+    type: null, // 'post' or 'image'
+    id: null,
+    title: "",
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Extract unique genres from posts
   const uniqueGenres = [...new Set(posts.flatMap((post) => post.genres || []))];
@@ -101,6 +110,113 @@ export default function AllPostsPage() {
       setSelectedImageIndex((prev) =>
         prev <= 0 ? selectedPost.images.length - 1 : prev - 1
       );
+    }
+  };
+
+  // Delete confirmation handlers
+  const showDeleteConfirmation = (type, id, title) => {
+    setDeleteConfirmation({ isOpen: true, type, id, title });
+  };
+
+  const hideDeleteConfirmation = () => {
+    setDeleteConfirmation({ isOpen: false, type: null, id: null, title: "" });
+  };
+
+  // Delete post
+  const handleDeletePost = async () => {
+    if (!deleteConfirmation.id) return;
+
+    setIsDeleting(true);
+    try {
+      const response = await axios.post(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/delete-post",
+        { postId: deleteConfirmation.id },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        // Remove post from state
+        setPosts((prev) =>
+          prev.filter((post) => post.id !== deleteConfirmation.id)
+        );
+
+        // Close modal if the deleted post was being viewed
+        if (selectedPost && selectedPost.id === deleteConfirmation.id) {
+          handleCloseModal();
+        }
+
+        hideDeleteConfirmation();
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      // You might want to show an error message to the user here
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Delete image
+  const handleDeleteImage = async () => {
+    if (!deleteConfirmation.id || !selectedPost) return;
+
+    setIsDeleting(true);
+    try {
+      const response = await axios.post(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/delete-image",
+        { imageId: deleteConfirmation.id },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        // Update the selected post by removing the deleted image
+        const updatedPost = {
+          ...selectedPost,
+          images: selectedPost.images.filter(
+            (img) => img.id !== deleteConfirmation.id
+          ),
+        };
+        setSelectedPost(updatedPost);
+
+        // Update posts state
+        setPosts((prev) =>
+          prev.map((post) => (post.id === selectedPost.id ? updatedPost : post))
+        );
+
+        // Adjust selected image index if necessary
+        if (
+          selectedImageIndex >= updatedPost.images.length &&
+          updatedPost.images.length > 0
+        ) {
+          setSelectedImageIndex(updatedPost.images.length - 1);
+        } else if (updatedPost.images.length === 0) {
+          setSelectedImageIndex(0);
+        }
+
+        hideDeleteConfirmation();
+      }
+    } catch (error) {
+      console.error("Error deleting image:", error);
+      // You might want to show an error message to the user here
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirmation.type === "post") {
+      handleDeletePost();
+    } else if (deleteConfirmation.type === "image") {
+      handleDeleteImage();
     }
   };
 
@@ -272,16 +388,28 @@ export default function AllPostsPage() {
                     {post.content}
                   </p>
 
-                  {/* View Button */}
-                  <motion.button
-                    onClick={() => handleViewPost(post)}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/30 py-2 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2"
-                  >
-                    <Eye className="w-4 h-4" />
-                    View Details
-                  </motion.button>
+                  {/* Action Buttons */}
+                  <div className="flex gap-2">
+                    <motion.button
+                      onClick={() => handleViewPost(post)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/30 py-2 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2"
+                    >
+                      <Eye className="w-4 h-4" />
+                      View Details
+                    </motion.button>
+                    <motion.button
+                      onClick={() =>
+                        showDeleteConfirmation("post", post.id, post.title)
+                      }
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 p-2 rounded-lg transition-all duration-300"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </motion.button>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -327,12 +455,27 @@ export default function AllPostsPage() {
                       <span>Streaming on {selectedPost.streamingAt}</span>
                     </div>
                   </div>
-                  <button
-                    onClick={handleCloseModal}
-                    className="text-slate-400 hover:text-white transition-colors"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() =>
+                        showDeleteConfirmation(
+                          "post",
+                          selectedPost.id,
+                          selectedPost.title
+                        )
+                      }
+                      className="text-red-400 hover:text-red-300 hover:bg-red-500/10 p-2 rounded-lg transition-all duration-200"
+                      title="Delete Post"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={handleCloseModal}
+                      className="text-slate-400 hover:text-white transition-colors"
+                    >
+                      <X className="w-6 h-6" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="p-6">
@@ -354,6 +497,22 @@ export default function AllPostsPage() {
                               }`}
                               className="w-full h-full object-cover"
                             />
+
+                            {/* Delete Image Button */}
+                            <button
+                              onClick={() =>
+                                showDeleteConfirmation(
+                                  "image",
+                                  selectedPost.images[selectedImageIndex]?.id,
+                                  `Image ${selectedImageIndex + 1}`
+                                )
+                              }
+                              className="absolute top-2 right-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 hover:text-red-300 p-2 rounded-lg transition-all duration-200 backdrop-blur-sm border border-red-500/30"
+                              title="Delete Image"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+
                             {selectedPost.images.length > 1 && (
                               <>
                                 <button
@@ -396,21 +555,40 @@ export default function AllPostsPage() {
                         selectedPost.images.length > 1 && (
                           <div className="flex gap-2 overflow-x-auto pb-2">
                             {selectedPost.images.map((image, index) => (
-                              <button
+                              <div
                                 key={image.id}
-                                onClick={() => setSelectedImageIndex(index)}
-                                className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
-                                  index === selectedImageIndex
-                                    ? "border-emerald-500"
-                                    : "border-slate-700 hover:border-slate-600"
-                                }`}
+                                className="relative flex-shrink-0"
                               >
-                                <img
-                                  src={image.imageUrl}
-                                  alt={`Thumbnail ${index + 1}`}
-                                  className="w-full h-full object-cover"
-                                />
-                              </button>
+                                <button
+                                  onClick={() => setSelectedImageIndex(index)}
+                                  className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                                    index === selectedImageIndex
+                                      ? "border-emerald-500"
+                                      : "border-slate-700 hover:border-slate-600"
+                                  }`}
+                                >
+                                  <img
+                                    src={image.imageUrl}
+                                    alt={`Thumbnail ${index + 1}`}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </button>
+                                {/* Delete button on thumbnail */}
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    showDeleteConfirmation(
+                                      "image",
+                                      image.id,
+                                      `Image ${index + 1}`
+                                    );
+                                  }}
+                                  className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 transition-colors"
+                                  title="Delete Image"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </div>
                             ))}
                           </div>
                         )}
@@ -427,6 +605,28 @@ export default function AllPostsPage() {
                         <Star className="w-4 h-4" />
                         {ratingLabels[selectedPost.ratingCategory]}
                       </div>
+
+                      {/* Rating Categories */}
+                      {selectedPost.ratingCategories &&
+                        selectedPost.ratingCategories.length > 0 && (
+                          <div>
+                            <h4 className="text-white font-semibold mb-2">
+                              Rating Categories
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                              {selectedPost.ratingCategories.map(
+                                (rating, index) => (
+                                  <span
+                                    key={index}
+                                    className="px-2 py-1 bg-emerald-500/20 text-emerald-300 rounded text-sm border border-emerald-400/30"
+                                  >
+                                    {rating.category}: {rating.score}/100
+                                  </span>
+                                )
+                              )}
+                            </div>
+                          </div>
+                        )}
 
                       {/* Genres */}
                       {selectedPost.genres &&
@@ -481,6 +681,78 @@ export default function AllPostsPage() {
                       </div>
                     </div>
                   </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Delete Confirmation Modal */}
+        <AnimatePresence>
+          {deleteConfirmation.isOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
+              onClick={hideDeleteConfirmation}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-2xl max-w-md w-full p-6"
+              >
+                <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-500/20 rounded-full">
+                  <AlertTriangle className="w-6 h-6 text-red-400" />
+                </div>
+
+                <h3 className="text-xl font-bold text-white text-center mb-2">
+                  Confirm Deletion
+                </h3>
+
+                <p className="text-slate-400 text-center mb-6">
+                  Are you sure you want to delete{" "}
+                  {deleteConfirmation.type === "post"
+                    ? "this post"
+                    : "this image"}
+                  :{" "}
+                  <span className="text-white font-medium">
+                    {deleteConfirmation.title}
+                  </span>
+                  ?
+                  <br />
+                  <span className="text-red-400 text-sm">
+                    This action cannot be undone.
+                  </span>
+                </p>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={hideDeleteConfirmation}
+                    disabled={isDeleting}
+                    className="flex-1 bg-slate-700 hover:bg-slate-600 text-white py-2 rounded-lg transition-colors disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDelete}
+                    disabled={isDeleting}
+                    className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    {isDeleting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Deleting...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="w-4 h-4" />
+                        Delete
+                      </>
+                    )}
+                  </button>
                 </div>
               </motion.div>
             </motion.div>
