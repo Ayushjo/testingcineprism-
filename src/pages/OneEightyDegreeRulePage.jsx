@@ -1,12 +1,8 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Camera,
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
   BookOpen,
   Video,
   FileText,
@@ -16,13 +12,13 @@ import {
   AlertTriangle,
   Lightbulb,
   Target,
-  Award,
   ChevronRight,
   ExternalLink,
   CheckCircle,
   XCircle,
   RotateCcw,
   Trophy,
+  Award,
 } from "lucide-react";
 
 const Rule180Page = () => {
@@ -262,7 +258,7 @@ const Rule180Page = () => {
 
             <button
               onClick={resetQuiz}
-              className="flex items-center gap-2 mx-auto px-6 py-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-semibold rounded-lg border border-emerald-500/30 transition-all duration-300"
+              className="flex items-center gap-2 mx-auto px-6 py-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-semibold rounded-lg border border-emerald-500/30 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
             >
               <RotateCcw className="w-5 h-5" />
               Retake Quiz
@@ -406,7 +402,12 @@ const Rule180Page = () => {
           >
             <button
               onClick={handleNextQuestion}
-              className="px-6 py-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-semibold rounded-lg border border-emerald-500/30 transition-all duration-300 flex items-center gap-2 mx-auto"
+              className="px-6 py-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-semibold rounded-lg border border-emerald-500/30 transition-all duration-300 flex items-center gap-2 mx-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+              aria-label={
+                quizState.currentQuestion < quizQuestions.length - 1
+                  ? "Next Question"
+                  : "View Results"
+              }
             >
               {quizState.currentQuestion < quizQuestions.length - 1 ? (
                 <>
@@ -438,7 +439,7 @@ const Rule180Page = () => {
           </h3>
           <button
             onClick={() => setShowLine(!showLine)}
-            className="px-4 py-2 bg-emerald-500/20 text-emerald-300 rounded-lg border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors"
+            className="px-4 py-2 bg-emerald-500/20 text-emerald-300 rounded-lg border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
           >
             {showLine ? "Hide Line" : "Show Line"}
           </button>
@@ -450,10 +451,7 @@ const Rule180Page = () => {
             <div
               className="h-full w-full"
               style={{
-                backgroundImage: `
-                linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
-              `,
+                backgroundImage: `linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)`,
                 backgroundSize: "20px 20px",
               }}
             ></div>
@@ -599,17 +597,17 @@ const Rule180Page = () => {
 
   const NoteCard = ({ icon: Icon, title, content, color = "emerald" }) => {
     const colorClasses = {
-      emerald: "bg-emerald-500/10 border-emerald-500/30 text-emerald-300",
-      blue: "bg-blue-500/10 border-blue-500/30 text-blue-300",
-      purple: "bg-purple-500/10 border-purple-500/30 text-purple-300",
-      red: "bg-red-500/10 border-red-500/30 text-red-300",
+      emerald: "bg-emerald-500/10 border-emerald-500/20 text-emerald-300",
+      blue: "bg-blue-500/10 border-blue-500/20 text-blue-300",
+      purple: "bg-purple-500/10 border-purple-500/20 text-purple-300",
+      red: "bg-red-500/10 border-red-500/20 text-red-300",
     };
 
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`p-6 rounded-2xl border backdrop-blur-xl ${colorClasses[color]} mb-4`}
+        className={`p-6 rounded-2xl border backdrop-blur-xl ${colorClasses[color]} mb-4 shadow-sm transition-colors`}
       >
         <div className="flex items-start gap-4">
           <Icon className="w-6 h-6 mt-1 flex-shrink-0" />
@@ -844,7 +842,8 @@ const Rule180Page = () => {
                   <a
                     href="https://www.youtube.com/watch?v=BBA8nXTUAw8"
                     target="_blank"
-                    className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-colors"
+                    className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                    rel="noreferrer"
                   >
                     <ExternalLink className="w-4 h-4 text-slate-400" />
                     <div>
@@ -859,7 +858,8 @@ const Rule180Page = () => {
                   <a
                     href="https://www.youtube.com/watch?v=wLfZL9PZI9k"
                     target="_blank"
-                    className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-colors"
+                    className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                    rel="noreferrer"
                   >
                     <ExternalLink className="w-4 h-4 text-slate-400" />
                     <div>
@@ -884,7 +884,8 @@ const Rule180Page = () => {
                 <a
                   href="https://www.studiobinder.com/blog/what-is-continuity-editing-in-film/"
                   target="_blank"
-                  className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-colors"
+                  className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                  rel="noreferrer"
                 >
                   <ExternalLink className="w-4 h-4 text-slate-400" />
                   <div>
@@ -930,24 +931,40 @@ const Rule180Page = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-10"
         >
-          <div className="flex items-center gap-4 mb-6">
-            <div className="p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
-              <Camera className="w-8 h-8 text-emerald-300" />
-            </div>
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-slate-200 to-emerald-300 bg-clip-text text-transparent">
-                180-Degree Rule
-              </h1>
-              <div className="flex items-center gap-3 mt-2">
-                <span className="px-3 py-1 bg-slate-800/50 text-slate-300 text-sm font-medium rounded-full">
-                  Camera Work
-                </span>
-                <span className="px-3 py-1 bg-green-500/20 text-green-300 text-sm font-medium rounded-full">
-                  Beginner
-                </span>
+          <div className="rounded-3xl border border-slate-700/40 bg-slate-900/60 backdrop-blur-xl px-6 py-8 md:px-10 shadow-sm">
+            <div className="flex items-start md:items-center justify-between gap-6 flex-col md:flex-row">
+              <div className="flex items-start gap-4">
+                <div className="p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
+                  <Camera className="w-8 h-8 text-emerald-300" />
+                </div>
+                <div>
+                  <h1 className="text-4xl md:text-5xl font-bold text-balance bg-gradient-to-r from-white to-emerald-300 bg-clip-text text-transparent">
+                    180-Degree Rule
+                  </h1>
+                  <p className="mt-2 text-slate-300 max-w-2xl leading-relaxed">
+                    Maintain spatial clarity and coherent eyelines in dialogue
+                    and action. Master the foundation, then learn when and how
+                    to break it with purpose.
+                  </p>
+                  <div className="flex items-center gap-2 mt-4">
+                    <span className="px-3 py-1 bg-slate-800/60 text-slate-300 text-sm font-medium rounded-full border border-slate-700/50">
+                      Camera Work
+                    </span>
+                    <span className="px-3 py-1 bg-emerald-500/15 text-emerald-300 text-sm font-medium rounded-full border border-emerald-500/25">
+                      Beginner
+                    </span>
+                  </div>
+                </div>
               </div>
+
+              <button
+                onClick={() => setActiveSection("basics")}
+                className="px-4 py-2 rounded-xl border border-emerald-500/30 text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+              >
+                Start with the basics
+              </button>
             </div>
           </div>
         </motion.div>
@@ -955,12 +972,12 @@ const Rule180Page = () => {
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Sidebar Navigation */}
           <div className="lg:col-span-1">
-            <div className="sticky top-8">
+            <div className="sticky top-24">
               <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6">
                 <h3 className="text-lg font-semibold text-white mb-4">
                   Lesson Sections
                 </h3>
-                <nav className="space-y-2">
+                <nav className="space-y-2" aria-label="Lesson Sections">
                   {sections.map((section) => {
                     const Icon = section.icon;
                     const isActive = activeSection === section.id;
@@ -969,16 +986,24 @@ const Rule180Page = () => {
                       <button
                         key={section.id}
                         onClick={() => setActiveSection(section.id)}
-                        className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                        aria-current={isActive ? "page" : undefined}
+                        className={`group w-full flex items-center justify-between gap-3 p-3 rounded-xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 ${
                           isActive
-                            ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                            : "text-slate-300 hover:bg-slate-800/50 hover:text-white"
+                            ? "bg-slate-800/60 text-emerald-300 border border-emerald-500/30 ring-1 ring-emerald-400/20"
+                            : "text-slate-300 hover:bg-slate-800/50 hover:text-white border border-transparent"
                         }`}
                       >
-                        <Icon className="w-5 h-5" />
-                        <span className="flex-1 text-left">
-                          {section.title}
+                        <span className="flex items-center gap-3">
+                          <Icon className="w-5 h-5" />
+                          <span className="text-left">{section.title}</span>
                         </span>
+                        <ChevronRight
+                          className={`w-4 h-4 transition-opacity ${
+                            isActive
+                              ? "opacity-100 text-emerald-300"
+                              : "opacity-0 group-hover:opacity-100 text-slate-400"
+                          }`}
+                        />
                       </button>
                     );
                   })}
@@ -991,9 +1016,10 @@ const Rule180Page = () => {
           <div className="lg:col-span-3">
             <motion.div
               key={activeSection}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+              className="space-y-8"
             >
               {renderSectionContent()}
             </motion.div>
