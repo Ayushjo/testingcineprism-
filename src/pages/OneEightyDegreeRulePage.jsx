@@ -893,7 +893,7 @@ const Rule180Page = () => {
                 </div>
                 <div>
                   {/* Heading: subtle luxury, serif, no rainbow */}
-                  <h1 className="text-4xl md:text-5xl font-serif font-semibold tracking-tight text-balance text-slate-100">
+                  <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-balance text-slate-100">
                     180-Degree Rule
                   </h1>
                   <p className="mt-2 text-slate-300 max-w-2xl leading-relaxed">
