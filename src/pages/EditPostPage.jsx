@@ -214,15 +214,17 @@ export default function EditPostPage() {
       );
 
       const submitData = {
-        id: selectedPost.id,
+        postId: selectedPost.id,
         ...formData,
         year: parseInt(formData.year),
         ratingCategories: validRatingCategories,
       };
-
+      const finalSubmitData = JSON.stringify(submitData);
+      console.log(finalSubmitData);
+      
       const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/edit-post",
-        { submitData },
+        { finalSubmitData },
         {
           withCredentials: true,
           headers: {
