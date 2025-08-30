@@ -14,6 +14,7 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
+import axios from "axios";
 
 const genres = [
   "Action",
@@ -197,6 +198,7 @@ export default function EditPostPage() {
       }));
     }
   };
+  const token = localStorage.getItem("cineprism_auth_token");
 
   // Submit edit
   const handleSubmit = async (e) => {
@@ -218,19 +220,19 @@ export default function EditPostPage() {
         ratingCategories: validRatingCategories,
       };
 
-      const response = await fetch(
+      const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/edit-post",
+        { submitData },
         {
-          method: "POST",
+          withCredentials: true,
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          credentials: "include",
-          body: JSON.stringify(submitData),
         }
       );
 
-      const result = await response.json();
+      const result = await response.data;
 
       if (response.status === 200) {
         setSubmitStatus("success");
