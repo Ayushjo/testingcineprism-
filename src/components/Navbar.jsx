@@ -52,7 +52,6 @@ export default function Navbar() {
       { href: "/recommendations-page", label: "Top Picks" },
       { href: "/reviews", label: "Reviews" },
       { href: "/trending", label: "Trending" },
-      { href: "/unpopular-opinions", label: "Unpopular Opinions" },
       { href: "/cinema-school", label: "Cinema School" },
     ];
 

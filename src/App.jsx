@@ -78,10 +78,6 @@ const App = () => {
             <Route path="/trending" element={<TrendingPage />} />
 
             <Route path="/cinema-school" element={<CinemaSchoolPage />} />
-            <Route
-              path="/unpopular-opinions"
-              element={<UnpopularOpinionsPage />}
-            />
             <Route path="/180-degree-rule" element={<Rule180Page />} />
             <Route
               path="/ai-insights/:id"
