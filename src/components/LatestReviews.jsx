@@ -235,12 +235,6 @@ export default function LatestReviews() {
                       <h3 className="text-white font-bold text-lg mb-2 leading-tight tracking-tight">
                         {movie.title}
                       </h3>
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                        <span className="text-yellow-100 font-semibold text-sm">
-                          {movie.rating}
-                        </span>
-                      </div>
                     </div>
 
                     {/* Hover Glow Effect */}

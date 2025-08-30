@@ -202,21 +202,6 @@ export default function TrendingPage() {
           <p className="text-slate-400 text-xs sm:text-sm leading-relaxed line-clamp-2 md:line-clamp-2 hidden sm:block">
             {movie.overview || "Most viewed this week"}
           </p>
-          {/* Mobile: Show rating inline with title */}
-          <div className="flex items-center gap-1 mt-1 sm:hidden">
-            <Star className="w-3 h-3 text-yellow-400 fill-current" />
-            <span className="text-white text-xs font-semibold">
-              {movie.vote_average}
-            </span>
-          </div>
-        </div>
-
-        {/* Rating - Desktop/Tablet only */}
-        <div className="hidden sm:flex flex-shrink-0 items-center gap-2 bg-black/20 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 rounded-xl md:rounded-2xl border border-white/10">
-          <Star className="w-3 h-3 md:w-4 md:h-4 text-yellow-400 fill-current" />
-          <span className="text-white font-semibold text-sm md:text-base">
-            {movie.vote_average}
-          </span>
         </div>
       </div>
 
