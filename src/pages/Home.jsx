@@ -346,9 +346,7 @@ export default function Homepage() {
                     transition={{ duration: 0.6, delay: 0.9 }}
                     className="text-lg md:text-xl text-slate-300 font-light leading-relaxed max-w-2xl tracking-wider"
                   >
-                    A curated collection of cinematic masterpieces, where
-                    artistry meets storytelling in the most refined viewing
-                    experience.
+                    Cinema for acquired taste.
                   </motion.p>
                 </motion.div>
 
@@ -531,8 +529,7 @@ export default function Homepage() {
                   transition={{ duration: 0.6, delay: 0.7 }}
                   className="text-base text-slate-300 font-light leading-relaxed tracking-wide px-4"
                 >
-                  A curated collection of cinematic masterpieces, where artistry
-                  meets storytelling in the most refined viewing experience.
+                  Cinema for acquired taste.
                 </motion.p>
 
                 {/* Mobile Featured Content Card */}

@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
 import TheCineprismLogo from "../assets/thecineprismlogo.jpg";
+
 export default function LoginPage() {
   const { loginWithGoogle, user, handleAuthCallback } = useAuth();
   const navigate = useNavigate();
@@ -36,75 +37,91 @@ export default function LoginPage() {
   }, [user, navigate]);
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-black">
-      {/* Enhanced Background with multiple layers */}
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-neutral-950 via-slate-900 to-black">
+      {/* Cinematic Background Layer */}
       <div className="absolute inset-0">
-        {/* Primary background image - Blade Runner 2049 aesthetic */}
+        {/* Main background - Classic cinema aesthetic */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-25"
           style={{
-            backgroundImage: `url('https://image.tmdb.org/t/p/original/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg')`,
+            backgroundImage: `url('https://images.unsplash.com/photo-1489599512549-c1b006ad123c?q=80&w=2070')`,
           }}
         />
-        {/* Secondary overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-slate-900/60 to-black/80" />
-        {/* Subtle texture overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 via-transparent to-emerald-900/20" />
-        {/* Noise texture for premium feel */}
+        {/* Film grain overlay */}
         <div
-          className="absolute inset-0 opacity-[0.03] mix-blend-multiply"
+          className="absolute inset-0 opacity-[0.08] mix-blend-multiply"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' result='noise'/%3E%3CfeColorMatrix in='noise' type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.4'/%3E%3C/svg%3E")`,
           }}
         />
+        {/* Premium gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-neutral-950/75 to-black/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-neutral-900/50 to-black/80" />
+        {/* Subtle color accent */}
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/15 via-transparent to-red-900/10" />
       </div>
 
-      {/* Enhanced Floating Elements */}
+      {/* Cinematic Light Rays */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Floating orbs */}
-        {[...Array(8)].map((_, i) => (
+        {/* Projector light effect */}
+        <motion.div
+          className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-amber-200/20 via-amber-300/5 to-transparent"
+          style={{
+            clipPath: "polygon(45% 0%, 55% 0%, 65% 100%, 35% 100%)",
+          }}
+          animate={{
+            opacity: [0.3, 0.6, 0.3],
+            scaleX: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Floating film elements */}
+        {[...Array(6)].map((_, i) => (
           <motion.div
-            key={`orb-${i}`}
-            className="absolute rounded-full bg-gradient-to-br from-emerald-400/20 to-indigo-400/20 blur-sm"
+            key={`film-${i}`}
+            className="absolute w-2 h-8 bg-gradient-to-b from-amber-400/20 to-transparent"
             style={{
-              width: `${Math.random() * 6 + 2}px`,
-              height: `${Math.random() * 6 + 2}px`,
-              left: `${Math.random() * 100}%`,
+              left: `${20 + Math.random() * 60}%`,
               top: `${Math.random() * 100}%`,
+              clipPath: "polygon(0% 0%, 100% 0%, 90% 100%, 10% 100%)",
             }}
             animate={{
-              y: [0, -120, 0],
-              x: [0, Math.random() * 60 - 30, 0],
-              opacity: [0, 0.8, 0],
-              scale: [1, 1.5, 1],
+              y: [-100, window.innerHeight + 100],
+              opacity: [0, 0.6, 0],
+              rotate: [0, 5, 0],
             }}
             transition={{
-              duration: 4 + Math.random() * 3,
+              duration: 12 + Math.random() * 8,
               repeat: Infinity,
-              delay: Math.random() * 3,
-              ease: "easeInOut",
+              delay: Math.random() * 10,
+              ease: "linear",
             }}
           />
         ))}
 
-        {/* Geometric shapes */}
-        {[...Array(5)].map((_, i) => (
+        {/* Subtle sparkle effects */}
+        {[...Array(12)].map((_, i) => (
           <motion.div
-            key={`shape-${i}`}
-            className="absolute w-px h-12 bg-gradient-to-b from-transparent via-emerald-400/30 to-transparent"
+            key={`sparkle-${i}`}
+            className="absolute w-1 h-1 bg-amber-200 rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              rotate: `${Math.random() * 360}deg`,
             }}
             animate={{
               opacity: [0, 1, 0],
-              scaleY: [0.5, 1, 0.5],
+              scale: [0, 1, 0],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: 2 + Math.random() * 3,
               repeat: Infinity,
-              delay: Math.random() * 4,
+              delay: Math.random() * 5,
+              ease: "easeInOut",
             }}
           />
         ))}
@@ -113,73 +130,120 @@ export default function LoginPage() {
       {/* Main Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
         <motion.div
-          initial={{ opacity: 0, y: 60, scale: 0.9 }}
+          initial={{ opacity: 0, y: 40, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{
-            duration: 1,
+            duration: 1.2,
             ease: [0.22, 1, 0.36, 1],
-            delay: 0.1,
           }}
-          className="w-full max-w-lg"
+          className="w-full max-w-md"
         >
-          {/* Enhanced Login Panel */}
+          {/* Enhanced Login Panel with Film-Inspired Design */}
           <div className="relative group">
-            {/* Glow effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/20 via-indigo-500/20 to-emerald-500/20 rounded-3xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            {/* Outer glow effect */}
+            <div className="absolute -inset-2 bg-gradient-to-r from-amber-500/10 via-red-500/5 to-amber-500/10 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700" />
 
-            <div className="relative bg-slate-900/40 backdrop-blur-2xl border border-white/10 rounded-3xl p-12 shadow-2xl overflow-hidden">
-              {/* Inner glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-indigo-500/5 rounded-3xl" />
+            {/* Film strip border effect */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-neutral-700/30 to-neutral-600/30 rounded-3xl">
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-900/20 via-transparent to-red-900/20" />
+            </div>
 
-              {/* Subtle border highlight */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/10 via-transparent to-transparent" />
+            <div className="relative bg-neutral-900/60 backdrop-blur-xl border border-neutral-700/30 rounded-3xl p-10 shadow-2xl overflow-hidden">
+              {/* Inner luxury gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-950/20 via-transparent to-red-950/20 rounded-3xl" />
 
-              {/* Brand Logo Area */}
+              {/* Subtle film strip pattern on sides */}
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-400/30 via-neutral-600/20 to-amber-400/30">
+                <div className="absolute inset-y-0 left-0 w-full bg-gradient-to-b from-transparent via-neutral-800/40 to-transparent" />
+              </div>
+              <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-400/30 via-neutral-600/20 to-amber-400/30">
+                <div className="absolute inset-y-0 right-0 w-full bg-gradient-to-b from-transparent via-neutral-800/40 to-transparent" />
+              </div>
+
+              {/* Brand Section */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="text-center mb-10"
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-center mb-8"
               >
-                {/* Logo placeholder - you can replace with actual logo */}
+                {/* Logo with cinematic flair */}
                 <motion.div
-                  className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-emerald-400 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg"
+                  className="relative w-20 h-20 mx-auto mb-6 group/logo"
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <img src={TheCineprismLogo} alt="" className="rounded-lg" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-red-500/20 rounded-2xl blur-md opacity-0 group-hover/logo:opacity-100 transition-opacity duration-500" />
+                  <div className="relative bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-2xl p-2 border border-neutral-700/50 shadow-xl">
+                    <img
+                      src={TheCineprismLogo}
+                      alt="The Cinéprism"
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                  </div>
+                  {/* Film reel accent */}
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full shadow-lg border border-amber-300/50" />
                 </motion.div>
 
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-emerald-200 to-white bg-clip-text text-transparent mb-3 tracking-tight">
-                  The Cinéprism
+                <h1 className="text-3xl font-light tracking-wider mb-2">
+                  <span className="bg-gradient-to-r from-amber-200 via-neutral-100 to-amber-200 bg-clip-text text-transparent">
+                    THE CINÉPRISM
+                  </span>
                 </h1>
-                <p className="text-slate-400 text-lg font-light leading-relaxed">
-                  Your gateway to cinematic discoveries
+                <div className="flex items-center justify-center gap-2 mb-4">
+                  <div className="w-8 h-px bg-gradient-to-r from-transparent via-amber-400/60 to-transparent" />
+                  <div className="w-1 h-1 bg-amber-400/60 rounded-full" />
+                  <div className="w-8 h-px bg-gradient-to-r from-transparent via-amber-400/60 to-transparent" />
+                </div>
+                <p className="text-neutral-400 font-light text-sm tracking-wide leading-relaxed">
+                  Where Cinema Meets Critique
                 </p>
               </motion.div>
 
-              {/* Enhanced Google Sign In Button */}
+              {/* Welcome Message */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="text-center mb-8"
+              >
+                <h2 className="text-neutral-300 text-lg font-light mb-2">
+                  Welcome Back
+                </h2>
+                <p className="text-neutral-500 text-sm leading-relaxed">
+                  Continue your cinematic journey with us
+                </p>
+              </motion.div>
+
+              {/* Premium Google Sign In Button */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.5 }}
-                className="relative z-20 mb-8"
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="mb-6"
               >
                 <motion.button
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{
+                    scale: 1.01,
+                    boxShadow: "0 8px 32px rgba(245, 158, 11, 0.15)",
+                  }}
+                  whileTap={{ scale: 0.99 }}
                   onClick={loginWithGoogle}
                   className="relative w-full group overflow-hidden"
                 >
-                  {/* Button background with gradient border */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-white to-gray-50 rounded-2xl" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  {/* Button background with premium styling */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-neutral-100 to-white rounded-2xl shadow-lg" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-amber-50/50 to-neutral-50/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                  <div className="relative bg-white group-hover:bg-gray-50 text-gray-900 font-semibold py-5 px-8 rounded-2xl transition-all duration-300 shadow-lg group-hover:shadow-xl border border-gray-200/50 flex items-center justify-center gap-4">
+                  <div className="relative bg-white text-neutral-800 font-medium py-4 px-6 rounded-2xl transition-all duration-300 border border-neutral-200/80 flex items-center justify-center gap-3 group-hover:border-amber-300/40">
                     {/* Enhanced Google Icon */}
-                    <div className="relative">
+                    <motion.div
+                      className="relative"
+                      whileHover={{ rotate: 5 }}
+                      transition={{ duration: 0.2 }}
+                    >
                       <svg
-                        className="w-6 h-6 transition-transform duration-300 group-hover:scale-110"
+                        className="w-5 h-5 transition-transform duration-300"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -199,17 +263,20 @@ export default function LoginPage() {
                           d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                         />
                       </svg>
-                    </div>
-                    <span className="text-lg">Continue with Google</span>
-                    {/* Arrow icon */}
+                    </motion.div>
+
+                    <span className="text-base tracking-wide">
+                      Continue with Google
+                    </span>
+
+                    {/* Subtle arrow */}
                     <motion.div
-                      className="opacity-0 group-hover:opacity-100"
-                      initial={{ x: -10 }}
+                      className="opacity-0 group-hover:opacity-70 transition-opacity duration-300"
+                      initial={{ x: -5 }}
                       whileHover={{ x: 0 }}
-                      transition={{ duration: 0.2 }}
                     >
                       <svg
-                        className="w-5 h-5 text-gray-600"
+                        className="w-4 h-4 text-neutral-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -217,8 +284,8 @@ export default function LoginPage() {
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17 8l4 4m0 0l-4 4m4-4H3"
+                          strokeWidth={1.5}
+                          d="M13 7l5 5m0 0l-5 5m5-5H6"
                         />
                       </svg>
                     </motion.div>
@@ -226,25 +293,25 @@ export default function LoginPage() {
                 </motion.button>
               </motion.div>
 
-              {/* Enhanced Terms */}
+              {/* Elegant Terms */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.7 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
                 className="text-center"
               >
-                <p className="text-slate-500 text-sm leading-relaxed">
+                <p className="text-neutral-500 text-xs leading-relaxed font-light">
                   By continuing, you agree to our{" "}
                   <a
                     href="#"
-                    className="text-emerald-400 hover:text-emerald-300 transition-colors duration-200 underline decoration-emerald-400/30 hover:decoration-emerald-300/50 underline-offset-2"
+                    className="text-amber-400/80 hover:text-amber-300 transition-colors duration-200 underline decoration-amber-400/30 hover:decoration-amber-300/50 underline-offset-2"
                   >
                     Terms of Service
                   </a>{" "}
                   and{" "}
                   <a
                     href="#"
-                    className="text-emerald-400 hover:text-emerald-300 transition-colors duration-200 underline decoration-emerald-400/30 hover:decoration-emerald-300/50 underline-offset-2"
+                    className="text-amber-400/80 hover:text-amber-300 transition-colors duration-200 underline decoration-amber-400/30 hover:decoration-amber-300/50 underline-offset-2"
                   >
                     Privacy Policy
                   </a>
@@ -255,36 +322,39 @@ export default function LoginPage() {
         </motion.div>
       </div>
 
-      {/* Enhanced Ambient Effects */}
+      {/* Cinematic Ambient Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Large ambient orbs */}
+        {/* Large cinematic orb */}
         <motion.div
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-full blur-3xl"
+          className="absolute top-1/3 right-1/4 w-96 h-96 bg-gradient-to-br from-amber-500/8 to-red-500/5 rounded-full blur-3xl"
           animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1.2, 1, 1.2],
+            scale: [1, 1.1, 1],
             opacity: [0.4, 0.7, 0.4],
           }}
           transition={{
-            duration: 10,
+            duration: 12,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 2,
           }}
         />
-        {/* Additional smaller ambient effects */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-radial from-emerald-500/5 via-transparent to-transparent rounded-full blur-2xl" />
+
+        {/* Secondary ambient light */}
+        <motion.div
+          className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-gradient-to-br from-neutral-500/5 to-amber-500/8 rounded-full blur-3xl"
+          animate={{
+            scale: [1.1, 1, 1.1],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3,
+          }}
+        />
+
+        {/* Central subtle glow */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-radial from-amber-500/3 via-transparent to-transparent rounded-full blur-2xl" />
       </div>
     </div>
   );
