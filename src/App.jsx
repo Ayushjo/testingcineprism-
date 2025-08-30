@@ -40,6 +40,7 @@ import NewsArticlePage from "./pages/NewsArticlePage";
 import AuthCallback from "./components/AuthCallback";
 import EditPostPage from "./pages/EditPostPage";
 import Rule180Page from "./pages/OneEightyDegreeRulePage";
+import TrendingRankManager from "./pages/TrendingRankManager";
 
 const App = () => {
   const location = useLocation();
@@ -105,6 +106,7 @@ const App = () => {
               />
               <Route path="add-top-picks" element={<AddTopPicksPage />} />
               <Route path="edit-post" element={<EditPostPage />} />
+              <Route path="edit-rank" element={<TrendingRankManager />} />
             </Route>
           </Route>
         </Routes>

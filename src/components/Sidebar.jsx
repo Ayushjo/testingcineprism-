@@ -20,6 +20,7 @@ const navigationItems = [
   { icon: ImageUp, label: "Upload Reviews Poster", id: "upload-review-poster" },
   { icon: Images, label: "Upload Gallery", id: "upload-gallery" },
   { icon: FilePlus2, label: "Edit Post", id: "edit-post" },
+  { icon: FilePlus2, label: "Edit Trending Rank", id: "edit-rank" },
 ];
 
 function Sidebar({
