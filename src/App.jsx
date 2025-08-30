@@ -82,12 +82,14 @@ const App = () => {
               element={<UnpopularOpinionsPage />}
             />
             <Route path="/180-degree-rule" element={<Rule180Page />} />
+            <Route
+              path="/ai-insights/:id"
+              element={<AIInsightsArticlePage />}
+            />
+            <Route path="/news/:id" element={<NewsArticlePage />} />
+            <Route path="/recommendations-page" element={<TopPicksPage />} />
+            <Route path="/merchandise" element={<Merchandise />} />
           </Route>
-
-          <Route path="/ai-insights/:id" element={<AIInsightsArticlePage />} />
-          <Route path="/news/:id" element={<NewsArticlePage />} />
-          <Route path="/recommendations-page" element={<TopPicksPage />} />
-          <Route path="/merchandise" element={<Merchandise />} />
 
           {/* Protected Admin Routes */}
           <Route element={<AdminProtectedRoute />}>
