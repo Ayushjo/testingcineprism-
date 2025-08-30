@@ -214,7 +214,7 @@ export default function EditPostPage() {
       );
 
       const submitData = {
-        postId: selectedPost.id,
+        id: selectedPost.id,
         ...formData,
         year: parseInt(formData.year),
         ratingCategories: validRatingCategories,
