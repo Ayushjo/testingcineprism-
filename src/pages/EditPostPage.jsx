@@ -221,10 +221,10 @@ export default function EditPostPage() {
       };
       const finalSubmitData = JSON.stringify(submitData);
       console.log(finalSubmitData);
-      
+
       const response = await axios.post(
         "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/edit-post",
-        { finalSubmitData },
+        submitData,
         {
           withCredentials: true,
           headers: {
