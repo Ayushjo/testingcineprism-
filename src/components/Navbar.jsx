@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Twitter, LogOut, User } from "lucide-react";
 import TheCineprismLogo from "../assets/thecineprismlogo.jpg";
@@ -12,25 +12,29 @@ export default function Navbar() {
 
   const { user, logout, loading } = useAuth();
 
+  // Memoized scroll handler
+  const handleScroll = useCallback(() => {
+    setIsScrolled(window.scrollY > 20);
+  }, []);
+
+  // Memoized resize handler
+  const handleResize = useCallback(() => {
+    if (window.innerWidth >= 768) {
+      setIsMobileMenuOpen(false);
+    }
+  }, []);
+
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setIsMobileMenuOpen(false);
-      }
-    };
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
-  const handleLogout = async () => {
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [handleScroll, handleResize]);
+
+  const handleLogout = useCallback(async () => {
     setIsLoggingOut(true);
     try {
       await logout();
@@ -40,8 +44,30 @@ export default function Navbar() {
       setIsLoggingOut(false);
       setIsMobileMenuOpen(false);
     }
-  };
+  }, [logout]);
 
+  // Memoize navigation links to prevent recalculation
+  const navLinks = useMemo(() => {
+    const baseNavLinks = [
+      { href: "/recommendations-page", label: "Top Picks" },
+      { href: "/reviews", label: "Reviews" },
+      { href: "/trending", label: "Trending" },
+      { href: "/unpopular-opinions", label: "Unpopular Opinions" },
+      { href: "/cinema-school", label: "Cinema School" },
+    ];
+
+    const links = user
+      ? baseNavLinks
+      : [...baseNavLinks, { href: "/login", label: "Login" }];
+
+    if (user?.role === "ADMIN") {
+      links.push({ href: "/admin", label: "Admin" });
+    }
+
+    return links;
+  }, [user]);
+
+  // Show loading state only on initial load
   if (loading) {
     return (
       <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-xl border-b border-white/5">
@@ -60,22 +86,6 @@ export default function Navbar() {
         </div>
       </nav>
     );
-  }
-
-  const baseNavLinks = [
-    { href: "/recommendations-page", label: "Top Picks" },
-    { href: "/reviews", label: "Reviews" },
-    { href: "/trending", label: "Trending" },
-    { href: "/unpopular-opinions", label: "Unpopular Opinions" },
-    { href: "/cinema-school", label: "Cinema School" },
-  ];
-
-  const navLinks = user
-    ? baseNavLinks
-    : [...baseNavLinks, { href: "/login", label: "Login" }];
-
-  if (user?.role === "ADMIN") {
-    navLinks.push({ href: "/admin", label: "Admin" });
   }
 
   return (
@@ -110,7 +120,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link, index) => (
               <motion.div
-                key={link.href}
+                key={`nav-${link.href}`} // Use href as key for better performance
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -308,7 +318,7 @@ export default function Navbar() {
             <div className="px-4 py-6 space-y-2">
               {navLinks.map((link, index) => (
                 <motion.a
-                  key={link.href}
+                  key={`mobile-${link.href}`}
                   href={link.href}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
