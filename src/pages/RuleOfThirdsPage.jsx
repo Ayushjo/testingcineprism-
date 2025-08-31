@@ -1,4 +1,3 @@
-
 "use client";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -8,7 +7,7 @@ import {
   Video,
   FileText,
   Eye,
-  Users,
+  Grid3X3,
   Move,
   AlertTriangle,
   Lightbulb,
@@ -27,10 +26,13 @@ import {
   ArrowDown,
   Play,
   Quote,
+  Image,
+  Crop,
+  Focus,
 } from "lucide-react";
 
-const Rule180Guide = () => {
-  const [showDiagram, setShowDiagram] = useState(false);
+const RuleOfThirdsGuide = () => {
+  const [showGrid, setShowGrid] = useState(true);
   const [quizState, setQuizState] = useState({
     currentQuestion: 0,
     selectedAnswers: {},
@@ -56,65 +58,65 @@ const Rule180Guide = () => {
     {
       id: 1,
       question:
-        "What does the 180-degree rule primarily help with in a film scene?",
+        "What does the Rule of Thirds primarily help with in photography and cinematography?",
       options: [
         {
           id: "a",
-          text: "Making the actors look more dramatic",
+          text: "Making colors more vibrant",
           correct: false,
         },
         {
           id: "b",
-          text: "Ensuring consistent spatial orientation for the audience",
+          text: "Creating more balanced and visually interesting compositions",
           correct: true,
         },
-        { id: "c", text: "Keeping the lighting balanced", correct: false },
+        { id: "c", text: "Improving image sharpness", correct: false },
         {
           id: "d",
-          text: "Allowing the editor to use fancy transitions",
+          text: "Reducing camera shake",
           correct: false,
         },
       ],
       explanation:
-        "The 180-degree rule maintains spatial consistency, helping the audience understand where characters are positioned relative to each other throughout a scene.",
+        "The Rule of Thirds creates visual balance and interest by placing important elements along grid lines or at intersection points, making compositions more dynamic than centered subjects.",
     },
     {
       id: 2,
       question:
-        "Why should the camera stay on one side of the axis of action between two characters?",
+        "Where should you typically place your main subject when following the Rule of Thirds?",
       options: [
         {
           id: "a",
-          text: "To keep their screen direction and eyelines consistent",
-          correct: true,
+          text: "Exactly in the center of the frame",
+          correct: false,
         },
         {
           id: "b",
-          text: "To make them look equally important",
-          correct: false,
+          text: "Along the grid lines or at intersection points",
+          correct: true,
         },
         {
           id: "c",
-          text: "To keep both characters in sharp focus",
+          text: "In the corners of the frame",
           correct: false,
         },
-        { id: "d", text: "Because it looks more symmetrical", correct: false },
+        { id: "d", text: "At the very edge of the frame", correct: false },
       ],
       explanation:
-        "Staying on one side ensures that each character's eyeline direction remains consistent, making the conversation feel natural and connected.",
+        "Placing subjects along the imaginary grid lines or at their intersection points creates more dynamic and visually appealing compositions than centering everything.",
     },
     {
       id: 3,
       question:
-        "Which is a reason a director might intentionally break the 180-degree rule?",
+        "Which is a good reason to intentionally break the Rule of Thirds?",
       options: [
         {
           id: "a",
-          text: "To create audience confusion and mirror chaos",
+          text: "To create symmetry or emphasize centrality",
           correct: true,
         },
-        { id: "b", text: "To save memory card space", correct: false },
-        { id: "c", text: "To avoid using multiple lights", correct: false },
+        { id: "b", text: "To save storage space", correct: false },
+        { id: "c", text: "To make editing faster", correct: false },
         {
           id: "d",
           text: "Because it's easier than following the rule",
@@ -122,44 +124,44 @@ const Rule180Guide = () => {
         },
       ],
       explanation:
-        "Breaking the rule can be a powerful storytelling tool to show confusion, psychological states, or dramatic power shifts in a scene.",
+        "Breaking the rule works well for symmetrical compositions, formal portraits, or when you want to emphasize the central importance of your subject.",
     },
     {
       id: 4,
       question:
-        "In the famous diner scene from 'Heat' (1995), how is the 180-degree rule applied?",
+        "In landscape photography, where should the horizon typically be placed according to the Rule of Thirds?",
       options: [
         {
           id: "a",
-          text: "It is constantly broken to show tension",
+          text: "Always in the exact center",
           correct: false,
         },
         {
           id: "b",
-          text: "It is perfectly maintained throughout the conversation",
+          text: "Along the upper or lower third line",
           correct: true,
         },
-        { id: "c", text: "It only applies to wide shots", correct: false },
-        { id: "d", text: "The rule is ignored completely", correct: false },
+        { id: "c", text: "At the very top of the frame", correct: false },
+        { id: "d", text: "It doesn't matter", correct: false },
       ],
       explanation:
-        "The Heat diner scene is a masterclass in maintaining the 180-degree rule, keeping both characters' positions clear throughout their intense dialogue.",
+        "Placing the horizon on the upper third emphasizes the foreground, while the lower third emphasizes the sky. This creates more dynamic compositions than centering the horizon.",
     },
     {
       id: 5,
-      question: "What is the 'axis of action' in the 180-degree rule?",
+      question: "What are the 'power points' in the Rule of Thirds?",
       options: [
-        { id: "a", text: "The path actors take when moving", correct: false },
+        { id: "a", text: "The corners of the frame", correct: false },
         {
           id: "b",
-          text: "The imaginary line between two subjects",
+          text: "The four intersection points of the grid lines",
           correct: true,
         },
-        { id: "c", text: "The camera movement path", correct: false },
-        { id: "d", text: "The lighting setup boundary", correct: false },
+        { id: "c", text: "The center of each third", correct: false },
+        { id: "d", text: "The edges of the frame", correct: false },
       ],
       explanation:
-        "The axis of action is the imaginary straight line drawn between two subjects or along the path of movement that cameras should not cross.",
+        "The power points are the four intersections where the horizontal and vertical grid lines cross. These spots naturally draw the viewer's eye and create strong focal points.",
     },
   ];
 
@@ -200,18 +202,26 @@ const Rule180Guide = () => {
   };
 
   const InteractiveDiagram = () => {
-    const [cameraPosition, setCameraPosition] = useState(1);
-    const [showLine, setShowLine] = useState(true);
+    const [selectedExample, setSelectedExample] = useState(1);
 
-    const cam = {
-      1: { x: 12, y: 88 },
-      2: { x: 50, y: 88 },
-      3: { x: 88, y: 88 },
+    const examples = {
+      1: {
+        title: "Portrait Composition",
+        description:
+          "Subject positioned on right third line, eyes at upper power point",
+        color: "from-blue-400 to-blue-600",
+      },
+      2: {
+        title: "Landscape Composition",
+        description: "Horizon on lower third, tree at left power point",
+        color: "from-green-400 to-green-600",
+      },
+      3: {
+        title: "Action Shot",
+        description: "Moving subject on left third with space to 'move into'",
+        color: "from-purple-400 to-purple-600",
+      },
     };
-    const A = { x: 25, y: 50 };
-    const B = { x: 75, y: 50 };
-    const stroke =
-      cameraPosition === 3 ? "rgba(248,113,113,1)" : "rgba(16,185,129,1)";
 
     return (
       <div className="my-12 bg-slate-900/30 backdrop-blur-2xl border border-slate-700/30 rounded-3xl p-8 shadow-2xl">
@@ -221,14 +231,14 @@ const Rule180Guide = () => {
               Interactive Demonstration
             </h3>
             <p className="text-slate-400">
-              Click camera positions to see the rule in action
+              Click examples to see the rule in action
             </p>
           </div>
           <button
-            onClick={() => setShowLine(!showLine)}
+            onClick={() => setShowGrid(!showGrid)}
             className="px-4 py-2 bg-emerald-500/20 text-emerald-300 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/30 transition-all duration-300 font-medium"
           >
-            {showLine ? "Hide 180° Line" : "Show 180° Line"}
+            {showGrid ? "Hide Grid" : "Show Grid"}
           </button>
         </div>
 
@@ -245,138 +255,103 @@ const Rule180Guide = () => {
             />
           </div>
 
-          {/* 180-degree axis */}
-          {showLine && (
+          {/* Rule of Thirds Grid */}
+          {showGrid && (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="absolute top-1/2 left-1/4 right-1/4 h-1 bg-gradient-to-r from-emerald-400 to-blue-400 transform -translate-y-0.5 rounded-full"
+              className="absolute inset-0"
             >
-              <div className="absolute -top-3 left-0 w-6 h-6 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/50" />
-              <div className="absolute -top-3 right-0 w-6 h-6 bg-blue-400 rounded-full shadow-lg shadow-blue-400/50" />
-              <div className="absolute -top-12 left-1/2 -translate-x-1/2 text-emerald-300 text-sm font-semibold whitespace-nowrap bg-slate-900/80 px-3 py-1 rounded-lg border border-emerald-500/30">
-                180° Axis of Action
+              {/* Vertical lines */}
+              <div className="absolute left-1/3 top-0 bottom-0 w-0.5 bg-emerald-400/60" />
+              <div className="absolute left-2/3 top-0 bottom-0 w-0.5 bg-emerald-400/60" />
+
+              {/* Horizontal lines */}
+              <div className="absolute top-1/3 left-0 right-0 h-0.5 bg-emerald-400/60" />
+              <div className="absolute top-2/3 left-0 right-0 h-0.5 bg-emerald-400/60" />
+
+              {/* Power points */}
+              <div className="absolute top-1/3 left-1/3 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/50 transform -translate-x-1.5 -translate-y-1.5" />
+              <div className="absolute top-1/3 left-2/3 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/50 transform -translate-x-1.5 -translate-y-1.5" />
+              <div className="absolute top-2/3 left-1/3 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/50 transform -translate-x-1.5 -translate-y-1.5" />
+              <div className="absolute top-2/3 left-2/3 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/50 transform -translate-x-1.5 -translate-y-1.5" />
+
+              <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-emerald-300 text-sm font-semibold whitespace-nowrap bg-slate-900/80 px-3 py-1 rounded-lg border border-emerald-500/30">
+                Rule of Thirds Grid
               </div>
             </motion.div>
           )}
 
-          {/* Sight lines */}
-          {showLine && (
-            <svg className="absolute inset-0 w-full h-full pointer-events-none">
-              <motion.line
-                key={`line-a-${cameraPosition}`}
-                x1={`${cam[cameraPosition].x}%`}
-                y1={`${cam[cameraPosition].y}%`}
-                x2={`${A.x}%`}
-                y2={`${A.y}%`}
-                stroke={stroke}
-                strokeWidth="3"
-                strokeDasharray="6,3"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 0.8 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-              />
-              <motion.line
-                key={`line-b-${cameraPosition}`}
-                x1={`${cam[cameraPosition].x}%`}
-                y1={`${cam[cameraPosition].y}%`}
-                x2={`${B.x}%`}
-                y2={`${B.y}%`}
-                stroke={stroke}
-                strokeWidth="3"
-                strokeDasharray="6,3"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 0.8 }}
-                transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-              />
-            </svg>
-          )}
-
-          {/* Characters */}
+          {/* Example compositions */}
           <motion.div
-            className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2"
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
+            key={selectedExample}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="absolute inset-0 flex items-center justify-center"
           >
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 border-3 border-blue-300 rounded-full flex items-center justify-center shadow-xl shadow-blue-400/30">
-              <Users className="w-10 h-10 text-white" />
-            </div>
-            <div className="text-center mt-3 text-blue-300 font-bold text-sm bg-slate-900/70 px-2 py-1 rounded-lg">
-              Character A
-            </div>
+            {selectedExample === 1 && (
+              <div className="relative">
+                <div
+                  className={`w-16 h-20 bg-gradient-to-br ${examples[1].color} rounded-lg shadow-xl absolute left-2/3 top-1/3 transform -translate-x-1/2 -translate-y-1/2`}
+                />
+                <div className="absolute left-2/3 top-1/3 w-2 h-2 bg-white rounded-full transform -translate-x-1/2 -translate-y-2" />
+              </div>
+            )}
+
+            {selectedExample === 2 && (
+              <div className="relative w-full h-full">
+                <div className="absolute bottom-1/3 left-0 right-0 h-0.5 bg-green-400/80" />
+                <div
+                  className={`w-8 h-24 bg-gradient-to-t ${examples[2].color} rounded-t-lg absolute left-1/3 bottom-1/3 transform -translate-x-1/2`}
+                />
+              </div>
+            )}
+
+            {selectedExample === 3 && (
+              <div className="relative">
+                <div
+                  className={`w-12 h-8 bg-gradient-to-br ${examples[3].color} rounded-lg shadow-xl absolute left-1/3 top-1/2 transform -translate-x-1/2 -translate-y-1/2`}
+                />
+                <div className="absolute left-1/3 top-1/2 w-8 h-0.5 bg-purple-300/60 transform translate-x-2" />
+              </div>
+            )}
           </motion.div>
 
-          <motion.div
-            className="absolute top-1/2 right-1/4 translate-x-1/2 -translate-y-1/2"
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
-          >
-            <div className="w-20 h-20 bg-gradient-to-br from-purple-400 to-purple-600 border-3 border-purple-300 rounded-full flex items-center justify-center shadow-xl shadow-purple-400/30">
-              <Users className="w-10 h-10 text-white" />
-            </div>
-            <div className="text-center mt-3 text-purple-300 font-bold text-sm bg-slate-900/70 px-2 py-1 rounded-lg">
-              Character B
-            </div>
-          </motion.div>
-
-          {/* Camera positions */}
-          {[1, 2, 3].map((pos) => {
-            const isActive = cameraPosition === pos;
-            const isWrong = pos === 3;
-            return (
-              <motion.div
-                key={pos}
-                className={`absolute ${
-                  pos === 1
-                    ? "bottom-8 left-8"
-                    : pos === 2
-                    ? "bottom-8 left-1/2 -translate-x-1/2"
-                    : "bottom-8 right-8"
-                }`}
-                animate={{
-                  opacity: isActive ? 1 : 0.4,
-                  scale: isActive ? 1.2 : 1,
-                  y: isActive ? -4 : 0,
-                }}
-                whileHover={{ scale: isActive ? 1.2 : 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <div
-                  className={`w-16 h-16 rounded-2xl border-3 flex items-center justify-center cursor-pointer transition-all duration-300 shadow-lg ${
-                    isWrong
-                      ? "bg-gradient-to-br from-red-500 to-red-700 border-red-400 shadow-red-500/40"
-                      : "bg-gradient-to-br from-emerald-500 to-emerald-700 border-emerald-400 shadow-emerald-500/40"
-                  } ${isActive ? "ring-4 ring-white/30" : ""}`}
-                  onClick={() => setCameraPosition(pos)}
-                >
-                  <Camera
-                    className={`w-8 h-8 ${
-                      isWrong ? "text-white" : "text-white"
-                    }`}
-                  />
-                </div>
-                <div
-                  className={`text-center mt-2 text-xs font-bold ${
-                    isWrong ? "text-red-300" : "text-emerald-300"
+          {/* Example buttons */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-4">
+            {[1, 2, 3].map((num) => {
+              const isActive = selectedExample === num;
+              const example = examples[num];
+              return (
+                <motion.button
+                  key={num}
+                  onClick={() => setSelectedExample(num)}
+                  className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all duration-300 ${
+                    isActive
+                      ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-300 shadow-lg"
+                      : "bg-slate-800/40 border-slate-700/50 text-slate-300 hover:bg-slate-700/50"
                   }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  {pos === 3 ? "Breaks Rule!" : `Camera ${pos}`}
-                </div>
-              </motion.div>
-            );
-          })}
+                  Example {num}
+                </motion.button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="bg-slate-800/30 rounded-xl p-4 border border-slate-700/30">
           <div className="flex items-center gap-3 mb-2">
             <Lightbulb className="w-5 h-5 text-yellow-400" />
-            <span className="font-semibold text-white">How it works</span>
+            <span className="font-semibold text-white">
+              {examples[selectedExample].title}
+            </span>
           </div>
           <p className="text-slate-300 text-sm leading-relaxed">
-            Notice how cameras 1 and 2 maintain consistent screen
-            positions—Character A always looks right, Character B always looks
-            left. Camera 3 crosses the invisible line, suddenly making them
-            appear to look in the same direction, breaking spatial logic.
+            {examples[selectedExample].description}. Notice how placing elements
+            along the grid lines or at intersection points creates more dynamic
+            and visually interesting compositions than centering everything.
           </p>
         </div>
       </div>
@@ -424,8 +399,7 @@ const Rule180Guide = () => {
                   <CheckCircle className="w-12 h-12 mx-auto mb-4" />
                   <p className="text-2xl font-bold mb-2">Outstanding!</p>
                   <p className="text-slate-400">
-                    You've mastered the 180-degree rule like a pro
-                    cinematographer.
+                    You've mastered the Rule of Thirds like a pro photographer.
                   </p>
                 </div>
               ) : percentage >= 60 ? (
@@ -641,7 +615,7 @@ const Rule180Guide = () => {
             <div className="inline-flex items-center gap-3 bg-slate-900/60 backdrop-blur-xl px-6 py-3 rounded-full border border-slate-700/50 mb-8">
               <Camera className="w-5 h-5 text-emerald-400" />
               <span className="text-slate-300 font-medium">
-                Cinematography Masterclass
+                Photography Masterclass
               </span>
             </div>
 
@@ -649,28 +623,28 @@ const Rule180Guide = () => {
               The Complete Guide to
               <br />
               <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
-                The 180-Degree Rule
+                The Rule of Thirds
               </span>
             </h1>
 
             <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-12">
-              Master the fundamental principle that keeps your audience oriented
-              and your scenes coherent. From basic concepts to advanced
-              applications, learn when to follow the rule—and when to break it
-              for maximum impact.
+              Master the foundational composition technique that transforms
+              ordinary photos into compelling visual stories. From basic
+              principles to creative applications, learn when to follow the
+              rule—and when to break it for artistic impact.
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-400">
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4" />
-                <span>15 min read</span>
+                <span>12 min read</span>
               </div>
               <div className="flex items-center gap-2">
                 <Star className="w-4 h-4 text-yellow-400" />
                 <span>Beginner Friendly</span>
               </div>
               <div className="flex items-center gap-2">
-                <Film className="w-4 h-4" />
+                <Image className="w-4 h-4" />
                 <span>Interactive Examples</span>
               </div>
             </div>
@@ -703,35 +677,36 @@ const Rule180Guide = () => {
                 </div>
                 <div>
                   <p className="text-xl text-slate-200 leading-relaxed font-medium italic">
-                    "The 180-degree rule is like an invisible fence for your
-                    camera. Master it first, then learn when to break it."
+                    "The Rule of Thirds is your gateway to better composition.
+                    Master it first, then learn when breaking it serves your
+                    artistic vision."
                   </p>
                   <p className="text-slate-400 mt-2">
-                    — Industry principle that has guided filmmakers for over a
-                    century
+                    — Fundamental principle used by artists and photographers
+                    for centuries
                   </p>
                 </div>
               </div>
             </div>
 
             <p className="text-xl text-slate-200 leading-relaxed mb-8 font-medium">
-              Imagine watching a conversation between two people, and suddenly
-              one character appears to have teleported to the other side of the
-              screen. Confusing? That's exactly what happens when the 180-degree
-              rule is broken accidentally.
+              Imagine looking at a photograph where everything feels perfectly
+              balanced and draws your eye naturally through the frame. That's
+              the power of the Rule of Thirds at work—a simple yet
+              transformative composition technique.
             </p>
 
             <p className="text-lg text-slate-300 leading-relaxed mb-8">
-              The 180-degree rule is one of the most fundamental principles in
-              cinematography, yet it's often misunderstood or overlooked by
-              emerging filmmakers. This comprehensive guide will take you from
-              the basic concepts to advanced applications, complete with
-              interactive examples and real-world case studies.
+              The Rule of Thirds is one of the most fundamental principles in
+              photography and visual arts, yet it's often dismissed as "just a
+              beginner's rule." This comprehensive guide will show you why it
+              works, how to apply it effectively, and most importantly, when
+              breaking it creates even more powerful images.
             </p>
           </div>
         </motion.section>
 
-        {/* What is the 180-Degree Rule */}
+        {/* What is the Rule of Thirds */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -739,17 +714,18 @@ const Rule180Guide = () => {
           className="mb-20"
         >
           <h2 className="text-4xl font-bold text-white mb-8 flex items-center gap-3">
-            <Target className="w-8 h-8 text-emerald-400" />
-            What is the 180-Degree Rule?
+            <Grid3X3 className="w-8 h-8 text-emerald-400" />
+            What is the Rule of Thirds?
           </h2>
 
           <div className="bg-slate-900/30 backdrop-blur-xl border border-slate-700/30 rounded-3xl p-8 mb-8 shadow-xl">
             <p className="text-lg text-slate-200 leading-relaxed mb-6">
-              At its core, the 180-degree rule is about{" "}
-              <strong className="text-emerald-300">spatial consistency</strong>.
-              When filming two subjects (typically characters in conversation),
-              you establish an imaginary straight line between them—this is your{" "}
-              <strong className="text-blue-300">axis of action</strong>.
+              The Rule of Thirds divides your frame into nine equal sections
+              with two horizontal and two vertical lines. Instead of placing
+              your subject dead center, you position key elements along these
+              lines or at their{" "}
+              <strong className="text-emerald-300">intersection points</strong>
+              —known as <strong className="text-blue-300">power points</strong>.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-8">
@@ -761,23 +737,23 @@ const Rule180Guide = () => {
                   <h3 className="font-bold text-white">Following the Rule</h3>
                 </div>
                 <p className="text-slate-300 text-sm leading-relaxed">
-                  Keep your camera on one side of the line, and characters
-                  maintain consistent screen positions. Character A always looks
-                  right, Character B always looks left.
+                  Place important elements along grid lines or at intersection
+                  points. This creates visual balance, draws the eye naturally,
+                  and makes compositions more dynamic than centered subjects.
                 </p>
               </div>
 
               <div className="bg-slate-800/40 rounded-2xl p-6 border border-slate-700/30">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
-                    <XCircle className="w-5 h-5 text-red-400" />
+                  <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                    <Target className="w-5 h-5 text-blue-400" />
                   </div>
-                  <h3 className="font-bold text-white">Breaking the Rule</h3>
+                  <h3 className="font-bold text-white">Power Points</h3>
                 </div>
                 <p className="text-slate-300 text-sm leading-relaxed">
-                  Cross the line, and suddenly both characters appear to look in
-                  the same direction, breaking the spatial relationship and
-                  confusing your audience.
+                  The four intersection points are the strongest positions in
+                  your frame. Placing subjects here creates immediate visual
+                  impact and natural focal points.
                 </p>
               </div>
             </div>
@@ -788,10 +764,9 @@ const Rule180Guide = () => {
                 <div>
                   <h4 className="font-bold text-blue-300 mb-2">Key Insight</h4>
                   <p className="text-slate-300 leading-relaxed">
-                    The rule isn't about the actual 180-degree semicircle—it's
-                    about maintaining consistent screen direction. Think of it
-                    as staying on one side of an invisible fence that runs
-                    between your subjects.
+                    The rule works because it mimics how our eyes naturally scan
+                    images—we don't look at the center first, but rather follow
+                    a Z-pattern that hits these key intersection points.
                   </p>
                 </div>
               </div>
@@ -823,15 +798,15 @@ const Rule180Guide = () => {
         >
           <h2 className="text-4xl font-bold text-white mb-8 flex items-center gap-3">
             <Eye className="w-8 h-8 text-emerald-400" />
-            Why It Matters: The Psychology of Spatial Orientation
+            Why It Matters: The Psychology of Visual Balance
           </h2>
 
           <div className="prose prose-invert prose-lg max-w-none mb-8">
             <p className="text-lg text-slate-200 leading-relaxed mb-6">
-              Our brains are wired to understand spatial relationships. When
-              characters maintain consistent screen positions, viewers
-              unconsciously build a mental map of the scene. This isn't just
-              aesthetic preference—it's cognitive necessity.
+              Our brains are hardwired to find asymmetrical compositions more
+              engaging than perfectly centered ones. The Rule of Thirds creates
+              visual tension and balance that keeps viewers interested and
+              guides their eye through the frame naturally.
             </p>
           </div>
 
@@ -841,11 +816,11 @@ const Rule180Guide = () => {
                 <Target className="w-6 h-6 text-emerald-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-3">
-                Spatial Continuity
+                Visual Balance
               </h3>
               <p className="text-slate-300 leading-relaxed">
-                Maintains the audience's understanding of where characters are
-                positioned relative to each other throughout the scene.
+                Creates harmonious compositions that feel natural and pleasing
+                to the eye, even when elements aren't perfectly symmetrical.
               </p>
             </div>
 
@@ -854,24 +829,24 @@ const Rule180Guide = () => {
                 <Eye className="w-6 h-6 text-blue-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-3">
-                Eyeline Matching
+                Eye Movement
               </h3>
               <p className="text-slate-300 leading-relaxed">
-                Ensures that characters appear to be looking at each other,
-                creating a natural flow in dialogue scenes.
+                Guides the viewer's gaze through your image in a natural,
+                flowing way that creates visual interest and engagement.
               </p>
             </div>
 
             <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/30 rounded-2xl p-6 shadow-lg">
               <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
-                <Users className="w-6 h-6 text-purple-400" />
+                <Focus className="w-6 h-6 text-purple-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-3">
-                Audience Immersion
+                Subject Emphasis
               </h3>
               <p className="text-slate-300 leading-relaxed">
-                Prevents jarring moments that pull viewers out of the story by
-                maintaining visual logic and flow.
+                Makes your main subject stand out while maintaining context with
+                the surrounding environment and supporting elements.
               </p>
             </div>
           </div>
@@ -885,7 +860,7 @@ const Rule180Guide = () => {
           className="mb-20"
         >
           <h2 className="text-4xl font-bold text-white mb-8 flex items-center gap-3">
-            <Film className="w-8 h-8 text-emerald-400" />
+            <Image className="w-8 h-8 text-emerald-400" />
             Masterclass Examples
           </h2>
 
@@ -894,8 +869,8 @@ const Rule180Guide = () => {
               <div className="aspect-video bg-slate-800 relative">
                 <iframe
                   className="w-full h-full"
-                  src="https://www.youtube.com/embed/xlNTDEtYX9k"
-                  title="Heat Diner Scene Analysis"
+                  src="https://www.youtube.com/embed/T1C4eSZface"
+                  title="Rule of Thirds Photography Tutorial"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -908,23 +883,25 @@ const Rule180Guide = () => {
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold text-white">
-                      Heat (1995) - The Perfect Execution
+                      Rule of Thirds - Photography Composition
                     </h3>
-                    <p className="text-slate-400">Directed by Michael Mann</p>
+                    <p className="text-slate-400">
+                      Professional techniques explained
+                    </p>
                   </div>
                 </div>
                 <p className="text-slate-300 leading-relaxed mb-4">
-                  The iconic diner scene between Robert De Niro and Al Pacino is
-                  a masterclass in 180-degree rule application. Notice how
-                  throughout their intense 4-minute conversation, both
-                  characters maintain consistent screen positions.
+                  See how professional photographers use the Rule of Thirds
+                  across different genres—from portraits and landscapes to
+                  street photography and architecture. Notice how the technique
+                  adapts to different subjects while maintaining its
+                  effectiveness.
                 </p>
                 <div className="bg-slate-800/50 rounded-xl p-4">
                   <p className="text-sm text-slate-400 italic">
-                    "This scene demonstrates how following the rule enhances
-                    dramatic tension rather than limiting it. The consistent
-                    eyelines make their psychological chess match even more
-                    compelling."
+                    "This video demonstrates the versatility of the Rule of
+                    Thirds and shows why it remains one of the most reliable
+                    composition tools in visual arts."
                   </p>
                 </div>
               </div>
@@ -936,8 +913,8 @@ const Rule180Guide = () => {
               <div className="aspect-video bg-slate-800">
                 <iframe
                   className="w-full h-full"
-                  src="https://www.youtube.com/embed/iW0bKUfvH2c"
-                  title="180 Degree Rule Explained"
+                  src="https://www.youtube.com/embed/7ZVyNjKSr0M"
+                  title="Rule of Thirds in Famous Paintings"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -945,11 +922,11 @@ const Rule180Guide = () => {
               </div>
               <div className="p-6">
                 <h4 className="text-lg font-bold text-white mb-2">
-                  Visual Breakdown
+                  Art History Analysis
                 </h4>
                 <p className="text-slate-300 text-sm leading-relaxed">
-                  A comprehensive analysis showing the rule across multiple
-                  famous films and genres.
+                  Discover how master painters have used the Rule of Thirds for
+                  centuries, long before photography existed.
                 </p>
               </div>
             </div>
@@ -958,8 +935,8 @@ const Rule180Guide = () => {
               <div className="aspect-video bg-slate-800">
                 <iframe
                   className="w-full h-full"
-                  src="https://www.youtube.com/embed/wLfZL9PZI9k"
-                  title="How to Film Conversations"
+                  src="https://www.youtube.com/embed/MdQF0OqslZ8"
+                  title="Landscape Photography Rule of Thirds"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -967,11 +944,11 @@ const Rule180Guide = () => {
               </div>
               <div className="p-6">
                 <h4 className="text-lg font-bold text-white mb-2">
-                  Practical Techniques
+                  Landscape Applications
                 </h4>
                 <p className="text-slate-300 text-sm leading-relaxed">
-                  Step-by-step guide to implementing the rule in your own
-                  dialogue scenes.
+                  Learn how to apply the rule to horizons, leading lines, and
+                  natural elements in outdoor photography.
                 </p>
               </div>
             </div>
@@ -995,12 +972,13 @@ const Rule180Guide = () => {
               <Zap className="w-8 h-8 text-red-400 mt-1 flex-shrink-0" />
               <div>
                 <h3 className="text-2xl font-bold text-white mb-4">
-                  Advanced Technique: Intentional Rule Breaking
+                  Advanced Technique: Creative Rule Breaking
                 </h3>
                 <p className="text-lg text-slate-200 leading-relaxed mb-6">
-                  Sometimes crossing the line is exactly what you want. Master
-                  filmmakers use rule-breaking as a powerful storytelling tool
-                  to create specific emotional or psychological effects.
+                  Once you understand why the Rule of Thirds works, you can
+                  break it intentionally for artistic effect. Centered
+                  compositions can be powerful when they serve a specific
+                  purpose.
                 </p>
               </div>
             </div>
@@ -1009,58 +987,59 @@ const Rule180Guide = () => {
           <div className="space-y-6 mb-10">
             <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/30 rounded-2xl p-8 shadow-lg">
               <h3 className="text-2xl font-bold text-white mb-6">
-                Famous Examples of Strategic Rule Breaking
+                When Breaking the Rule Works Best
               </h3>
 
               <div className="space-y-6">
                 <div className="border-l-4 border-purple-500 pl-6 bg-purple-500/5 rounded-r-xl p-4">
                   <h4 className="text-xl font-bold text-purple-300 mb-2">
-                    The Dark Knight - Interrogation Scene
+                    Symmetrical Compositions
                   </h4>
                   <p className="text-slate-300 leading-relaxed mb-3">
-                    Christopher Nolan deliberately crosses the line as tension
-                    escalates between Batman and the Joker. The spatial
-                    disorientation mirrors the psychological chaos the Joker
-                    represents.
+                    Perfect symmetry demands centered subjects. Architecture,
+                    reflections, and formal portraits often work better when
+                    perfectly balanced and centered.
                   </p>
                   <div className="bg-slate-800/50 rounded-lg p-3">
                     <p className="text-sm text-slate-400 italic">
-                      "The camera crossing reinforces the theme that normal
-                      rules don't apply when dealing with chaos incarnate."
+                      "Symmetry creates a sense of order, formality, and
+                      timeless elegance that off-center compositions can't
+                      achieve."
                     </p>
                   </div>
                 </div>
 
                 <div className="border-l-4 border-blue-500 pl-6 bg-blue-500/5 rounded-r-xl p-4">
                   <h4 className="text-xl font-bold text-blue-300 mb-2">
-                    Lord of the Rings - Gollum's Internal Conflict
+                    Patterns and Textures
                   </h4>
                   <p className="text-slate-300 leading-relaxed mb-3">
-                    Peter Jackson uses line crossing during Sméagol/Gollum's
-                    conversations with himself, making it appear as two
-                    different characters having a dialogue.
+                    When the entire frame is your subject—like repeating
+                    patterns or detailed textures—centering the composition can
+                    emphasize the uniformity and create meditative images.
                   </p>
                   <div className="bg-slate-800/50 rounded-lg p-3">
                     <p className="text-sm text-slate-400 italic">
-                      "The 180-degree break visualizes the character's split
-                      personality in a way words alone couldn't achieve."
+                      "Pattern photography often benefits from central framing
+                      to showcase the repetitive elements equally across the
+                      frame."
                     </p>
                   </div>
                 </div>
 
                 <div className="border-l-4 border-emerald-500 pl-6 bg-emerald-500/5 rounded-r-xl p-4">
                   <h4 className="text-xl font-bold text-emerald-300 mb-2">
-                    Parasite - Class Boundaries
+                    Minimalist Photography
                   </h4>
                   <p className="text-slate-300 leading-relaxed mb-3">
-                    Bong Joon-ho crosses the line when characters discuss
-                    crossing social boundaries, using visual language to
-                    reinforce the film's central themes.
+                    In minimalist compositions with lots of negative space,
+                    centering your single subject can create powerful isolation
+                    and emphasize the emptiness around it.
                   </p>
                   <div className="bg-slate-800/50 rounded-lg p-3">
                     <p className="text-sm text-slate-400 italic">
-                      "The rule break becomes a metaphor for transgressing
-                      societal lines that shouldn't be crossed."
+                      "Centered subjects in minimal compositions create
+                      contemplative images that emphasize solitude and space."
                     </p>
                   </div>
                 </div>
@@ -1071,19 +1050,19 @@ const Rule180Guide = () => {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/30 rounded-2xl p-6 shadow-lg">
               <div className="flex items-center gap-3 mb-4">
-                <Move className="w-6 h-6 text-blue-400" />
+                <Crop className="w-6 h-6 text-blue-400" />
                 <h3 className="text-xl font-bold text-white">
-                  Bending, Not Breaking
+                  Alternative Compositions
                 </h3>
               </div>
               <p className="text-slate-300 leading-relaxed mb-4">
-                You can "reset" the line without jarring your audience by using:
+                Explore other composition techniques:
               </p>
               <ul className="text-slate-300 space-y-2 text-sm">
-                <li>• Neutral shots (directly facing one character)</li>
-                <li>• Camera movement that carries viewers across the line</li>
-                <li>• Cutaways to objects or establishing shots</li>
-                <li>• Character movement that naturally shifts the axis</li>
+                <li>• Golden ratio for more refined proportions</li>
+                <li>• Central composition for formal balance</li>
+                <li>• Dynamic symmetry for classical elegance</li>
+                <li>• Fibonacci spiral for natural flow</li>
               </ul>
             </div>
 
@@ -1095,13 +1074,13 @@ const Rule180Guide = () => {
                 </h3>
               </div>
               <p className="text-slate-300 leading-relaxed mb-4">
-                Strategic rule-breaking works best for:
+                Break the rule effectively for:
               </p>
               <ul className="text-slate-300 space-y-2 text-sm">
-                <li>• Showing confusion or disorientation</li>
-                <li>• Indicating power shifts between characters</li>
-                <li>• Representing psychological states</li>
-                <li>• Covering complex action choreography</li>
+                <li>• Creating perfect symmetry or balance</li>
+                <li>• Emphasizing isolation or solitude</li>
+                <li>• Showcasing patterns or textures</li>
+                <li>• Making bold artistic statements</li>
               </ul>
             </div>
           </div>
@@ -1131,12 +1110,12 @@ const Rule180Guide = () => {
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-white mb-2">
-                    Establish the Axis of Action
+                    Enable Grid Lines
                   </h4>
                   <p className="text-slate-300 leading-relaxed">
-                    Before rolling camera, clearly identify the invisible line
-                    running between your subjects. This line becomes your
-                    reference point for all camera positions in the scene.
+                    Turn on grid lines in your camera or smartphone settings.
+                    This overlay will help you visualize the Rule of Thirds
+                    while composing your shots.
                   </p>
                 </div>
               </div>
@@ -1147,12 +1126,12 @@ const Rule180Guide = () => {
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-white mb-2">
-                    Choose Your Side
+                    Identify Your Main Subject
                   </h4>
                   <p className="text-slate-300 leading-relaxed">
-                    Decide which side of the line your camera will operate from
-                    and commit to it. This choice will determine the consistent
-                    screen positions for your entire scene.
+                    Before composing, decide what the primary focus of your
+                    image should be. This will be placed on a grid line or power
+                    point.
                   </p>
                 </div>
               </div>
@@ -1163,12 +1142,12 @@ const Rule180Guide = () => {
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-white mb-2">
-                    Plan Your Coverage
+                    Position and Balance
                   </h4>
                   <p className="text-slate-300 leading-relaxed">
-                    Map out all your shots while staying on your chosen side.
-                    Consider wide shots, medium shots, and close-ups that
-                    maintain the established eyeline directions.
+                    Place your subject along a grid line or at an intersection.
+                    Consider what balances the composition on the other side of
+                    the frame.
                   </p>
                 </div>
               </div>
@@ -1179,12 +1158,11 @@ const Rule180Guide = () => {
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-white mb-2">
-                    Monitor in Post
+                    Review and Refine
                   </h4>
                   <p className="text-slate-300 leading-relaxed">
-                    During editing, watch for any shots that feel "off" or break
-                    spatial continuity. These are often unintentional rule
-                    violations that need addressing.
+                    Take the shot, then review. Does it feel balanced? Does your
+                    eye flow naturally through the frame? Adjust as needed.
                   </p>
                 </div>
               </div>
@@ -1199,16 +1177,17 @@ const Rule180Guide = () => {
                   Practice Exercise
                 </h4>
                 <p className="text-slate-300 leading-relaxed mb-4">
-                  Set up two chairs facing each other about 6 feet apart. Place
-                  objects or people in the chairs and practice shooting from
-                  different angles while maintaining the 180-degree rule.
+                  Take 10 photos of the same subject: 3 using the Rule of
+                  Thirds, 3 centered, and 4 experimenting with different
+                  positions. Compare how each composition feels and affects the
+                  story you're telling.
                 </p>
                 <div className="bg-slate-800/30 rounded-lg p-4">
                   <p className="text-slate-400 text-sm">
-                    <strong className="text-emerald-300">Pro tip:</strong> Use
-                    tape on the floor to mark your axis of action. This physical
-                    reminder helps crew members understand the invisible
-                    boundary.
+                    <strong className="text-emerald-300">Pro tip:</strong> Start
+                    with still subjects like flowers or architecture before
+                    moving to people or moving subjects. This helps you focus
+                    purely on composition without worrying about timing.
                   </p>
                 </div>
               </div>
@@ -1220,7 +1199,7 @@ const Rule180Guide = () => {
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          
           className="mb-20"
         >
           <h2 className="text-4xl font-bold text-white mb-8 flex items-center gap-3">
@@ -1232,7 +1211,7 @@ const Rule180Guide = () => {
             <p className="text-lg text-slate-300 leading-relaxed">
               Ready to put your understanding to the test? This interactive quiz
               covers everything from basic principles to advanced applications
-              of the 180-degree rule.
+              of the Rule of Thirds.
             </p>
           </div>
 
@@ -1261,7 +1240,7 @@ const Rule180Guide = () => {
               </div>
               <div className="space-y-4">
                 <a
-                  href="https://www.youtube.com/watch?v=BBA8nXTUAw8"
+                  href="https://www.youtube.com/watch?v=T1C4eSZface"
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center gap-3 p-4 bg-slate-800/40 rounded-xl hover:bg-slate-700/50 transition-all duration-300 group"
@@ -1269,15 +1248,15 @@ const Rule180Guide = () => {
                   <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors" />
                   <div>
                     <p className="text-white font-semibold group-hover:text-emerald-300 transition-colors">
-                      StudioBinder's Complete Guide
+                      Photography Composition Guide
                     </p>
                     <p className="text-slate-400 text-sm">
-                      Visual breakdown with industry examples
+                      Professional techniques and real-world examples
                     </p>
                   </div>
                 </a>
                 <a
-                  href="https://www.youtube.com/watch?v=wLfZL9PZI9k"
+                  href="https://www.youtube.com/watch?v=7ZVyNjKSr0M"
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center gap-3 p-4 bg-slate-800/40 rounded-xl hover:bg-slate-700/50 transition-all duration-300 group"
@@ -1285,10 +1264,10 @@ const Rule180Guide = () => {
                   <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors" />
                   <div>
                     <p className="text-white font-semibold group-hover:text-emerald-300 transition-colors">
-                      Camber Film School Techniques
+                      Art History Analysis
                     </p>
                     <p className="text-slate-400 text-sm">
-                      Hands-on filming approaches and tips
+                      How masters used the rule before photography
                     </p>
                   </div>
                 </a>
@@ -1304,7 +1283,7 @@ const Rule180Guide = () => {
               </div>
               <div className="space-y-4">
                 <a
-                  href="https://www.studiobinder.com/blog/what-is-continuity-editing-in-film/"
+                  href="https://photographylife.com/rule-of-thirds"
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center gap-3 p-4 bg-slate-800/40 rounded-xl hover:bg-slate-700/50 transition-all duration-300 group"
@@ -1312,32 +1291,31 @@ const Rule180Guide = () => {
                   <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-blue-400 transition-colors" />
                   <div>
                     <p className="text-white font-semibold group-hover:text-blue-300 transition-colors">
-                      Continuity Editing Masterclass
+                      Photography Life Guide
                     </p>
                     <p className="text-slate-400 text-sm">
-                      Advanced editing techniques and theory
+                      Advanced composition techniques and theory
                     </p>
                   </div>
                 </a>
                 <div className="p-4 bg-slate-800/40 rounded-xl">
                   <div className="flex items-center gap-3 mb-2">
-                    <Film className="w-5 h-5 text-purple-400" />
+                    <Image className="w-5 h-5 text-purple-400" />
                     <p className="text-white font-semibold">
-                      Recommended Films to Study
+                      Recommended Practice Subjects
                     </p>
                   </div>
                   <ul className="text-slate-400 text-sm space-y-1">
-                    <li>• Heat (1995) - Perfect dialogue execution</li>
-                    <li>• The Godfather (1972) - Classic Hollywood style</li>
-                    <li>• Pulp Fiction (1994) - Creative rule-bending</li>
-                    <li>• Mad Max: Fury Road (2015) - Action sequences</li>
+                    <li>• Portraits - Eyes on power points</li>
+                    <li>• Landscapes - Horizon on third lines</li>
+                    <li>• Architecture - Strong vertical/horizontal lines</li>
+                    <li>• Street photography - Leading lines and subjects</li>
                   </ul>
                 </div>
               </div>
             </div>
           </div>
         </motion.section>
-
         {/* Conclusion */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
@@ -1351,22 +1329,22 @@ const Rule180Guide = () => {
                 <Trophy className="w-8 h-8 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-white mb-6">
-                Master the Rule, Then Break It
+                Master the Rule, Then Make It Your Own
               </h2>
               <p className="text-lg text-slate-300 leading-relaxed max-w-3xl mx-auto mb-8">
-                The 180-degree rule isn't a creative limitation—it's a
-                foundation that enables more sophisticated storytelling. Master
-                the basics first, understand why the rule works, and then you'll
-                know exactly when and how to break it for maximum impact.
+                The Rule of Thirds isn't a limitation—it's a foundation that
+                helps you create compelling compositions consistently. Master
+                the basics first, understand why it works, and then you'll know
+                exactly when breaking it serves your artistic vision.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-slate-400">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-emerald-400" />
-                  <span>Rule Mastered</span>
+                  <span>Composition Mastered</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Eye className="w-4 h-4 text-blue-400" />
-                  <span>Spatial Awareness Developed</span>
+                  <span>Visual Balance Developed</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Zap className="w-4 h-4 text-purple-400" />
@@ -1389,9 +1367,9 @@ const Rule180Guide = () => {
               Ready to Apply What You've Learned?
             </h3>
             <p className="text-slate-300 mb-6 max-w-2xl mx-auto leading-relaxed">
-              The best way to master the 180-degree rule is through practice.
-              Start with simple dialogue scenes, then experiment with more
-              complex scenarios as your confidence grows.
+              The best way to master the Rule of Thirds is through practice.
+              Start with simple subjects, then experiment with more complex
+              compositions as your confidence grows.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
@@ -1416,4 +1394,4 @@ const Rule180Guide = () => {
   );
 };
 
-export default Rule180Guide; 
+export default RuleOfThirdsGuide;

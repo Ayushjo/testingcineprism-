@@ -41,6 +41,7 @@ const CinemaSchoolPage = () => {
       description:
         "Dividing the frame into nine equal sections for balanced and dynamic shots.",
       example: "Placing horizons on the upper or lower third.",
+      route: "/rule-of-thirds",
     },
     {
       id: 3,

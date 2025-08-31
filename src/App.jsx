@@ -41,6 +41,7 @@ import AuthCallback from "./components/AuthCallback";
 import EditPostPage from "./pages/EditPostPage";
 import Rule180Page from "./pages/OneEightyDegreeRulePage";
 import TrendingRankManager from "./pages/TrendingRankManager";
+import RuleOfThirdsPage from "./pages/RuleOfThirdsPage";
 
 const App = () => {
   const location = useLocation();
@@ -64,7 +65,8 @@ const App = () => {
           {/* ADD: OAuth callback route */}
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/reviews" element={<ReviewPage />} />
-
+          <Route path="/180-degree-rule" element={<Rule180Page />} />
+          <Route path="/rule-of-thirds" element={<RuleOfThirdsPage />} />
           <Route element={<RedirectIfUser />}>
             <Route
               path="/genre/Science-Fiction"
@@ -78,7 +80,7 @@ const App = () => {
             <Route path="/trending" element={<TrendingPage />} />
 
             <Route path="/cinema-school" element={<CinemaSchoolPage />} />
-            <Route path="/180-degree-rule" element={<Rule180Page />} />
+
             <Route
               path="/ai-insights/:id"
               element={<AIInsightsArticlePage />}
