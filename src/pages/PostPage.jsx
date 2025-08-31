@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios"; // Add this import
 import {
   Star,
   Calendar,
@@ -307,7 +308,6 @@ const Comment = ({
                     onChange={(e) => setReplyText(e.target.value)}
                     onInput={handleTextareaInput}
                     rows={1}
-                    
                     className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
                     disabled={isSubmittingReply}
                   />
@@ -383,6 +383,45 @@ export default function PostPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [newComment, setNewComment] = useState("");
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  // Add state for initial like status
+  const [initialLikeStatus, setInitialLikeStatus] = useState(null);
+  const [initialLikeStatusLoading, setInitialLikeStatusLoading] =
+    useState(true);
+
+  const token = localStorage.getItem("cineprism_auth_token");
+
+  // Move hasLiked function outside of component or make it a proper async function
+  const checkInitialLikeStatus = async () => {
+    if (!user || !id) {
+      setInitialLikeStatusLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/has-liked",
+        { postId: id },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setInitialLikeStatus(response.data.hasLiked);
+    } catch (error) {
+      console.error("Error checking if the user has liked the post:", error);
+      setInitialLikeStatus(false);
+    } finally {
+      setInitialLikeStatusLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    checkInitialLikeStatus();
+  }, [id, user, token]);
 
   // Debug logging
   useEffect(() => {
@@ -408,7 +447,8 @@ export default function PostPage() {
     loadMore: loadMoreComments,
   } = useComments(id);
 
-  const { isLiked, likeCount, toggleLike } = useLike(id);
+  // Modified useLike hook call to include initial status
+  const { isLiked, likeCount, toggleLike } = useLike(id, initialLikeStatus);
 
   // Redirect if no ID is provided
   useEffect(() => {
@@ -479,8 +519,8 @@ export default function PostPage() {
     toggleLike();
   };
 
-  // Loading state
-  if (postLoading) {
+  // Loading state - also check for initial like status loading
+  if (postLoading || initialLikeStatusLoading) {
     return (
       <div className="min-h-screen bg-slate-950 text-white pt-20 flex items-center justify-center">
         <div className="flex items-center gap-3">
