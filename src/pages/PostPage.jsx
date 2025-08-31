@@ -587,43 +587,46 @@ export default function PostPage() {
                 </div>
 
                 {/* Primary Info - Year */}
-                <div className="flex flex-wrap gap-3">
-                  <div className="flex items-center gap-2 bg-white/5 backdrop-blur-xl px-4 py-3 rounded-2xl border border-white/10">
-                    <Calendar className="w-5 h-5 text-slate-400" />
-                    <span className="text-slate-200 font-medium text-base">
-                      {post.year}
-                    </span>
+                <div className="flex  gap-3">
+                  <div className="flex flex-wrap gap-3">
+                    <div className="flex items-center gap-2 bg-white/5 backdrop-blur-xl px-4 py-3 rounded-2xl border border-white/10">
+                      <Calendar className="w-5 h-5 text-slate-400" />
+                      <span className="text-slate-200 font-medium text-base">
+                        {post.year}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {post.genres?.map((genre, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-2 bg-gray-500/10 backdrop-blur-xl px-4 py-2 rounded-xl border border-gray-500/20"
+                      >
+                        <Tag className="w-4 h-4 text-gray-400" />
+                        <span className="text-gray-300 font-medium text-sm">
+                          {genre}
+                        </span>
+                      </div>
+                    )) || (
+                      <div className="flex items-center gap-2 bg-emerald-500/10 backdrop-blur-xl px-4 py-2 rounded-xl border border-emerald-500/20">
+                        <Tag className="w-4 h-4 text-emerald-400" />
+                        <span className="text-emerald-300 font-medium text-sm">
+                          N/A
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* Secondary Info - Genres */}
-                <div className="flex flex-wrap gap-2">
-                  {post.genres?.map((genre, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center gap-2 bg-gray-500/10 backdrop-blur-xl px-4 py-2 rounded-xl border border-gray-500/20"
-                    >
-                      <Tag className="w-4 h-4 text-gray-400" />
-                      <span className="text-gray-300 font-medium text-sm">
-                        {genre}
-                      </span>
-                    </div>
-                  )) || (
-                    <div className="flex items-center gap-2 bg-emerald-500/10 backdrop-blur-xl px-4 py-2 rounded-xl border border-emerald-500/20">
-                      <Tag className="w-4 h-4 text-emerald-400" />
-                      <span className="text-emerald-300 font-medium text-sm">
-                        N/A
-                      </span>
-                    </div>
-                  )}
-                </div>
 
                 {/* Tertiary Info - Director & Streaming */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10">
                     <User className="w-5 h-5 text-gray-400" />
                     <span className="text-slate-200 font-medium">
-                      Directed :
+                      Director :
                     </span>
                     <span className="text-white font-semibold">
                       {post.directedBy}
