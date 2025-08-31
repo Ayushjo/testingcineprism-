@@ -421,7 +421,7 @@ export default function PostPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
     checkInitialLikeStatus();
-  }, [id, user, token]);
+  }, []);
 
   // Debug logging
   useEffect(() => {
