@@ -30,7 +30,7 @@ import {
 import { useAuth } from "@/context/AuthContext.jsx";
 import toast from "react-hot-toast";
 import { ShareButton } from "@/components/ShareComponent.jsx";
-
+import { Helmet } from "react-helmet";
 // Enhanced Comment component with unlimited nesting support
 const Comment = ({
   comment,
@@ -542,6 +542,7 @@ export default function PostPage() {
   if (postError || !post) {
     return (
       <div className="min-h-screen bg-slate-950 text-white pt-20 flex items-center justify-center">
+        {generateMetaTags()}
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-400 mb-2">Error</h2>
           <p className="text-slate-400">{postError || "Post not found"}</p>
@@ -555,6 +556,47 @@ export default function PostPage() {
       </div>
     );
   }
+  const generateMetaTags = () => {
+    if (!post) return null;
+    const pageUrl = window.location.href;
+    const description =
+      post.content.length > 160
+        ? post.content.substring(0, 157) + "..."
+        : post.content;
+    return (
+      <Helmet>
+        {/* Basic Meta Tags */}
+        <title>{post.title} - CinePrism</title>
+        <meta name="description" content={description} />
+
+        {/* Open Graph / Facebook / WhatsApp */}
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={post.posterImageUrl} />
+        <meta property="og:image:width" content="400" />
+        <meta property="og:image:height" content="600" />
+        <meta property="og:site_name" content="CinePrism" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@cineprism" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={post.posterImageUrl} />
+
+        {/* Additional Meta for Better Sharing */}
+        <meta property="article:author" content="CinePrism" />
+        <meta property="article:published_time" content={post.createdAt} />
+        <meta property="article:section" content="Movie Reviews" />
+        <meta
+          property="article:tag"
+          content={post.genres?.join(", ") || "Movie"}
+        />
+      </Helmet>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white pt-20">
@@ -688,7 +730,6 @@ export default function PostPage() {
                     </div>
                   </button>
                   <ShareButton
-                    
                     url={window.location.href}
                     title={post.title}
                     description={`A review of ${post.title} (${post.year}) directed by ${post.directedBy}`}

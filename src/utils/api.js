@@ -3,7 +3,6 @@
 import axios from "axios";
 import { useState, useEffect, useCallback } from "react";
 
-
 const token = localStorage.getItem("cineprism_auth_token");
 const API_BASE_URL =
   "https://testingcineprismbackend-production.up.railway.app/api/v1";
@@ -273,7 +272,16 @@ export const usePost = (postId) => {
         postApi.fetchPost(postId),
         postApi.fetchRelatedPosts(postId),
       ]);
+      const optimizedPosterUrl = postData.posterImageUrl?.includes(
+        "cloudinary.com"
+      )
+        ? postData.posterImageUrl.replace(
+            "/upload/",
+            "/upload/w_1200,h_auto,c_scale,f_auto,q_auto/"
+          )
+        : postData.posterImageUrl;
 
+      postData.posterImageUrl = optimizedPosterUrl;
       setPost(postData);
       setRelatedPosts(relatedData);
     } catch (err) {
