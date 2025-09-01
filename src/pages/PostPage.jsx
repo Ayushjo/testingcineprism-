@@ -687,7 +687,7 @@ export default function PostPage() {
                     </div>
                   </button>
                   <button
-                    onClick={()=>{
+                    onClick={() => {
                       handleShareClick();
                       toast.success("Link copied to clipboard!");
                     }}
@@ -697,10 +697,7 @@ export default function PostPage() {
                       <Share className="w-6 h-6" />
                     </div>
                     <div className="flex flex-col items-start">
-                      <span className="font-bold text-lg">
-                        {post.commentCount}
-                      </span>
-                      <span className="text-sm text-slate-500">Share</span>
+                      <span className="font-bold text-lg">Share</span>
                     </div>
                   </button>
                 </div>
