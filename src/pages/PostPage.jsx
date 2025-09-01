@@ -688,6 +688,7 @@ export default function PostPage() {
                     </div>
                   </button>
                   <ShareButton
+                    className="flex items-center gap-3 text-slate-400 hover:text-emerald-400 transition-all duration-300 group pr-2"
                     url={window.location.href}
                     title={post.title}
                     description={`A review of ${post.title} (${post.year}) directed by ${post.directedBy}`}
