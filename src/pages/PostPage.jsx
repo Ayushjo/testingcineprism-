@@ -542,7 +542,6 @@ export default function PostPage() {
   if (postError || !post) {
     return (
       <div className="min-h-screen bg-slate-950 text-white pt-20 flex items-center justify-center">
-        {generateMetaTags()}
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-400 mb-2">Error</h2>
           <p className="text-slate-400">{postError || "Post not found"}</p>
@@ -600,6 +599,7 @@ export default function PostPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white pt-20">
+      {generateMetaTags()}
       {/* Ambient Background */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
