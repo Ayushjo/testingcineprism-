@@ -16,6 +16,7 @@ import {
   MoreHorizontal,
   X,
   Reply,
+  Share,
 } from "lucide-react";
 import {
   usePost,
@@ -27,6 +28,7 @@ import {
   getAvatarColor,
 } from "../utils/api.js";
 import { useAuth } from "@/context/AuthContext.jsx";
+import toast from "react-hot-toast";
 
 // Enhanced Comment component with unlimited nesting support
 const Comment = ({
@@ -418,6 +420,10 @@ export default function PostPage() {
     }
   };
 
+  const handleShareClick = () => {
+    navigator.clipboard.writeText(window.location.href);
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     checkInitialLikeStatus();
@@ -678,6 +684,23 @@ export default function PostPage() {
                       <span className="text-sm text-slate-500">
                         {post.commentCount === 1 ? "Comment" : "Comments"}
                       </span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={()=>{
+                      handleShareClick();
+                      toast.success("Link copied to clipboard!");
+                    }}
+                    className="flex items-center gap-3 text-slate-400 hover:text-emerald-400 transition-all duration-300 group"
+                  >
+                    <div className="p-2 rounded-xl bg-white/5 group-hover:bg-emerald-500/10 transition-colors duration-300">
+                      <Share className="w-6 h-6" />
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <span className="font-bold text-lg">
+                        {post.commentCount}
+                      </span>
+                      <span className="text-sm text-slate-500">Share</span>
                     </div>
                   </button>
                 </div>
