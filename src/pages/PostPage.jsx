@@ -29,6 +29,7 @@ import {
 } from "../utils/api.js";
 import { useAuth } from "@/context/AuthContext.jsx";
 import toast from "react-hot-toast";
+import { ShareButton } from "@/components/ShareComponent.jsx";
 
 // Enhanced Comment component with unlimited nesting support
 const Comment = ({
@@ -686,20 +687,11 @@ export default function PostPage() {
                       </span>
                     </div>
                   </button>
-                  <button
-                    onClick={() => {
-                      handleShareClick();
-                      toast.success("Link copied to clipboard!");
-                    }}
-                    className="flex items-center gap-3 text-slate-400 hover:text-emerald-400 transition-all duration-300 group"
-                  >
-                    <div className="p-2 rounded-xl bg-white/5 group-hover:bg-emerald-500/10 transition-colors duration-300">
-                      <Share className="w-6 h-6" />
-                    </div>
-                    <div className="flex flex-col items-start">
-                      <span className="font-bold text-lg">Share</span>
-                    </div>
-                  </button>
+                  <ShareButton
+                    url={window.location.href}
+                    title={post.title}
+                    description={`A review of ${post.title} (${post.year}) directed by ${post.directedBy}`}
+                  />
                 </div>
 
                 {/* Review Text */}
