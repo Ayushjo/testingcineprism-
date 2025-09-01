@@ -272,16 +272,6 @@ export const usePost = (postId) => {
         postApi.fetchPost(postId),
         postApi.fetchRelatedPosts(postId),
       ]);
-      const optimizedPosterUrl = postData.posterImageUrl?.includes(
-        "cloudinary.com"
-      )
-        ? postData.posterImageUrl.replace(
-            "/upload/",
-            "/upload/w_1200,h_auto,c_scale,f_auto,q_auto/"
-          )
-        : postData.posterImageUrl;
-
-      postData.posterImageUrl = optimizedPosterUrl;
       setPost(postData);
       setRelatedPosts(relatedData);
     } catch (err) {
