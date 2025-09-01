@@ -5,10 +5,23 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
 
-createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
-  </BrowserRouter>
-);
+const rootElement = document.getElementById("root");
+
+// Handle hydration for react-snap
+if (rootElement.hasChildNodes()) {
+  createRoot(rootElement).render(
+    <BrowserRouter>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </BrowserRouter>
+  );
+} else {
+  createRoot(rootElement).render(
+    <BrowserRouter>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}

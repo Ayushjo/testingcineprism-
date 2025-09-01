@@ -6,8 +6,24 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "react-snap",
     "lint": "eslint .",
     "preview": "vite preview"
+  },
+  "reactSnap": {
+    "inlineCss": true,
+    "minifyHtml": true,
+    "skipThirdPartyRequests": true,
+    "cacheAjaxRequests": false,
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ],
+    "include": [
+      "/",
+      "/post/*"
+    ],
+    "userAgent": "ReactSnap"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
@@ -52,6 +68,7 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
     "postcss": "^8.5.4",
+    "react-snap": "^1.23.0",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.9.2",
     "vite": "^6.3.5"

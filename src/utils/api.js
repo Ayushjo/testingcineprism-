@@ -258,6 +258,15 @@ export const usePost = (postId) => {
   const [error, setError] = useState(null);
 
   const fetchData = useCallback(async () => {
+    // Skip API calls during react-snap pre-rendering
+    if (
+      typeof window !== "undefined" &&
+      window.navigator.userAgent === "ReactSnap"
+    ) {
+      setLoading(false);
+      return;
+    }
+
     if (!postId) {
       setLoading(false);
       setError("No post ID provided");
