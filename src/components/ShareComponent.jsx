@@ -201,22 +201,22 @@ const SharePopup = ({ isOpen, onClose, url, title, description }) => {
 // Enhanced Share Button Component
 export const ShareButton = ({ url, title, description }) => {
   const [showSharePopup, setShowSharePopup] = useState(false);
-
   const handleShareClick = () => {
     setShowSharePopup(true);
   };
-
   return (
     <>
       <button
         onClick={handleShareClick}
-        className="flex items-center gap-3 text-slate-400 hover:text-emerald-400 transition-all duration-300 group"
+        className="flex items-center gap-2 sm:gap-3 text-slate-400 hover:text-emerald-400 transition-all duration-300 group"
       >
         <div className="p-2 rounded-xl bg-white/5 group-hover:bg-emerald-500/10 transition-colors duration-300">
-          <Share className="w-6 h-6" />
+          <Share className="w-5 h-5 sm:w-6 sm:h-6" />
         </div>
         <div className="flex flex-col items-start">
-          <span className="font-bold text-lg">Share</span>
+          <span className="font-bold text-base sm:text-lg">Share</span>
+          {/* Hide secondary text on mobile to save space */}
+          <span className="text-xs text-slate-500 hidden sm:inline">Post</span>
         </div>
       </button>
 
