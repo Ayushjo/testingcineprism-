@@ -10,66 +10,60 @@ import axios from "axios";
 
 const AuthContext = createContext();
 
-// Token management - use only localStorage
+// Token management
 const TOKEN_KEY = "cineprism_auth_token";
-
-// Your backend API URL
 const API_BASE_URL =
   "https://testingcineprismbackend-production.up.railway.app/api/v1";
-
-const getStoredToken = () => {
-  return localStorage.getItem(TOKEN_KEY);
-};
-
-const setStoredToken = (token) => {
-  localStorage.setItem(TOKEN_KEY, token);
-  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-};
-
-const clearStoredToken = () => {
-  localStorage.removeItem(TOKEN_KEY);
-  delete axios.defaults.headers.common["Authorization"];
-};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [initialized, setInitialized] = useState(false); // Track if auth has been initialized
+  const [token, setToken] = useState(localStorage.getItem(TOKEN_KEY));
 
-  // Fetch user data
-  const fetchUser = useCallback(async () => {
-    const token = getStoredToken();
-
-    if (!token) {
-      setUser(null);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      // Set token in axios headers
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-      // Use consistent API endpoint - choose one: either /user/me or /auth/me
-      const response = await axios.get(`${API_BASE_URL}/user/me`);
-      setUser(response.data.user);
-    } catch (error) {
-      console.log("Auth fetch error:", error);
-      // Clear invalid token
-      clearStoredToken();
-      setUser(null);
-    } finally {
-      setLoading(false);
-      setInitialized(true);
+  // Helper functions for token management
+  const updateToken = useCallback((newToken) => {
+    if (newToken) {
+      localStorage.setItem(TOKEN_KEY, newToken);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+      setToken(newToken);
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+      delete axios.defaults.headers.common["Authorization"];
+      setToken(null);
     }
   }, []);
 
-  // Initialize auth only once
+  // Fetch user data - only depends on token
+  const fetchUser = useCallback(
+    async (authToken) => {
+      if (!authToken) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // Set token in axios headers
+        axios.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
+
+        const response = await axios.get(`${API_BASE_URL}/user/me`);
+        setUser(response.data.user);
+      } catch (error) {
+        console.log("Auth fetch error:", error);
+        // Clear invalid token
+        updateToken(null);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [updateToken]
+  );
+
+  // Run auth check only when token changes
   useEffect(() => {
-    if (!initialized) {
-      fetchUser();
-    }
-  }, [fetchUser, initialized]);
+    fetchUser(token);
+  }, [token, fetchUser]);
 
   // Google OAuth login
   const loginWithGoogle = useCallback(() => {
@@ -84,24 +78,24 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
-      clearStoredToken();
+      updateToken(null);
       setUser(null);
     }
-  }, []);
+  }, [updateToken]);
 
   // Handle OAuth callback
   const handleAuthCallback = useCallback(
-    async (token) => {
-      if (token) {
-        setStoredToken(token);
+    async (newToken) => {
+      if (newToken) {
         setLoading(true);
-        await fetchUser();
+        updateToken(newToken);
+        // fetchUser will be called automatically via useEffect when token changes
       }
     },
-    [fetchUser]
+    [updateToken]
   );
 
-  // Memoize context value to prevent unnecessary re-renders
+  // Memoize context value
   const contextValue = useMemo(
     () => ({
       user,
@@ -110,9 +104,9 @@ export const AuthProvider = ({ children }) => {
       logout,
       loginWithGoogle,
       handleAuthCallback,
-      token: getStoredToken(),
+      token,
     }),
-    [user, loading, logout, loginWithGoogle, handleAuthCallback]
+    [user, loading, token, logout, loginWithGoogle, handleAuthCallback]
   );
 
   return (
