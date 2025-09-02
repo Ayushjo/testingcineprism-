@@ -10,7 +10,7 @@ export default function Navbar() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
 
-  const { user, logout, loading } = useAuth();
+  const { user, logout, initialized } = useAuth();
 
   // Memoized scroll handler
   const handleScroll = useCallback(() => {
@@ -66,27 +66,7 @@ export default function Navbar() {
     return links;
   }, [user]);
 
-  // Show loading state only on initial load
-  if (loading) {
-    return (
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            <div className="flex items-center gap-2 text-xl font-bold tracking-tight text-white">
-              <img
-                src={TheCineprismLogo}
-                alt="The Cineprism Logo"
-                className="h-8 w-8 object-contain rounded-full"
-              />
-              The Cinéprism
-            </div>
-            <div className="text-slate-400">Loading...</div>
-          </div>
-        </div>
-      </nav>
-    );
-  }
-
+  // Don't show loading - always render navbar immediately
   return (
     <motion.nav
       initial={{ y: -100 }}
@@ -119,7 +99,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link, index) => (
               <motion.div
-                key={`nav-${link.href}`} // Use href as key for better performance
+                key={`nav-${link.href}`}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -147,8 +127,8 @@ export default function Navbar() {
               </motion.div>
             ))}
 
-            {/* User Actions */}
-            {user && (
+            {/* User Actions - Only show if auth is initialized */}
+            {initialized && user && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -330,8 +310,8 @@ export default function Navbar() {
                 </motion.a>
               ))}
 
-              {/* Mobile User Section */}
-              {user && (
+              {/* Mobile User Section - Only show if auth is initialized */}
+              {initialized && user && (
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -396,7 +376,8 @@ export default function Navbar() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{
                   duration: 0.3,
-                  delay: (navLinks.length + (user ? 2 : 0)) * 0.1,
+                  delay:
+                    (navLinks.length + (initialized && user ? 2 : 0)) * 0.1,
                 }}
                 className="flex items-center gap-3 pt-4 mt-4 border-t border-white/10"
               >

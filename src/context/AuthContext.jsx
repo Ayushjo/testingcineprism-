@@ -5,6 +5,7 @@ import {
   useContext,
   useMemo,
   useCallback,
+  useRef,
 } from "react";
 import axios from "axios";
 
@@ -19,9 +20,14 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem(TOKEN_KEY));
+  const [initialized, setInitialized] = useState(false);
 
-  // Helper functions for token management
-  const updateToken = useCallback((newToken) => {
+  // Use ref to prevent unnecessary re-renders
+  const userRef = useRef(user);
+  userRef.current = user;
+
+  // Stable token management functions (no dependencies)
+  const updateTokenStable = useCallback((newToken) => {
     if (newToken) {
       localStorage.setItem(TOKEN_KEY, newToken);
       axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
@@ -31,46 +37,56 @@ export const AuthProvider = ({ children }) => {
       delete axios.defaults.headers.common["Authorization"];
       setToken(null);
     }
-  }, []);
+  }, []); // No dependencies - stable reference
 
-  // Fetch user data - only depends on token
-  const fetchUser = useCallback(
+  // Stable fetch user function
+  const fetchUserStable = useCallback(
     async (authToken) => {
       if (!authToken) {
         setUser(null);
+        setLoading(false);
+        setInitialized(true);
+        return;
+      }
+
+      // Don't fetch if we already have a user and token hasn't changed
+      if (userRef.current && initialized) {
         setLoading(false);
         return;
       }
 
       try {
-        // Set token in axios headers
         axios.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
-
         const response = await axios.get(`${API_BASE_URL}/user/me`);
         setUser(response.data.user);
       } catch (error) {
         console.log("Auth fetch error:", error);
-        // Clear invalid token
-        updateToken(null);
-        setUser(null);
+        // Only clear token if it's actually invalid (not network errors)
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          updateTokenStable(null);
+          setUser(null);
+        }
       } finally {
         setLoading(false);
+        setInitialized(true);
       }
     },
-    [updateToken]
-  );
+    [initialized, updateTokenStable]
+  ); // Minimal dependencies
 
-  // Run auth check only when token changes
+  // Initial auth check - only run once
   useEffect(() => {
-    fetchUser(token);
-  }, [token, fetchUser]);
+    if (!initialized) {
+      fetchUserStable(token);
+    }
+  }, [token, fetchUserStable, initialized]);
 
-  // Google OAuth login
+  // Google OAuth login - stable reference
   const loginWithGoogle = useCallback(() => {
     window.location.href = `${API_BASE_URL}/auth/google`;
   }, []);
 
-  // Logout function
+  // Logout function - stable reference
   const logout = useCallback(async () => {
     try {
       // Optional: Call backend logout endpoint if you have one
@@ -78,35 +94,45 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
-      updateToken(null);
+      updateTokenStable(null);
       setUser(null);
+      setInitialized(false); // Reset initialization for next login
     }
-  }, [updateToken]);
+  }, [updateTokenStable]);
 
-  // Handle OAuth callback
+  // Handle OAuth callback - stable reference
   const handleAuthCallback = useCallback(
     async (newToken) => {
       if (newToken) {
         setLoading(true);
-        updateToken(newToken);
-        // fetchUser will be called automatically via useEffect when token changes
+        setInitialized(false); // Reset to force user fetch
+        updateTokenStable(newToken);
       }
     },
-    [updateToken]
+    [updateTokenStable]
   );
 
-  // Memoize context value
+  // Memoize context value with stable references
   const contextValue = useMemo(
     () => ({
       user,
       setUser,
-      loading,
+      loading: loading && !initialized, // Only show loading on first initialization
       logout,
       loginWithGoogle,
       handleAuthCallback,
       token,
+      initialized, // Expose initialization state
     }),
-    [user, loading, token, logout, loginWithGoogle, handleAuthCallback]
+    [
+      user,
+      loading,
+      initialized,
+      token,
+      logout,
+      loginWithGoogle,
+      handleAuthCallback,
+    ]
   );
 
   return (
