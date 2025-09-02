@@ -1,10 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Calendar, Tag, Search, Filter, ArrowRight } from "lucide-react";
+import {
+  Calendar,
+  Tag,
+  Search,
+  Filter,
+  ArrowRight,
+  ChevronDown,
+} from "lucide-react";
 import axios from "axios";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Helper function for getting score color (shared across components)
 const getScoreColor = (score) => {
@@ -444,7 +459,7 @@ const ReviewCardsWithFocus = ({ filteredReviews }) => {
 
 export default function ReviewPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedGenre, setSelectedGenre] = useState("All");
+  const [selectedGenre, setSelectedGenre] = useState("all");
   const [sortBy, setSortBy] = useState("rating");
   const [posts, setPosts] = useState([]); // Initialize as empty array
   const [isLoading, setIsLoading] = useState(true); // Set to true for API loading
@@ -453,6 +468,34 @@ export default function ReviewPage() {
   const token =
     localStorage.getItem("cineprism_auth_token") ||
     sessionStorage.getItem("cineprism_auth_token");
+
+  // Predefined genres list matching TopPicksPage
+  const genres = [
+    { key: "all", label: "All Genres" },
+    { key: "action", label: "Action" },
+    { key: "adventure", label: "Adventure" },
+    { key: "biography", label: "Biography" },
+    { key: "comedy", label: "Comedy" },
+    { key: "crime", label: "Crime" },
+    { key: "drama", label: "Drama" },
+    { key: "fantasy", label: "Fantasy" },
+    { key: "history", label: "History" },
+    { key: "horror", label: "Horror" },
+    { key: "music", label: "Music" },
+    { key: "mystery", label: "Mystery" },
+    { key: "romance", label: "Romance" },
+    { key: "scifi", label: "Sci-Fi" },
+    { key: "thriller", label: "Thriller" },
+    { key: "war", label: "War" },
+    { key: "western", label: "Western" },
+  ];
+
+  // Sort options
+  const sortOptions = [
+    { key: "rating", label: "Highest Rated" },
+    { key: "year", label: "Newest First" },
+    { key: "title", label: "A-Z" },
+  ];
 
   // API call to fetch posts
   useEffect(() => {
@@ -487,47 +530,93 @@ export default function ReviewPage() {
   }, [token]);
 
   // Convert API data to match the review format
-  const reviews = posts.map((post) => ({
-    title: post.title,
-    year: post.year,
-    genre: post.genres ? post.genres.join(", ") : "Unknown",
-    rating: post.ratingCategories
-      ? (
-          post.ratingCategories.reduce((sum, c) => sum + c.score, 0) /
-          post.ratingCategories.length /
-          10
-        ).toFixed(1)
-      : 7.0,
-    image: post.reviewPosterImageUrl || "/placeholder-poster.jpg",
-    review: post.content,
-    id: post.id,
-    ratingCriteria: post.ratingCategories
-      ? post.ratingCategories.map((category) => ({
-          name: category.category,
-          score: category.score,
-        }))
-      : [],
-  }));
+  const reviews = useMemo(() => {
+    return posts.map((post) => {
+      // Calculate average rating from ratingCategories
+      const averageRating =
+        post.ratingCategories && post.ratingCategories.length > 0
+          ? post.ratingCategories.reduce((sum, c) => sum + c.score, 0) /
+            post.ratingCategories.length
+          : 0;
 
-  // Get unique genres
-  const genres = [
-    "All",
-    ...new Set(reviews.flatMap((review) => review.genre.split(", "))),
-  ];
+      return {
+        title: post.title,
+        year: post.year,
+        genre: post.genres ? post.genres.join(", ") : "Unknown",
+        rating: averageRating,
+        image: post.reviewPosterImageUrl || "/placeholder-poster.jpg",
+        review: post.content,
+        id: post.id,
+        ratingCriteria: post.ratingCategories
+          ? post.ratingCategories.map((category) => ({
+              name: category.category,
+              score: category.score,
+            }))
+          : [],
+      };
+    });
+  }, [posts]);
 
   // Filter and sort reviews
-  const filteredReviews = reviews
-    .filter(
-      (review) =>
-        review.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (selectedGenre === "All" || review.genre.includes(selectedGenre))
-    )
-    .sort((a, b) => {
-      if (sortBy === "rating") return b.rating - a.rating;
-      if (sortBy === "year") return b.year - a.year;
-      if (sortBy === "title") return a.title.localeCompare(b.title);
-      return 0;
+  const filteredReviews = useMemo(() => {
+    let filtered = reviews;
+
+    // Filter by search term
+    if (searchTerm.trim()) {
+      const query = searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(
+        (review) =>
+          review.title.toLowerCase().includes(query) ||
+          review.genre.toLowerCase().includes(query) ||
+          review.year?.toString().includes(query)
+      );
+    }
+
+    // Filter by genre
+    if (selectedGenre !== "all") {
+      filtered = filtered.filter((review) => {
+        const reviewGenres = review.genre.toLowerCase().split(", ");
+        const selectedGenreLabel = genres
+          .find((g) => g.key === selectedGenre)
+          ?.label.toLowerCase();
+        return reviewGenres.some(
+          (genre) =>
+            genre === selectedGenreLabel ||
+            (selectedGenreLabel === "sci-fi" && genre === "science fiction") ||
+            (selectedGenreLabel === "biography" && genre === "biographical")
+        );
+      });
+    }
+
+    // Sort reviews
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "rating":
+          return b.rating - a.rating; // Highest rated first
+        case "year":
+          return b.year - a.year; // Newest first
+        case "title":
+          return a.title.localeCompare(b.title); // A-Z
+        default:
+          return 0;
+      }
     });
+
+    return filtered;
+  }, [reviews, searchTerm, selectedGenre, sortBy, genres]);
+
+  const handleGenreSelect = (genreKey) => {
+    setSelectedGenre(genreKey);
+  };
+
+  const handleSortSelect = (sortKey) => {
+    setSortBy(sortKey);
+  };
+
+  const activeGenreLabel =
+    genres.find((g) => g.key === selectedGenre)?.label || "All Genres";
+  const activeSortLabel =
+    sortOptions.find((s) => s.key === sortBy)?.label || "Highest Rated";
 
   // Loading state
   if (isLoading) {
@@ -591,67 +680,138 @@ export default function ReviewPage() {
             </p>
           </motion.div>
 
-          {/* Search and Filter Controls */}
+          {/* Search and Filter Controls with ShadCN Dropdowns */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex flex-col md:flex-row gap-4 mb-12"
+            className="flex flex-col lg:flex-row gap-4 max-w-6xl mx-auto"
           >
-            {/* Search Bar */}
-            <div className="flex-1 relative">
+            {/* Wider Search Bar */}
+            <div className="flex-1 max-w-4xl mx-auto relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="Search reviews..."
+                placeholder="Search reviews by title, genre, or year..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-white/10 transition-all duration-300"
+                className="w-full pl-12 pr-4 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-white/10 transition-all duration-300"
               />
             </div>
 
-            {/* Genre Filter */}
-            <div className="relative">
-              <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-              <select
-                value={selectedGenre}
-                onChange={(e) => setSelectedGenre(e.target.value)}
-                className="pl-12 pr-8 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl text-white focus:outline-none focus:border-emerald-400/50 focus:bg-white/10 transition-all duration-300 appearance-none cursor-pointer"
-              >
-                {genres.map((genre) => (
-                  <option key={genre} value={genre} className="bg-slate-900">
-                    {genre}
-                  </option>
-                ))}
-              </select>
+            {/* Genre Filter Dropdown */}
+            <div className="flex justify-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center justify-between gap-3 px-6 py-4 min-w-[220px] rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-emerald-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-4 w-4" />
+                    <span className="font-medium">{activeGenreLabel}</span>
+                  </div>
+                  <ChevronDown className="h-4 w-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-80 max-h-80 overflow-y-auto bg-slate-900/98 border-white/10 backdrop-blur-xl">
+                  <DropdownMenuLabel className="text-slate-300 font-semibold px-4 py-2">
+                    Filter by Genre
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  {genres.map((genre) => (
+                    <DropdownMenuItem
+                      key={genre.key}
+                      onClick={() => handleGenreSelect(genre.key)}
+                      className={`cursor-pointer transition-colors px-4 py-3 ${
+                        selectedGenre === genre.key
+                          ? "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 focus:bg-emerald-500/30"
+                          : "text-slate-300 hover:text-emerald-200 hover:bg-emerald-500/10 focus:bg-emerald-500/10 focus:text-emerald-200"
+                      }`}
+                    >
+                      {genre.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
-            {/* Sort Options */}
-            <div className="relative">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-6 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl text-white focus:outline-none focus:border-emerald-400/50 focus:bg-white/10 transition-all duration-300 appearance-none cursor-pointer"
-              >
-                <option value="rating" className="bg-slate-900">
-                  Highest Rated
-                </option>
-                <option value="year" className="bg-slate-900">
-                  Newest First
-                </option>
-                <option value="title" className="bg-slate-900">
-                  A-Z
-                </option>
-              </select>
+            {/* Sort Options Dropdown */}
+            <div className="flex justify-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center justify-between gap-3 px-6 py-4 min-w-[180px] rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-emerald-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
+                  <span className="font-medium">{activeSortLabel}</span>
+                  <ChevronDown className="h-4 w-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 bg-slate-900/98 border-white/10 backdrop-blur-xl">
+                  <DropdownMenuLabel className="text-slate-300 font-semibold px-4 py-2">
+                    Sort By
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  {sortOptions.map((option) => (
+                    <DropdownMenuItem
+                      key={option.key}
+                      onClick={() => handleSortSelect(option.key)}
+                      className={`cursor-pointer transition-colors px-4 py-3 ${
+                        sortBy === option.key
+                          ? "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 focus:bg-emerald-500/30"
+                          : "text-slate-300 hover:text-emerald-200 hover:bg-emerald-500/10 focus:bg-emerald-500/10 focus:text-emerald-200"
+                      }`}
+                    >
+                      {option.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </motion.div>
+
+          {/* Results Summary */}
+          {(searchTerm || selectedGenre !== "all") && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-6 text-center"
+            >
+              <p className="text-slate-400 text-sm">
+                {filteredReviews.length > 0
+                  ? `Found ${filteredReviews.length} review${
+                      filteredReviews.length !== 1 ? "s" : ""
+                    }`
+                  : "No reviews found"}
+                {searchTerm && ` matching "${searchTerm}"`}
+                {selectedGenre !== "all" && ` in ${activeGenreLabel}`}
+              </p>
+            </motion.div>
+          )}
         </div>
       </section>
 
       {/* Reviews Grid */}
       <section className="pb-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ReviewCardsWithFocus filteredReviews={filteredReviews} />
+          {filteredReviews.length > 0 ? (
+            <ReviewCardsWithFocus filteredReviews={filteredReviews} />
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center py-16"
+            >
+              <div className="text-slate-400 text-lg">
+                {searchTerm || selectedGenre !== "all"
+                  ? "No reviews found matching your criteria."
+                  : "No reviews available."}
+              </div>
+              {(searchTerm || selectedGenre !== "all") && (
+                <button
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSelectedGenre("all");
+                  }}
+                  className="mt-4 text-emerald-400 hover:text-emerald-300 transition-colors duration-200 text-sm underline"
+                >
+                  Clear filters and show all reviews
+                </button>
+              )}
+            </motion.div>
+          )}
         </div>
       </section>
     </div>
