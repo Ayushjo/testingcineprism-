@@ -1,4 +1,4 @@
-// App.jsx - Updated for Google OAuth only
+// App.jsx - Updated with ScrollToTop
 import { ParallaxProvider } from "react-scroll-parallax";
 import Homepage from "./pages/Home";
 import Navbar from "./components/Navbar";
@@ -14,7 +14,6 @@ import HorrorPage from "./components/HorroPage";
 import AnimationPage from "./components/AnimationPage";
 import TrendingPage from "./pages/TrendingPage";
 import LoginPage from "./pages/LoginPage";
-// REMOVE: import SignupPage from "./pages/SignUpPage";
 import UnpopularOpinionsPage from "./pages/UnpopularOpinionsPage";
 import Merchandise from "./pages/Merchandise";
 import MeteorCursor from "./components/MeteorCursor";
@@ -35,13 +34,14 @@ import CinemaSchoolPage from "./pages/CinemaSchoolPage";
 import ArticlePageLayout from "./components/ArticlePageLayout";
 import AIInsightsArticlePage from "./pages/AIInsightsArticlePage";
 import NewsArticlePage from "./pages/NewsArticlePage";
-
-// ADD: Import the AuthCallback component
 import AuthCallback from "./components/AuthCallback";
 import EditPostPage from "./pages/EditPostPage";
 import Rule180Page from "./pages/OneEightyDegreeRulePage";
 import TrendingRankManager from "./pages/TrendingRankManager";
 import RuleOfThirdsPage from "./pages/RuleOfThirdsPage";
+
+// ADD: Import ScrollToTop component
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   const location = useLocation();
@@ -52,16 +52,16 @@ const App = () => {
       <ParallaxProvider>
         <Toaster />
         <MeteorCursor />
+        {/* ADD: ScrollToTop component */}
+        <ScrollToTop smooth={true} delay={100} />
         <Navbar />
         <Routes>
           <Route path="/" element={<Homepage />} />
 
           <Route element={<RedirectIfAuth />}>
             <Route path="/login" element={<LoginPage />} />
-            {/* REMOVE: <Route path="/signup" element={<SignupPage />} /> */}
           </Route>
 
-          {/* ADD: OAuth callback route */}
           <Route path="/auth/callback" element={<AuthCallback />} />
 
           <Route element={<RedirectIfUser />}>
@@ -91,7 +91,6 @@ const App = () => {
             <Route path="/merchandise" element={<Merchandise />} />
           </Route>
 
-          {/* Protected Admin Routes */}
           <Route element={<AdminProtectedRoute />}>
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<CreatePostPage />} />
