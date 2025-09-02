@@ -151,8 +151,16 @@ const TopPicksPage = () => {
     return filtered;
   }, [activeGenre, searchQuery, allMovies]);
 
-  const handleGenreSelect = (genreKey) => {
+  // Fixed genre selection handler
+  const handleGenreSelect = (genreKey, event) => {
     console.log("handleGenreSelect called with:", genreKey);
+
+    // Prevent event bubbling
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
     setActiveGenre(genreKey);
     setShowGenreDropdown(false);
     setIsLoading(false);
@@ -166,7 +174,9 @@ const TopPicksPage = () => {
     setSearchQuery("");
   };
 
-  const toggleDropdown = () => {
+  const toggleDropdown = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
     setShowGenreDropdown(!showGenreDropdown);
   };
 
@@ -261,7 +271,8 @@ const TopPicksPage = () => {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={toggleDropdown}
-                className="w-full sm:w-auto flex items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300 min-w-[200px]"
+                type="button"
+                className="w-full sm:w-auto flex items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300 min-w-[200px] focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               >
                 <span className="font-medium text-sm sm:text-base truncate">
                   {activeGenreLabel}
@@ -278,22 +289,29 @@ const TopPicksPage = () => {
                 />
               </button>
 
-              {/* Dropdown Menu */}
+              {/* Dropdown Menu - Fixed z-index and event handling */}
               {showGenreDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800/98 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-50 max-h-80 overflow-y-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute top-full left-0 right-0 mt-2 bg-slate-800/98 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-[9999] max-h-80 overflow-y-auto"
+                >
                   <div className="py-1">
                     {genres.map((genre) => (
                       <button
                         key={genre.key}
                         type="button"
-                        onClick={() => handleGenreSelect(genre.key)}
-                        className={`w-full text-left px-4 py-3 hover:bg-white/10 transition-colors duration-200 text-sm sm:text-base ${
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={(e) => handleGenreSelect(genre.key, e)}
+                        className={`w-full text-left px-4 py-3 hover:bg-white/10 transition-all duration-200 text-sm sm:text-base focus:outline-none focus:bg-white/10 cursor-pointer select-none ${
                           activeGenre === genre.key
                             ? "bg-emerald-500/20 text-emerald-300"
                             : "text-slate-300 hover:text-white"
                         }`}
                       >
-                        <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center justify-between w-full pointer-events-none">
                           <span>{genre.label}</span>
                           {movieCounts[genre.key] !== undefined && (
                             <span className="text-xs opacity-75 ml-2">
@@ -304,7 +322,7 @@ const TopPicksPage = () => {
                       </button>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               )}
             </div>
           </motion.div>
