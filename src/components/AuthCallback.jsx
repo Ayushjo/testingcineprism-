@@ -1,30 +1,46 @@
+// AuthCallback.jsx
 import { useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import ThemedLoader from "./ThemeLoader";
 
-export default function AuthCallback() {
+const AuthCallback = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { handleAuthCallback } = useAuth();
 
   useEffect(() => {
-    const token = searchParams.get("token");
+    const handleCallback = async () => {
+      try {
+        // Get token from URL params
+        const token = searchParams.get("token");
+        const error = searchParams.get("error");
 
-    if (token) {
-      handleAuthCallback(token);
-      // Clear the token from URL for security
-      navigate("/", { replace: true });
-    } else {
-      navigate("/login", { replace: true });
-    }
-  }, [searchParams, handleAuthCallback, navigate]);
+        if (error) {
+          console.error("OAuth error:", error);
+          navigate("/login?error=auth_failed", { replace: true });
+          return;
+        }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950">
-      <div className="text-white text-center">
-        <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4" />
-        <p>Completing sign in...</p>
-      </div>
-    </div>
-  );
-}
+        if (token) {
+          // Handle the auth callback with the token
+          await handleAuthCallback(token);
+          // Redirect to home page after successful authentication
+          navigate("/", { replace: true });
+        } else {
+          console.error("No token received from OAuth callback");
+          navigate("/login?error=no_token", { replace: true });
+        }
+      } catch (error) {
+        console.error("Auth callback error:", error);
+        navigate("/login?error=callback_failed", { replace: true });
+      }
+    };
+
+    handleCallback();
+  }, [searchParams, navigate, handleAuthCallback]);
+
+  return <ThemedLoader />;
+};
+
+export default AuthCallback;

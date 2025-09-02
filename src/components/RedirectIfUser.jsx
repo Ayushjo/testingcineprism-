@@ -4,6 +4,7 @@ import ThemedLoader from "./ThemeLoader";
 
 const RedirectIfUser = () => {
   const { user, loading } = useAuth();
+
   if (loading) {
     return <ThemedLoader />;
   }
@@ -11,6 +12,7 @@ const RedirectIfUser = () => {
   if (user) {
     return <Outlet />;
   }
+
   return <Navigate to="/login" replace />;
 };
 

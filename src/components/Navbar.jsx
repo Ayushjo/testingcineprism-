@@ -1,68 +1,19 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Twitter, LogOut, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import TheCineprismLogo from "../assets/thecineprismlogo.jpg";
-import axios from "axios";
-
-const API_BASE_URL =
-  "https://testingcineprismbackend-production.up.railway.app/api/v1";
-const TOKEN_KEY = "cineprism_auth_token";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
 
-  // Initialize user data from localStorage - runs only once
-  useEffect(() => {
-    const storedToken = localStorage.getItem(TOKEN_KEY);
-    if (storedToken) {
-      setToken(storedToken);
-      // Fetch user data
-      axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
-      axios
-        .get(`${API_BASE_URL}/user/me`)
-        .then((response) => {
-          setUser(response.data.user);
-        })
-        .catch((error) => {
-          console.log("Auth fetch error:", error);
-          // Clear invalid token
-          localStorage.removeItem(TOKEN_KEY);
-          delete axios.defaults.headers.common["Authorization"];
-          setToken(null);
-        });
-    }
-  }, []); // Empty dependency array - runs only once
-
-  // Listen for logout events from other parts of the app
-  useEffect(() => {
-    const handleLogoutEvent = () => {
-      setUser(null);
-      setToken(null);
-    };
-
-    // Listen for custom logout event
-    window.addEventListener("userLoggedOut", handleLogoutEvent);
-
-    // Listen for storage changes (if user logs out in another tab)
-    const handleStorageChange = (e) => {
-      if (e.key === TOKEN_KEY && !e.newValue) {
-        setUser(null);
-        setToken(null);
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("userLoggedOut", handleLogoutEvent);
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
+  // Use AuthContext instead of managing user state separately
+  const { user, logout: authLogout, loading } = useAuth();
+  const navigate = useNavigate();
 
   const handleScroll = useCallback(() => {
     setIsScrolled(window.scrollY > 20);
@@ -87,23 +38,18 @@ export default function Navbar() {
   const handleLogout = useCallback(async () => {
     setIsLoggingOut(true);
     try {
-      // Clear token and user data
-      localStorage.removeItem(TOKEN_KEY);
-      delete axios.defaults.headers.common["Authorization"];
-      setUser(null);
-      setToken(null);
-
-      // Dispatch custom event so other components know about logout
-      window.dispatchEvent(new CustomEvent("userLoggedOut"));
-
-      // Optional: Call backend logout endpoint
-      // await axios.post(`${API_BASE_URL}/auth/logout`);
+      await authLogout();
+      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
     } finally {
       setIsLoggingOut(false);
       setIsMobileMenuOpen(false);
     }
+  }, [authLogout, navigate]);
+
+  const handleLinkClick = useCallback(() => {
+    setIsMobileMenuOpen(false);
   }, []);
 
   // Memoize navigation links
@@ -126,6 +72,35 @@ export default function Navbar() {
     return links;
   }, [user]);
 
+  // Show loading state briefly if auth is still loading
+  if (loading) {
+    return (
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-xl border-b border-white/5"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            <Link
+              to="/"
+              className="flex items-center gap-2 text-xl font-bold tracking-tight text-white"
+            >
+              <img
+                src={TheCineprismLogo}
+                alt="The Cineprism Logo"
+                className="h-8 w-8 object-contain rounded-full"
+              />
+              The Cinéprism
+            </Link>
+            <div className="animate-pulse h-4 w-4 bg-white/20 rounded"></div>
+          </div>
+        </div>
+      </motion.nav>
+    );
+  }
+
   return (
     <motion.nav
       initial={{ y: -100 }}
@@ -140,19 +115,22 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <motion.a
-            href="/"
+          <motion.div
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
-            className="flex items-center gap-2 text-xl font-bold tracking-tight text-white transition-all duration-300 hover:text-emerald-400"
           >
-            <img
-              src={TheCineprismLogo}
-              alt="The Cineprism Logo"
-              className="h-8 w-8 object-contain rounded-full"
-            />
-            The Cinéprism
-          </motion.a>
+            <Link
+              to="/"
+              className="flex items-center gap-2 text-xl font-bold tracking-tight text-white transition-all duration-300 hover:text-emerald-400"
+            >
+              <img
+                src={TheCineprismLogo}
+                alt="The Cineprism Logo"
+                className="h-8 w-8 object-contain rounded-full"
+              />
+              The Cinéprism
+            </Link>
+          </motion.div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
@@ -166,12 +144,12 @@ export default function Navbar() {
                 onMouseEnter={() => setHoveredItem(`nav-${index}`)}
                 onMouseLeave={() => setHoveredItem(null)}
               >
-                <motion.a
-                  href={link.href}
+                <Link
+                  to={link.href}
                   className="relative px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-all duration-300 rounded-2xl block z-10"
                 >
                   <span className="relative z-10">{link.label}</span>
-                </motion.a>
+                </Link>
 
                 <motion.div
                   className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10"
@@ -354,18 +332,21 @@ export default function Navbar() {
           >
             <div className="px-4 py-6 space-y-2">
               {navLinks.map((link, index) => (
-                <motion.a
+                <motion.div
                   key={`mobile-${link.href}`}
-                  href={link.href}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 rounded-2xl transition-all duration-200 font-medium border border-transparent hover:border-white/10"
                 >
-                  {link.label}
-                </motion.a>
+                  <Link
+                    to={link.href}
+                    onClick={handleLinkClick}
+                    className="block px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 rounded-2xl transition-all duration-200 font-medium border border-transparent hover:border-white/10"
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
               ))}
 
               {/* Mobile User Section */}

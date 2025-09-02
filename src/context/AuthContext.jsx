@@ -5,7 +5,6 @@ import {
   useContext,
   useMemo,
   useCallback,
-  useRef,
 } from "react";
 import axios from "axios";
 
@@ -22,12 +21,8 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem(TOKEN_KEY));
   const [initialized, setInitialized] = useState(false);
 
-  // Use ref to prevent unnecessary re-renders
-  const userRef = useRef(user);
-  userRef.current = user;
-
-  // Stable token management functions (no dependencies)
-  const updateTokenStable = useCallback((newToken) => {
+  // Stable token management functions
+  const updateToken = useCallback((newToken) => {
     if (newToken) {
       localStorage.setItem(TOKEN_KEY, newToken);
       axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
@@ -37,10 +32,10 @@ export const AuthProvider = ({ children }) => {
       delete axios.defaults.headers.common["Authorization"];
       setToken(null);
     }
-  }, []); // No dependencies - stable reference
+  }, []);
 
-  // Stable fetch user function
-  const fetchUserStable = useCallback(
+  // Fetch user function - only called when needed
+  const fetchUser = useCallback(
     async (authToken) => {
       if (!authToken) {
         setUser(null);
@@ -49,8 +44,8 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      // Don't fetch if we already have a user and token hasn't changed
-      if (userRef.current && initialized) {
+      // Prevent multiple calls if already initialized with valid user
+      if (initialized && user) {
         setLoading(false);
         return;
       }
@@ -61,9 +56,9 @@ export const AuthProvider = ({ children }) => {
         setUser(response.data.user);
       } catch (error) {
         console.log("Auth fetch error:", error);
-        // Only clear token if it's actually invalid (not network errors)
+        // Only clear token if it's actually invalid
         if (error.response?.status === 401 || error.response?.status === 403) {
-          updateTokenStable(null);
+          updateToken(null);
           setUser(null);
         }
       } finally {
@@ -71,22 +66,22 @@ export const AuthProvider = ({ children }) => {
         setInitialized(true);
       }
     },
-    [initialized, updateTokenStable]
-  ); // Minimal dependencies
+    [initialized, user, updateToken]
+  );
 
-  // Initial auth check - only run once
+  // Initial auth check - only run once on mount
   useEffect(() => {
     if (!initialized) {
-      fetchUserStable(token);
+      fetchUser(token);
     }
-  }, [token, fetchUserStable, initialized]);
+  }, []); // Empty dependency array ensures this runs only once
 
-  // Google OAuth login - stable reference
+  // Google OAuth login
   const loginWithGoogle = useCallback(() => {
     window.location.href = `${API_BASE_URL}/auth/google`;
   }, []);
 
-  // Logout function - stable reference
+  // Logout function
   const logout = useCallback(async () => {
     try {
       // Optional: Call backend logout endpoint if you have one
@@ -94,39 +89,37 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
-      updateTokenStable(null);
+      updateToken(null);
       setUser(null);
       setInitialized(false);
-
-      // Dispatch custom event so navbar knows about logout
-      window.dispatchEvent(new CustomEvent("userLoggedOut"));
     }
-  }, [updateTokenStable]);
+  }, [updateToken]);
 
-
-  // Handle OAuth callback - stable reference
+  // Handle OAuth callback
   const handleAuthCallback = useCallback(
     async (newToken) => {
       if (newToken) {
         setLoading(true);
-        setInitialized(false); // Reset to force user fetch
-        updateTokenStable(newToken);
+        setInitialized(false);
+        updateToken(newToken);
+        // Fetch user data immediately after setting token
+        await fetchUser(newToken);
       }
     },
-    [updateTokenStable]
+    [updateToken, fetchUser]
   );
 
-  // Memoize context value with stable references
+  // Memoize context value
   const contextValue = useMemo(
     () => ({
       user,
       setUser,
-      loading: loading && !initialized, // Only show loading on first initialization
+      loading,
       logout,
       loginWithGoogle,
       handleAuthCallback,
       token,
-      initialized, // Expose initialization state
+      initialized,
     }),
     [
       user,
