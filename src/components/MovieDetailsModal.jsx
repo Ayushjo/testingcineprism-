@@ -108,12 +108,6 @@ const MovieDetailsModal = ({ movie, onClose }) => {
               <span className="bg-emerald-500/20 text-emerald-300 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-500/30 backdrop-blur-sm">
                 #{movie.trending_rank || "N/A"}
               </span>
-              <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/20">
-                <Star className="w-3 h-3 text-amber-400 fill-current" />
-                <span className="text-white font-bold text-xs">
-                  {movie.vote_average}
-                </span>
-              </div>
             </div>
           </div>
 
