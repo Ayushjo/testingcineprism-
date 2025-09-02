@@ -96,9 +96,13 @@ export const AuthProvider = ({ children }) => {
     } finally {
       updateTokenStable(null);
       setUser(null);
-      setInitialized(false); // Reset initialization for next login
+      setInitialized(false);
+
+      // Dispatch custom event so navbar knows about logout
+      window.dispatchEvent(new CustomEvent("userLoggedOut"));
     }
   }, [updateTokenStable]);
+
 
   // Handle OAuth callback - stable reference
   const handleAuthCallback = useCallback(

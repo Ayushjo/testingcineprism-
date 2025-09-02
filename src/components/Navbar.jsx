@@ -2,22 +2,72 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Twitter, LogOut, User } from "lucide-react";
 import TheCineprismLogo from "../assets/thecineprismlogo.jpg";
-import { useAuth } from "../context/AuthContext";
+import axios from "axios";
+
+const API_BASE_URL =
+  "https://testingcineprismbackend-production.up.railway.app/api/v1";
+const TOKEN_KEY = "cineprism_auth_token";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
 
-  const { user, logout, initialized } = useAuth();
+  // Initialize user data from localStorage - runs only once
+  useEffect(() => {
+    const storedToken = localStorage.getItem(TOKEN_KEY);
+    if (storedToken) {
+      setToken(storedToken);
+      // Fetch user data
+      axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+      axios
+        .get(`${API_BASE_URL}/user/me`)
+        .then((response) => {
+          setUser(response.data.user);
+        })
+        .catch((error) => {
+          console.log("Auth fetch error:", error);
+          // Clear invalid token
+          localStorage.removeItem(TOKEN_KEY);
+          delete axios.defaults.headers.common["Authorization"];
+          setToken(null);
+        });
+    }
+  }, []); // Empty dependency array - runs only once
 
-  // Memoized scroll handler
+  // Listen for logout events from other parts of the app
+  useEffect(() => {
+    const handleLogoutEvent = () => {
+      setUser(null);
+      setToken(null);
+    };
+
+    // Listen for custom logout event
+    window.addEventListener("userLoggedOut", handleLogoutEvent);
+
+    // Listen for storage changes (if user logs out in another tab)
+    const handleStorageChange = (e) => {
+      if (e.key === TOKEN_KEY && !e.newValue) {
+        setUser(null);
+        setToken(null);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("userLoggedOut", handleLogoutEvent);
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
   const handleScroll = useCallback(() => {
     setIsScrolled(window.scrollY > 20);
   }, []);
 
-  // Memoized resize handler
   const handleResize = useCallback(() => {
     if (window.innerWidth >= 768) {
       setIsMobileMenuOpen(false);
@@ -37,16 +87,26 @@ export default function Navbar() {
   const handleLogout = useCallback(async () => {
     setIsLoggingOut(true);
     try {
-      await logout();
+      // Clear token and user data
+      localStorage.removeItem(TOKEN_KEY);
+      delete axios.defaults.headers.common["Authorization"];
+      setUser(null);
+      setToken(null);
+
+      // Dispatch custom event so other components know about logout
+      window.dispatchEvent(new CustomEvent("userLoggedOut"));
+
+      // Optional: Call backend logout endpoint
+      // await axios.post(`${API_BASE_URL}/auth/logout`);
     } catch (error) {
       console.error("Logout failed:", error);
     } finally {
       setIsLoggingOut(false);
       setIsMobileMenuOpen(false);
     }
-  }, [logout]);
+  }, []);
 
-  // Memoize navigation links to prevent recalculation
+  // Memoize navigation links
   const navLinks = useMemo(() => {
     const baseNavLinks = [
       { href: "/recommendations-page", label: "Top Picks" },
@@ -66,7 +126,6 @@ export default function Navbar() {
     return links;
   }, [user]);
 
-  // Don't show loading - always render navbar immediately
   return (
     <motion.nav
       initial={{ y: -100 }}
@@ -114,7 +173,6 @@ export default function Navbar() {
                   <span className="relative z-10">{link.label}</span>
                 </motion.a>
 
-                {/* Glassmorphic Background */}
                 <motion.div
                   className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10"
                   initial={{ scale: 0.8, opacity: 0 }}
@@ -127,8 +185,8 @@ export default function Navbar() {
               </motion.div>
             ))}
 
-            {/* User Actions - Only show if auth is initialized */}
-            {initialized && user && (
+            {/* User Actions */}
+            {user && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -136,7 +194,7 @@ export default function Navbar() {
                 transition={{ duration: 0.3 }}
                 className="flex items-center gap-2 ml-2"
               >
-                {/* User Profile Indicator */}
+                {/* User Profile */}
                 <motion.div
                   onMouseEnter={() => setHoveredItem("user-profile")}
                   onMouseLeave={() => setHoveredItem(null)}
@@ -310,8 +368,8 @@ export default function Navbar() {
                 </motion.a>
               ))}
 
-              {/* Mobile User Section - Only show if auth is initialized */}
-              {initialized && user && (
+              {/* Mobile User Section */}
+              {user && (
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -319,7 +377,6 @@ export default function Navbar() {
                   transition={{ duration: 0.3, delay: navLinks.length * 0.1 }}
                   className="pt-4 mt-4 border-t border-white/10 space-y-3"
                 >
-                  {/* User Info */}
                   <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-2xl border border-white/10">
                     <div className="h-8 w-8 bg-gradient-to-br from-emerald-400 to-blue-500 rounded-full flex items-center justify-center">
                       <User className="h-4 w-4 text-white" />
@@ -332,7 +389,6 @@ export default function Navbar() {
                     </div>
                   </div>
 
-                  {/* Mobile Logout Button */}
                   <motion.button
                     onClick={handleLogout}
                     disabled={isLoggingOut}
@@ -376,8 +432,7 @@ export default function Navbar() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{
                   duration: 0.3,
-                  delay:
-                    (navLinks.length + (initialized && user ? 2 : 0)) * 0.1,
+                  delay: (navLinks.length + (user ? 2 : 0)) * 0.1,
                 }}
                 className="flex items-center gap-3 pt-4 mt-4 border-t border-white/10"
               >
