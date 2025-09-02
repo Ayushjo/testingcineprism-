@@ -1,20 +1,38 @@
-// utils/api.js - Enhanced API integration with nested comments support
+// utils/api.js - Enhanced API integration with dynamic token management
 
 import axios from "axios";
 import { useState, useEffect, useCallback } from "react";
 
-const token = localStorage.getItem("cineprism_auth_token");
+const TOKEN_KEY = "cineprism_auth_token";
 const API_BASE_URL =
   "https://testingcineprismbackend-production.up.railway.app/api/v1";
 
+// Create base API instance WITHOUT token
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    Authorization: `Bearer ${token}`, // <-- sending token here
     "Content-Type": "application/json",
   },
   withCredentials: true,
 });
+
+// Helper function to get current token
+const getCurrentToken = () => {
+  return localStorage.getItem(TOKEN_KEY);
+};
+
+// Helper function to create headers with current token
+const getAuthHeaders = () => {
+  const token = getCurrentToken();
+  return token
+    ? {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      }
+    : {
+        "Content-Type": "application/json",
+      };
+};
 
 // ============================================================================
 // POST API FUNCTIONS
@@ -23,7 +41,9 @@ const api = axios.create({
 export const postApi = {
   // Get single post
   async fetchPost(postId) {
-    const response = await api.get(`/posts/${postId}`);
+    const response = await api.get(`/posts/${postId}`, {
+      headers: getAuthHeaders(),
+    });
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed to fetch post");
     }
@@ -32,7 +52,9 @@ export const postApi = {
 
   // Get related posts
   async fetchRelatedPosts(postId) {
-    const response = await api.get(`/posts/${postId}/related`);
+    const response = await api.get(`/posts/${postId}/related`, {
+      headers: getAuthHeaders(),
+    });
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed to fetch related posts");
     }
@@ -41,7 +63,9 @@ export const postApi = {
 
   // Get post statistics
   async getPostStats(postId) {
-    const response = await api.get(`/posts/${postId}/stats`);
+    const response = await api.get(`/posts/${postId}/stats`, {
+      headers: getAuthHeaders(),
+    });
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed to fetch post stats");
     }
@@ -58,6 +82,7 @@ export const commentApi = {
   async fetchComments(postId, page = 1, limit = 10) {
     const response = await api.get(`/posts/${postId}/comments`, {
       params: { page, limit },
+      headers: getAuthHeaders(),
     });
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed to fetch comments");
@@ -72,6 +97,7 @@ export const commentApi = {
   async fetchReplies(commentId, page = 1, limit = 5, nested = false) {
     const response = await api.get(`/posts/comments/${commentId}/replies`, {
       params: { page, limit, nested },
+      headers: getAuthHeaders(),
     });
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed to fetch replies");
@@ -84,7 +110,9 @@ export const commentApi = {
 
   // Get complete comment thread (new function)
   async fetchCommentThread(commentId) {
-    const response = await api.get(`/posts/comments/${commentId}/thread`);
+    const response = await api.get(`/posts/comments/${commentId}/thread`, {
+      headers: getAuthHeaders(),
+    });
     if (!response.data.success) {
       throw new Error(
         response.data.message || "Failed to fetch comment thread"
@@ -93,13 +121,14 @@ export const commentApi = {
     return response.data.thread;
   },
 
-  // Create new comment - with explicit withCredentials
+  // Create new comment
   async createComment(postId, content) {
     try {
       const response = await api.post(
         `/posts/${postId}/comments`,
         { content },
         {
+          headers: getAuthHeaders(),
           withCredentials: true,
         }
       );
@@ -127,6 +156,7 @@ export const commentApi = {
         `/posts/comments/${commentId}/replies`,
         { content },
         {
+          headers: getAuthHeaders(),
           withCredentials: true,
         }
       );
@@ -147,13 +177,14 @@ export const commentApi = {
     }
   },
 
-  // Update comment - with explicit withCredentials
+  // Update comment
   async updateComment(commentId, content) {
     try {
       const response = await api.put(
         `/posts/comments/${commentId}`,
         { content },
         {
+          headers: getAuthHeaders(),
           withCredentials: true,
         }
       );
@@ -174,10 +205,11 @@ export const commentApi = {
     }
   },
 
-  // Delete comment - with explicit withCredentials
+  // Delete comment
   async deleteComment(commentId) {
     try {
       const response = await api.delete(`/posts/comments/${commentId}`, {
+        headers: getAuthHeaders(),
         withCredentials: true,
       });
 
@@ -203,13 +235,14 @@ export const commentApi = {
 // ============================================================================
 
 export const likeApi = {
-  // Toggle like on post - with explicit withCredentials
+  // Toggle like on post
   async toggleLike(postId) {
     try {
       const response = await api.post(
         `/posts/${postId}/like`,
         {},
         {
+          headers: getAuthHeaders(),
           withCredentials: true,
         }
       );
@@ -235,7 +268,9 @@ export const likeApi = {
 
   // Get like status
   async getLikeStatus(postId) {
-    const response = await api.get(`/posts/${postId}/like`);
+    const response = await api.get(`/posts/${postId}/like`, {
+      headers: getAuthHeaders(),
+    });
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed to get like status");
     }
