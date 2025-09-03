@@ -1,73 +1,57 @@
-
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
 import { motion, useMotionValue } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
-import BladeRunnerImg from "../assets/bladerunner.jpg";
-import SpiderManImage from "../assets/spiderman.jpg";
-import BatmanImage from "../assets/batman.jpg";
-import ArrivalImage from "../assets/arrival.jpg";
-import DarkKnightImage from "../assets/darkknight.jpg";
-import DunkKirkImage from "../assets/dunkirk.jpg";
-import OppenHeimerImage from "../assets/oppenheimer.jpg";
-const latestReviewsData = [
-  {
-    id: 1,
-    title: "Dunkirk",
-    rating: 8.0,
-    posterUrl: DunkKirkImage
-  },
-  {
-    id: 2,
-    title: "Joker",
-    rating: 8.4,
-    posterUrl:
-      "https://image.tmdb.org/t/p/original/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
-  },
-  {
-    id: 3,
-    title: "Spider-Man: Across the Spider-Verse",
-    rating: 8.6,
-    posterUrl: SpiderManImage,
-  },
-  {
-    id: 4,
-    title: "The Dark Knight",
-    rating: 9.0,
-    posterUrl: DarkKnightImage,
-  },
-  {
-    id: 5,
-    title: "Oppenheimer",
-    rating: 8.8,
-    posterUrl:
-     OppenHeimerImage,
-  },
-  {
-    id: 6,
-    title: "Arrival",
-    rating: 7.9,
-    posterUrl:
-      ArrivalImage,
-  },
-  {
-    id: 7,
-    title: "Everything Everywhere All at Once",
-    rating: 8.0,
-    posterUrl:
-      "https://image.tmdb.org/t/p/original/w3LxiVYdWWRvEVdn5RYq6jIqkb1.jpg",
-  },
-];
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function LatestReviews() {
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
+  const [latestReviews, setLatestReviews] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const navigate = useNavigate();
 
   const x = useMotionValue(0);
   const dragConstraints = useRef({ left: 0, right: 0 });
+  // Fetch latest reviews from API
+  useEffect(() => {
+    const fetchLatestReviews = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(
+          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/latest-reviews"
+        );
+
+        const data = response.data;
+        if (data.latestReviews) {
+          // Transform API data to match component structure
+          const transformedReviews = data.latestReviews.map((review) => ({
+            id: review.id,
+            title: review.title,
+            year: review.year,
+            genres: review.genres,
+            posterUrl: review.posterImageUrl,
+            content: review.content,
+            ratingCriteria: review.ratingCategories || [],
+            directedBy: review.directedBy,
+            streamingAt: review.streamingAt,
+          }));
+          setLatestReviews(transformedReviews);
+        }
+      } catch (error) {
+        console.error("Error fetching latest reviews:", error);
+        setError("Failed to load reviews. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLatestReviews();
+  }, []);
 
   // Update scroll constraints and button states
   useEffect(() => {
@@ -98,16 +82,13 @@ export default function LatestReviews() {
       window.removeEventListener("resize", updateConstraints);
       unsubscribe();
     };
-  }, [x]);
+  }, [x, latestReviews]);
 
   const handleDragStart = () => {
     setIsDragging(true);
   };
 
-  const handleDragEnd = (
-    event,
-    info
-  ) => {
+  const handleDragEnd = () => {
     setIsDragging(false);
   };
 
@@ -120,6 +101,55 @@ export default function LatestReviews() {
     const newX = Math.max(x.get() - 320, dragConstraints.current.left);
     x.set(newX);
   };
+
+  const handleCardClick = (reviewId) => {
+    if (!isDragging) {
+      navigate(`/post/${reviewId}`);
+    }
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <section className="py-24 bg-gradient-to-b from-slate-900 to-slate-950 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="w-12 h-12 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-400 text-lg">Loading latest reviews...</p>
+        </div>
+      </section>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <section className="py-24 bg-gradient-to-b from-slate-900 to-slate-950 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-8 max-w-md mx-auto">
+            <h3 className="text-2xl font-bold text-red-400 mb-4">Error</h3>
+            <p className="text-slate-400 mb-6">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-gradient-to-r from-red-500/80 to-red-600/80 hover:from-red-500 hover:to-red-600 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Empty state
+  if (latestReviews.length === 0) {
+    return (
+      <section className="py-24 bg-gradient-to-b from-slate-900 to-slate-950 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-slate-400 text-lg">No reviews available</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-24 bg-gradient-to-b from-slate-900 to-slate-950 relative overflow-hidden">
@@ -203,7 +233,7 @@ export default function LatestReviews() {
               }`}
               whileTap={{ cursor: "grabbing" }}
             >
-              {latestReviewsData.map((movie, index) => (
+              {latestReviews.map((movie, index) => (
                 <motion.div
                   key={movie.id}
                   initial={{ opacity: 0, x: 50 }}
@@ -211,20 +241,23 @@ export default function LatestReviews() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   whileHover={!isDragging ? { y: -10, scale: 1.02 } : {}}
-                  className="group relative flex-shrink-0 w-64 select-none"
+                  onMouseEnter={() => setHoveredCard(index)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                  onClick={() => handleCardClick(movie.id)}
+                  className="group relative flex-shrink-0 w-64 select-none cursor-pointer"
                   style={{ pointerEvents: isDragging ? "none" : "auto" }}
                 >
                   <div className="aspect-[2/3] relative rounded-2xl overflow-hidden shadow-2xl group-hover:shadow-emerald-500/20 transition-all duration-500">
-                    <LazyLoadImage
-                    effect="blur"
+                    {/* Rating Display */}
+
+                    <img
                       src={movie.posterUrl || "/placeholder.svg"}
                       alt={movie.title}
-                      width={"100%"}
-                      height={"100%"}
-                      className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 ${
-                        movie.title === "Arrival" ? "object-[100%_center]" : ""
-                      }`}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       draggable={false}
+                      onError={(e) => {
+                        e.target.src = "/placeholder.svg";
+                      }}
                     />
 
                     {/* Gradient Overlay */}
@@ -235,6 +268,20 @@ export default function LatestReviews() {
                       <h3 className="text-white font-bold text-lg mb-2 leading-tight tracking-tight">
                         {movie.title}
                       </h3>
+                      <div className="flex items-center gap-2 text-slate-300 text-sm mb-2">
+                        <span>{movie.year}</span>
+                        {movie.genres && movie.genres.length > 0 && (
+                          <>
+                            <span>•</span>
+                            <span>{movie.genres[0]}</span>
+                          </>
+                        )}
+                      </div>
+                      {movie.directedBy && (
+                        <p className="text-slate-400 text-xs">
+                          Directed by {movie.directedBy}
+                        </p>
+                      )}
                     </div>
 
                     {/* Hover Glow Effect */}
@@ -252,7 +299,7 @@ export default function LatestReviews() {
           {/* Scroll Indicators */}
           <div className="flex justify-center mt-8 gap-2">
             {Array.from({
-              length: Math.ceil(latestReviewsData.length / 3),
+              length: Math.ceil(latestReviews.length / 3),
             }).map((_, index) => (
               <div
                 key={index}
