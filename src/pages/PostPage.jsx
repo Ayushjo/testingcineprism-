@@ -569,29 +569,6 @@ export default function PostPage() {
     return (
       <Helmet>
         <title>{currentPost.title} - CinePrism</title>
-        <meta name="description" content={description} />
-        <meta property="og:type" content="article" />
-        <meta property="og:url" content={pageUrl} />
-        <meta property="og:title" content={currentPost.title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:image" content={currentPost.posterImageUrl} />
-        <meta property="og:image:width" content="400" />
-        <meta property="og:image:height" content="600" />
-        <meta property="og:site_name" content="CinePrism" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={currentPost.title} />
-        <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={currentPost.posterImageUrl} />
-        <meta property="article:author" content="CinePrism" />
-        <meta
-          property="article:published_time"
-          content={currentPost.createdAt}
-        />
-        <meta property="article:section" content="Movie Reviews" />
-        <meta
-          property="article:tag"
-          content={currentPost.genres?.join(", ") || "Movie"}
-        />
       </Helmet>
     );
   };
