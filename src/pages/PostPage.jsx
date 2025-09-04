@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios"; // Add this import
+import axios from "axios";
 import {
-  Star,
   Calendar,
   Tag,
   Play,
@@ -14,9 +13,7 @@ import {
   Send,
   Loader2,
   MoreHorizontal,
-  X,
   Reply,
-  Share,
 } from "lucide-react";
 import {
   usePost,
@@ -31,7 +28,8 @@ import { useAuth } from "@/context/AuthContext.jsx";
 import toast from "react-hot-toast";
 import { ShareButton } from "@/components/ShareComponent.jsx";
 import { Helmet } from "react-helmet";
-// Enhanced Comment component with unlimited nesting support
+
+// Comment component remains the same as your existing code
 const Comment = ({
   comment,
   onReplyAdded,
@@ -379,21 +377,57 @@ const Comment = ({
   );
 };
 
+
 export default function PostPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  // Check for initial data from server-side rendering
+  const initialData =
+    typeof window !== "undefined" ? window.__INITIAL_POST_DATA__ : null;
+
+  // Initialize state with server data if available
+  const [post, setPost] = useState(initialData);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [newComment, setNewComment] = useState("");
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
-  // Add state for initial like status
   const [initialLikeStatus, setInitialLikeStatus] = useState(null);
   const [initialLikeStatusLoading, setInitialLikeStatusLoading] =
     useState(true);
 
   const token = localStorage.getItem("cineprism_auth_token");
 
-  // Move hasLiked function outside of component or make it a proper async function
+  // Only fetch from API if we don't have initial data
+  const {
+    post: fetchedPost,
+    relatedPosts,
+    loading: postLoading,
+    error: postError,
+  } = usePost(initialData ? null : id);
+
+  // Use initial data or fetched data
+  const currentPost = post || fetchedPost;
+
+  // Update post state when fetched data arrives
+  useEffect(() => {
+    if (fetchedPost && !post) {
+      setPost(fetchedPost);
+    }
+  }, [fetchedPost, post]);
+
+  const {
+    comments,
+    pagination: commentPagination,
+    loading: commentsLoading,
+    addComment,
+    updateComment,
+    removeComment,
+    loadMore: loadMoreComments,
+  } = useComments(id);
+
+  const { isLiked, likeCount, toggleLike } = useLike(id, initialLikeStatus);
+
   const checkInitialLikeStatus = async () => {
     if (!user || !id) {
       setInitialLikeStatusLoading(false);
@@ -421,43 +455,11 @@ export default function PostPage() {
     }
   };
 
-  const handleShareClick = () => {
-    navigator.clipboard.writeText(window.location.href);
-  };
-
   useEffect(() => {
     window.scrollTo(0, 0);
     checkInitialLikeStatus();
   }, []);
 
-  // Debug logging
-  useEffect(() => {
-    console.log("PostPage mounted with id:", id);
-    console.log("User from context:", user);
-  }, [id, user]);
-
-  // API hooks - use id directly from useParams
-  const {
-    post,
-    relatedPosts,
-    loading: postLoading,
-    error: postError,
-  } = usePost(id);
-
-  const {
-    comments,
-    pagination: commentPagination,
-    loading: commentsLoading,
-    addComment,
-    updateComment,
-    removeComment,
-    loadMore: loadMoreComments,
-  } = useComments(id);
-
-  // Modified useLike hook call to include initial status
-  const { isLiked, likeCount, toggleLike } = useLike(id, initialLikeStatus);
-
-  // Redirect if no ID is provided
   useEffect(() => {
     if (!id) {
       console.error("No post ID provided");
@@ -466,15 +468,16 @@ export default function PostPage() {
   }, [id, navigate]);
 
   const nextImage = () => {
-    if (post?.images) {
-      setCurrentImageIndex((prev) => (prev + 1) % post.images.length);
+    if (currentPost?.images) {
+      setCurrentImageIndex((prev) => (prev + 1) % currentPost.images.length);
     }
   };
 
   const prevImage = () => {
-    if (post?.images) {
+    if (currentPost?.images) {
       setCurrentImageIndex(
-        (prev) => (prev - 1 + post.images.length) % post.images.length
+        (prev) =>
+          (prev - 1 + currentPost.images.length) % currentPost.images.length
       );
     }
   };
@@ -508,7 +511,6 @@ export default function PostPage() {
   };
 
   const handleReplyAdded = (commentId, reply) => {
-    // Update the parent comment's reply count
     const parentComment = comments.find((c) => c.id === commentId);
     if (parentComment) {
       updateComment(commentId, {
@@ -526,8 +528,8 @@ export default function PostPage() {
     toggleLike();
   };
 
-  // Loading state - also check for initial like status loading
-  if (postLoading || initialLikeStatusLoading) {
+  // Loading state
+  if (!currentPost && (postLoading || initialLikeStatusLoading)) {
     return (
       <div className="min-h-screen bg-slate-950 text-white pt-20 flex items-center justify-center">
         <div className="flex items-center gap-3">
@@ -539,7 +541,7 @@ export default function PostPage() {
   }
 
   // Error state
-  if (postError || !post) {
+  if (postError || !currentPost) {
     return (
       <div className="min-h-screen bg-slate-950 text-white pt-20 flex items-center justify-center">
         <div className="text-center">
@@ -555,43 +557,40 @@ export default function PostPage() {
       </div>
     );
   }
+
   const generateMetaTags = () => {
-    if (!post) return null;
+    if (!currentPost) return null;
     const pageUrl = window.location.href;
     const description =
-      post.content.length > 160
-        ? post.content.substring(0, 157) + "..."
-        : post.content;
+      currentPost.content && currentPost.content.length > 160
+        ? currentPost.content.substring(0, 157) + "..."
+        : currentPost.content || `A movie review of ${currentPost.title}`;
+
     return (
       <Helmet>
-        {/* Basic Meta Tags */}
-        <title>{post.title} - CinePrism</title>
+        <title>{currentPost.title} - CinePrism</title>
         <meta name="description" content={description} />
-
-        {/* Open Graph / Facebook / WhatsApp */}
         <meta property="og:type" content="article" />
         <meta property="og:url" content={pageUrl} />
-        <meta property="og:title" content={post.title} />
+        <meta property="og:title" content={currentPost.title} />
         <meta property="og:description" content={description} />
-        <meta property="og:image" content={post.posterImageUrl} />
+        <meta property="og:image" content={currentPost.posterImageUrl} />
         <meta property="og:image:width" content="400" />
         <meta property="og:image:height" content="600" />
         <meta property="og:site_name" content="CinePrism" />
-
-        {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@cineprism" />
-        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:title" content={currentPost.title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={post.posterImageUrl} />
-
-        {/* Additional Meta for Better Sharing */}
+        <meta name="twitter:image" content={currentPost.posterImageUrl} />
         <meta property="article:author" content="CinePrism" />
-        <meta property="article:published_time" content={post.createdAt} />
+        <meta
+          property="article:published_time"
+          content={currentPost.createdAt}
+        />
         <meta property="article:section" content="Movie Reviews" />
         <meta
           property="article:tag"
-          content={post.genres?.join(", ") || "Movie"}
+          content={currentPost.genres?.join(", ") || "Movie"}
         />
       </Helmet>
     );
@@ -600,6 +599,7 @@ export default function PostPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-white pt-20">
       {generateMetaTags()}
+
       {/* Ambient Background */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
@@ -616,10 +616,10 @@ export default function PostPage() {
                 <div className="aspect-[2/3] relative rounded-3xl overflow-hidden shadow-2xl">
                   <img
                     src={
-                      post.posterImageUrl ||
+                      currentPost.posterImageUrl ||
                       "/placeholder.svg?height=600&width=400"
                     }
-                    alt={post.title}
+                    alt={currentPost.title}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
@@ -628,26 +628,25 @@ export default function PostPage() {
 
               {/* Content */}
               <div className="lg:col-span-3 space-y-8">
-                {/* Title */}
                 <div>
                   <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-4 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight leading-tight">
-                    {post.title}
+                    {currentPost.title}
                   </h1>
                 </div>
 
-                {/* Primary Info - Year */}
-                <div className="flex  gap-3">
+                {/* Year and Genres */}
+                <div className="flex gap-3">
                   <div className="flex flex-wrap gap-3">
                     <div className="flex items-center gap-2 bg-white/5 backdrop-blur-xl px-4 py-3 rounded-2xl border border-white/10">
                       <Calendar className="w-5 h-5 text-slate-400" />
                       <span className="text-slate-200 font-medium text-base">
-                        {post.year}
+                        {currentPost.year}
                       </span>
                     </div>
                   </div>
 
                   <div className="flex flex-wrap gap-2">
-                    {post.genres?.map((genre, index) => (
+                    {currentPost.genres?.map((genre, index) => (
                       <div
                         key={index}
                         className="flex items-center gap-2 bg-gray-500/10 backdrop-blur-xl px-4 py-2 rounded-xl border border-gray-500/20"
@@ -668,92 +667,108 @@ export default function PostPage() {
                   </div>
                 </div>
 
-                {/* Secondary Info - Genres */}
-
-                {/* Tertiary Info - Director & Streaming */}
+                {/* Director & Streaming */}
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10">
-                    <User className="w-5 h-5 text-gray-400" />
-                    <span className="text-slate-200 font-medium">
-                      Director :
-                    </span>
-                    <span className="text-white font-semibold">
-                      {post.directedBy}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10">
-                    <Play className="w-5 h-5 text-gray-400" />
-                    <span className="text-slate-200 font-medium">
-                      Streaming :
-                    </span>
-                    <span className="text-white font-semibold">
-                      {post.streamingAt}
-                    </span>
-                  </div>
+                  {currentPost.directedBy && (
+                    <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10">
+                      <User className="w-5 h-5 text-gray-400" />
+                      <span className="text-slate-200 font-medium">
+                        Director:
+                      </span>
+                      <span className="text-white font-semibold">
+                        {currentPost.directedBy}
+                      </span>
+                    </div>
+                  )}
+                  {currentPost.streamingAt && (
+                    <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10">
+                      <Play className="w-5 h-5 text-gray-400" />
+                      <span className="text-slate-200 font-medium">
+                        Streaming:
+                      </span>
+                      <span className="text-white font-semibold">
+                        {currentPost.streamingAt}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Action Bar */}
-                <div className="flex items-center gap-8 py-6 border-t border-white/10">
+                <div className="flex items-center gap-4 sm:gap-6 lg:gap-8 py-6 border-t border-white/10 overflow-x-auto">
                   <button
                     onClick={handleLikeClick}
-                    className="flex items-center gap-3 text-slate-400 hover:text-pink-500 transition-all duration-300 group"
+                    className="flex items-center gap-2 sm:gap-3 text-slate-400 hover:text-pink-500 transition-all duration-300 group flex-shrink-0"
                   >
-                    <div className="p-2 rounded-xl bg-white/5 group-hover:bg-pink-500/10 transition-colors duration-300">
+                    <div className="p-1.5 sm:p-2 rounded-xl bg-white/5 group-hover:bg-pink-500/10 transition-colors duration-300">
                       <Heart
-                        className={`w-6 h-6 ${
+                        className={`w-5 h-5 sm:w-6 sm:h-6 ${
                           isLiked ? "fill-pink-500 text-pink-500" : ""
                         }`}
                       />
                     </div>
                     <div className="flex flex-col items-start">
-                      <span className="font-bold text-lg">
+                      <span className="font-bold text-base sm:text-lg">
                         {likeCount.toLocaleString()}
                       </span>
-                      <span className="text-sm text-slate-500">Likes</span>
+                      <span className="text-xs sm:text-sm text-slate-500">
+                        Likes
+                      </span>
                     </div>
                   </button>
 
                   <button
                     onClick={scrollToDiscussion}
-                    className="flex items-center gap-3 text-slate-400 hover:text-emerald-400 transition-all duration-300 group"
+                    className="flex items-center gap-2 sm:gap-3 text-slate-400 hover:text-emerald-400 transition-all duration-300 group flex-shrink-0"
                   >
-                    <div className="p-2 rounded-xl bg-white/5 group-hover:bg-emerald-500/10 transition-colors duration-300">
-                      <MessageCircle className="w-6 h-6" />
+                    <div className="p-1.5 sm:p-2 rounded-xl bg-white/5 group-hover:bg-emerald-500/10 transition-colors duration-300">
+                      <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
                     <div className="flex flex-col items-start">
-                      <span className="font-bold text-lg">
-                        {post.commentCount}
+                      <span className="font-bold text-base sm:text-lg">
+                        {currentPost.commentCount || 0}
                       </span>
-                      <span className="text-sm text-slate-500">
-                        {post.commentCount === 1 ? "Comment" : "Comments"}
+                      <span className="text-xs sm:text-sm text-slate-500">
+                        <span className="hidden sm:inline">Comments</span>
+                        <span className="sm:hidden">💬</span>
                       </span>
                     </div>
                   </button>
+
                   <ShareButton
                     url={window.location.href}
-                    title={post.title}
-                    description={`A review of ${post.title} (${post.year}) directed by ${post.directedBy}`}
+                    title={currentPost.title}
+                    description={`A review of ${currentPost.title} ${
+                      currentPost.year ? `(${currentPost.year})` : ""
+                    } ${
+                      currentPost.directedBy
+                        ? `directed by ${currentPost.directedBy}`
+                        : ""
+                    }`}
+                    postId={id}
                   />
                 </div>
 
                 {/* Review Text */}
-                <div className="prose prose-invert prose-xl max-w-none">
-                  {post.content.split("\n\n").map((paragraph, index) => (
-                    <p
-                      key={index}
-                      className="text-slate-300 leading-relaxed mb-6 text-lg lg:text-xl font-light"
-                    >
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
+                {currentPost.content && (
+                  <div className="prose prose-invert prose-xl max-w-none">
+                    {currentPost.content
+                      .split("\n\n")
+                      .map((paragraph, index) => (
+                        <p
+                          key={index}
+                          className="text-slate-300 leading-relaxed mb-6 text-lg lg:text-xl font-light"
+                        >
+                          {paragraph}
+                        </p>
+                      ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </section>
-
-        {/* Section 2: Image Gallery Carousel */}
-        {post.images && post.images.length > 0 && (
+        {/* Section 2: Image Gallery Carousel - FIXED */}
+        {currentPost.images && currentPost.images.length > 0 && (
           <section className="py-16">
             <div className="text-center mb-12">
               <h2 className="text-4xl font-black text-white mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
@@ -762,11 +777,11 @@ export default function PostPage() {
             </div>
 
             <div className="relative max-w-4xl mx-auto">
-              {post.images.length === 1 ? (
+              {currentPost.images.length === 1 ? (
                 <div className="aspect-video relative rounded-2xl overflow-hidden shadow-2xl">
                   <img
                     src={
-                      post.images[0].imageUrl ||
+                      currentPost.images[0].imageUrl ||
                       "/placeholder.svg?height=400&width=600"
                     }
                     alt="Gallery image"
@@ -778,7 +793,7 @@ export default function PostPage() {
                   <div className="aspect-video relative rounded-2xl overflow-hidden shadow-2xl">
                     <img
                       src={
-                        post.images[currentImageIndex]?.imageUrl ||
+                        currentPost.images[currentImageIndex]?.imageUrl ||
                         "/placeholder.svg?height=400&width=600"
                       }
                       alt={`Gallery image ${currentImageIndex + 1}`}
@@ -800,7 +815,7 @@ export default function PostPage() {
                   </button>
 
                   <div className="flex justify-center gap-2 mt-6">
-                    {post.images.map((_, index) => (
+                    {currentPost.images.map((_, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentImageIndex(index)}

@@ -66,13 +66,14 @@ const App = () => {
 
           <Route element={<RedirectIfUser />}>
             <Route path="/reviews" element={<ReviewPage />} />
+
+            <Route path="/post/:id" element={<PostPage />} />
             <Route path="/180-degree-rule" element={<Rule180Page />} />
             <Route path="/rule-of-thirds" element={<RuleOfThirdsPage />} />
             <Route
               path="/genre/Science-Fiction"
               element={<ScienceFictionPage />}
             />
-            <Route path="/post/:id" element={<PostPage />} />
             <Route path="/genre/Action" element={<ActionPage />} />
             <Route path="/genre/Thriller" element={<ThrillerPage />} />
             <Route path="/genre/Drama" element={<DramaPage />} />

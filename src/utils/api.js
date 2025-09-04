@@ -1,4 +1,4 @@
-// utils/api.js - Enhanced API integration with dynamic token management
+// utils/api.js - Enhanced API integration with dynamic token management + HTML meta fetching
 
 import axios from "axios";
 import { useState, useEffect, useCallback } from "react";
@@ -6,6 +6,8 @@ import { useState, useEffect, useCallback } from "react";
 const TOKEN_KEY = "cineprism_auth_token";
 const API_BASE_URL =
   "https://testingcineprismbackend-production.up.railway.app/api/v1";
+const BACKEND_BASE_URL =
+  "https://testingcineprismbackend-production.up.railway.app";
 
 // Create base API instance WITHOUT token
 const api = axios.create({
@@ -32,6 +34,72 @@ const getAuthHeaders = () => {
     : {
         "Content-Type": "application/json",
       };
+};
+
+// ============================================================================
+// HTML META DATA API FUNCTIONS (NEW)
+// ============================================================================
+
+export const metaApi = {
+  // Fetch HTML page and extract meta data
+  async fetchPostMeta(postId) {
+    try {
+      const response = await fetch(`${BACKEND_BASE_URL}/post/${postId}`, {
+        method: "GET",
+        headers: {
+          Accept: "text/html",
+          "User-Agent": "CinePrism-App/1.0", // Identify as app, not crawler
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `HTTP ${response.status}: Failed to fetch HTML meta data`
+        );
+      }
+
+      const htmlContent = await response.text();
+
+      // Parse HTML to extract meta data
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlContent, "text/html");
+
+      // Extract meta tag data for sharing
+      const metaData = {
+        title:
+          doc.querySelector('meta[property="og:title"]')?.content ||
+          doc.querySelector("title")?.textContent?.replace(" - CinePrism", ""),
+        description:
+          doc.querySelector('meta[property="og:description"]')?.content ||
+          doc.querySelector('meta[name="description"]')?.content,
+        image: doc.querySelector('meta[property="og:image"]')?.content,
+        url:
+          doc.querySelector('meta[property="og:url"]')?.content ||
+          window.location.href,
+        siteName:
+          doc.querySelector('meta[property="og:site_name"]')?.content ||
+          "CinePrism",
+        // Extract additional data from HTML body if needed
+        year: doc
+          .querySelector("body")
+          ?.textContent.match(/Year:\s*(\d{4})/)?.[1],
+        director: doc
+          .querySelector("body")
+          ?.textContent.match(/Director:\s*([^\n]+)/)?.[1]
+          ?.trim(),
+      };
+
+      // Store globally for sharing
+      if (typeof window !== "undefined") {
+        window.__POST_META_DATA__ = metaData;
+      }
+
+      return metaData;
+    } catch (error) {
+      console.error("Error fetching HTML meta data:", error);
+      return null;
+    }
+  },
 };
 
 // ============================================================================
@@ -285,17 +353,50 @@ export const likeApi = {
 // ENHANCED REACT HOOKS FOR DATA FETCHING
 // ============================================================================
 
-// Hook for post data
-export const usePost = (postId) => {
+// NEW: Hook for fetching HTML meta data
+export const usePostMeta = (postId) => {
+  const [metaData, setMetaData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchMeta = useCallback(async () => {
+    if (!postId) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await metaApi.fetchPostMeta(postId);
+      setMetaData(data);
+    } catch (err) {
+      console.error("Error fetching meta data:", err);
+      setError(err.message || "Failed to fetch meta data");
+    } finally {
+      setLoading(false);
+    }
+  }, [postId]);
+
+  useEffect(() => {
+    fetchMeta();
+  }, [fetchMeta]);
+
+  return { metaData, loading, error, refetch: fetchMeta };
+};
+
+// Enhanced hook for post data - now also handles meta data
+export const usePost = (postId, fetchMeta = false) => {
   const [post, setPost] = useState(null);
   const [relatedPosts, setRelatedPosts] = useState([]);
+  const [metaData, setMetaData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchData = useCallback(async () => {
+    // Skip API call if no postId provided
     if (!postId) {
       setLoading(false);
-      setError("No post ID provided");
       return;
     }
 
@@ -303,25 +404,37 @@ export const usePost = (postId) => {
       setLoading(true);
       setError(null);
 
-      const [postData, relatedData] = await Promise.all([
+      // Fetch HTML meta data first if requested
+      const promises = [
         postApi.fetchPost(postId),
         postApi.fetchRelatedPosts(postId),
-      ]);
-      setPost(postData);
-      setRelatedPosts(relatedData);
+      ];
+
+      if (fetchMeta) {
+        promises.push(metaApi.fetchPostMeta(postId));
+      }
+
+      const results = await Promise.all(promises);
+
+      setPost(results[0]);
+      setRelatedPosts(results[1]);
+
+      if (fetchMeta && results[2]) {
+        setMetaData(results[2]);
+      }
     } catch (err) {
       console.error("Error fetching post data:", err);
       setError(err.message || "Failed to fetch post data");
     } finally {
       setLoading(false);
     }
-  }, [postId]);
+  }, [postId, fetchMeta]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  return { post, relatedPosts, loading, error, refetch: fetchData };
+  return { post, relatedPosts, metaData, loading, error, refetch: fetchData };
 };
 
 // Hook for comments with pagination
@@ -556,8 +669,8 @@ export const useReplies = (commentId, enableNested = false) => {
   };
 };
 
-// Hook for like functionality
-export const useLike = (postId) => {
+// Hook for like functionality - FIXED to accept initialStatus
+export const useLike = (postId, initialStatus = null) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -603,8 +716,11 @@ export const useLike = (postId) => {
       }
     };
 
-    fetchLikeStatus();
-  }, [postId]);
+    // Only fetch if no initial status provided
+    if (initialStatus === null) {
+      fetchLikeStatus();
+    }
+  }, [postId, initialStatus]); // Add initialStatus dependency
 
   return {
     isLiked,
@@ -685,6 +801,11 @@ export const formatNestedComments = (comments, maxDepth = 5) => {
     ...comment,
     displayDepth: Math.min(comment.depth || 0, maxDepth),
   }));
+};
+
+// Helper function to get stored meta data for sharing
+export const getStoredMetaData = () => {
+  return typeof window !== "undefined" ? window.__POST_META_DATA__ : null;
 };
 
 // Export default API instance for custom requests
