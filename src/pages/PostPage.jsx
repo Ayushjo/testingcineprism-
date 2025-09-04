@@ -575,7 +575,7 @@ export default function PostPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white pt-20">
-      {generateMetaTags()}
+      
 
       {/* Ambient Background */}
       <div className="absolute inset-0 opacity-20">
