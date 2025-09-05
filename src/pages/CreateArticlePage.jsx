@@ -157,7 +157,7 @@ export default function CreateArticlePage() {
       formData.append("blocks", JSON.stringify(blocksForBackend));
 
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/create-article",
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/articles/create-article",
         formData,
         {
           withCredentials: true,
@@ -202,6 +202,78 @@ export default function CreateArticlePage() {
   const BlockEditor = ({ block, index }) => {
     const { type, content } = block;
 
+    const handleContentChange = useCallback(
+      (field, value) => {
+        setBlocks((prev) => {
+          const newBlocks = [...prev];
+          newBlocks[index] = {
+            ...newBlocks[index],
+            content: { ...newBlocks[index].content, [field]: value },
+          };
+          return newBlocks;
+        });
+      },
+      [index]
+    );
+
+    const handleImageRemove = useCallback(() => {
+      setBlocks((prev) => {
+        const newBlocks = [...prev];
+        newBlocks[index] = {
+          ...newBlocks[index],
+          content: { ...newBlocks[index].content, file: null, preview: "" },
+        };
+        return newBlocks;
+      });
+    }, [index]);
+
+    const handleListItemChange = useCallback(
+      (itemIndex, value) => {
+        setBlocks((prev) => {
+          const newBlocks = [...prev];
+          const newItems = [...newBlocks[index].content.items];
+          newItems[itemIndex] = value;
+          newBlocks[index] = {
+            ...newBlocks[index],
+            content: { ...newBlocks[index].content, items: newItems },
+          };
+          return newBlocks;
+        });
+      },
+      [index]
+    );
+
+    const addListItem = useCallback(() => {
+      setBlocks((prev) => {
+        const newBlocks = [...prev];
+        newBlocks[index] = {
+          ...newBlocks[index],
+          content: {
+            ...newBlocks[index].content,
+            items: [...newBlocks[index].content.items, ""],
+          },
+        };
+        return newBlocks;
+      });
+    }, [index]);
+
+    const removeListItem = useCallback(
+      (itemIndex) => {
+        setBlocks((prev) => {
+          const newBlocks = [...prev];
+          const newItems = newBlocks[index].content.items.filter(
+            (_, i) => i !== itemIndex
+          );
+          newBlocks[index] = {
+            ...newBlocks[index],
+            content: { ...newBlocks[index].content, items: newItems },
+          };
+          return newBlocks;
+        });
+      },
+      [index]
+    );
+
     switch (type) {
       case "PARAGRAPH":
         return (
@@ -209,9 +281,9 @@ export default function CreateArticlePage() {
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
-                checked={content.hasTitle}
+                checked={content.hasTitle || false}
                 onChange={(e) =>
-                  updateBlock(index, { ...content, hasTitle: e.target.checked })
+                  handleContentChange("hasTitle", e.target.checked)
                 }
                 className="rounded bg-slate-800 border-slate-600 text-emerald-500 focus:ring-emerald-500/50"
               />
@@ -225,19 +297,15 @@ export default function CreateArticlePage() {
                 type="text"
                 placeholder="Paragraph title..."
                 value={content.title || ""}
-                onChange={(e) =>
-                  updateBlock(index, { ...content, title: e.target.value })
-                }
+                onChange={(e) => handleContentChange("title", e.target.value)}
                 className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300 font-medium"
               />
             )}
 
             <textarea
               placeholder="Write your paragraph content..."
-              value={content.text}
-              onChange={(e) =>
-                updateBlock(index, { ...content, text: e.target.value })
-              }
+              value={content.text || ""}
+              onChange={(e) => handleContentChange("text", e.target.value)}
               rows={4}
               className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-lg px-3 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300 resize-none"
             />
@@ -250,12 +318,9 @@ export default function CreateArticlePage() {
             <div className="flex gap-2 items-center">
               <label className="text-sm text-slate-400">Level:</label>
               <select
-                value={content.level}
+                value={content.level || 2}
                 onChange={(e) =>
-                  updateBlock(index, {
-                    ...content,
-                    level: parseInt(e.target.value),
-                  })
+                  handleContentChange("level", parseInt(e.target.value))
                 }
                 className="bg-slate-800 border border-slate-600 rounded px-2 py-1 text-white text-sm focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50"
               >
@@ -267,14 +332,12 @@ export default function CreateArticlePage() {
             <input
               type="text"
               placeholder="Heading text..."
-              value={content.text}
-              onChange={(e) =>
-                updateBlock(index, { ...content, text: e.target.value })
-              }
+              value={content.text || ""}
+              onChange={(e) => handleContentChange("text", e.target.value)}
               className={`w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-lg px-3 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300 font-bold ${
-                content.level === 2
+                (content.level || 2) === 2
                   ? "text-2xl"
-                  : content.level === 3
+                  : (content.level || 2) === 3
                   ? "text-xl"
                   : "text-lg"
               }`}
@@ -290,17 +353,12 @@ export default function CreateArticlePage() {
                 <div className="space-y-3">
                   <img
                     src={content.preview}
-                    alt={content.alt}
+                    alt={content.alt || ""}
                     className="max-w-full h-auto rounded-lg border border-slate-600"
                   />
                   <button
-                    onClick={() =>
-                      updateBlock(index, {
-                        ...content,
-                        file: null,
-                        preview: "",
-                      })
-                    }
+                    type="button"
+                    onClick={handleImageRemove}
                     className="flex items-center gap-2 text-red-400 hover:text-red-300 text-sm transition-colors"
                   >
                     <X size={16} /> Remove Image
@@ -333,19 +391,15 @@ export default function CreateArticlePage() {
             <input
               type="text"
               placeholder="Alt text (required for accessibility)..."
-              value={content.alt}
-              onChange={(e) =>
-                updateBlock(index, { ...content, alt: e.target.value })
-              }
+              value={content.alt || ""}
+              onChange={(e) => handleContentChange("alt", e.target.value)}
               className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
             />
             <input
               type="text"
               placeholder="Caption (optional)..."
-              value={content.caption}
-              onChange={(e) =>
-                updateBlock(index, { ...content, caption: e.target.value })
-              }
+              value={content.caption || ""}
+              onChange={(e) => handleContentChange("caption", e.target.value)}
               className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
             />
           </div>
@@ -357,40 +411,34 @@ export default function CreateArticlePage() {
             <div className="flex gap-2">
               <label className="text-sm text-slate-400">Type:</label>
               <select
-                value={content.type}
-                onChange={(e) =>
-                  updateBlock(index, { ...content, type: e.target.value })
-                }
+                value={content.type || "bullet"}
+                onChange={(e) => handleContentChange("type", e.target.value)}
                 className="bg-slate-800 border border-slate-600 rounded px-2 py-1 text-white text-sm focus:ring-2 focus:ring-emerald-500/50"
               >
                 <option value="bullet">Bullet Points</option>
                 <option value="numbered">Numbered List</option>
               </select>
             </div>
-            {content.items.map((item, itemIndex) => (
+            {(content.items || [""]).map((item, itemIndex) => (
               <div key={itemIndex} className="flex gap-2">
                 <span className="text-slate-400 mt-2 min-w-4">
-                  {content.type === "numbered" ? `${itemIndex + 1}.` : "•"}
+                  {(content.type || "bullet") === "numbered"
+                    ? `${itemIndex + 1}.`
+                    : "•"}
                 </span>
                 <input
                   type="text"
                   value={item}
-                  onChange={(e) => {
-                    const newItems = [...content.items];
-                    newItems[itemIndex] = e.target.value;
-                    updateBlock(index, { ...content, items: newItems });
-                  }}
+                  onChange={(e) =>
+                    handleListItemChange(itemIndex, e.target.value)
+                  }
                   className="flex-1 bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
                   placeholder="List item..."
                 />
-                {content.items.length > 1 && (
+                {(content.items || [""]).length > 1 && (
                   <button
-                    onClick={() => {
-                      const newItems = content.items.filter(
-                        (_, i) => i !== itemIndex
-                      );
-                      updateBlock(index, { ...content, items: newItems });
-                    }}
+                    type="button"
+                    onClick={() => removeListItem(itemIndex)}
                     className="text-red-400 hover:text-red-300 p-2 transition-colors"
                   >
                     <Trash2 size={16} />
@@ -399,12 +447,8 @@ export default function CreateArticlePage() {
               </div>
             ))}
             <button
-              onClick={() =>
-                updateBlock(index, {
-                  ...content,
-                  items: [...content.items, ""],
-                })
-              }
+              type="button"
+              onClick={addListItem}
               className="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-1 transition-colors"
             >
               <Plus size={16} /> Add item
@@ -417,20 +461,16 @@ export default function CreateArticlePage() {
           <div className="space-y-3">
             <textarea
               placeholder="Quote text..."
-              value={content.text}
-              onChange={(e) =>
-                updateBlock(index, { ...content, text: e.target.value })
-              }
+              value={content.text || ""}
+              onChange={(e) => handleContentChange("text", e.target.value)}
               rows={3}
               className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-lg px-3 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300 italic resize-none"
             />
             <input
               type="text"
               placeholder="Quote author (optional)..."
-              value={content.author}
-              onChange={(e) =>
-                updateBlock(index, { ...content, author: e.target.value })
-              }
+              value={content.author || ""}
+              onChange={(e) => handleContentChange("author", e.target.value)}
               className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
             />
           </div>
