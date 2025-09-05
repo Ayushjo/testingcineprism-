@@ -42,6 +42,7 @@ import RuleOfThirdsPage from "./pages/RuleOfThirdsPage";
 
 // ADD: Import ScrollToTop component
 import ScrollToTop from "./components/ScrollToTop";
+import CreateArticlePage from "./pages/CreateArticlePage";
 
 const App = () => {
   const location = useLocation();
@@ -105,6 +106,7 @@ const App = () => {
               <Route path="add-top-picks" element={<AddTopPicksPage />} />
               <Route path="edit-post" element={<EditPostPage />} />
               <Route path="edit-rank" element={<TrendingRankManager />} />
+              <Route path="create-article" element={<CreateArticlePage />} />
             </Route>
           </Route>
         </Routes>

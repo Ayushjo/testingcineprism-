@@ -22,7 +22,7 @@ import HowToLoseImage from "../assets/howtoloseaguys.jpg";
 import OppenHeimerImage from "../assets/oppenheimer.jpg";
 import OppenHeimerFireImage from "../assets/oppenheimerfire.jpg";
 import Tilt from "react-parallax-tilt";
-
+import { DesktopHero, MobileHero } from "@/components/ScriptHeroSections";
 import LatestReviews from "../components/LatestReviews";
 import TrendingThisWeek from "../components/TrendingThisWeek";
 import ExploreByGenre from "../components/ExploreByGenre";

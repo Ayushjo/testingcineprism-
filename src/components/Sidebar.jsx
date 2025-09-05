@@ -12,6 +12,7 @@ import {
   X,
   TrendingUp
 } from "lucide-react";
+import { File } from "lucide-react";
 
 const navigationItems = [
   { icon: FileText, label: "All Posts", id: "all-posts" },
@@ -22,6 +23,7 @@ const navigationItems = [
   { icon: Images, label: "Upload Gallery", id: "upload-gallery" },
   { icon: FilePlus2, label: "Edit Post", id: "edit-post" },
   { icon: TrendingUp, label: "Edit Trending Rank", id: "edit-rank" },
+  { icon: File, label: "Create Article", id: "create-article" },
 ];
 
 function Sidebar({
