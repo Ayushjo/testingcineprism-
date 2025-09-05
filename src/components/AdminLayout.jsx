@@ -10,6 +10,7 @@ import {
   X,
   TrendingUp
 } from "lucide-react";
+import { File } from "lucide-react";
 
 const navigationItems = [
   { icon: FileText, label: "All Posts", id: "all-posts" },
