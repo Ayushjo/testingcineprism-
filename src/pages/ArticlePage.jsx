@@ -80,7 +80,7 @@ const ArticlePage = () => {
                 {content.title}
               </h3>
             )}
-            <p className="text-slate-300 leading-relaxed text-lg lg:text-xl font-light tracking-wide">
+            <p className="text-slate-300 leading-relaxed text-lg lg:text-xl font-light tracking-wide whitespace-pre-wrap">
               {content.text}
             </p>
           </div>
@@ -241,7 +241,7 @@ const ArticlePage = () => {
               {article.title}
             </h1>
 
-            <p className="text-xl lg:text-2xl text-slate-300 mb-12 leading-relaxed font-light max-w-4xl mx-auto">
+            <p className="text-lg lg:text-xl text-slate-300 mb-12 leading-relaxed font-light max-w-4xl mx-auto whitespace-pre-wrap">
               {article.shortDescription}
             </p>
 

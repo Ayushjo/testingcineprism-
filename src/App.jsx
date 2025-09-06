@@ -68,8 +68,8 @@ const App = () => {
           <Route path="/articles/:slug" element={<ArticlePage />} />
           <Route element={<RedirectIfUser />}>
             <Route path="/reviews" element={<ReviewPage />} />
-
             <Route path="/post/:id" element={<PostPage />} />
+
             <Route path="/180-degree-rule" element={<Rule180Page />} />
             <Route path="/rule-of-thirds" element={<RuleOfThirdsPage />} />
             <Route
