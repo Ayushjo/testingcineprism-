@@ -219,7 +219,7 @@ const ArticlePage = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             onClick={() => navigate(-1)}
-            className="flex items-center gap-3 text-slate-400 hover:text-white transition-all duration-300 mb-12 group"
+            className="flex items-center gap-3 text-slate-400 hover:text-white transition-all duration-300 mb-16 group"
           >
             <div className="p-2 rounded-xl bg-white/5 group-hover:bg-white/10 transition-colors duration-300">
               <ArrowLeft
@@ -235,50 +235,59 @@ const ArticlePage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-center mb-16"
+            className="text-center"
           >
+            {/* Title */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white mb-8 leading-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
               {article.title}
             </h1>
 
-            <p className="text-lg lg:text-xl text-slate-300 mb-12 leading-relaxed font-light max-w-4xl mx-auto whitespace-pre-wrap">
-              {article.shortDescription}
-            </p>
+            {/* Description */}
+            <div className="mb-12">
+              <p className="text-lg lg:text-xl text-slate-300 leading-relaxed font-light max-w-4xl mx-auto whitespace-pre-wrap">
+                {article.shortDescription}
+              </p>
+            </div>
 
-            {/* Article Meta */}
-            <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-8 text-slate-400 mb-8">
-              <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10">
-                <User size={20} />
-                <span className="font-medium text-slate-200">
-                  {article.author}
-                </span>
+            {/* Clean Meta Section */}
+            <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-800/50 rounded-3xl p-8 mb-10 max-w-4xl mx-auto">
+              {/* Author and Date Row */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-lg shrink-0">
+                    {article.author[0].toUpperCase()}
+                  </div>
+                  <div className="text-left">
+                    <div className="flex items-center gap-2 text-white font-semibold text-lg">
+                      <User size={16} />
+                      {article.author}
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400 text-sm">
+                      <Calendar size={14} />
+                      {formatDate(article.publishedAt || article.createdAt)}
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10">
-                <Calendar size={20} />
-                <span className="font-medium text-slate-200">
-                  {formatDate(article.publishedAt || article.createdAt)}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10">
-                <Clock size={20} />
-                <span className="font-medium text-slate-200">
-                  {readingTime} min read
-                </span>
-              </div>
-
-              <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10">
-                <Eye size={20} />
-                <span className="font-medium text-slate-200">
-                  {article.viewCount || 0} views
-                </span>
+              {/* Stats Row */}
+              <div className="flex flex-wrap items-center justify-center gap-8 pt-6 border-t border-slate-800/50">
+                <div className="flex items-center gap-2 text-slate-300">
+                  <Clock size={18} className="text-emerald-500" />
+                  <span className="font-medium">{readingTime} min read</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-300">
+                  <Eye size={18} className="text-emerald-500" />
+                  <span className="font-medium">
+                    {article.viewCount || 0} views
+                  </span>
+                </div>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center justify-center gap-4 lg:gap-6">
-              <button className="flex items-center gap-3 px-6 py-4 bg-white/5 backdrop-blur-xl text-slate-300 rounded-2xl hover:bg-white/10 transition-all duration-300 border border-white/10 hover:border-white/20 group">
+            <div className="flex items-center justify-center gap-4">
+              <button className="flex items-center gap-3 px-8 py-4 bg-white/5 backdrop-blur-xl text-slate-300 rounded-2xl hover:bg-white/10 transition-all duration-300 border border-white/10 hover:border-white/20 group">
                 <Share2
                   size={20}
                   className="group-hover:scale-110 transition-transform duration-300"
@@ -288,7 +297,7 @@ const ArticlePage = () => {
 
               <button
                 onClick={() => setIsBookmarked(!isBookmarked)}
-                className={`flex items-center gap-3 px-6 py-4 backdrop-blur-xl rounded-2xl transition-all duration-300 border group ${
+                className={`flex items-center gap-3 px-8 py-4 backdrop-blur-xl rounded-2xl transition-all duration-300 border group ${
                   isBookmarked
                     ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/30"
                     : "bg-white/5 text-slate-300 border-white/10 hover:bg-white/10 hover:border-white/20"
@@ -362,40 +371,37 @@ const ArticlePage = () => {
             )}
           </div>
 
-          {/* Article Footer */}
+          {/* Article Footer - Cleaner Design */}
           <motion.footer
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
             className="border-t border-slate-800 pt-16 mt-20"
           >
-            <div className="bg-slate-900/30 backdrop-blur-xl rounded-3xl p-8 lg:p-12 border border-slate-700">
-              <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
-                <div className="flex-1">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                      {article.author[0].toUpperCase()}
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-white mb-1">
-                        {article.author}
-                      </h3>
-                      <p className="text-slate-400">
-                        Published on{" "}
-                        {formatDate(article.publishedAt || article.createdAt)}
-                      </p>
-                    </div>
-                  </div>
+            <div className="bg-slate-900/40 backdrop-blur-xl rounded-3xl p-10 border border-slate-800/50">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  About the Author
+                </h3>
+                <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
+                  {article.author[0].toUpperCase()}
                 </div>
+                <h4 className="text-xl font-semibold text-white mb-2">
+                  {article.author}
+                </h4>
+                <p className="text-slate-400 mb-8">
+                  Published on{" "}
+                  {formatDate(article.publishedAt || article.createdAt)}
+                </p>
+              </div>
 
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                  <button className="px-8 py-4 bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-emerald-500/20">
-                    Follow Author
-                  </button>
-                  <button className="px-8 py-4 border border-slate-600 text-slate-300 rounded-2xl hover:bg-slate-800/50 hover:border-slate-500 transition-all duration-300 font-medium">
-                    More Articles
-                  </button>
-                </div>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button className="px-8 py-4 bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-emerald-500/20">
+                  Follow Author
+                </button>
+                <button className="px-8 py-4 border border-slate-600 text-slate-300 rounded-2xl hover:bg-slate-800/50 hover:border-slate-500 transition-all duration-300 font-medium">
+                  More Articles
+                </button>
               </div>
             </div>
           </motion.footer>
@@ -404,19 +410,19 @@ const ArticlePage = () => {
 
       {/* Floating Action Bar - Mobile */}
       <div className="fixed bottom-6 left-6 right-6 lg:hidden z-50">
-        <div className="bg-slate-900/90 backdrop-blur-xl border border-slate-700 rounded-2xl p-4">
+        <div className="bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-4 shadow-2xl">
           <div className="flex items-center justify-around">
             <button className="flex flex-col items-center gap-1 text-slate-400 hover:text-pink-500 transition-colors">
               <Heart size={20} />
-              <span className="text-xs">Like</span>
+              <span className="text-xs font-medium">Like</span>
             </button>
             <button className="flex flex-col items-center gap-1 text-slate-400 hover:text-emerald-400 transition-colors">
               <MessageCircle size={20} />
-              <span className="text-xs">Comment</span>
+              <span className="text-xs font-medium">Comment</span>
             </button>
             <button className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-400 transition-colors">
               <Share2 size={20} />
-              <span className="text-xs">Share</span>
+              <span className="text-xs font-medium">Share</span>
             </button>
             <button
               onClick={() => setIsBookmarked(!isBookmarked)}
@@ -430,7 +436,7 @@ const ArticlePage = () => {
                 size={20}
                 className={isBookmarked ? "fill-current" : ""}
               />
-              <span className="text-xs">Save</span>
+              <span className="text-xs font-medium">Save</span>
             </button>
           </div>
         </div>
