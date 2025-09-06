@@ -43,6 +43,7 @@ import RuleOfThirdsPage from "./pages/RuleOfThirdsPage";
 // ADD: Import ScrollToTop component
 import ScrollToTop from "./components/ScrollToTop";
 import CreateArticlePage from "./pages/CreateArticlePage";
+import ArticlePage from "./pages/ArticlePage";
 
 const App = () => {
   const location = useLocation();
@@ -64,7 +65,7 @@ const App = () => {
           </Route>
 
           <Route path="/auth/callback" element={<AuthCallback />} />
-
+          <Route path="/articles/:slug" element={<ArticlePage />} />
           <Route element={<RedirectIfUser />}>
             <Route path="/reviews" element={<ReviewPage />} />
 
