@@ -162,8 +162,7 @@ export default function CreateArticlePage() {
         {
           withCredentials: true,
           headers: {
-            Authorization: `Bearer ${token}`, // <-- sending token here
-            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
