@@ -22,7 +22,7 @@ import HowToLoseImage from "../assets/howtoloseaguys.jpg";
 import OppenHeimerImage from "../assets/oppenheimer.jpg";
 import OppenHeimerFireImage from "../assets/oppenheimerfire.jpg";
 import Tilt from "react-parallax-tilt";
-import { DesktopHero, MobileHero } from "@/components/ScriptHeroSections";
+import { DesktopHero, } from "@/components/ScriptHeroSections";
 import LatestReviews from "../components/LatestReviews";
 import TrendingThisWeek from "../components/TrendingThisWeek";
 import ExploreByGenre from "../components/ExploreByGenre";
@@ -35,7 +35,7 @@ import BatmanImage from "../assets/batman.jpg";
 import BladeRunnerImg from "../assets/bladerunner.jpg";
 import DuneFanImage from "../assets/dunefan.jpg";
 import SinnerImage from "../assets/sinners.jpg";
-
+import MobileHero from "@/components/MobileHero";
 import TennetImage from "../assets/tennet.jpg";
 import AliceImage from "../assets/alicedarling.jpg";
 import Marquee from "../components/Marquee";
@@ -500,117 +500,7 @@ export default function Homepage() {
         </section>
 
         {/* Mobile Hero Section - Only visible on mobile */}
-        <section className="relative min-h-screen overflow-hidden pt-20 block md:hidden">
-          {/* Subtle Background Pattern */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px]" />
-          </div>
-          {/* Ambient Glow Effects */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/3 left-1/2 w-64 h-64 bg-white/3 rounded-full blur-3xl transform -translate-x-1/2" />
-            <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-slate-200/3 rounded-full blur-3xl" />
-          </div>
-          {/* Background Video */}
-          <div className="absolute inset-0 z-0">
-            <video
-              src={backgroundVideoUrl}
-              className="w-full h-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-950/30 via-slate-950/20 to-slate-950/30" />
-          </div>
-          {/* Mobile Hero Content */}
-          <div className="relative z-20 min-h-screen flex items-center">
-            <div className="max-w-lg mx-auto px-6 w-full">
-              <div className="text-center space-y-8">
-                {/* Badge */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                  className="flex justify-center"
-                >
-                  <span className="inline-flex items-center gap-3 bg-slate-800/30 backdrop-blur-sm border border-slate-700/30 px-4 py-2 rounded-full text-xs font-medium text-slate-200">
-                    <div className="w-1.5 h-1.5 bg-slate-200 rounded-full animate-pulse" />
-                    Cinema for acquired taste.
-                    <Film className="w-3 h-3 text-slate-200" />
-                  </span>
-                </motion.div>
-
-                {/* Title */}
-                <motion.h1
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  className="text-6xl font-light leading-[0.9] tracking-tight"
-                >
-                  <span className="text-slate-100 font-extralight">The</span>
-                  <br />
-                  <span className="bg-gradient-to-r from-slate-100 via-white to-slate-200 bg-clip-text text-transparent font-normal">
-                    Cinéprism
-                  </span>
-                </motion.h1>
-
-                {/* Mobile Featured Content Card */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.9 }}
-                  className="relative group mx-4"
-                >
-                  <div className="relative bg-slate-800/20 backdrop-blur-2xl border border-slate-600/30 rounded-3xl p-6 transition-all duration-500">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="text-left">
-                        <p className="text-xs text-slate-200 font-medium mb-2 uppercase tracking-wider">
-                          Featured Review
-                        </p>
-                        <h3 className="text-lg font-light text-slate-100 mb-1">
-                          {heroPosters[currentSlide].title}
-                        </h3>
-                        <p className="text-slate-400 text-xs">
-                          {heroPosters[currentSlide].year} •{" "}
-                          {heroPosters[currentSlide].genre}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-1 bg-slate-800/40 backdrop-blur-xl border border-slate-600/40 text-slate-200 px-3 py-1.5 rounded-full">
-                        <Star className="w-3 h-3 fill-current text-slate-200" />
-                        <span className="text-xs font-semibold text-slate-200">
-                          {heroPosters[currentSlide].rating}
-                        </span>
-                      </div>
-                    </div>
-
-                    <p className="text-slate-300 italic text-sm leading-relaxed text-left">
-                      "{heroPosters[currentSlide].subtitle}"
-                    </p>
-                  </div>
-
-                  {/* Mobile Film Navigation */}
-                  <div className="flex items-center justify-center gap-3 mt-6">
-                    {heroPosters.map((poster, index) => (
-                      <motion.button
-                        key={index}
-                        onClick={() => setCurrentSlide(index)}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                          index === currentSlide
-                            ? "bg-slate-200 shadow-lg shadow-slate-200/20"
-                            : "bg-slate-600/40 hover:bg-slate-500/60"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </motion.div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <MobileHero heroPosters={heroPosters} currentSlide={currentSlide} />
         <TrendingThisWeek />
         <LatestReviews />
         {/* Bento Grid Section */}
