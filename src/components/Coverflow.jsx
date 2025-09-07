@@ -30,7 +30,7 @@ const Card = ({ movie, index, totalItems, scrollXProgress }) => {
       <div className="aspect-[2/3] relative rounded-2xl overflow-hidden shadow-2xl">
         <img
           alt={movie.title}
-          src={movie.posterUrl.src ? movie.posterUrl.src : movie.posterUrl}
+          src={movie.image? movie.image : movie.posterUrl}
           effect="blur"
           className="w-full h-full object-cover"
         />

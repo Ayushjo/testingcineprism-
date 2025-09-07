@@ -8,8 +8,23 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-body {
-  cursor: none;
+/* Only hide cursor on large screens (1024px and up) */
+@media (min-width: 1024px) and (pointer: fine) {
+  body {
+    cursor: none;
+  }
+}
+
+/* Show default cursor on small screens and touch devices */
+@media (max-width: 1023px), (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+  
+  /* Force show cursor on buttons and links for mobile */
+  button, a, input, textarea, select {
+    cursor: pointer !important;
+  }
 }
 
 :root {
@@ -142,9 +157,19 @@ html {
   background: rgba(16, 185, 129, 0.7);
 }
 
-/* Optional: Show the default cursor on buttons and links for better usability */
-button, a {
-  cursor: pointer;
+/* Updated cursor rules with responsive behavior */
+@media (min-width: 1024px) and (pointer: fine) {
+  /* Show pointer cursor on interactive elements for desktop */
+  button, a {
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 1023px), (pointer: coarse) {
+  /* Ensure proper cursors on mobile/touch devices */
+  button, a, input, textarea, select, [role="button"] {
+    cursor: pointer !important;
+  }
 }
 
 /* Custom film strip animation */
