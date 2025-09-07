@@ -267,7 +267,7 @@ export default function Homepage() {
     <>
       <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
         {/* Desktop Hero Section - Hidden on Mobile */}
-        <section className="relative h-screen overflow-hidden pt-20 hidden md:block">
+        <section className="relative h-screen overflow-hidden pt-20 hidden lg:block">
           {/* Subtle Background Pattern */}
           <div className="absolute inset-0 opacity-5">
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:60px_60px]" />
@@ -500,7 +500,9 @@ export default function Homepage() {
         </section>
 
         {/* Mobile Hero Section - Only visible on mobile */}
-        <MobileHero heroPosters={heroPosters} currentSlide={currentSlide} />
+        <div className="lg:hidden">
+          <MobileHero heroPosters={heroPosters} currentSlide={currentSlide} />
+        </div>
         <TrendingThisWeek />
         <LatestReviews />
         {/* Bento Grid Section */}
