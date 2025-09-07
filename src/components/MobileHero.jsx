@@ -11,85 +11,160 @@ import {
 } from "lucide-react";
 import ParasitImage from "../assets/parasite.webp";
 import BladeRunnerImage from "../assets/bladerunner.jpg";
-import PastLivesImage from "../assets/pastlives.jpg";
+
 import SinnersImage from "../assets/sinners.jpg";
+
+import InterstellarImage from "../assets/Interstellar.jpg";
+import HowToLoseImage from "../assets/howtoloseaguys.jpg";
+import OppenHeimerImage from "../assets/oppenheimer.jpg";
+import OppenHeimerFireImage from "../assets/oppenheimerfire.jpg";
+import Tilt from "react-parallax-tilt";
+import { DesktopHero } from "@/components/ScriptHeroSections";
+import LatestReviews from "../components/LatestReviews";
+import TrendingThisWeek from "../components/TrendingThisWeek";
+import ExploreByGenre from "../components/ExploreByGenre";
+import NewsletterCTA from "../components/NewsLetterCTA";
+import FleabagImage2 from "../assets/fleebag2.jpg";
+import PastLivesImage from "../assets/pastlives.jpg";
+
+import SpiderManImage from "../assets/spiderman.jpg";
+import BatmanImage from "../assets/batman.jpg";
+import BladeRunnerImg from "../assets/bladerunner.jpg";
 import DuneFanImage from "../assets/dunefan.jpg";
+import SinnerImage from "../assets/sinners.jpg";
+import MobileHero from "@/components/MobileHero";
+import TennetImage from "../assets/tennet.jpg";
+import AliceImage from "../assets/alicedarling.jpg";
+import Marquee from "../components/Marquee";
+import Coverflow from "../components/Coverflow";
+import CoverflowMarquee from "../components/CoverflowMarquee";
+import DarkKnightImage from "../assets/darkknight.jpg";
+import DunkKirkImage from "../assets/dunkirk.jpg";
+import InteractiveVideoGrid from "../components/InteractiveVideoGrid";
+import ArticleSection from "../components/ArticleSection";
 const MobileHeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Expanded sample data - replace with your actual heroPosters
+  // const heroPosters = [
+  //   {
+  //     image: "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
+  //     title: "Fleabag",
+      
+  //   },
+  //   {
+  //     image: "https://image.tmdb.org/t/p/w500/xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg",
+  //     title: "Dune: Part Two",
+      
+  //   },
+  //   {
+  //     image: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+  //     title: "Interstellar",
+      
+  //   },
+  //   {
+  //     image: "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
+  //     title: "The Godfather",
+      
+  //   },
+  //   {
+  //     image: ParasitImage,
+  //     title: "Parasite",
+      
+  //   },
+  //   {
+  //     image: BladeRunnerImage,
+  //     title: "Blade Runner 2049",
+      
+  //   },
+  //   {
+  //     image: PastLivesImage,
+  //     title: "Past Lives",
+      
+  //   },
+  //   {
+  //     image: DuneFanImage,
+  //     title: "Dune",
+      
+  //   },
+  //   {
+  //     image: SinnersImage,
+  //     title: "Sinners",
+      
+  //   },
+  // ];
   const heroPosters = [
     {
-      image: "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
+      id: 1,
       title: "Fleabag",
-      subtitle: "Brilliant, Bold, and Brutally Honest",
-      year: "2016",
-      rating: 8.7,
-      genre: "Drama/Comedy",
+      subtitle: "Phoebe Waller-Bridge's Masterpiece",
+      image: FleabagImage2,
     },
     {
-      image: "https://image.tmdb.org/t/p/w500/xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg",
+      id: 2,
       title: "Dune: Part Two",
-      subtitle: "Epic Sci-Fi Continuation",
-      year: "2024",
-      rating: 8.8,
-      genre: "Sci-Fi",
-    },
-    {
-      image: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
-      title: "Interstellar",
-      subtitle: "Space Odyssey Masterpiece",
-      year: "2014",
-      rating: 8.6,
-      genre: "Sci-Fi",
-    },
-    {
-      image: "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
-      title: "The Godfather",
-      subtitle: "The Ultimate Crime Epic",
-      year: "1972",
-      rating: 9.2,
-      genre: "Crime/Drama",
-    },
-    {
-      image: ParasitImage,
-      title: "Parasite",
-      subtitle: "Social Thriller Masterclass",
-      year: "2019",
-      rating: 8.5,
-      genre: "Thriller",
-    },
-    {
-      image: BladeRunnerImage,
-      title: "Blade Runner 2049",
-      subtitle: "Cyberpunk Visual Poetry",
-      year: "2017",
-      rating: 8.0,
-      genre: "Sci-Fi",
-    },
-    {
-      image: PastLivesImage,
-      title: "Past Lives",
-      subtitle: "Romance in the Digital Age",
-      year: "2013",
-      rating: 8.0,
-      genre: "Romance/Drama",
-    },
-    {
+      subtitle: "The Sci-Fi Epic Continues",
       image: DuneFanImage,
-      title: "Dune",
-      subtitle: "Action Cinema Perfection",
-      year: "2023",
-      rating: 8.1,
-      genre: "Action",
     },
     {
-      image: SinnersImage,
+      id: 3,
+      title: "Alice Darling",
+      subtitle: "A Heartbreaking Reunion",
+      image: AliceImage,
+    },
+    {
+      id: 4,
+      title: "Past Lives",
+      subtitle: "A Heartbreaking Reunion",
+      image: PastLivesImage,
+    },
+    {
+      id: 5,
       title: "Sinners",
-      subtitle: "Culinary Psychological Horror",
-      year: "2022",
-      rating: 7.2,
-      genre: "Horror/Thriller",
+      subtitle: "A Heartbreaking Reunion",
+      image: SinnerImage,
+    },
+    {
+      id: 6,
+      title: "Dark Knight",
+      subtitle: "A Heartbreaking Reunion",
+      image: DarkKnightImage,
+    },
+    {
+      id: 7,
+      title: "Dunkirk",
+      subtitle: "A Heartbreaking Reunion",
+      image: DunkKirkImage,
+    },
+    {
+      id: 8,
+      title: "Parasite",
+      subtitle: "A Heartbreaking Reunion",
+      image: "https://image.tmdb.org/t/p/w342/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
+    },
+    {
+      id: 9,
+      title: "Interstellar",
+      subtitle: "A Heartbreaking Reunion",
+      image: "https://image.tmdb.org/t/p/w342/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+    },
+    {
+      id: 10,
+      title: "Tennet",
+      subtitle: "A Heartbreaking Reunion",
+      image: TennetImage,
+    },
+    {
+      id: 11,
+      title: "Everything Everywhere All at Once",
+      subtitle: "A Heartbreaking Reunion",
+      image: "https://image.tmdb.org/t/p/w342/w3LxiVYdWWRvEVdn5RYq6jIqkb1.jpg",
+    },
+    {
+      id: 12,
+      title: "Oppenheimer",
+      subtitle: "Nolan's Atomic Masterpiece",
+      image: OppenHeimerImage,
     },
   ];
 
