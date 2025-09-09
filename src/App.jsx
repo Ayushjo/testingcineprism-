@@ -44,6 +44,7 @@ import RuleOfThirdsPage from "./pages/RuleOfThirdsPage";
 import ScrollToTop from "./components/ScrollToTop";
 import CreateArticlePage from "./pages/CreateArticlePage";
 import ArticlePage from "./pages/ArticlePage";
+import BoxOfficePage from "./pages/BoxOfficePage";
 
 const App = () => {
   const location = useLocation();
@@ -63,6 +64,7 @@ const App = () => {
           <Route element={<RedirectIfAuth />}>
             <Route path="/login" element={<LoginPage />} />
           </Route>
+          <Route path="/box-office" element={<BoxOfficePage />} />
 
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/articles/:slug" element={<ArticlePage />} />
