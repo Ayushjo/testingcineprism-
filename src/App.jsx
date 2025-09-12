@@ -45,6 +45,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import CreateArticlePage from "./pages/CreateArticlePage";
 import ArticlePage from "./pages/ArticlePage";
 import BoxOfficePage from "./pages/BoxOfficePage";
+import ArticleSection from "./pages/ArticleSection";
 
 const App = () => {
   const location = useLocation();
@@ -64,11 +65,13 @@ const App = () => {
           <Route element={<RedirectIfAuth />}>
             <Route path="/login" element={<LoginPage />} />
           </Route>
-          <Route path="/box-office" element={<BoxOfficePage />} />
 
           <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route path="/articles/:slug" element={<ArticlePage />} />
+
           <Route element={<RedirectIfUser />}>
+            <Route path="/articles/:slug" element={<ArticlePage />} />
+            <Route path="/articles" element={<ArticleSection />} />
+            <Route path="/box-office" element={<BoxOfficePage />} />
             <Route path="/reviews" element={<ReviewPage />} />
             <Route path="/post/:id" element={<PostPage />} />
 
