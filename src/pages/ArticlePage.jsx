@@ -2,18 +2,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  Calendar,
-  User,
-  Eye,
-  Share2,
-  Bookmark,
-  ArrowLeft,
-  Clock,
-  Tag,
-  Heart,
-  MessageCircle,
-} from "lucide-react";
+import { Eye, Share2, Bookmark, ArrowLeft, Clock, Tag } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const ArticlePage = () => {
@@ -76,11 +65,11 @@ const ArticlePage = () => {
         return (
           <div className="mb-8">
             {content.hasTitle && content.title && (
-              <h3 className="text-2xl lg:text-3xl font-bold text-white mb-6 leading-tight">
+              <h3 className="text-2xl font-semibold text-white mb-4 leading-tight">
                 {content.title}
               </h3>
             )}
-            <p className="text-slate-300 leading-relaxed text-lg lg:text-xl font-light tracking-wide whitespace-pre-wrap">
+            <p className="text-slate-200 leading-[1.8] text-lg font-normal tracking-normal whitespace-pre-wrap">
               {content.text}
             </p>
           </div>
@@ -89,9 +78,9 @@ const ArticlePage = () => {
       case "HEADING":
         const HeadingTag = `h${content.level}`;
         const headingClasses = {
-          2: "text-3xl lg:text-4xl font-bold text-white mb-8 mt-16 leading-tight",
-          3: "text-2xl lg:text-3xl font-semibold text-white mb-6 mt-12 leading-tight",
-          4: "text-xl lg:text-2xl font-medium text-white mb-5 mt-10 leading-tight",
+          2: "text-3xl font-bold text-white mb-6 mt-12 leading-tight",
+          3: "text-2xl font-semibold text-white mb-4 mt-10 leading-tight",
+          4: "text-xl font-medium text-white mb-3 mt-8 leading-tight",
         };
 
         return React.createElement(
@@ -102,17 +91,16 @@ const ArticlePage = () => {
 
       case "IMAGE":
         return (
-          <figure className="mb-12 my-16">
-            <div className="relative overflow-hidden rounded-3xl shadow-2xl">
+          <figure className="mb-10 my-12">
+            <div className="relative overflow-hidden rounded-lg">
               <img
-                src={content.url}
+                src={content.url || "/placeholder.svg"}
                 alt={content.alt}
-                className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105"
+                className="w-full h-auto object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
             </div>
             {content.caption && (
-              <figcaption className="text-center text-slate-400 mt-6 italic text-base font-light">
+              <figcaption className="text-center text-slate-400 mt-4 italic text-sm">
                 {content.caption}
               </figcaption>
             )}
@@ -123,8 +111,8 @@ const ArticlePage = () => {
         const ListTag = content.type === "numbered" ? "ol" : "ul";
         const listClasses =
           content.type === "numbered"
-            ? "list-decimal list-inside space-y-4 mb-10 text-slate-300 text-lg lg:text-xl font-light"
-            : "list-disc list-inside space-y-4 mb-10 text-slate-300 text-lg lg:text-xl font-light";
+            ? "list-decimal list-inside space-y-3 mb-8 text-slate-200 text-lg"
+            : "list-disc list-inside space-y-3 mb-8 text-slate-200 text-lg";
 
         return React.createElement(
           ListTag,
@@ -140,15 +128,12 @@ const ArticlePage = () => {
 
       case "QUOTE":
         return (
-          <blockquote className="relative border-l-4 border-emerald-500 pl-8 py-8 my-12 bg-slate-900/30 rounded-r-3xl">
-            <div className="absolute top-4 left-4 text-emerald-500/20 text-6xl font-serif">
-              "
-            </div>
-            <p className="text-xl lg:text-2xl italic text-slate-200 leading-relaxed font-light mb-4 relative z-10">
+          <blockquote className="border-l-4 border-emerald-500 pl-6 py-4 my-8 bg-slate-900/20 rounded-r-lg">
+            <p className="text-xl italic text-slate-200 leading-relaxed mb-3">
               {content.text}
             </p>
             {content.author && (
-              <cite className="text-emerald-400 font-medium text-base">
+              <cite className="text-emerald-400 font-medium text-sm">
                 — {content.author}
               </cite>
             )}
@@ -157,12 +142,8 @@ const ArticlePage = () => {
 
       case "DIVIDER":
         return (
-          <div className="flex items-center justify-center my-16">
-            <div className="flex items-center space-x-4">
-              <div className="w-24 h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent"></div>
-              <div className="w-3 h-3 bg-emerald-500 rounded-full shadow-lg shadow-emerald-500/50"></div>
-              <div className="w-24 h-px bg-gradient-to-l from-transparent via-slate-600 to-transparent"></div>
-            </div>
+          <div className="flex items-center justify-center my-12">
+            <div className="w-32 h-px bg-slate-700"></div>
           </div>
         );
 
@@ -205,111 +186,76 @@ const ArticlePage = () => {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      {/* Ambient Background */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(139,92,246,0.03),transparent_50%)]" />
-      </div>
-
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-16">
-        <div className="max-w-5xl mx-auto px-6 lg:px-8">
-          {/* Back Button */}
+      <section className="relative pt-16 pb-12">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8">
           <motion.button
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             onClick={() => navigate(-1)}
-            className="flex items-center gap-3 text-slate-400 hover:text-white transition-all duration-300 mb-16 group"
+            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-200 mb-12"
           >
-            <div className="p-2 rounded-xl bg-white/5 group-hover:bg-white/10 transition-colors duration-300">
-              <ArrowLeft
-                size={20}
-                className="group-hover:-translate-x-1 transition-transform duration-300"
-              />
-            </div>
-            <span className="font-medium">Back to Articles</span>
+            <ArrowLeft size={18} />
+            <span>Back</span>
           </motion.button>
 
-          {/* Article Header */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-center"
           >
-            {/* Title */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white mb-8 leading-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               {article.title}
             </h1>
 
-            {/* Description */}
-            <div className="mb-12">
-              <p className="text-lg lg:text-xl text-slate-300 leading-relaxed font-light max-w-4xl mx-auto whitespace-pre-wrap">
+            {article.shortDescription && (
+              <p className="text-xl text-slate-300 leading-relaxed mb-8 max-w-3xl">
                 {article.shortDescription}
               </p>
-            </div>
+            )}
 
-            {/* Clean Meta Section */}
-            <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-800/50 rounded-3xl p-8 mb-10 max-w-4xl mx-auto">
-              {/* Author and Date Row */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-lg shrink-0">
-                    {article.author[0].toUpperCase()}
-                  </div>
-                  <div className="text-left">
-                    <div className="flex items-center gap-2 text-white font-semibold text-lg">
-                      <User size={16} />
-                      {article.author}
-                    </div>
-                    <div className="flex items-center gap-2 text-slate-400 text-sm">
-                      <Calendar size={14} />
-                      {formatDate(article.publishedAt || article.createdAt)}
-                    </div>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 pb-8 border-b border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-semibold">
+                  {article.author[0].toUpperCase()}
+                </div>
+                <div>
+                  <div className="text-white font-medium">{article.author}</div>
+                  <div className="text-slate-400 text-sm">
+                    {formatDate(article.publishedAt || article.createdAt)}
                   </div>
                 </div>
               </div>
 
-              {/* Stats Row */}
-              <div className="flex flex-wrap items-center justify-center gap-8 pt-6 border-t border-slate-800/50">
-                <div className="flex items-center gap-2 text-slate-300">
-                  <Clock size={18} className="text-emerald-500" />
-                  <span className="font-medium">{readingTime} min read</span>
+              <div className="flex items-center gap-6 text-slate-400 text-sm sm:ml-auto">
+                <div className="flex items-center gap-1">
+                  <Clock size={14} />
+                  <span>{readingTime} min read</span>
                 </div>
-                <div className="flex items-center gap-2 text-slate-300">
-                  <Eye size={18} className="text-emerald-500" />
-                  <span className="font-medium">
-                    {article.viewCount || 0} views
-                  </span>
+                <div className="flex items-center gap-1">
+                  <Eye size={14} />
+                  <span>{article.viewCount || 0} views</span>
                 </div>
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center justify-center gap-4">
-              <button className="flex items-center gap-3 px-8 py-4 bg-white/5 backdrop-blur-xl text-slate-300 rounded-2xl hover:bg-white/10 transition-all duration-300 border border-white/10 hover:border-white/20 group">
-                <Share2
-                  size={20}
-                  className="group-hover:scale-110 transition-transform duration-300"
-                />
-                <span className="font-medium">Share</span>
+            <div className="flex items-center gap-3">
+              <button className="flex items-center gap-2 px-4 py-2 text-slate-300 hover:text-white transition-colors">
+                <Share2 size={16} />
+                <span className="text-sm">Share</span>
               </button>
-
               <button
                 onClick={() => setIsBookmarked(!isBookmarked)}
-                className={`flex items-center gap-3 px-8 py-4 backdrop-blur-xl rounded-2xl transition-all duration-300 border group ${
+                className={`flex items-center gap-2 px-4 py-2 transition-colors ${
                   isBookmarked
-                    ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/30"
-                    : "bg-white/5 text-slate-300 border-white/10 hover:bg-white/10 hover:border-white/20"
+                    ? "text-emerald-400"
+                    : "text-slate-300 hover:text-white"
                 }`}
               >
                 <Bookmark
-                  size={20}
-                  className={`group-hover:scale-110 transition-transform duration-300 ${
-                    isBookmarked ? "fill-current" : ""
-                  }`}
+                  size={16}
+                  className={isBookmarked ? "fill-current" : ""}
                 />
-                <span className="font-medium">
+                <span className="text-sm">
                   {isBookmarked ? "Saved" : "Save"}
                 </span>
               </button>
@@ -318,88 +264,76 @@ const ArticlePage = () => {
         </div>
       </section>
 
-      {/* Main Image */}
       {article.mainImageUrl && (
         <motion.section
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mb-20"
+          transition={{ delay: 0.2 }}
+          className="mb-16"
         >
-          <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-3xl shadow-2xl">
+          <div className="max-w-4xl mx-auto px-6 lg:px-8">
+            <div className="relative overflow-hidden rounded-lg">
               <img
-                src={article.mainImageUrl}
+                src={article.mainImageUrl || "/placeholder.svg"}
                 alt={article.title}
-                className="w-full h-[50vh] lg:h-[70vh] object-cover"
+                className="w-full h-[400px] lg:h-[500px] object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
             </div>
           </div>
         </motion.section>
       )}
 
-      {/* Article Content */}
       <motion.article
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
+        transition={{ delay: 0.3 }}
         className="relative"
       >
-        <div className="max-w-4xl mx-auto px-6 lg:px-8 pb-20">
-          <div className="prose prose-lg prose-invert max-w-none">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8 pb-16">
+          <div className="prose prose-lg max-w-none">
             {article.blocks && article.blocks.length > 0 ? (
               article.blocks.map((block, index) => (
                 <motion.div
                   key={block.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 * index }}
+                  transition={{ delay: 0.05 * index }}
                 >
                   {renderContentBlock(block)}
                 </motion.div>
               ))
             ) : (
-              <div className="text-center py-20">
-                <div className="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Tag className="w-8 h-8 text-slate-500" />
-                </div>
-                <p className="text-slate-400 text-xl">
+              <div className="text-center py-16">
+                <Tag className="w-12 h-12 text-slate-500 mx-auto mb-4" />
+                <p className="text-slate-400">
                   No content available for this article.
                 </p>
               </div>
             )}
           </div>
 
-          {/* Article Footer - Cleaner Design */}
           <motion.footer
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="border-t border-slate-800 pt-16 mt-20"
+            transition={{ delay: 0.4 }}
+            className="border-t border-slate-800 pt-12 mt-16"
           >
-            <div className="bg-slate-900/40 backdrop-blur-xl rounded-3xl p-10 border border-slate-800/50">
-              <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-white mb-4">
-                  About the Author
-                </h3>
-                <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
-                  {article.author[0].toUpperCase()}
-                </div>
-                <h4 className="text-xl font-semibold text-white mb-2">
-                  {article.author}
-                </h4>
-                <p className="text-slate-400 mb-8">
-                  Published on{" "}
-                  {formatDate(article.publishedAt || article.createdAt)}
-                </p>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
+                {article.author[0].toUpperCase()}
               </div>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button className="px-8 py-4 bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-emerald-500/20">
-                  Follow Author
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {article.author}
+              </h3>
+              <p className="text-slate-400 mb-6">
+                Published on{" "}
+                {formatDate(article.publishedAt || article.createdAt)}
+              </p>
+              <div className="flex items-center justify-center gap-3">
+                <button className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors">
+                  Follow
                 </button>
-                <button className="px-8 py-4 border border-slate-600 text-slate-300 rounded-2xl hover:bg-slate-800/50 hover:border-slate-500 transition-all duration-300 font-medium">
+                <button className="px-6 py-2 border border-slate-600 text-slate-300 hover:bg-slate-800 rounded-lg font-medium transition-colors">
                   More Articles
                 </button>
               </div>
@@ -407,40 +341,6 @@ const ArticlePage = () => {
           </motion.footer>
         </div>
       </motion.article>
-
-      {/* Floating Action Bar - Mobile */}
-      <div className="fixed bottom-6 left-6 right-6 lg:hidden z-50">
-        <div className="bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-4 shadow-2xl">
-          <div className="flex items-center justify-around">
-            <button className="flex flex-col items-center gap-1 text-slate-400 hover:text-pink-500 transition-colors">
-              <Heart size={20} />
-              <span className="text-xs font-medium">Like</span>
-            </button>
-            <button className="flex flex-col items-center gap-1 text-slate-400 hover:text-emerald-400 transition-colors">
-              <MessageCircle size={20} />
-              <span className="text-xs font-medium">Comment</span>
-            </button>
-            <button className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-400 transition-colors">
-              <Share2 size={20} />
-              <span className="text-xs font-medium">Share</span>
-            </button>
-            <button
-              onClick={() => setIsBookmarked(!isBookmarked)}
-              className={`flex flex-col items-center gap-1 transition-colors ${
-                isBookmarked
-                  ? "text-emerald-400"
-                  : "text-slate-400 hover:text-emerald-400"
-              }`}
-            >
-              <Bookmark
-                size={20}
-                className={isBookmarked ? "fill-current" : ""}
-              />
-              <span className="text-xs font-medium">Save</span>
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
