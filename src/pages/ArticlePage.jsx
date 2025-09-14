@@ -63,13 +63,13 @@ const ArticlePage = () => {
     switch (type) {
       case "PARAGRAPH":
         return (
-          <div className="mb-8">
+          <div className="mb-6">
             {content.hasTitle && content.title && (
-              <h3 className="text-2xl font-semibold text-white mb-4 leading-tight">
+              <h3 className="text-xl font-semibold text-white mb-3 leading-tight">
                 {content.title}
               </h3>
             )}
-            <p className="text-slate-200 leading-[1.8] text-lg font-normal tracking-normal whitespace-pre-wrap">
+            <p className="text-slate-300 leading-[1.7] text-base font-normal tracking-normal whitespace-pre-wrap">
               {content.text}
             </p>
           </div>
@@ -78,9 +78,9 @@ const ArticlePage = () => {
       case "HEADING":
         const HeadingTag = `h${content.level}`;
         const headingClasses = {
-          2: "text-3xl font-bold text-white mb-6 mt-12 leading-tight",
-          3: "text-2xl font-semibold text-white mb-4 mt-10 leading-tight",
-          4: "text-xl font-medium text-white mb-3 mt-8 leading-tight",
+          2: "text-2xl font-bold text-white mb-4 mt-8 leading-tight",
+          3: "text-xl font-semibold text-white mb-3 mt-6 leading-tight",
+          4: "text-lg font-medium text-white mb-2 mt-5 leading-tight",
         };
 
         return React.createElement(
@@ -91,7 +91,7 @@ const ArticlePage = () => {
 
       case "IMAGE":
         return (
-          <figure className="mb-10 my-12">
+          <figure className="mb-8 my-8">
             <div className="relative overflow-hidden rounded-lg">
               <img
                 src={content.url || "/placeholder.svg"}
@@ -100,7 +100,7 @@ const ArticlePage = () => {
               />
             </div>
             {content.caption && (
-              <figcaption className="text-center text-slate-400 mt-4 italic text-sm">
+              <figcaption className="text-center text-slate-400 mt-3 italic text-sm">
                 {content.caption}
               </figcaption>
             )}
@@ -111,8 +111,8 @@ const ArticlePage = () => {
         const ListTag = content.type === "numbered" ? "ol" : "ul";
         const listClasses =
           content.type === "numbered"
-            ? "list-decimal list-inside space-y-3 mb-8 text-slate-200 text-lg"
-            : "list-disc list-inside space-y-3 mb-8 text-slate-200 text-lg";
+            ? "list-decimal list-inside space-y-2 mb-6 text-slate-300 text-base"
+            : "list-disc list-inside space-y-2 mb-6 text-slate-300 text-base";
 
         return React.createElement(
           ListTag,
@@ -128,8 +128,8 @@ const ArticlePage = () => {
 
       case "QUOTE":
         return (
-          <blockquote className="border-l-4 border-emerald-500 pl-6 py-4 my-8 bg-slate-900/20 rounded-r-lg">
-            <p className="text-xl italic text-slate-200 leading-relaxed mb-3">
+          <blockquote className="border-l-4 border-emerald-500 pl-6 py-4 my-6 bg-slate-900/20 rounded-r-lg">
+            <p className="text-lg italic text-slate-200 leading-relaxed mb-2">
               {content.text}
             </p>
             {content.author && (
@@ -142,7 +142,7 @@ const ArticlePage = () => {
 
       case "DIVIDER":
         return (
-          <div className="flex items-center justify-center my-12">
+          <div className="flex items-center justify-center my-8">
             <div className="w-32 h-px bg-slate-700"></div>
           </div>
         );
@@ -186,76 +186,70 @@ const ArticlePage = () => {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <section className="relative pt-16 pb-12">
+      <section className="relative pt-24 pb-8 ">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
-          <motion.button
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-200 mb-12"
-          >
-            <ArrowLeft size={18} />
-            <span>Back</span>
-          </motion.button>
+          
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
               {article.title}
             </h1>
 
             {article.shortDescription && (
-              <p className="text-xl text-slate-300 leading-relaxed mb-8 max-w-3xl">
+              <p className="text-lg text-slate-300 leading-relaxed mb-6 max-w-3xl">
                 {article.shortDescription}
               </p>
             )}
 
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 pb-8 border-b border-slate-800">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 pb-6 border-b border-slate-800">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-semibold">
+                <div className="w-9 h-9 bg-emerald-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                   {article.author[0].toUpperCase()}
                 </div>
                 <div>
-                  <div className="text-white font-medium">{article.author}</div>
-                  <div className="text-slate-400 text-sm">
+                  <div className="text-white font-medium text-sm">
+                    {article.author}
+                  </div>
+                  <div className="text-slate-400 text-xs">
                     {formatDate(article.publishedAt || article.createdAt)}
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-6 text-slate-400 text-sm sm:ml-auto">
+              <div className="flex items-center gap-6 text-slate-400 text-xs sm:ml-auto">
                 <div className="flex items-center gap-1">
-                  <Clock size={14} />
+                  <Clock size={12} />
                   <span>{readingTime} min read</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Eye size={14} />
+                  <Eye size={12} />
                   <span>{article.viewCount || 0} views</span>
                 </div>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <button className="flex items-center gap-2 px-4 py-2 text-slate-300 hover:text-white transition-colors">
-                <Share2 size={16} />
-                <span className="text-sm">Share</span>
+              <button className="flex items-center gap-2 px-3 py-2 text-slate-300 hover:text-white transition-colors">
+                <Share2 size={14} />
+                <span className="text-xs">Share</span>
               </button>
               <button
                 onClick={() => setIsBookmarked(!isBookmarked)}
-                className={`flex items-center gap-2 px-4 py-2 transition-colors ${
+                className={`flex items-center gap-2 px-3 py-2 transition-colors ${
                   isBookmarked
                     ? "text-emerald-400"
                     : "text-slate-300 hover:text-white"
                 }`}
               >
                 <Bookmark
-                  size={16}
+                  size={14}
                   className={isBookmarked ? "fill-current" : ""}
                 />
-                <span className="text-sm">
+                <span className="text-xs">
                   {isBookmarked ? "Saved" : "Save"}
                 </span>
               </button>
@@ -269,14 +263,15 @@ const ArticlePage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="mb-16"
+          className="mb-8"
         >
-          <div className="max-w-4xl mx-auto px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-lg">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="relative overflow-hidden rounded-md">
               <img
                 src={article.mainImageUrl || "/placeholder.svg"}
                 alt={article.title}
-                className="w-full h-[400px] lg:h-[500px] object-cover"
+                className="w-full h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] object-cover"
+                style={{ objectFit: "cover" }}
               />
             </div>
           </div>
@@ -316,24 +311,24 @@ const ArticlePage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="border-t border-slate-800 pt-12 mt-16"
+            className="border-t border-slate-800 pt-8 mt-12"
           >
             <div className="text-center">
-              <div className="w-16 h-16 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
+              <div className="w-14 h-14 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-lg mx-auto mb-3">
                 {article.author[0].toUpperCase()}
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">
+              <h3 className="text-lg font-semibold text-white mb-1">
                 {article.author}
               </h3>
-              <p className="text-slate-400 mb-6">
+              <p className="text-slate-400 mb-4 text-sm">
                 Published on{" "}
                 {formatDate(article.publishedAt || article.createdAt)}
               </p>
               <div className="flex items-center justify-center gap-3">
-                <button className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors">
+                <button className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors text-sm">
                   Follow
                 </button>
-                <button className="px-6 py-2 border border-slate-600 text-slate-300 hover:bg-slate-800 rounded-lg font-medium transition-colors">
+                <button className="px-5 py-2 border border-slate-600 text-slate-300 hover:bg-slate-800 rounded-lg font-medium transition-colors text-sm">
                   More Articles
                 </button>
               </div>
