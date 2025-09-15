@@ -117,19 +117,6 @@ const ArticleCardsWithFocus = ({ filteredArticles }) => {
                       </span>
                     </div>
                   </div>
-
-                  <p className="text-slate-300 leading-relaxed mb-4 sm:mb-6 line-clamp-2 sm:line-clamp-2 text-sm sm:text-base">
-                    {article.shortDescription}
-                  </p>
-
-                  <motion.button
-                    whileHover={{ scale: 1.02, x: 5 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group/btn inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold transition-all duration-300 text-sm sm:text-base"
-                  >
-                    Read Full Article
-                    <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:translate-x-1 transition-transform" />
-                  </motion.button>
                 </div>
               </div>
             </div>
