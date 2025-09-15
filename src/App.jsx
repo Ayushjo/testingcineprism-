@@ -65,9 +65,9 @@ const App = () => {
           <Route element={<RedirectIfAuth />}>
             <Route path="/login" element={<LoginPage />} />
           </Route>
+          <Route path="/articles/:slug" element={<ArticlePage />} />
 
           <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route path="/articles/:slug" element={<ArticlePage />} />
           <Route element={<RedirectIfUser />}>
             <Route path="/articles" element={<ArticleSection />} />
             <Route path="/box-office" element={<BoxOfficePage />} />

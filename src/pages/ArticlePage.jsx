@@ -188,8 +188,6 @@ const ArticlePage = () => {
     <div className="min-h-screen bg-slate-950">
       <section className="relative pt-24 pb-8 ">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
-          
-
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -263,10 +261,10 @@ const ArticlePage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="mb-8"
+          className="mb-8 w-full"
         >
-          <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-md">
+          <div className="w-full">
+            <div className="relative overflow-hidden">
               <img
                 src={article.mainImageUrl || "/placeholder.svg"}
                 alt={article.title}
