@@ -377,7 +377,6 @@ const Comment = ({
   );
 };
 
-
 export default function PostPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -575,8 +574,6 @@ export default function PostPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white pt-20">
-      
-
       {/* Ambient Background */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
@@ -924,7 +921,9 @@ export default function PostPage() {
                 <div
                   key={relatedPost.id}
                   className="group relative h-96 rounded-2xl overflow-hidden shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer"
-                  onClick={() => navigate(`/post/${relatedPost.id}`)}
+                  onClick={() =>
+                    (window.location.href = `/post/${relatedPost.slug}`)
+                  }
                 >
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
