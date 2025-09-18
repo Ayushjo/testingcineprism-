@@ -922,7 +922,7 @@ export default function PostPage() {
                   key={relatedPost.id}
                   className="group relative h-96 rounded-2xl overflow-hidden shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer"
                   onClick={() =>
-                    (window.location.href = `/post/${relatedPost.slug}`)
+                    (window.location.href = `/post/${relatedPost.id}`)
                   }
                 >
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
