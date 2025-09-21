@@ -17,12 +17,35 @@ const BACKEND_BASE_URL =
   "https://testingcineprismbackend-production.up.railway.app";
 
 // Social Media Share Component
-const SharePopup = ({ isOpen, onClose, url, title, description, postId }) => {
+const SharePopup = ({
+  isOpen,
+  onClose,
+  url,
+  title,
+  description,
+  postId,
+  articleId,
+  articleSlug,
+  type = "post",
+}) => {
   const [copied, setCopied] = useState(false);
   const popupRef = useRef(null);
 
-  // Use backend URL for social media sharing (has meta tags)
-  const shareableUrl = postId ? `${BACKEND_BASE_URL}/post/${postId}` : url;
+  // Determine backend URL for social media sharing (has meta tags)
+  const getShareableUrl = () => {
+    if (type === "article") {
+      if (articleSlug) {
+        return `${BACKEND_BASE_URL}/api/v1/articles/${articleSlug}`;
+      } else if (articleId) {
+        return `${BACKEND_BASE_URL}/article/${articleId}`;
+      }
+    } else if (type === "post" && postId) {
+      return `${BACKEND_BASE_URL}/post/${postId}`;
+    }
+    return url; // fallback to provided URL
+  };
+
+  const shareableUrl = getShareableUrl();
 
   // Use frontend URL for copying (better UX)
   const copyUrl = url;
@@ -121,7 +144,9 @@ const SharePopup = ({ isOpen, onClose, url, title, description, postId }) => {
       url: `mailto:?subject=${encodeURIComponent(
         title
       )}&body=${encodeURIComponent(
-        `Check out this movie review:\n\n${title}\n\n${description}\n\n${shareableUrl}`
+        type === "article"
+          ? `Check out this article:\n\n${title}\n\n${description}\n\n${shareableUrl}`
+          : `Check out this movie review:\n\n${title}\n\n${description}\n\n${shareableUrl}`
       )}`,
     },
   ];
@@ -151,6 +176,11 @@ const SharePopup = ({ isOpen, onClose, url, title, description, postId }) => {
 
   if (!isOpen) return null;
 
+  const getShareTitle = () => {
+    if (type === "article") return "Share this article";
+    return "Share this review";
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div
@@ -160,7 +190,7 @@ const SharePopup = ({ isOpen, onClose, url, title, description, postId }) => {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-white">
-            Share this review
+            {getShareTitle()}
           </h3>
           <button
             onClick={onClose}
@@ -243,7 +273,15 @@ const SharePopup = ({ isOpen, onClose, url, title, description, postId }) => {
 };
 
 // Enhanced Share Button Component
-export const ShareButton = ({ url, title, description, postId }) => {
+export const ShareButton = ({
+  url,
+  title,
+  description,
+  postId,
+  articleId,
+  articleSlug,
+  type = "post",
+}) => {
   const [showSharePopup, setShowSharePopup] = useState(false);
 
   const handleShareClick = () => {
@@ -262,7 +300,9 @@ export const ShareButton = ({ url, title, description, postId }) => {
         <div className="flex flex-col items-start">
           <span className="font-bold text-base sm:text-lg">Share</span>
           <span className="text-xs sm:text-sm text-slate-500">
-            <span className="hidden sm:inline">Spread the word</span>
+            <span className="hidden sm:inline">
+              {type === "article" ? "Spread the word" : "Spread the word"}
+            </span>
             <span className="sm:hidden">📤</span>
           </span>
         </div>
@@ -275,6 +315,9 @@ export const ShareButton = ({ url, title, description, postId }) => {
         title={title}
         description={description}
         postId={postId}
+        articleId={articleId}
+        articleSlug={articleSlug}
+        type={type}
       />
     </>
   );

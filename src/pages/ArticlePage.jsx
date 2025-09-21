@@ -17,7 +17,7 @@ import {
   Reply,
 } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
-import ShareButton from "@/components/ShareButton.jsx";
+import { ShareButton } from "@/components/ShareComponent.jsx";
 import {
   useArticleComments,
   useArticleLike,
@@ -679,13 +679,16 @@ const ArticlePage = () => {
               </button>
 
               <ShareButton
+                url={window.location.href}
                 title={article.title}
-                text={
+                description={
                   article.excerpt ||
                   article.shortDescription ||
                   `Check out this article: ${article.title}`
                 }
-                url={`${window.location.origin}/articles/${slug}`}
+                articleId={article.id}
+                articleSlug={slug} // This is from your useParams()
+                type="article"
               />
 
               <button
