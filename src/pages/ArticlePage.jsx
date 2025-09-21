@@ -25,6 +25,7 @@ import {
   formatDate,
   getAvatarColor,
 } from "../utils/articleApi.js";
+import { Helmet } from "react-helmet";
 
 const Comment = ({
   comment,
@@ -463,6 +464,14 @@ const ArticlePage = () => {
       });
     }
   };
+  useEffect(() => {
+    if (article && window.__sharethis__) {
+      // Small delay to ensure DOM is updated
+      setTimeout(() => {
+        window.__sharethis__.initialize();
+      }, 100);
+    }
+  }, [article]);
 
   const handleLikeClick = () => {
     if (!user) {
@@ -514,6 +523,77 @@ const ArticlePage = () => {
     <div className="min-h-screen bg-slate-950">
       <section className="relative pt-16 pb-12">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
+          <Helmet>
+            <title>{article.title} | TheCinePrism</title>
+            <meta
+              name="description"
+              content={
+                article.excerpt ||
+                article.shortDescription ||
+                article.content?.slice(0, 150) ||
+                `Read ${article.title} on TheCinePrism`
+              }
+            />
+
+            {/* Open Graph */}
+            <meta property="og:title" content={article.title} />
+            <meta
+              property="og:description"
+              content={
+                article.excerpt ||
+                article.shortDescription ||
+                article.content?.slice(0, 150) ||
+                `Read ${article.title} on TheCinePrism`
+              }
+            />
+            <meta
+              property="og:image"
+              content={
+                article.mainImageUrl ||
+                article.imageUrl ||
+                "/thecineprismlogo.jpg"
+              }
+            />
+            <meta
+              property="og:url"
+              content={`${window.location.origin}/articles/${slug}`}
+            />
+            <meta property="og:type" content="article" />
+            <meta property="og:site_name" content="TheCinePrism" />
+
+            {/* Twitter */}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:site" content="@TheCinePrism" />
+            <meta name="twitter:title" content={article.title} />
+            <meta
+              name="twitter:description"
+              content={
+                article.excerpt ||
+                article.shortDescription ||
+                article.content?.slice(0, 150) ||
+                `Read ${article.title} on TheCinePrism`
+              }
+            />
+            <meta
+              name="twitter:image"
+              content={
+                article.mainImageUrl ||
+                article.imageUrl ||
+                "/thecineprismlogo.jpg"
+              }
+            />
+
+            {/* Article specific */}
+            <meta property="article:author" content={article.author} />
+            <meta
+              property="article:published_time"
+              content={article.publishedAt || article.createdAt}
+            />
+            {article.tags &&
+              article.tags.map((tag) => (
+                <meta key={tag} property="article:tag" content={tag} />
+              ))}
+          </Helmet>
           <motion.button
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -604,25 +684,39 @@ const ArticlePage = () => {
                 </div>
               </button>
 
-              <button className="flex items-center gap-2 px-4 py-2 text-slate-300 hover:text-white transition-colors">
-                <Share2 size={16} />
-                <span className="text-sm">Share</span>
-              </button>
+              {/* ShareThis Integration */}
+              <div className="flex items-center gap-2 sm:gap-3 text-slate-400 hover:text-emerald-400 transition-all duration-300 group flex-shrink-0">
+                <div className="p-1.5 sm:p-2 rounded-xl bg-white/5 group-hover:bg-emerald-500/10 transition-colors duration-300">
+                  <Share2 className="w-5 h-5 sm:w-6 sm:h-6" />
+                </div>
+                <div
+                  className="sharethis-inline-share-buttons"
+                  data-title={article.title}
+                  data-url={`${window.location.origin}/articles/${slug}`}
+                  data-description={article.excerpt || article.shortDescription}
+                ></div>
+              </div>
+
               <button
                 onClick={() => setIsBookmarked(!isBookmarked)}
-                className={`flex items-center gap-2 px-4 py-2 transition-colors ${
+                className={`flex items-center gap-2 sm:gap-3 transition-all duration-300 group flex-shrink-0 ${
                   isBookmarked
                     ? "text-emerald-400"
-                    : "text-slate-300 hover:text-white"
+                    : "text-slate-400 hover:text-emerald-400"
                 }`}
               >
-                <Bookmark
-                  size={16}
-                  className={isBookmarked ? "fill-current" : ""}
-                />
-                <span className="text-sm">
-                  {isBookmarked ? "Saved" : "Save"}
-                </span>
+                <div className="p-1.5 sm:p-2 rounded-xl bg-white/5 group-hover:bg-emerald-500/10 transition-colors duration-300">
+                  <Bookmark
+                    className={`w-5 h-5 sm:w-6 sm:h-6 ${
+                      isBookmarked ? "fill-current" : ""
+                    }`}
+                  />
+                </div>
+                <div className="flex flex-col items-start">
+                  <span className="font-bold text-base sm:text-lg">
+                    {isBookmarked ? "Saved" : "Save"}
+                  </span>
+                </div>
               </button>
             </div>
           </motion.div>
@@ -676,7 +770,6 @@ const ArticlePage = () => {
               </div>
             )}
           </div>
-
         </div>
       </motion.article>
 
