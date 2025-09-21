@@ -17,6 +17,7 @@ import {
   Reply,
 } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
+import ShareButton from "@/components/ShareButton.jsx";
 import {
   useArticleComments,
   useArticleLike,
@@ -464,14 +465,7 @@ const ArticlePage = () => {
       });
     }
   };
-  useEffect(() => {
-    if (article && window.__sharethis__) {
-      // Small delay to ensure DOM is updated
-      setTimeout(() => {
-        window.__sharethis__.initialize();
-      }, 100);
-    }
-  }, [article]);
+
 
   const handleLikeClick = () => {
     if (!user) {
@@ -684,18 +678,15 @@ const ArticlePage = () => {
                 </div>
               </button>
 
-              {/* ShareThis Integration */}
-              <div className="flex items-center gap-2 sm:gap-3 text-slate-400 hover:text-emerald-400 transition-all duration-300 group flex-shrink-0">
-                <div className="p-1.5 sm:p-2 rounded-xl bg-white/5 group-hover:bg-emerald-500/10 transition-colors duration-300">
-                  <Share2 className="w-5 h-5 sm:w-6 sm:h-6" />
-                </div>
-                <div
-                  className="sharethis-inline-share-buttons"
-                  data-title={article.title}
-                  data-url={`${window.location.origin}/articles/${slug}`}
-                  data-description={article.excerpt || article.shortDescription}
-                ></div>
-              </div>
+              <ShareButton
+                title={article.title}
+                text={
+                  article.excerpt ||
+                  article.shortDescription ||
+                  `Check out this article: ${article.title}`
+                }
+                url={`${window.location.origin}/articles/${slug}`}
+              />
 
               <button
                 onClick={() => setIsBookmarked(!isBookmarked)}
