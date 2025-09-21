@@ -588,15 +588,7 @@ const ArticlePage = () => {
                 <meta key={tag} property="article:tag" content={tag} />
               ))}
           </Helmet>
-          <motion.button
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-200 mb-12"
-          >
-            <ArrowLeft size={18} />
-            <span>Back</span>
-          </motion.button>
+          
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -691,27 +683,7 @@ const ArticlePage = () => {
                 type="article"
               />
 
-              <button
-                onClick={() => setIsBookmarked(!isBookmarked)}
-                className={`flex items-center gap-2 sm:gap-3 transition-all duration-300 group flex-shrink-0 ${
-                  isBookmarked
-                    ? "text-emerald-400"
-                    : "text-slate-400 hover:text-emerald-400"
-                }`}
-              >
-                <div className="p-1.5 sm:p-2 rounded-xl bg-white/5 group-hover:bg-emerald-500/10 transition-colors duration-300">
-                  <Bookmark
-                    className={`w-5 h-5 sm:w-6 sm:h-6 ${
-                      isBookmarked ? "fill-current" : ""
-                    }`}
-                  />
-                </div>
-                <div className="flex flex-col items-start">
-                  <span className="font-bold text-base sm:text-lg">
-                    {isBookmarked ? "Saved" : "Save"}
-                  </span>
-                </div>
-              </button>
+              
             </div>
           </motion.div>
         </div>
