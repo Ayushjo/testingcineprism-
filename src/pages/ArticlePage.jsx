@@ -608,7 +608,7 @@ const ArticlePage = () => {
                   <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-semibold shadow-lg">
                     {article.author[0].toUpperCase()}
                   </div>
-                  <div className="text-sm font-medium">
+                  <div className="text-sm font-medium sm:flex ">
                     <span>{article.author}</span>
                     <span className="mx-2">•</span>
                     <span>
