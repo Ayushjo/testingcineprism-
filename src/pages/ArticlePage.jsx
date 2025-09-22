@@ -7,7 +7,6 @@ import {
   Share2,
   Bookmark,
   ArrowLeft,
-  Clock,
   Tag,
   Heart,
   MessageCircle,
@@ -17,7 +16,6 @@ import {
   Reply,
 } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ShareButton } from "@/components/ShareComponent.jsx";
 import {
   useArticleComments,
   useArticleLike,
@@ -26,7 +24,6 @@ import {
   formatDate,
   getAvatarColor,
 } from "../utils/articleApi.js";
-import { Helmet } from "react-helmet";
 
 const Comment = ({
   comment,
@@ -466,7 +463,6 @@ const ArticlePage = () => {
     }
   };
 
-
   const handleLikeClick = () => {
     if (!user) {
       alert("Please login to like articles");
@@ -515,197 +511,192 @@ const ArticlePage = () => {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <section className="relative pt-16 pb-12">
-        <div className="max-w-4xl mx-auto px-6 lg:px-8">
-          <Helmet>
-            <title>{article.title} | TheCinePrism</title>
-            <meta
-              name="description"
-              content={
-                article.excerpt ||
-                article.shortDescription ||
-                article.content?.slice(0, 150) ||
-                `Read ${article.title} on TheCinePrism`
-              }
-            />
-
-            {/* Open Graph */}
-            <meta property="og:title" content={article.title} />
-            <meta
-              property="og:description"
-              content={
-                article.excerpt ||
-                article.shortDescription ||
-                article.content?.slice(0, 150) ||
-                `Read ${article.title} on TheCinePrism`
-              }
-            />
-            <meta
-              property="og:image"
-              content={
-                article.mainImageUrl ||
-                article.imageUrl ||
-                "/thecineprismlogo.jpg"
-              }
-            />
-            <meta
-              property="og:url"
-              content={`${window.location.origin}/articles/${slug}`}
-            />
-            <meta property="og:type" content="article" />
-            <meta property="og:site_name" content="TheCinePrism" />
-
-            {/* Twitter */}
-            <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:site" content="@TheCinePrism" />
-            <meta name="twitter:title" content={article.title} />
-            <meta
-              name="twitter:description"
-              content={
-                article.excerpt ||
-                article.shortDescription ||
-                article.content?.slice(0, 150) ||
-                `Read ${article.title} on TheCinePrism`
-              }
-            />
-            <meta
-              name="twitter:image"
-              content={
-                article.mainImageUrl ||
-                article.imageUrl ||
-                "/thecineprismlogo.jpg"
-              }
-            />
-
-            {/* Article specific */}
-            <meta property="article:author" content={article.author} />
-            <meta
-              property="article:published_time"
-              content={article.publishedAt || article.createdAt}
-            />
-            {article.tags &&
-              article.tags.map((tag) => (
-                <meta key={tag} property="article:tag" content={tag} />
-              ))}
-          </Helmet>
+      {article.mainImageUrl ? (
+        <section className="relative h-[60vh] overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${article.mainImageUrl})` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent" />
           
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              {article.title}
-            </h1>
-
-            {article.shortDescription && (
-              <p className="text-xl text-slate-300 leading-relaxed mb-8 max-w-3xl">
-                {article.shortDescription}
-              </p>
-            )}
-
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 pb-8 border-b border-slate-800">
-              <div className="flex items-center gap-3">
+          <div className="absolute bottom-0 left-0 right-0 z-10">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 pt-20">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="max-w-4xl"
+              >
+                
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight drop-shadow-2xl">
+                  {article.title}
+                </h1>
+                {article.shortDescription && (
+                  <p className="text-lg sm:text-xl md:text-2xl text-white/95 leading-relaxed mb-6 max-w-3xl drop-shadow-lg font-light">
+                    {article.shortDescription}
+                  </p>
+                )}
+                <div className="flex items-center gap-3 text-white/90 mb-6">
+                  <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-semibold shadow-lg">
+                    {article.author[0].toUpperCase()}
+                  </div>
+                  <div className="text-sm font-medium">
+                    <span>{article.author}</span>
+                    <span className="mx-2">•</span>
+                    <span>
+                      {formatDate(article.publishedAt || article.createdAt)}
+                    </span>
+                    <span className="mx-2">•</span>
+                    <span>{readingTime} min read</span>
+                    <span className="mx-2">•</span>
+                    <span className="flex items-center gap-1">
+                      <Eye size={14} />
+                      {(article.viewCount || 0).toLocaleString()} views
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={handleLikeClick}
+                    className="flex items-center gap-2 text-white/80 hover:text-pink-400 transition-all duration-300 group bg-white/10 backdrop-blur-sm px-4 py-2.5 rounded-xl border border-white/20 hover:border-pink-400/50"
+                  >
+                    <Heart
+                      className={`w-5 h-5 ${
+                        isLiked ? "fill-pink-500 text-pink-500" : ""
+                      }`}
+                    />
+                    <span className="font-medium">
+                      {likeCount.toLocaleString()}
+                    </span>
+                  </button>
+                  <button
+                    onClick={scrollToDiscussion}
+                    className="flex items-center gap-2 text-white/80 hover:text-emerald-400 transition-all duration-300 group bg-white/10 backdrop-blur-sm px-4 py-2.5 rounded-xl border border-white/20 hover:border-emerald-400/50"
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    <span className="font-medium">{comments.length || 0}</span>
+                  </button>
+                  <button className="flex items-center gap-2 text-white/80 hover:text-white transition-all duration-300 bg-white/10 backdrop-blur-sm px-4 py-2.5 rounded-xl border border-white/20 hover:border-white/40">
+                    <Share2 className="w-5 h-5" />
+                    <span className="font-medium">Share</span>
+                  </button>
+                  <button
+                    onClick={() => setIsBookmarked(!isBookmarked)}
+                    className={`flex items-center gap-2 transition-all duration-300 backdrop-blur-sm px-4 py-2.5 rounded-xl border ${
+                      isBookmarked
+                        ? "text-emerald-400 bg-emerald-500/20 border-emerald-400/50"
+                        : "text-white/80 hover:text-white bg-white/10 border-white/20 hover:border-white/40"
+                    }`}
+                  >
+                    <Bookmark
+                      className={`w-5 h-5 ${
+                        isBookmarked ? "fill-current" : ""
+                      }`}
+                    />
+                    <span className="font-medium">
+                      {isBookmarked ? "Saved" : "Save"}
+                    </span>
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section className="relative pt-16 pb-12">
+          <div className="max-w-4xl mx-auto px-6 lg:px-8">
+            <motion.button
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-200 mb-12"
+            >
+              <ArrowLeft size={18} />
+              <span>Back</span>
+            </motion.button>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <div className="mb-4">
+                <span className="inline-block bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">
+                  Film Analysis
+                </span>
+              </div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+                {article.title}
+              </h1>
+              {article.shortDescription && (
+                <p className="text-xl md:text-2xl text-slate-300 leading-relaxed mb-8 max-w-3xl">
+                  {article.shortDescription}
+                </p>
+              )}
+              <div className="flex items-center gap-3 text-slate-400 mb-8">
                 <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-semibold">
                   {article.author[0].toUpperCase()}
                 </div>
-                <div>
-                  <div className="text-white font-medium">{article.author}</div>
-                  <div className="text-slate-400 text-sm">
+                <div className="text-sm">
+                  <span className="text-white font-medium">
+                    {article.author}
+                  </span>
+                  <span className="mx-2">•</span>
+                  <span>
                     {formatDate(article.publishedAt || article.createdAt)}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-6 text-slate-400 text-sm sm:ml-auto">
-                <div className="flex items-center gap-1">
-                  <Clock size={14} />
+                  </span>
+                  <span className="mx-2">•</span>
                   <span>{readingTime} min read</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Eye size={14} />
-                  <span>{article.viewCount || 0} views</span>
+                  <span className="mx-2">•</span>
+                  <span className="flex items-center gap-1">
+                    <Eye size={14} />
+                    {(article.viewCount || 0).toLocaleString()} views
+                  </span>
                 </div>
               </div>
-            </div>
-
-            <div className="flex items-center gap-4 sm:gap-6 lg:gap-8 py-6 border-b border-slate-800 overflow-x-auto">
-              <button
-                onClick={handleLikeClick}
-                className="flex items-center gap-2 sm:gap-3 text-slate-400 hover:text-pink-500 transition-all duration-300 group flex-shrink-0"
-              >
-                <div className="p-1.5 sm:p-2 rounded-xl bg-white/5 group-hover:bg-pink-500/10 transition-colors duration-300">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={handleLikeClick}
+                  className="flex items-center gap-2 text-slate-400 hover:text-pink-500 transition-all duration-300 group bg-white/5 px-4 py-2.5 rounded-xl border border-slate-600 hover:border-pink-500/50"
+                >
                   <Heart
-                    className={`w-5 h-5 sm:w-6 sm:h-6 ${
+                    className={`w-5 h-5 ${
                       isLiked ? "fill-pink-500 text-pink-500" : ""
                     }`}
                   />
-                </div>
-                <div className="flex flex-col items-start">
-                  <span className="font-bold text-base sm:text-lg">
+                  <span className="font-medium">
                     {likeCount.toLocaleString()}
                   </span>
-                  <span className="text-xs sm:text-sm text-slate-500">
-                    Likes
+                </button>
+                <button
+                  onClick={scrollToDiscussion}
+                  className="flex items-center gap-2 text-slate-400 hover:text-emerald-400 transition-all duration-300 group bg-white/5 px-4 py-2.5 rounded-xl border border-slate-600 hover:border-emerald-400/50"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  <span className="font-medium">{comments.length || 0}</span>
+                </button>
+                <button className="flex items-center gap-2 text-slate-400 hover:text-white transition-all duration-300 bg-white/5 px-4 py-2.5 rounded-xl border border-slate-600 hover:border-slate-500">
+                  <Share2 className="w-5 h-5" />
+                  <span className="font-medium">Share</span>
+                </button>
+                <button
+                  onClick={() => setIsBookmarked(!isBookmarked)}
+                  className={`flex items-center gap-2 transition-all duration-300 px-4 py-2.5 rounded-xl border ${
+                    isBookmarked
+                      ? "text-emerald-400 bg-emerald-500/10 border-emerald-400/50"
+                      : "text-slate-400 hover:text-white bg-white/5 border-slate-600 hover:border-slate-500"
+                  }`}
+                >
+                  <Bookmark
+                    className={`w-5 h-5 ${isBookmarked ? "fill-current" : ""}`}
+                  />
+                  <span className="font-medium">
+                    {isBookmarked ? "Saved" : "Save"}
                   </span>
-                </div>
-              </button>
-
-              <button
-                onClick={scrollToDiscussion}
-                className="flex items-center gap-2 sm:gap-3 text-slate-400 hover:text-emerald-400 transition-all duration-300 group flex-shrink-0"
-              >
-                <div className="p-1.5 sm:p-2 rounded-xl bg-white/5 group-hover:bg-emerald-500/10 transition-colors duration-300">
-                  <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />
-                </div>
-                <div className="flex flex-col items-start">
-                  <span className="font-bold text-base sm:text-lg">
-                    {comments.length || 0}
-                  </span>
-                  <span className="text-xs sm:text-sm text-slate-500">
-                    <span className="hidden sm:inline">Comments</span>
-                    <span className="sm:hidden">💬</span>
-                  </span>
-                </div>
-              </button>
-
-              <ShareButton
-                url={window.location.href}
-                title={article.title}
-                description={
-                  article.excerpt ||
-                  article.shortDescription ||
-                  `Check out this article: ${article.title}`
-                }
-                articleId={article.id}
-                articleSlug={slug} // This is from your useParams()
-                type="article"
-              />
-
-              
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {article.mainImageUrl && (
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-16"
-        >
-          <div className="max-w-4xl mx-auto px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-lg">
-              <img
-                src={article.mainImageUrl || "/placeholder.svg"}
-                alt={article.title}
-                className="w-full h-[400px] lg:h-[500px] object-cover"
-              />
-            </div>
+                </button>
+              </div>
+            </motion.div>
           </div>
-        </motion.section>
+        </section>
       )}
 
       <motion.article
@@ -736,6 +727,33 @@ const ArticlePage = () => {
               </div>
             )}
           </div>
+          <motion.footer
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="border-t border-slate-800 pt-12 mt-16"
+          >
+            <div className="text-center">
+              <div className="w-16 h-16 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
+                {article.author[0].toUpperCase()}
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {article.author}
+              </h3>
+              <p className="text-slate-400 mb-6">
+                Published on{" "}
+                {formatDate(article.publishedAt || article.createdAt)}
+              </p>
+              <div className="flex items-center justify-center gap-3">
+                <button className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors">
+                  Follow
+                </button>
+                <button className="px-6 py-2 border border-slate-600 text-slate-300 hover:bg-slate-800 rounded-lg font-medium transition-colors">
+                  More Articles
+                </button>
+              </div>
+            </div>
+          </motion.footer>
         </div>
       </motion.article>
 
@@ -749,7 +767,6 @@ const ArticlePage = () => {
               Join the conversation with unlimited nested replies
             </p>
           </div>
-
           <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-2xl p-6 mb-8">
             <form onSubmit={handleSubmitComment}>
               <textarea
@@ -779,7 +796,6 @@ const ArticlePage = () => {
               </div>
             </form>
           </div>
-
           <div className="space-y-8">
             {commentsLoading && comments.length === 0 ? (
               <div className="flex items-center justify-center gap-3 py-8">
@@ -799,7 +815,6 @@ const ArticlePage = () => {
                     maxDepth={8}
                   />
                 ))}
-
                 {commentPagination?.hasMore && (
                   <div className="flex justify-center pt-6">
                     <button
@@ -816,7 +831,6 @@ const ArticlePage = () => {
                     </button>
                   </div>
                 )}
-
                 {comments.length === 0 && !commentsLoading && (
                   <div className="text-center py-12">
                     <MessageCircle className="w-12 h-12 text-slate-600 mx-auto mb-4" />
