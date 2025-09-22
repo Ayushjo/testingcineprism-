@@ -369,7 +369,6 @@ const ArticlePage = () => {
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isBookmarked, setIsBookmarked] = useState(false);
   const [readingTime, setReadingTime] = useState(0);
   const [newComment, setNewComment] = useState("");
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
@@ -648,23 +647,7 @@ const ArticlePage = () => {
                     <Share2 className="w-5 h-5" />
                     <span className="font-medium">Share</span>
                   </button>
-                  <button
-                    onClick={() => setIsBookmarked(!isBookmarked)}
-                    className={`flex items-center gap-2 transition-all duration-300 backdrop-blur-sm px-4 py-2.5 rounded-xl border ${
-                      isBookmarked
-                        ? "text-emerald-400 bg-emerald-500/20 border-emerald-400/50"
-                        : "text-white/80 hover:text-white bg-white/10 border-white/20 hover:border-white/40"
-                    }`}
-                  >
-                    <Bookmark
-                      className={`w-5 h-5 ${
-                        isBookmarked ? "fill-current" : ""
-                      }`}
-                    />
-                    <span className="font-medium">
-                      {isBookmarked ? "Saved" : "Save"}
-                    </span>
-                  </button>
+                  
                 </div>
               </motion.div>
             </div>
@@ -754,21 +737,7 @@ const ArticlePage = () => {
                   articleSlug={slug} // This is from your useParams()
                   type="article"
                 />
-                <button
-                  onClick={() => setIsBookmarked(!isBookmarked)}
-                  className={`flex items-center gap-2 transition-all duration-300 px-4 py-2.5 rounded-xl border ${
-                    isBookmarked
-                      ? "text-emerald-400 bg-emerald-500/10 border-emerald-400/50"
-                      : "text-slate-400 hover:text-white bg-white/5 border-slate-600 hover:border-slate-500"
-                  }`}
-                >
-                  <Bookmark
-                    className={`w-5 h-5 ${isBookmarked ? "fill-current" : ""}`}
-                  />
-                  <span className="font-medium">
-                    {isBookmarked ? "Saved" : "Save"}
-                  </span>
-                </button>
+                
               </div>
             </motion.div>
           </div>
