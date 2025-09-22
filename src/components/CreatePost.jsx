@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { X, Save, Search, Plus, Trash2 } from "lucide-react";
+import { X, Save, Search, Plus, Trash2, ChevronDown } from "lucide-react";
 import axios from "axios";
 
 const genres = [
@@ -28,6 +28,39 @@ const genres = [
   "Western",
 ];
 
+const languages = [
+  "English",
+  "Hindi",
+  "Korean",
+  "Tamil",
+  "Telugu",
+  "Japanese",
+  "Mandarin",
+  "Spanish",
+  "French",
+  "German",
+  "Italian",
+  "Portuguese",
+  "Russian",
+  "Arabic",
+  "Bengali",
+  "Marathi",
+  "Gujarati",
+  "Punjabi",
+  "Malayalam",
+  "Kannada",
+  "Urdu",
+  "Thai",
+  "Vietnamese",
+  "Indonesian",
+  "Turkish",
+  "Dutch",
+  "Swedish",
+  "Norwegian",
+  "Danish",
+  "Finnish",
+];
+
 export default function CreatePostPage() {
   const [formData, setFormData] = useState({
     title: "",
@@ -35,6 +68,7 @@ export default function CreatePostPage() {
     directedBy: "",
     streamingAt: "",
     year: "",
+    language: "",
     genres: [],
     relatedPostIds: [],
     ratingCategories: [{ category: "", score: 0 }], // Initialize with one empty rating
@@ -46,6 +80,7 @@ export default function CreatePostPage() {
   const [submitStatus, setSubmitStatus] = useState(null); // success, error
   const [submitMessage, setSubmitMessage] = useState("");
   const [relatedPostsSearch, setRelatedPostsSearch] = useState("");
+  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
   // Fetch posts for related posts selection
   useEffect(() => {
@@ -112,7 +147,8 @@ export default function CreatePostPage() {
         i === index
           ? {
               ...rating,
-              [field]: field === "score" ? parseFloat(value) || 0 : value,
+              [field]:
+                field === "score" ? Number.parseFloat(value) || 0 : value,
             }
           : rating
       ),
@@ -150,7 +186,7 @@ export default function CreatePostPage() {
       // Prepare data for API
       const submitData = {
         ...formData,
-        year: parseInt(formData.year),
+        year: Number.parseInt(formData.year),
         ratingCategories: validRatingCategories,
       };
       console.log(submitData);
@@ -176,6 +212,7 @@ export default function CreatePostPage() {
           directedBy: "",
           streamingAt: "",
           year: "",
+          language: "",
           genres: [],
           relatedPostIds: [],
           ratingCategories: [{ category: "", score: 0 }],
@@ -211,7 +248,7 @@ export default function CreatePostPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto pt-24">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -281,8 +318,8 @@ export default function CreatePostPage() {
             />
           </div>
 
-          {/* Directed By and Streaming At Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Directed By, Streaming At, and Language Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-300">
                 Directed By
@@ -315,6 +352,63 @@ export default function CreatePostPage() {
                 required
                 disabled={isSubmitting}
               />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-300">
+                Language
+              </label>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setIsLanguageDropdownOpen(!isLanguageDropdownOpen)
+                  }
+                  disabled={isSubmitting}
+                  className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300 flex items-center justify-between disabled:opacity-50"
+                >
+                  <span
+                    className={
+                      formData.language ? "text-white" : "text-slate-400"
+                    }
+                  >
+                    {formData.language || "Select language..."}
+                  </span>
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      isLanguageDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {isLanguageDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute top-full left-0 right-0 z-50 mt-1 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl max-h-64 overflow-y-auto"
+                  >
+                    {languages.map((language) => (
+                      <button
+                        key={language}
+                        type="button"
+                        onClick={() => {
+                          handleInputChange("language", language);
+                          setIsLanguageDropdownOpen(false);
+                        }}
+                        disabled={isSubmitting}
+                        className={`w-full px-4 py-3 text-left hover:bg-slate-800/50 transition-all duration-200 first:rounded-t-xl last:rounded-b-xl disabled:opacity-50 ${
+                          formData.language === language
+                            ? "bg-emerald-500/20 text-emerald-300 border-l-2 border-emerald-500"
+                            : "text-slate-300"
+                        }`}
+                      >
+                        {language}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </div>
             </div>
           </div>
 
