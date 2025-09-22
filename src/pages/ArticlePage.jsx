@@ -2,6 +2,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet";
+import {ShareButton} from "@/components/ShareComponent.jsx";
 import {
   Eye,
   Share2,
@@ -511,6 +513,73 @@ const ArticlePage = () => {
 
   return (
     <div className="min-h-screen bg-slate-950">
+      <Helmet>
+        <title>{article.title} | TheCinePrism</title>
+        <meta
+          name="description"
+          content={
+            article.excerpt ||
+            article.shortDescription ||
+            article.content?.slice(0, 150) ||
+            `Read ${article.title} on TheCinePrism`
+          }
+        />
+
+        {/* Open Graph */}
+        <meta property="og:title" content={article.title} />
+        <meta
+          property="og:description"
+          content={
+            article.excerpt ||
+            article.shortDescription ||
+            article.content?.slice(0, 150) ||
+            `Read ${article.title} on TheCinePrism`
+          }
+        />
+        <meta
+          property="og:image"
+          content={
+            article.mainImageUrl || article.imageUrl || "/thecineprismlogo.jpg"
+          }
+        />
+        <meta
+          property="og:url"
+          content={`${window.location.origin}/articles/${slug}`}
+        />
+        <meta property="og:type" content="article" />
+        <meta property="og:site_name" content="TheCinePrism" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@TheCinePrism" />
+        <meta name="twitter:title" content={article.title} />
+        <meta
+          name="twitter:description"
+          content={
+            article.excerpt ||
+            article.shortDescription ||
+            article.content?.slice(0, 150) ||
+            `Read ${article.title} on TheCinePrism`
+          }
+        />
+        <meta
+          name="twitter:image"
+          content={
+            article.mainImageUrl || article.imageUrl || "/thecineprismlogo.jpg"
+          }
+        />
+
+        {/* Article specific */}
+        <meta property="article:author" content={article.author} />
+        <meta
+          property="article:published_time"
+          content={article.publishedAt || article.createdAt}
+        />
+        {article.tags &&
+          article.tags.map((tag) => (
+            <meta key={tag} property="article:tag" content={tag} />
+          ))}
+      </Helmet>
       {article.mainImageUrl ? (
         <section className="relative h-[60vh] overflow-hidden">
           <div
@@ -518,25 +587,24 @@ const ArticlePage = () => {
             style={{ backgroundImage: `url(${article.mainImageUrl})` }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent" />
-          
+
           <div className="absolute bottom-0 left-0 right-0 z-10">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 pt-20">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 pt-20 text-center">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="max-w-4xl"
+                className="max-w-4xl mx-auto"
               >
-                
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight drop-shadow-2xl">
                   {article.title}
                 </h1>
                 {article.shortDescription && (
-                  <p className="text-lg sm:text-xl md:text-2xl text-white/95 leading-relaxed mb-6 max-w-3xl drop-shadow-lg font-light">
+                  <p className="text-lg sm:text-xl md:text-2xl text-white/95 leading-relaxed mb-6 max-w-3xl mx-auto drop-shadow-lg font-light">
                     {article.shortDescription}
                   </p>
                 )}
-                <div className="flex items-center gap-3 text-white/90 mb-6">
+                <div className="flex items-center justify-center gap-3 text-white/90 mb-6">
                   <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-semibold shadow-lg">
                     {article.author[0].toUpperCase()}
                   </div>
@@ -555,7 +623,7 @@ const ArticlePage = () => {
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center gap-4">
                   <button
                     onClick={handleLikeClick}
                     className="flex items-center gap-2 text-white/80 hover:text-pink-400 transition-all duration-300 group bg-white/10 backdrop-blur-sm px-4 py-2.5 rounded-xl border border-white/20 hover:border-pink-400/50"
@@ -628,11 +696,11 @@ const ArticlePage = () => {
                 {article.title}
               </h1>
               {article.shortDescription && (
-                <p className="text-xl md:text-2xl text-slate-300 leading-relaxed mb-8 max-w-3xl">
+                <p className="text-xl md:text-2xl text-slate-300 leading-relaxed mb-8 max-w-3xl mx-auto">
                   {article.shortDescription}
                 </p>
               )}
-              <div className="flex items-center gap-3 text-slate-400 mb-8">
+              <div className="flex items-center justify-center gap-3 text-slate-400 mb-8">
                 <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-semibold">
                   {article.author[0].toUpperCase()}
                 </div>
@@ -653,7 +721,7 @@ const ArticlePage = () => {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center gap-4">
                 <button
                   onClick={handleLikeClick}
                   className="flex items-center gap-2 text-slate-400 hover:text-pink-500 transition-all duration-300 group bg-white/5 px-4 py-2.5 rounded-xl border border-slate-600 hover:border-pink-500/50"
@@ -674,10 +742,18 @@ const ArticlePage = () => {
                   <MessageCircle className="w-5 h-5" />
                   <span className="font-medium">{comments.length || 0}</span>
                 </button>
-                <button className="flex items-center gap-2 text-slate-400 hover:text-white transition-all duration-300 bg-white/5 px-4 py-2.5 rounded-xl border border-slate-600 hover:border-slate-500">
-                  <Share2 className="w-5 h-5" />
-                  <span className="font-medium">Share</span>
-                </button>
+                <ShareButton
+                  url={window.location.href}
+                  title={article.title}
+                  description={
+                    article.excerpt ||
+                    article.shortDescription ||
+                    `Check out this article: ${article.title}`
+                  }
+                  articleId={article.id}
+                  articleSlug={slug} // This is from your useParams()
+                  type="article"
+                />
                 <button
                   onClick={() => setIsBookmarked(!isBookmarked)}
                   className={`flex items-center gap-2 transition-all duration-300 px-4 py-2.5 rounded-xl border ${
