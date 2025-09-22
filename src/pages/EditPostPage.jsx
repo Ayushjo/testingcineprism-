@@ -39,6 +39,39 @@ const genres = [
   "Western",
 ];
 
+const languages = [
+  "English",
+  "Hindi",
+  "Korean",
+  "Tamil",
+  "Telugu",
+  "Japanese",
+  "Mandarin",
+  "Spanish",
+  "French",
+  "German",
+  "Italian",
+  "Portuguese",
+  "Russian",
+  "Arabic",
+  "Bengali",
+  "Marathi",
+  "Gujarati",
+  "Punjabi",
+  "Malayalam",
+  "Kannada",
+  "Urdu",
+  "Thai",
+  "Vietnamese",
+  "Indonesian",
+  "Turkish",
+  "Dutch",
+  "Swedish",
+  "Norwegian",
+  "Danish",
+  "Finnish",
+];
+
 export default function EditPostPage() {
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -54,6 +87,7 @@ export default function EditPostPage() {
     directedBy: "",
     streamingAt: "",
     year: "",
+    language: "", // Added language field
     genres: [],
     relatedPostIds: [],
     ratingCategories: [{ category: "", score: 0 }],
@@ -117,6 +151,7 @@ export default function EditPostPage() {
       directedBy: post.directedBy || "",
       streamingAt: post.streamingAt || "",
       year: post.year?.toString() || "",
+      language: post.language || "", // Added language prefill
       genres: post.genres || [],
       relatedPostIds: post.relatedPostIds || [],
       ratingCategories:
@@ -176,7 +211,8 @@ export default function EditPostPage() {
         i === index
           ? {
               ...rating,
-              [field]: field === "score" ? parseFloat(value) || 0 : value,
+              [field]:
+                field === "score" ? Number.parseFloat(value) || 0 : value,
             }
           : rating
       ),
@@ -216,7 +252,7 @@ export default function EditPostPage() {
       const submitData = {
         postId: selectedPost.id,
         ...formData,
-        year: parseInt(formData.year),
+        year: Number.parseInt(formData.year),
         ratingCategories: validRatingCategories,
       };
       const finalSubmitData = JSON.stringify(submitData);
@@ -279,7 +315,7 @@ export default function EditPostPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 p-6">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto ">
         <AnimatePresence mode="wait">
           {!showEditForm ? (
             // Posts List View
@@ -331,7 +367,7 @@ export default function EditPostPage() {
                       {post.posterImageUrl && (
                         <div className="aspect-[3/4] overflow-hidden">
                           <img
-                            src={post.posterImageUrl}
+                            src={post.posterImageUrl || "/placeholder.svg"}
                             alt={post.title}
                             className="w-full h-full object-cover"
                           />
@@ -504,8 +540,8 @@ export default function EditPostPage() {
                   />
                 </div>
 
-                {/* Directed By and Streaming At Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Directed By, Streaming At, and Language Row */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-300">
                       Directed By
@@ -538,6 +574,34 @@ export default function EditPostPage() {
                       required
                       disabled={isSubmitting}
                     />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-300">
+                      Language
+                    </label>
+                    <select
+                      value={formData.language}
+                      onChange={(e) =>
+                        handleInputChange("language", e.target.value)
+                      }
+                      className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300 appearance-none cursor-pointer"
+                      required
+                      disabled={isSubmitting}
+                    >
+                      <option value="" className="bg-slate-800 text-slate-400">
+                        Select Language
+                      </option>
+                      {languages.map((language) => (
+                        <option
+                          key={language}
+                          value={language}
+                          className="bg-slate-800 text-white"
+                        >
+                          {language}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
