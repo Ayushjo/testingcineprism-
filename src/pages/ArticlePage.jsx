@@ -613,13 +613,7 @@ const ArticlePage = () => {
                     <span>
                       {formatDate(article.publishedAt || article.createdAt)}
                     </span>
-                    <span className="mx-2">•</span>
-                    <span>{readingTime} min read</span>
-                    <span className="mx-2">•</span>
-                    <span className="flex items-center gap-1">
-                      <Eye size={14} />
-                      {(article.viewCount || 0).toLocaleString()} views
-                    </span>
+  
                   </div>
                 </div>
                 <div className="flex items-center justify-center gap-4">
