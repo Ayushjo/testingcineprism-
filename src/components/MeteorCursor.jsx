@@ -5,18 +5,51 @@ import { motion } from "framer-motion";
 
 export default function GradientCursor() {
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
-    const updateMousePosition = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+    // Function to check if device is desktop
+    const checkIsDesktop = () => {
+      // Check screen width (1024px and up) AND pointer type (fine for mouse)
+      const hasLargeScreen = window.innerWidth >= 1024;
+      const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
+      return hasLargeScreen && hasFinePointer;
     };
 
+    // Set initial state
+    setIsDesktop(checkIsDesktop());
+
+    // Update mouse position
+    const updateMousePosition = (e) => {
+      if (checkIsDesktop()) {
+        setMousePosition({ x: e.clientX, y: e.clientY });
+      }
+    };
+
+    // Handle resize events
+    const handleResize = () => {
+      setIsDesktop(checkIsDesktop());
+    };
+
+    // Add event listeners
     window.addEventListener("mousemove", updateMousePosition);
+    window.addEventListener("resize", handleResize);
+
+    // Listen for pointer type changes (for hybrid devices)
+    const pointerQuery = window.matchMedia("(pointer: fine)");
+    pointerQuery.addEventListener("change", handleResize);
 
     return () => {
       window.removeEventListener("mousemove", updateMousePosition);
+      window.removeEventListener("resize", handleResize);
+      pointerQuery.removeEventListener("change", handleResize);
     };
   }, []);
+
+  // Don't render cursor on mobile/tablet or touch devices
+  if (!isDesktop) {
+    return null;
+  }
 
   const cursorSize = 20; // Size of the main dot
   const glowSize = 150; // Size of the gradient glow
