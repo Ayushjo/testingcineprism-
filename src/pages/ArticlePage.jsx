@@ -3,11 +3,10 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
-import {ShareButton} from "@/components/ShareComponent.jsx";
+import { ShareButton } from "@/components/ShareComponent.jsx";
 import {
   Eye,
   Share2,
-  Bookmark,
   ArrowLeft,
   Tag,
   Heart,
@@ -613,7 +612,6 @@ const ArticlePage = () => {
                     <span>
                       {formatDate(article.publishedAt || article.createdAt)}
                     </span>
-  
                   </div>
                 </div>
                 <div className="flex items-center justify-center gap-4">
@@ -641,7 +639,6 @@ const ArticlePage = () => {
                     <Share2 className="w-5 h-5" />
                     <span className="font-medium">Share</span>
                   </button>
-                  
                 </div>
               </motion.div>
             </div>
@@ -731,7 +728,6 @@ const ArticlePage = () => {
                   articleSlug={slug} // This is from your useParams()
                   type="article"
                 />
-                
               </div>
             </motion.div>
           </div>

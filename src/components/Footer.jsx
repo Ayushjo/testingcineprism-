@@ -101,7 +101,7 @@ const Footer = () => {
                 >
                   ❤️
                 </motion.span>{" "}
-                for cinema lovers
+                
               </p>
             </div>
           </motion.div>
