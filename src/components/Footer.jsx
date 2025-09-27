@@ -10,7 +10,11 @@ import { X, Instagram, Facebook, MessageSquare } from "lucide-react";
 // --- CHANGE 3: Create an array for social links to easily add or remove them ---
 const socials = [
   { name: "X", href: "https://x.com/TheCineprism", icon: X },
-  { name: "Instagram", href: "#", icon: Instagram },
+  {
+    name: "Instagram",
+    href: "https://www.instagram.com/thecineprism/",
+    icon: Instagram,
+  },
   { name: "Facebook", href: "#", icon: Facebook },
   { name: "WhatsApp", href: "#", icon: MessageSquare },
 ];
