@@ -15,8 +15,6 @@ const socials = [
     href: "https://www.instagram.com/thecineprism/",
     icon: Instagram,
   },
-  { name: "Facebook", href: "#", icon: Facebook },
-  { name: "WhatsApp", href: "#", icon: MessageSquare },
 ];
 import { useAuth } from "../context/AuthContext";
 
