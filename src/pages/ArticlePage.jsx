@@ -762,33 +762,7 @@ const ArticlePage = () => {
               </div>
             )}
           </div>
-          <motion.footer
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="border-t border-slate-800 pt-12 mt-16"
-          >
-            <div className="text-center">
-              <div className="w-16 h-16 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
-                {article.author[0].toUpperCase()}
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">
-                {article.author}
-              </h3>
-              <p className="text-slate-400 mb-6">
-                Published on{" "}
-                {formatDate(article.publishedAt || article.createdAt)}
-              </p>
-              <div className="flex items-center justify-center gap-3">
-                <button className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors">
-                  Follow
-                </button>
-                <button className="px-6 py-2 border border-slate-600 text-slate-300 hover:bg-slate-800 rounded-lg font-medium transition-colors">
-                  More Articles
-                </button>
-              </div>
-            </div>
-          </motion.footer>
+
         </div>
       </motion.article>
 
