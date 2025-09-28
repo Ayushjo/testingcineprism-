@@ -624,40 +624,248 @@ const CinemaSchoolPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 relative overflow-hidden">
+      {/* Cinema-themed Background SVG Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Film Strip Background Pattern */}
+        <svg className="absolute top-0 left-0 w-full h-full opacity-[0.02]" viewBox="0 0 1200 800">
+          <defs>
+            <pattern id="filmStrip" x="0" y="0" width="120" height="800" patternUnits="userSpaceOnUse">
+              <rect x="0" y="0" width="120" height="800" fill="none"/>
+              <rect x="10" y="0" width="100" height="800" fill="currentColor"/>
+              {/* Film perforations */}
+              {Array.from({length: 20}).map((_, i) => (
+                <g key={i}>
+                  <rect x="2" y={i * 40 + 10} width="8" height="20" fill="transparent" stroke="currentColor" strokeWidth="1"/>
+                  <rect x="110" y={i * 40 + 10} width="8" height="20" fill="transparent" stroke="currentColor" strokeWidth="1"/>
+                </g>
+              ))}
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#filmStrip)" className="text-white"/>
+        </svg>
+
+        {/* Floating Camera Equipment */}
+        <div className="absolute top-20 left-10 opacity-[0.03]">
+          <svg width="200" height="200" viewBox="0 0 200 200" className="text-emerald-400">
+            <g>
+              {/* Vintage Camera */}
+              <rect x="60" y="80" width="80" height="60" rx="8" fill="currentColor"/>
+              <circle cx="100" cy="110" r="25" fill="none" stroke="currentColor" strokeWidth="3"/>
+              <circle cx="100" cy="110" r="15" fill="currentColor" opacity="0.3"/>
+              <rect x="70" y="90" width="15" height="6" rx="2" fill="currentColor"/>
+              <rect x="115" y="90" width="15" height="6" rx="2" fill="currentColor"/>
+
+              {/* Camera flash */}
+              <rect x="85" y="65" width="30" height="15" rx="3" fill="currentColor" opacity="0.5"/>
+              <circle cx="100" cy="72" r="4" fill="currentColor"/>
+
+              <animateTransform attributeName="transform" type="rotate" values="0 100 100;5 100 100;0 100 100" dur="8s" repeatCount="indefinite"/>
+            </g>
+          </svg>
+        </div>
+
+        {/* Film Reel */}
+        <div className="absolute top-40 right-20 opacity-[0.04]">
+          <svg width="180" height="180" viewBox="0 0 180 180" className="text-blue-400">
+            <g>
+              <circle cx="90" cy="90" r="70" fill="none" stroke="currentColor" strokeWidth="3"/>
+              <circle cx="90" cy="90" r="50" fill="none" stroke="currentColor" strokeWidth="2"/>
+              <circle cx="90" cy="90" r="30" fill="none" stroke="currentColor" strokeWidth="2"/>
+              <circle cx="90" cy="90" r="15" fill="currentColor"/>
+
+              {/* Spokes */}
+              {Array.from({length: 8}).map((_, i) => (
+                <line key={i} x1="90" y1="90" x2={90 + 45 * Math.cos(i * Math.PI / 4)} y2={90 + 45 * Math.sin(i * Math.PI / 4)} stroke="currentColor" strokeWidth="2"/>
+              ))}
+
+              <animateTransform attributeName="transform" type="rotate" values="0 90 90;360 90 90" dur="20s" repeatCount="indefinite"/>
+            </g>
+          </svg>
+        </div>
+
+        {/* Director's Chair */}
+        <div className="absolute bottom-40 left-20 opacity-[0.035]">
+          <svg width="150" height="150" viewBox="0 0 150 150" className="text-yellow-400">
+            <g>
+              {/* Chair back */}
+              <rect x="40" y="30" width="70" height="60" rx="5" fill="none" stroke="currentColor" strokeWidth="3"/>
+              <rect x="45" y="35" width="60" height="50" fill="currentColor" opacity="0.2"/>
+
+              {/* Chair seat */}
+              <rect x="45" y="80" width="60" height="30" rx="3" fill="currentColor" opacity="0.3"/>
+
+              {/* Chair legs */}
+              <line x1="50" y1="110" x2="45" y2="130" stroke="currentColor" strokeWidth="3"/>
+              <line x1="100" y1="110" x2="105" y2="130" stroke="currentColor" strokeWidth="3"/>
+              <line x1="50" y1="30" x2="45" y2="15" stroke="currentColor" strokeWidth="3"/>
+              <line x1="100" y1="30" x2="105" y2="15" stroke="currentColor" strokeWidth="3"/>
+
+              {/* "DIRECTOR" text */}
+              <text x="75" y="58" fontSize="8" fill="currentColor" textAnchor="middle" fontWeight="bold">DIRECTOR</text>
+            </g>
+          </svg>
+        </div>
+
+        {/* Clapperboard */}
+        <div className="absolute bottom-20 right-40 opacity-[0.04]">
+          <svg width="160" height="120" viewBox="0 0 160 120" className="text-purple-400">
+            <g>
+              <rect x="20" y="40" width="120" height="70" rx="6" fill="currentColor" opacity="0.3"/>
+              <rect x="20" y="20" width="120" height="20" fill="none" stroke="currentColor" strokeWidth="2"/>
+
+              {/* Clapper stripes */}
+              {Array.from({length: 6}).map((_, i) => (
+                <rect key={i} x={25 + i * 18} y="22" width="16" height="16" fill={i % 2 === 0 ? "currentColor" : "none"} opacity="0.6"/>
+              ))}
+
+              {/* Text areas */}
+              <rect x="30" y="50" width="50" height="12" fill="none" stroke="currentColor" strokeWidth="1"/>
+              <rect x="90" y="50" width="40" height="12" fill="none" stroke="currentColor" strokeWidth="1"/>
+              <rect x="30" y="70" width="100" height="12" fill="none" stroke="currentColor" strokeWidth="1"/>
+              <rect x="30" y="90" width="100" height="12" fill="none" stroke="currentColor" strokeWidth="1"/>
+
+              <animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="6s" repeatCount="indefinite"/>
+            </g>
+          </svg>
+        </div>
+
+        {/* Spotlight */}
+        <div className="absolute top-60 left-1/3 opacity-[0.025]">
+          <svg width="200" height="300" viewBox="0 0 200 300" className="text-yellow-300">
+            <g>
+              {/* Light beam */}
+              <polygon points="90,50 110,50 140,250 60,250" fill="currentColor" opacity="0.1"/>
+
+              {/* Spotlight fixture */}
+              <ellipse cx="100" cy="40" rx="30" ry="15" fill="currentColor" opacity="0.4"/>
+              <circle cx="100" cy="35" r="20" fill="currentColor" opacity="0.6"/>
+              <circle cx="100" cy="35" r="12" fill="currentColor"/>
+
+              {/* Support arm */}
+              <line x1="100" y1="20" x2="100" y2="5" stroke="currentColor" strokeWidth="4"/>
+              <circle cx="100" cy="5" r="6" fill="currentColor"/>
+
+              <animate attributeName="opacity" values="0.025;0.035;0.025" dur="4s" repeatCount="indefinite"/>
+            </g>
+          </svg>
+        </div>
+
+        {/* Film Frames */}
+        <div className="absolute top-1/2 right-10 opacity-[0.03]">
+          <svg width="100" height="300" viewBox="0 0 100 300" className="text-green-400">
+            <g>
+              {Array.from({length: 5}).map((_, i) => (
+                <g key={i}>
+                  <rect x="20" y={i * 60 + 10} width="60" height="40" rx="3" fill="none" stroke="currentColor" strokeWidth="2"/>
+                  <rect x="25" y={i * 60 + 15} width="50" height="30" fill="currentColor" opacity="0.1"/>
+                  {/* Film perforations */}
+                  <rect x="10" y={i * 60 + 15} width="6" height="8" fill="currentColor" opacity="0.3"/>
+                  <rect x="10" y={i * 60 + 27} width="6" height="8" fill="currentColor" opacity="0.3"/>
+                  <rect x="84" y={i * 60 + 15} width="6" height="8" fill="currentColor" opacity="0.3"/>
+                  <rect x="84" y={i * 60 + 27} width="6" height="8" fill="currentColor" opacity="0.3"/>
+                </g>
+              ))}
+              <animateTransform attributeName="transform" type="translateY" values="0;-20;0" dur="10s" repeatCount="indefinite"/>
+            </g>
+          </svg>
+        </div>
+
+        {/* Movie Tickets */}
+        <div className="absolute bottom-1/3 left-1/2 opacity-[0.035]">
+          <svg width="150" height="100" viewBox="0 0 150 100" className="text-red-400">
+            <g>
+              {Array.from({length: 3}).map((_, i) => (
+                <g key={i} transform={`translate(${i * 15}, ${i * 10}) rotate(${i * 5} 50 30)`}>
+                  <rect x="20" y="20" width="80" height="40" rx="5" fill="currentColor" opacity="0.2" stroke="currentColor" strokeWidth="1"/>
+                  <circle cx="25" cy="40" r="3" fill="none" stroke="currentColor" strokeWidth="1"/>
+                  <circle cx="95" cy="40" r="3" fill="none" stroke="currentColor" strokeWidth="1"/>
+                  <line x1="30" y1="30" x2="60" y2="30" stroke="currentColor" strokeWidth="1"/>
+                  <line x1="30" y1="50" x2="90" y2="50" stroke="currentColor" strokeWidth="1"/>
+                  <text x="75" y="38" fontSize="6" fill="currentColor" textAnchor="middle">CINEMA</text>
+                </g>
+              ))}
+            </g>
+          </svg>
+        </div>
+
+        {/* Popcorn Container */}
+        <div className="absolute top-1/4 right-1/3 opacity-[0.03]">
+          <svg width="120" height="180" viewBox="0 0 120 180" className="text-orange-400">
+            <g>
+              {/* Container */}
+              <polygon points="30,60 90,60 85,160 35,160" fill="currentColor" opacity="0.2" stroke="currentColor" strokeWidth="2"/>
+
+              {/* Popcorn pieces */}
+              {Array.from({length: 8}).map((_, i) => (
+                <circle key={i} cx={40 + (i % 3) * 15} cy={70 + Math.floor(i / 3) * 20} r={3 + Math.random() * 2} fill="currentColor" opacity="0.4"/>
+              ))}
+
+              {/* Container stripes */}
+              <line x1="30" y1="80" x2="90" y2="80" stroke="currentColor" strokeWidth="1" opacity="0.5"/>
+              <line x1="32" y1="120" x2="88" y2="120" stroke="currentColor" strokeWidth="1" opacity="0.5"/>
+
+              <text x="60" y="140" fontSize="8" fill="currentColor" textAnchor="middle">POPCORN</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 relative z-10">
         {/* Page Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12 sm:mb-16 pt-12 md:pt-0"
+          className="text-center mb-12 sm:mb-16 pt-12 md:pt-0 relative"
         >
-          <div className="inline-flex items-center gap-2 sm:gap-3 bg-slate-900/60 backdrop-blur-xl px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-slate-700/50 mb-6 sm:mb-8">
-            <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
-            <span className="text-slate-300 font-medium text-sm sm:text-base">Professional Film Education</span>
+          {/* Background Decorative Elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <svg className="absolute top-0 left-1/4 w-32 h-32 text-emerald-500/5" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="40" fill="currentColor">
+                <animate attributeName="r" values="40;45;40" dur="4s" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+            <svg className="absolute top-20 right-1/4 w-24 h-24 text-slate-500/5" viewBox="0 0 100 100">
+              <rect x="25" y="25" width="50" height="50" fill="currentColor" transform="rotate(45 50 50)">
+                <animateTransform attributeName="transform" type="rotate" values="45 50 50;90 50 50;45 50 50" dur="6s" repeatCount="indefinite"/>
+              </rect>
+            </svg>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-white via-slate-200 to-emerald-300 bg-clip-text text-transparent mb-4 sm:mb-6 leading-tight">
-            Cinema School
-          </h1>
-          <p className="text-base sm:text-lg lg:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed px-4">
-            Master the Art and Craft of Filmmaking through our comprehensive curriculum designed by industry professionals
-          </p>
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 sm:gap-3 bg-slate-900/60 backdrop-blur-xl px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-slate-700/50 mb-6 sm:mb-8">
+              <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
+              <span className="text-slate-300 font-medium text-sm sm:text-base">Professional Film Education</span>
+            </div>
 
-          {/* Stats */}
-          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mt-8 sm:mt-12 text-sm sm:text-base">
-            <div className="flex items-center gap-2 text-slate-400">
-              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>32 Comprehensive Lessons</span>
-            </div>
-            <div className="flex items-center gap-2 text-slate-400">
-              <Users className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>14 Topic Categories</span>
-            </div>
-            <div className="flex items-center gap-2 text-slate-400">
-              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>3 Skill Levels</span>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-white via-slate-200 to-emerald-300 bg-clip-text text-transparent mb-4 sm:mb-6 leading-tight">
+              Cinema School
+            </h1>
+            <p className="text-base sm:text-lg lg:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed px-4">
+              Master the Art and Craft of Filmmaking through our comprehensive curriculum designed by industry professionals
+            </p>
+
+            {/* Stats with Enhanced Icons */}
+            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mt-8 sm:mt-12 text-sm sm:text-base">
+              <div className="flex items-center gap-2 text-slate-400 bg-slate-900/30 rounded-full px-4 py-2 border border-slate-700/30">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+                <span>32 Comprehensive Lessons</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-400 bg-slate-900/30 rounded-full px-4 py-2 border border-slate-700/30">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span>14 Topic Categories</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-400 bg-slate-900/30 rounded-full px-4 py-2 border border-slate-700/30">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                </svg>
+                <span>3 Skill Levels</span>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -703,7 +911,7 @@ const CinemaSchoolPage = () => {
 
         </motion.div>
 
-        {/* Featured Lesson */}
+        {/* Hero Illustration Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -741,10 +949,94 @@ const CinemaSchoolPage = () => {
                   </div>
                 </div>
                 <div className="relative">
-                  <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl lg:rounded-2xl border border-slate-700/50 flex items-center justify-center">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500/30">
-                      <Play className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-300 ml-0.5 sm:ml-1" />
-                    </div>
+                  {/* Cinema Equipment SVG Illustration */}
+                  <div className="aspect-video bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-xl lg:rounded-2xl border border-slate-700/50 flex items-center justify-center p-8 overflow-hidden">
+                    <svg viewBox="0 0 400 300" className="w-full h-full max-w-sm">
+                      {/* Camera Body */}
+                      <g>
+                        <rect x="120" y="120" width="160" height="100" rx="8" fill="#334155" stroke="#475569" strokeWidth="2"/>
+                        <rect x="130" y="130" width="140" height="80" rx="4" fill="#1e293b"/>
+
+                        {/* Lens */}
+                        <circle cx="200" cy="170" r="35" fill="#0f172a" stroke="#374151" strokeWidth="2"/>
+                        <circle cx="200" cy="170" r="25" fill="#111827" stroke="#4b5563" strokeWidth="1"/>
+                        <circle cx="200" cy="170" r="15" fill="#000" opacity="0.8"/>
+
+                        {/* Lens Reflection */}
+                        <circle cx="195" cy="165" r="8" fill="#10b981" opacity="0.3"/>
+                        <circle cx="192" cy="162" r="3" fill="#ffffff" opacity="0.6"/>
+
+                        {/* Camera Details */}
+                        <rect x="140" y="140" width="20" height="8" rx="2" fill="#374151"/>
+                        <rect x="240" y="140" width="20" height="8" rx="2" fill="#374151"/>
+                        <circle cx="160" cy="200" r="3" fill="#ef4444"/>
+                        <circle cx="240" cy="200" r="3" fill="#10b981"/>
+                      </g>
+
+                      {/* Film Strip */}
+                      <g>
+                        <rect x="50" y="80" width="120" height="20" fill="#1f2937" stroke="#374151" strokeWidth="1"/>
+                        <rect x="60" y="85" width="8" height="10" fill="#000"/>
+                        <rect x="75" y="85" width="8" height="10" fill="#000"/>
+                        <rect x="90" y="85" width="8" height="10" fill="#000"/>
+                        <rect x="105" y="85" width="8" height="10" fill="#000"/>
+                        <rect x="120" y="85" width="8" height="10" fill="#000"/>
+                        <rect x="135" y="85" width="8" height="10" fill="#000"/>
+                        <rect x="150" y="85" width="8" height="10" fill="#000"/>
+                      </g>
+
+                      {/* Director's Clapperboard */}
+                      <g>
+                        <rect x="280" y="60" width="80" height="60" rx="4" fill="#1e293b" stroke="#475569" strokeWidth="2"/>
+                        <rect x="280" y="60" width="80" height="15" fill="#000"/>
+                        <rect x="280" y="75" width="80" height="15" fill="#fbbf24"/>
+                        <rect x="280" y="90" width="80" height="15" fill="#000"/>
+                        <rect x="280" y="105" width="80" height="15" fill="#fbbf24"/>
+
+                        {/* Clapperboard Text */}
+                        <text x="320" y="55" fontSize="8" fill="#ffffff" textAnchor="middle" fontWeight="bold">SCENE 1</text>
+                        <text x="285" y="135" fontSize="6" fill="#ffffff">TAKE: 3</text>
+                        <text x="340" y="135" fontSize="6" fill="#ffffff">CAM: A</text>
+                      </g>
+
+                      {/* Tripod */}
+                      <g>
+                        <line x1="200" y1="220" x2="180" y2="280" stroke="#374151" strokeWidth="3"/>
+                        <line x1="200" y1="220" x2="220" y2="280" stroke="#374151" strokeWidth="3"/>
+                        <line x1="200" y1="220" x2="200" y2="285" stroke="#374151" strokeWidth="3"/>
+                        <circle cx="200" cy="218" r="6" fill="#475569"/>
+                      </g>
+
+                      {/* Spotlight */}
+                      <g>
+                        <ellipse cx="100" cy="40" rx="25" ry="15" fill="#fbbf24" opacity="0.2"/>
+                        <circle cx="80" cy="30" r="12" fill="#1e293b" stroke="#475569" strokeWidth="2"/>
+                        <circle cx="80" cy="30" r="8" fill="#fbbf24" opacity="0.8"/>
+                        <line x1="68" y1="30" x2="40" y2="30" stroke="#374151" strokeWidth="2"/>
+                        <circle cx="35" cy="30" r="4" fill="#475569"/>
+                      </g>
+
+                      {/* Floating Elements */}
+                      <g opacity="0.6">
+                        <circle cx="350" cy="180" r="2" fill="#10b981">
+                          <animate attributeName="cy" values="180;170;180" dur="3s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="70" cy="160" r="1.5" fill="#fbbf24">
+                          <animate attributeName="cy" values="160;150;160" dur="4s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="320" cy="200" r="1" fill="#ef4444">
+                          <animate attributeName="cy" values="200;190;200" dur="2.5s" repeatCount="indefinite"/>
+                        </circle>
+                      </g>
+
+                      {/* Grid Overlay (Rule of Thirds) */}
+                      <g opacity="0.1">
+                        <line x1="133" y1="20" x2="133" y2="280" stroke="#10b981" strokeWidth="1" strokeDasharray="2,2"/>
+                        <line x1="267" y1="20" x2="267" y2="280" stroke="#10b981" strokeWidth="1" strokeDasharray="2,2"/>
+                        <line x1="40" y1="100" x2="360" y2="100" stroke="#10b981" strokeWidth="1" strokeDasharray="2,2"/>
+                        <line x1="40" y1="200" x2="360" y2="200" stroke="#10b981" strokeWidth="1" strokeDasharray="2,2"/>
+                      </g>
+                    </svg>
                   </div>
                 </div>
               </div>
@@ -774,14 +1066,42 @@ const CinemaSchoolPage = () => {
 
           {filteredLessons.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-              {filteredLessons.map((lesson, index) => (
-                <LessonCard key={lesson.id} lesson={lesson} index={index} />
-              ))}
+              {filteredLessons.map((lesson, index) => {
+                // Add visual elements to specific cards
+                const isSpecialCard = index % 6 === 2; // Every 3rd card in each row
+                return (
+                  <div key={lesson.id} className="relative">
+                    <LessonCard lesson={lesson} index={index} />
+                    {isSpecialCard && (
+                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center opacity-80">
+                        <svg viewBox="0 0 24 24" className="w-3 h-3 text-white">
+                          <path fill="currentColor" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-12 sm:py-16">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="w-6 h-6 sm:w-8 sm:h-8 text-slate-500" />
+              {/* Enhanced No Results Illustration */}
+              <div className="w-32 h-32 mx-auto mb-6 relative">
+                <svg viewBox="0 0 200 200" className="w-full h-full">
+                  {/* Empty Film Reel */}
+                  <circle cx="100" cy="100" r="80" fill="none" stroke="#374151" strokeWidth="3" strokeDasharray="10,5"/>
+                  <circle cx="100" cy="100" r="20" fill="#1e293b" stroke="#475569" strokeWidth="2"/>
+                  <circle cx="100" cy="100" r="12" fill="#0f172a"/>
+
+                  {/* Search Icon */}
+                  <circle cx="140" cy="60" r="15" fill="none" stroke="#6b7280" strokeWidth="3"/>
+                  <line x1="152" y1="72" x2="165" y2="85" stroke="#6b7280" strokeWidth="3" strokeLinecap="round"/>
+
+                  {/* Sad Face */}
+                  <circle cx="85" cy="85" r="2" fill="#6b7280"/>
+                  <circle cx="115" cy="85" r="2" fill="#6b7280"/>
+                  <path d="M85 120 Q100 110 115 120" stroke="#6b7280" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                </svg>
               </div>
               <h3 className="text-lg sm:text-xl font-semibold text-slate-400 mb-2">No lessons found</h3>
               <p className="text-slate-500 text-sm sm:text-base">Try adjusting your filters or search terms</p>
