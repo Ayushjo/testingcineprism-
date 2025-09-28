@@ -60,21 +60,21 @@ const App = () => {
         <ScrollToTop smooth={true} delay={100} />
         <Navbar />
         <Routes>
+          <Route path="/rule-of-thirds" element={<RuleOfThirdsPage />} />
+          <Route path="/cinema-school" element={<CinemaSchoolPage />} />
+          <Route path="/180-degree-rule" element={<Rule180Page />} />
           <Route path="/" element={<Homepage />} />
           <Route path="/articles/:slug" element={<ArticlePage />} />
           <Route element={<RedirectIfAuth />}>
             <Route path="/login" element={<LoginPage />} />
           </Route>
-<Route path="/articles" element={<ArticleSection />} />
+          <Route path="/articles" element={<ArticleSection />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route element={<RedirectIfUser />}>
-            
             <Route path="/box-office" element={<BoxOfficePage />} />
             <Route path="/reviews" element={<ReviewPage />} />
             <Route path="/post/:id" element={<PostPage />} />
 
-            <Route path="/180-degree-rule" element={<Rule180Page />} />
-            <Route path="/rule-of-thirds" element={<RuleOfThirdsPage />} />
             <Route
               path="/genre/Science-Fiction"
               element={<ScienceFictionPage />}
@@ -86,7 +86,6 @@ const App = () => {
             <Route path="/genre/Animation" element={<AnimationPage />} />
             <Route path="/trending" element={<TrendingPage />} />
 
-            <Route path="/cinema-school" element={<CinemaSchoolPage />} />
             <Route path="/recommendations-page" element={<TopPicksPage />} />
             <Route
               path="/ai-insights/:id"
