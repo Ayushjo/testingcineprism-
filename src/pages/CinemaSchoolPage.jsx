@@ -631,7 +631,7 @@ const CinemaSchoolPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12 sm:mb-16"
+          className="text-center mb-12 sm:mb-16 pt-12 md:pt-0"
         >
           <div className="inline-flex items-center gap-2 sm:gap-3 bg-slate-900/60 backdrop-blur-xl px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-slate-700/50 mb-6 sm:mb-8">
             <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
