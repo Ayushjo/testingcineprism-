@@ -20,7 +20,7 @@ export default function Navbar() {
   }, []);
 
   const handleResize = useCallback(() => {
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 1024) {
       setIsMobileMenuOpen(false);
     }
   }, []);
@@ -135,7 +135,7 @@ export default function Navbar() {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link, index) => (
               <motion.div
                 key={`nav-${link.href}`}
@@ -258,7 +258,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Social Actions */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             <motion.div
               onMouseEnter={() => setHoveredItem("twitter")}
               onMouseLeave={() => setHoveredItem(null)}
@@ -287,7 +287,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <motion.button
               aria-label="Toggle menu"
               whileTap={{ scale: 0.95 }}
@@ -330,7 +330,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden bg-slate-950/95 backdrop-blur-xl border-t border-white/5"
+            className="lg:hidden bg-slate-950/95 backdrop-blur-xl border-t border-white/5"
           >
             <div className="px-4 py-6 space-y-2">
               {navLinks.map((link, index) => (
