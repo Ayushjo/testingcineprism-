@@ -128,25 +128,31 @@ const MobileHeroSection = () => {
     },
   ];
 
-  // Auto-slide effect
+  // Auto-slide effect for horizontal carousel
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide(
-        (prev) => (prev + 1) % Math.max(1, heroPosters.length - 2)
+        (prev) => (prev + 1) % (heroPosters.length - 3)
       );
-    }, 6000);
+    }, 4000);
     return () => clearInterval(interval);
   }, [heroPosters.length]);
 
-  // Get visible posters for carousel (3 at a time)
-  const getVisiblePosters = () => {
-    const visible = [];
-    for (let i = 0; i < 3; i++) {
-      const index = (currentSlide + i) % heroPosters.length;
-      visible.push({ ...heroPosters[index], slideIndex: index });
-    }
-    return visible;
-  };
+  // Custom scrollbar hide styles
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
 
   return (
     <>
@@ -210,174 +216,175 @@ const MobileHeroSection = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex-shrink-0 mb-8 sm:mb-12 md:mb-16"
+            className="flex-shrink-0 mb-8 sm:mb-12 md:mb-16 h-[36vh] sm:h-[40vh] md:h-[42vh]"
           >
-            <div className="text-center">
-              <div className="flex justify-center items-center gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 px-2">
-                {getVisiblePosters().map((poster, index) => (
-                  <motion.div
-                    key={`${poster.slideIndex}-${currentSlide}`}
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{
-                      scale: index === 1 ? 1.1 : 0.95,
-                      opacity: index === 1 ? 1 : 0.7,
-                    }}
-                    transition={{ duration: 0.7, ease: "easeInOut" }}
-                    className={`relative rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl transition-all duration-700 ease-in-out border border-slate-700/20 ${
-                      index === 1
-                        ? "w-36 sm:w-48 md:w-56 lg:w-64 h-48 sm:h-64 md:h-80 lg:h-88 z-20" // Center (featured) - much larger
-                        : "w-28 sm:w-36 md:w-44 lg:w-52 h-36 sm:h-48 md:h-60 lg:h-72 z-10" // Sides - larger
-                    }`}
-                  >
-                    <img
-                      src={poster.image || "/placeholder.svg"}
-                      alt={poster.title}
-                      className="w-full h-full object-cover transition-all duration-700"
-                      loading="lazy"
-                    />
+            <div className="h-full relative">
+              {/* Horizontal Scrolling Container */}
+              <div className="h-full overflow-x-auto overflow-y-hidden scrollbar-hide relative">
+                <div
+                  className="flex gap-4 sm:gap-6 md:gap-8 h-full transition-transform duration-700 ease-in-out px-4 sm:px-8"
+                  style={{
+                    transform: `translateX(-${currentSlide * 20}%)`,
+                    width: `${heroPosters.length * 20}%`
+                  }}
+                >
+                  {heroPosters.map((poster, index) => (
+                    <motion.div
+                      key={poster.id}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                      className="relative flex-shrink-0 w-32 sm:w-40 md:w-44 lg:w-48 aspect-[2/3] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-700/20 group cursor-pointer"
+                      whileHover={{ scale: 1.05, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <img
+                        src={poster.image || "/placeholder.svg"}
+                        alt={poster.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        loading="lazy"
+                      />
 
-                    {/* Enhanced film info overlay - only on center film */}
-                    {index === 1 && (
-                      <>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-6 text-white">
-                          <div className="text-center">
-                            <div className="inline-block px-2 py-1 bg-slate-200/20 backdrop-blur-sm rounded-full text-xs sm:text-sm font-medium mb-2 border border-slate-300/20">
-                              {poster.genre}
-                            </div>
-                            <h2 className="text-sm sm:text-lg md:text-xl lg:text-2xl font-bold mb-1 sm:mb-2">
-                              {poster.title}
-                            </h2>
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {/* Subtle glow effect for center poster */}
-                    {index === 1 && (
-                      <div className="absolute -inset-1 bg-gradient-to-r from-slate-400/20 via-white/10 to-slate-400/20 rounded-xl sm:rounded-2xl md:rounded-3xl blur-sm -z-10" />
-                    )}
-                  </motion.div>
-                ))}
+                      {/* Glow effect on hover */}
+                      <div className="absolute -inset-1 bg-gradient-to-r from-slate-400/20 via-white/10 to-slate-400/20 rounded-2xl sm:rounded-3xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+                    </motion.div>
+                  ))}
+                </div>
               </div>
 
-              {/* Enhanced Film Navigation */}
-              <div className="flex items-center justify-center gap-2 sm:gap-3">
-                {Array.from({
-                  length: Math.max(1, heroPosters.length - 2),
-                }).map((_, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    whileHover={{ scale: 1.4 }}
-                    whileTap={{ scale: 0.8 }}
-                    className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-300 ${
-                      index === currentSlide
-                        ? "bg-slate-200 shadow-lg shadow-slate-200/50 scale-125"
-                        : "bg-slate-600/50 hover:bg-slate-500/70"
-                    }`}
-                  />
-                ))}
-              </div>
+              {/* Fade edges */}
+              <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
             </div>
           </motion.div>
 
+          {/* Hero Content Section */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-center mb-8 sm:mb-12 md:mb-16 flex-shrink-0"
+            className="text-center mb-12 sm:mb-16 md:mb-20 flex-shrink-0 px-4"
           >
-            <h1 className="leading-[1.1] tracking-tight mb-4 sm:mb-6 md:mb-8">
-              <span className="block text-slate-100 font-extralight mb-1 sm:mb-2 hero-title-small">
-                Cinema for
-              </span>
-              <span className="block bg-gradient-to-r from-slate-100 via-white to-slate-200 bg-clip-text text-transparent font-normal hero-title-large">
-                Acquired Taste
-              </span>
-            </h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              className="text-slate-400 text-sm sm:text-base md:text-lg leading-relaxed max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto mb-6 sm:mb-8 md:mb-10"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.4 }}
+              className="relative"
             >
-              Deep dives, critical essays, and curated collections that
-              celebrate the art of film. A dedicated space for cinephiles who
-              find beauty in the details and meaning beyond the mainstream.
-            </motion.p>
+              <h1 className="leading-[0.9] tracking-tight mb-6 sm:mb-8 md:mb-10">
+                <span className="block text-slate-100 font-light mb-2 sm:mb-3 hero-title-small">
+                  Cinema for
+                </span>
+                <span className="block bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent font-bold hero-title-large">
+                  Acquired Taste
+                </span>
+              </h1>
 
-            {/* Enhanced CTA Button */}
-            <motion.button
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.0 }}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-slate-200 text-slate-950 px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 rounded-xl sm:rounded-2xl font-semibold hover:bg-white transition-all duration-300 flex items-center gap-2 mx-auto text-sm sm:text-base md:text-lg shadow-xl hover:shadow-2xl group"
-            >
-              <span>Start Exploring</span>
-              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </motion.button>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+                className="text-slate-300 text-base sm:text-lg md:text-xl leading-relaxed max-w-lg mx-auto mb-8 sm:mb-10 md:mb-12 font-light"
+              >
+                Deep dives, critical essays, and curated collections that celebrate the art of film.
+              </motion.p>
+
+              {/* Enhanced CTA Button */}
+              <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.0 }}
+                whileHover={{ scale: 1.05, y: -3 }}
+                whileTap={{ scale: 0.98 }}
+                className="group relative bg-white text-slate-950 px-8 sm:px-10 md:px-12 py-4 sm:py-5 md:py-6 rounded-2xl font-semibold hover:bg-slate-100 transition-all duration-300 flex items-center gap-3 mx-auto text-base sm:text-lg md:text-xl shadow-2xl hover:shadow-white/20 overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-white via-slate-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="relative z-10">Start Exploring</span>
+                <ArrowRight className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform duration-300" />
+              </motion.button>
+            </motion.div>
           </motion.div>
 
+          {/* Feature Cards Section - Redesigned */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.2 }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 px-2 sm:px-4 md:px-6 max-w-5xl mx-auto pb-8 sm:pb-12 md:pb-16 flex-shrink-0"
+            className="px-4 sm:px-6 md:px-8 max-w-4xl mx-auto pb-12 sm:pb-16 md:pb-20 flex-shrink-0"
           >
-            {/* Reviews Section */}
-            <motion.div
-              className="text-center group cursor-pointer"
-              whileHover={{ y: -8, scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="w-16 sm:w-20 md:w-24 lg:w-28 h-16 sm:h-20 md:h-24 lg:h-28 mx-auto mb-3 sm:mb-4 md:mb-6 rounded-xl sm:rounded-2xl md:rounded-3xl bg-slate-800/40 border border-slate-700/40 flex items-center justify-center group-hover:bg-slate-700/50 group-hover:border-slate-600/50 transition-all duration-300 shadow-lg group-hover:shadow-xl">
-                <Eye className="w-6 sm:w-8 md:w-10 lg:w-12 h-6 sm:h-8 md:h-10 lg:h-12 text-slate-300 group-hover:text-slate-200 transition-colors duration-300" />
-              </div>
-              <h3 className="text-base sm:text-lg md:text-xl font-semibold text-slate-200 mb-2 sm:mb-3 md:mb-4">
-                Reviews
-              </h3>
-              <p className="text-sm sm:text-base md:text-lg text-slate-400 leading-relaxed">
-                In-depth analysis of films from classics to new releases.
-              </p>
-            </motion.div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
+              {/* Reviews Section */}
+              <motion.div
+                className="group cursor-pointer"
+                whileHover={{ y: -12, scale: 1.03 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              >
+                <div className="relative bg-slate-800/30 backdrop-blur-sm border border-slate-700/30 rounded-3xl p-6 sm:p-8 h-full overflow-hidden group-hover:border-slate-600/50 transition-all duration-500">
+                  {/* Background glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            {/* Interviews Section */}
-            <motion.div
-              className="text-center group cursor-pointer"
-              whileHover={{ y: -8, scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="w-16 sm:w-20 md:w-24 lg:w-28 h-16 sm:h-20 md:h-24 lg:h-28 mx-auto mb-3 sm:mb-4 md:mb-6 rounded-xl sm:rounded-2xl md:rounded-3xl bg-slate-800/40 border border-slate-700/40 flex items-center justify-center group-hover:bg-slate-700/50 group-hover:border-slate-600/50 transition-all duration-300 shadow-lg group-hover:shadow-xl">
-                <MessageCircle className="w-6 sm:w-8 md:w-10 lg:w-12 h-6 sm:h-8 md:h-10 lg:h-12 text-slate-300 group-hover:text-slate-200 transition-colors duration-300" />
-              </div>
-              <h3 className="text-base sm:text-lg md:text-xl font-semibold text-slate-200 mb-2 sm:mb-3 md:mb-4">
-                Interviews
-              </h3>
-              <p className="text-sm sm:text-base md:text-lg text-slate-400 leading-relaxed">
-                Conversations with filmmakers, actors, and industry voices.
-              </p>
-            </motion.div>
+                  <div className="relative z-10 text-center">
+                    <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border border-emerald-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Eye className="w-10 h-10 text-emerald-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-4 group-hover:text-emerald-300 transition-colors duration-300">
+                      Reviews
+                    </h3>
+                    <p className="text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300">
+                      In-depth analysis of films from classics to new releases
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
 
-            {/* Archives Section */}
-            <motion.div
-              className="text-center group cursor-pointer"
-              whileHover={{ y: -8, scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="w-16 sm:w-20 md:w-24 lg:w-28 h-16 sm:h-20 md:h-24 lg:h-28 mx-auto mb-3 sm:mb-4 md:mb-6 rounded-xl sm:rounded-2xl md:rounded-3xl bg-slate-800/40 border border-slate-700/40 flex items-center justify-center group-hover:bg-slate-700/50 group-hover:border-slate-600/50 transition-all duration-300 shadow-lg group-hover:shadow-xl">
-                <Film className="w-6 sm:w-8 md:w-10 lg:w-12 h-6 sm:h-8 md:h-10 lg:h-12 text-slate-300 group-hover:text-slate-200 transition-colors duration-300" />
-              </div>
-              <h3 className="text-base sm:text-lg md:text-xl font-semibold text-slate-200 mb-2 sm:mb-3 md:mb-4">
-                Archives
-              </h3>
-              <p className="text-sm sm:text-base md:text-lg text-slate-400 leading-relaxed">
-                Preserving the history of cinema through rare insights.
-              </p>
-            </motion.div>
+              {/* Interviews Section */}
+              <motion.div
+                className="group cursor-pointer"
+                whileHover={{ y: -12, scale: 1.03 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              >
+                <div className="relative bg-slate-800/30 backdrop-blur-sm border border-slate-700/30 rounded-3xl p-6 sm:p-8 h-full overflow-hidden group-hover:border-slate-600/50 transition-all duration-500">
+                  {/* Background glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  <div className="relative z-10 text-center">
+                    <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <MessageCircle className="w-10 h-10 text-blue-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-4 group-hover:text-blue-300 transition-colors duration-300">
+                      Interviews
+                    </h3>
+                    <p className="text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300">
+                      Conversations with filmmakers, actors, and industry voices
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Archives Section */}
+              <motion.div
+                className="group cursor-pointer"
+                whileHover={{ y: -12, scale: 1.03 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              >
+                <div className="relative bg-slate-800/30 backdrop-blur-sm border border-slate-700/30 rounded-3xl p-6 sm:p-8 h-full overflow-hidden group-hover:border-slate-600/50 transition-all duration-500">
+                  {/* Background glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  <div className="relative z-10 text-center">
+                    <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Film className="w-10 h-10 text-purple-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-4 group-hover:text-purple-300 transition-colors duration-300">
+                      Archives
+                    </h3>
+                    <p className="text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300">
+                      Preserving the history of cinema through rare insights
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
           </motion.div>
         </div>
       </section>

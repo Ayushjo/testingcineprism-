@@ -311,7 +311,7 @@ export default function Homepage() {
                   >
                     <span className="inline-flex items-center gap-3 bg-slate-800/30 backdrop-blur-none border border-slate-700/30 px-5 py-2.5 rounded-full text-sm font-medium text-slate-200">
                       <div className="w-2 h-2 bg-slate-200 rounded-full animate-pulse" />
-                      Cinema for acquired taste.
+                      for acquired taste.
                       <Film className="w-4 h-4 text-slate-200" />
                     </span>
                   </motion.div>

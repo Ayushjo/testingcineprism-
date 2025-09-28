@@ -1,22 +1,93 @@
-import { motion, useMotionValue } from "framer-motion";
-import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { Star, ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+const ReviewCard = ({ movie, index, onClick }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      whileHover={{ y: -5, scale: 1.02 }}
+      onClick={() => onClick(movie.id)}
+      className="group relative flex-shrink-0 w-48 sm:w-52 md:w-56 cursor-pointer"
+    >
+      {/* Movie Poster Container */}
+      <div className="relative aspect-[2/3] rounded-2xl overflow-hidden mb-4 shadow-lg group-hover:shadow-xl group-hover:shadow-emerald-500/20 transition-all duration-300">
+        <img
+          src={movie.posterUrl || "/placeholder.svg"}
+          alt={movie.title}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          onError={(e) => {
+            e.target.src = "/placeholder.svg";
+          }}
+        />
+
+        {/* Review Badge Overlay */}
+        <div className="absolute top-3 left-3">
+          <div className="px-2 py-1 sm:px-3 sm:py-1.5 bg-black/60 backdrop-blur-sm rounded-full flex items-center gap-1 border border-white/20">
+            <BookOpen className="w-3 h-3 text-emerald-400" />
+            <span className="text-white font-medium text-xs">REVIEW</span>
+          </div>
+        </div>
+
+        {/* Hover Glow Effect */}
+        <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+        {/* Subtle Border Glow on Hover */}
+        <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-emerald-400/30 transition-colors duration-300" />
+
+        {/* Gradient Overlay for Text Readability */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+        {/* Movie Info Overlay */}
+        <div className="absolute bottom-3 left-3 right-3">
+          <h3 className="text-white font-bold text-sm leading-tight mb-1">
+            {movie.title}
+          </h3>
+          <div className="flex items-center gap-2 text-slate-300 text-xs">
+            <span>{movie.year}</span>
+            {movie.genres && movie.genres.length > 0 && (
+              <>
+                <span>•</span>
+                <span>{movie.genres[0]}</span>
+              </>
+            )}
+          </div>
+          {movie.directedBy && (
+            <p className="text-slate-400 text-xs mt-1">
+              by {movie.directedBy}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Movie Title (outside poster for better visibility) */}
+      <div className="px-2">
+        <h3 className="text-white font-bold text-sm sm:text-base line-clamp-2 group-hover:text-emerald-300 transition-colors duration-300 leading-tight">
+          {movie.title}
+        </h3>
+        <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-1">
+            <BookOpen className="w-3 h-3 text-emerald-400" />
+            <span className="text-slate-400 text-xs">Fresh Review</span>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 export default function LatestReviews() {
-  const scrollRef = useRef(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-  const [isDragging, setIsDragging] = useState(false);
   const [latestReviews, setLatestReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [hoveredCard, setHoveredCard] = useState(null);
   const navigate = useNavigate();
+  const scrollContainerRef = useRef(null);
 
-  const x = useMotionValue(0);
-  const dragConstraints = useRef({ left: 0, right: 0 });
   // Fetch latest reviews from API
   useEffect(() => {
     const fetchLatestReviews = async () => {
@@ -53,135 +124,59 @@ export default function LatestReviews() {
     fetchLatestReviews();
   }, []);
 
-  // Update scroll constraints and button states
-  useEffect(() => {
-    const updateConstraints = () => {
-      if (scrollRef.current) {
-        const container = scrollRef.current;
-        const scrollWidth = container.scrollWidth;
-        const clientWidth = container.clientWidth;
-        const maxScroll = scrollWidth - clientWidth;
-
-        dragConstraints.current = {
-          left: -maxScroll,
-          right: 0,
-        };
-
-        const currentX = x.get();
-        setCanScrollLeft(currentX < 0);
-        setCanScrollRight(Math.abs(currentX) < maxScroll - 10);
-      }
-    };
-
-    updateConstraints();
-    window.addEventListener("resize", updateConstraints);
-
-    const unsubscribe = x.onChange(updateConstraints);
-
-    return () => {
-      window.removeEventListener("resize", updateConstraints);
-      unsubscribe();
-    };
-  }, [x, latestReviews]);
-
-  const handleDragStart = () => {
-    setIsDragging(true);
-  };
-
-  const handleDragEnd = () => {
-    setIsDragging(false);
+  const handleReviewClick = (reviewId) => {
+    navigate(`/post/${reviewId}`);
   };
 
   const scrollLeft = () => {
-    const newX = Math.min(x.get() + 320, 0);
-    x.set(newX);
-  };
-
-  const scrollRight = () => {
-    const newX = Math.max(x.get() - 320, dragConstraints.current.left);
-    x.set(newX);
-  };
-
-  const handleCardClick = (reviewId) => {
-    if (!isDragging) {
-      navigate(`/post/${reviewId}`);
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: -300,
+        behavior: "smooth",
+      });
     }
   };
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <section className="py-24 bg-gradient-to-b from-slate-900 to-slate-950 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="w-12 h-12 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-400 text-lg">Loading latest reviews...</p>
-        </div>
-      </section>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <section className="py-24 bg-gradient-to-b from-slate-900 to-slate-950 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-8 max-w-md mx-auto">
-            <h3 className="text-2xl font-bold text-red-400 mb-4">Error</h3>
-            <p className="text-slate-400 mb-6">{error}</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="bg-gradient-to-r from-red-500/80 to-red-600/80 hover:from-red-500 hover:to-red-600 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300"
-            >
-              Try Again
-            </button>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // Empty state
-  if (latestReviews.length === 0) {
-    return (
-      <section className="py-24 bg-gradient-to-b from-slate-900 to-slate-950 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-slate-400 text-lg">No reviews available</p>
-        </div>
-      </section>
-    );
-  }
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: 300,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
-    <section className="py-24 bg-gradient-to-b from-slate-900 to-slate-950 relative overflow-hidden">
+    <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-slate-900 to-slate-950 relative overflow-hidden">
       {/* Ambient Background */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(16,185,129,0.03),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,rgba(139,92,246,0.03),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(16,185,129,0.05),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(139,92,246,0.05),transparent_50%)]" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        {/* Section Header */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 relative">
+        {/* Section Header - matching TrendingThisWeek style */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 md:mb-16"
         >
-          <div className="inline-block mb-6">
-            <span className="bg-white/5 backdrop-blur-xl text-emerald-400 px-4 py-2 rounded-2xl text-sm font-semibold border border-white/10">
-              🎬 Fresh Reviews
+          <div className="inline-block mb-4 sm:mb-6">
+            <span className="bg-white/5 backdrop-blur-xl text-emerald-400 px-3 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-semibold border border-white/10 flex items-center gap-2">
+              <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" />
+              Fresh Reviews
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 sm:mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight px-4">
             Latest Reviews
           </h2>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed px-4">
             Our newest takes on the films everyone's talking about
           </p>
         </motion.div>
 
-        {/* Carousel Container */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -189,124 +184,71 @@ export default function LatestReviews() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative"
         >
-          {/* Navigation Buttons */}
-          <motion.button
-            onClick={scrollLeft}
-            disabled={!canScrollLeft}
-            className={`absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full backdrop-blur-xl border transition-all duration-300 ${
-              canScrollLeft
-                ? "bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-110"
-                : "bg-white/5 border-white/10 text-white/30 cursor-not-allowed"
-            }`}
-            whileHover={canScrollLeft ? { scale: 1.1 } : {}}
-            whileTap={canScrollLeft ? { scale: 0.95 } : {}}
-          >
-            <ChevronLeft className="w-6 h-6 mx-auto" />
-          </motion.button>
-
-          <motion.button
-            onClick={scrollRight}
-            disabled={!canScrollRight}
-            className={`absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full backdrop-blur-xl border transition-all duration-300 ${
-              canScrollRight
-                ? "bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-110"
-                : "bg-white/5 border-white/10 text-white/30 cursor-not-allowed"
-            }`}
-            whileHover={canScrollRight ? { scale: 1.1 } : {}}
-            whileTap={canScrollRight ? { scale: 0.95 } : {}}
-          >
-            <ChevronRight className="w-6 h-6 mx-auto" />
-          </motion.button>
-
-          {/* Draggable Carousel */}
-          <div className="overflow-hidden mx-16">
-            <motion.div
-              ref={scrollRef}
-              drag="x"
-              dragConstraints={dragConstraints.current}
-              dragElastic={0.1}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              style={{ x }}
-              className={`flex gap-6 ${
-                isDragging ? "cursor-grabbing" : "cursor-grab"
-              }`}
-              whileTap={{ cursor: "grabbing" }}
-            >
-              {latestReviews.map((movie, index) => (
-                <motion.div
-                  key={movie.id}
-                  initial={{ opacity: 0, x: 50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={!isDragging ? { y: -10, scale: 1.02 } : {}}
-                  onMouseEnter={() => setHoveredCard(index)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                  onClick={() => handleCardClick(movie.id)}
-                  className="group relative flex-shrink-0 w-64 select-none cursor-pointer"
-                  style={{ pointerEvents: isDragging ? "none" : "auto" }}
+          {isLoading ? (
+            <div className="flex justify-center items-center py-12 sm:py-20">
+              <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-emerald-400"></div>
+            </div>
+          ) : error ? (
+            <div className="flex justify-center items-center py-12 sm:py-20">
+              <div className="text-center px-4">
+                <p className="text-red-400 mb-4 text-sm sm:text-base">
+                  {error}
+                </p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="bg-emerald-500/20 text-emerald-300 px-4 py-2 rounded-2xl border border-emerald-400/30 hover:bg-emerald-500/30 transition-all text-sm sm:text-base"
                 >
-                  <div className="aspect-[2/3] relative rounded-2xl overflow-hidden shadow-2xl group-hover:shadow-emerald-500/20 transition-all duration-500">
-                    {/* Rating Display */}
+                  Try Again
+                </button>
+              </div>
+            </div>
+          ) : latestReviews.length === 0 ? (
+            <div className="flex justify-center items-center py-12 sm:py-20">
+              <p className="text-slate-400 text-sm sm:text-base">
+                No reviews available
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Navigation Arrows - Desktop Only */}
+              <button
+                onClick={scrollLeft}
+                className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/60 backdrop-blur-sm rounded-full items-center justify-center border border-white/20 hover:bg-black/80 hover:border-emerald-400/50 transition-all duration-300 -translate-x-6"
+              >
+                <ChevronLeft className="w-6 h-6 text-white" />
+              </button>
 
-                    <img
-                      src={movie.posterUrl || "/placeholder.svg"}
-                      alt={movie.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      draggable={false}
-                      onError={(e) => {
-                        e.target.src = "/placeholder.svg";
-                      }}
-                    />
+              <button
+                onClick={scrollRight}
+                className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/60 backdrop-blur-sm rounded-full items-center justify-center border border-white/20 hover:bg-black/80 hover:border-emerald-400/50 transition-all duration-300 translate-x-6"
+              >
+                <ChevronRight className="w-6 h-6 text-white" />
+              </button>
 
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+              {/* Fade-out edges */}
+              <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
 
-                    {/* Movie Info */}
-                    <div className="absolute bottom-0 left-0 right-0 p-6">
-                      <h3 className="text-white font-bold text-lg mb-2 leading-tight tracking-tight">
-                        {movie.title}
-                      </h3>
-                      <div className="flex items-center gap-2 text-slate-300 text-sm mb-2">
-                        <span>{movie.year}</span>
-                        {movie.genres && movie.genres.length > 0 && (
-                          <>
-                            <span>•</span>
-                            <span>{movie.genres[0]}</span>
-                          </>
-                        )}
-                      </div>
-                      {movie.directedBy && (
-                        <p className="text-slate-400 text-xs">
-                          Directed by {movie.directedBy}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Hover Glow Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/10 via-transparent to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* Scroll Fade Edges */}
-          <div className="absolute left-16 top-0 bottom-0 w-12 bg-gradient-to-r from-slate-950 to-transparent pointer-events-none" />
-          <div className="absolute right-16 top-0 bottom-0 w-12 bg-gradient-to-l from-slate-950 to-transparent pointer-events-none" />
-
-          {/* Scroll Indicators */}
-          <div className="flex justify-center mt-8 gap-2">
-            {Array.from({
-              length: Math.ceil(latestReviews.length / 3),
-            }).map((_, index) => (
+              {/* Horizontal Scrolling Container */}
               <div
-                key={index}
-                className="w-2 h-2 rounded-full bg-white/20 transition-all duration-300"
-              />
-            ))}
-          </div>
+                ref={scrollContainerRef}
+                className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-hide pb-4 px-4 sm:px-8"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                }}
+              >
+                {latestReviews.map((movie, index) => (
+                  <ReviewCard
+                    key={movie.id}
+                    movie={movie}
+                    index={index}
+                    onClick={handleReviewClick}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </motion.div>
       </div>
     </section>
