@@ -5,8 +5,6 @@ import { motion } from "framer-motion";
 import {
   Star,
   TrendingUp,
-  MessageSquare,
-  Lightbulb,
   ExternalLink,
   Calendar,
   User,
@@ -17,44 +15,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import MovieDetailsModal from "../components/MovieDetailsModal"; // Adjust path as needed
 
-const aiInsightsData = [
-  {
-    id: "ai-1",
-    title:
-      "The Rise of the Anti-Hero: Why Are Audiences Rooting for the Bad Guy?",
-    content:
-      "Recent years have shown a significant rise in the popularity of anti-heroes, from comic book villains to morally gray protagonists in streaming dramas. AI analysis of 1.2M tweets and 500+ box office reports highlights that audiences resonate more with flawed characters who mirror real-world struggles. This trend suggests viewers are moving away from black-and-white morality tales in favor of stories that challenge their empathy and ethical boundaries.",
-    content_type: "analysis",
-    prompt_used:
-      "Analyze cultural and box office trends to explain the popularity of anti-heroes.",
-    status: "active",
-    view_count: 5230,
-    engagement_score: 8.2,
-    expires_at: "2025-09-01T00:00:00Z",
-    created_at: "2025-08-23T08:00:00Z",
-    updated_at: "2025-08-23T11:00:00Z",
-  },
-  {
-    id: "ai-2",
-    title: "Hypothetical Matchup: Ellen Ripley vs. Sarah Connor",
-    content:
-      "In a showdown between Ellen Ripley (Alien franchise) and Sarah Connor (Terminator franchise), AI models analyzed combat strategies, leadership traits, and survival instincts. Ripley's adaptability in extraterrestrial threats gives her a tactical edge, while Connor's military training and relentless determination make her a nearly unstoppable human warrior. Social sentiment polls lean slightly in favor of Ripley for her resilience against the unknown, though Connor dominates in strategic ground combat scenarios.",
-    content_type: "matchup",
-    prompt_used:
-      "Compare two iconic heroines from film: Ellen Ripley and Sarah Connor.",
-    status: "active",
-    view_count: 4175,
-    engagement_score: 7.6,
-    expires_at: "2025-09-05T00:00:00Z",
-    created_at: "2025-08-23T09:30:00Z",
-    updated_at: "2025-08-23T11:00:00Z",
-  },
-];
 
 const tabs = [
   { id: "movies", name: "Movies", icon: TrendingUp },
   { id: "news", name: "News", icon: Newspaper },
-  { id: "ai-insights", name: "AI Insights", icon: Lightbulb },
 ];
 
 export default function TrendingPage() {
@@ -129,18 +93,6 @@ export default function TrendingPage() {
     navigate(`/news/${index + 1}`);
   };
 
-  const handleAIInsightClick = (insight, index) => {
-    sessionStorage.setItem(
-      "currentArticle",
-      JSON.stringify({
-        ...insight,
-        id: index + 1,
-        image_url:
-          "https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1072&q=80",
-      })
-    );
-    navigate(`/ai-insights/${index + 1}`);
-  };
 
   const handleMovieClick = (movie) => {
     setSelectedMovie(movie);
@@ -394,75 +346,6 @@ export default function TrendingPage() {
     );
   };
 
-  const renderAIInsightCard = (insight, index) => (
-    <motion.div
-      key={index}
-      initial={{ opacity: 0, x: -50 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      whileHover={{ scale: 1.02, x: [0, 5, 10] }}
-      onClick={() => handleAIInsightClick(insight, index)}
-      className="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-6 cursor-pointer hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/10"
-    >
-      <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
-        {/* Rank Number */}
-        <div className="flex-shrink-0">
-          <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white/20 group-hover:text-emerald-400/40 transition-colors duration-300 tracking-tighter leading-none">
-            {String(index + 1).padStart(2, "0")}
-          </span>
-        </div>
-
-        {/* AI Icon */}
-        <div className="flex-shrink-0">
-          <div className="w-10 h-14 sm:w-12 sm:h-18 md:w-16 md:h-24 rounded-lg sm:rounded-xl bg-gradient-to-br from-emerald-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center">
-            {insight.content_type === "analysis" ? (
-              <Lightbulb className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 text-emerald-400" />
-            ) : (
-              <MessageSquare className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 text-purple-400" />
-            )}
-          </div>
-        </div>
-
-        {/* Insight Info - Flexible Layout */}
-        <div className="flex-1 min-w-0 pr-2 sm:pr-0">
-          <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white mb-1 tracking-tight group-hover:text-emerald-300 transition-colors duration-300 line-clamp-2">
-            {insight.title}
-          </h3>
-          <p className="text-slate-400 text-xs sm:text-sm mb-1 sm:mb-2 line-clamp-2 sm:line-clamp-3 hidden sm:block">
-            {insight.content}
-          </p>
-          <div className="flex items-center gap-1 sm:gap-2">
-            <span className="text-xs text-emerald-400 font-medium capitalize">
-              {insight.content_type}
-            </span>
-            <span className="text-xs text-slate-500 hidden sm:inline">•</span>
-            <span className="text-xs text-slate-500 hidden sm:inline">
-              AI Generated
-            </span>
-          </div>
-        </div>
-
-        {/* AI Badge - Desktop/Tablet only */}
-        <div className="hidden sm:flex flex-shrink-0">
-          <div className="bg-gradient-to-r from-emerald-500/20 to-purple-500/20 backdrop-blur-sm px-2 md:px-3 py-1 md:py-2 rounded-xl md:rounded-2xl border border-white/10">
-            <span className="text-xs font-semibold text-emerald-300">AI</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile: Content preview below */}
-      <div className="mt-2 sm:hidden">
-        <p className="text-slate-400 text-xs line-clamp-3 leading-relaxed">
-          {insight.content}
-        </p>
-        <div className="mt-1 flex items-center gap-1">
-          <span className="text-xs text-slate-500">AI Generated</span>
-        </div>
-      </div>
-
-      <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl sm:rounded-3xl" />
-    </motion.div>
-  );
 
   const getCurrentData = () => {
     switch (activeTab) {
@@ -470,8 +353,6 @@ export default function TrendingPage() {
         return trendingMoviesData;
       case "news":
         return trendingNewsData;
-      case "ai-insights":
-        return aiInsightsData;
       default:
         return trendingMoviesData;
     }
@@ -569,12 +450,6 @@ export default function TrendingPage() {
               {data.map((article, index) => renderNewsCard(article, index))}
             </div>
           </>
-        );
-      case "ai-insights":
-        return (
-          <div className="space-y-3 sm:space-y-4">
-            {data.map((insight, index) => renderAIInsightCard(insight, index))}
-          </div>
         );
       default:
         return null;
