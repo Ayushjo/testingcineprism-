@@ -524,7 +524,28 @@ export default function ReviewPage() {
       }
     } catch (error) {
       console.error("Error fetching reviews:", error);
-      setError("Failed to load reviews. Please try again.");
+
+      // Handle different error status codes
+      if (error.response) {
+        const status = error.response.status;
+        if (status === 400) {
+          setError("Bad request. Please try again.");
+        } else if (status === 401) {
+          setError("Authentication required. Please log in.");
+        } else if (status === 403) {
+          setError("Access denied. You don't have permission to view reviews.");
+        } else if (status === 404) {
+          setError("No reviews found.");
+        } else if (status === 500) {
+          setError("Failed to load reviews. Server error.");
+        } else {
+          setError("Failed to load reviews. Please try again.");
+        }
+      } else if (error.request) {
+        setError("Network error. Please check your connection.");
+      } else {
+        setError("Failed to load reviews. Please try again.");
+      }
       setPosts([]);
     } finally {
       setIsLoading(false);
@@ -569,7 +590,24 @@ export default function ReviewPage() {
       }
     } catch (error) {
       console.error("Error searching reviews:", error);
-      setError("Failed to search reviews. Please try again.");
+
+      // Handle different error status codes
+      if (error.response) {
+        const status = error.response.status;
+        if (status === 400) {
+          setError("Invalid search query. Please try different keywords.");
+        } else if (status === 404) {
+          setError("No reviews found matching your search.");
+        } else if (status === 500) {
+          setError("Failed to search reviews. Server error.");
+        } else {
+          setError("Failed to search reviews. Please try again.");
+        }
+      } else if (error.request) {
+        setError("Network error. Please check your connection.");
+      } else {
+        setError("Failed to search reviews. Please try again.");
+      }
       setPosts([]);
     } finally {
       setIsLoading(false);
@@ -595,8 +633,16 @@ export default function ReviewPage() {
         headers.Authorization = `Bearer ${token}`;
       }
 
+      // Format genre for backend (capitalize first letter, handle special cases)
+      let formattedGenre;
+      if (genre === "scifi") {
+        formattedGenre = "Sci-fi";
+      } else {
+        formattedGenre = genre.charAt(0).toUpperCase() + genre.slice(1).toLowerCase();
+      }
+
       const response = await axios.get(
-        `https://testingcineprismbackend-production.up.railway.app/api/v1/posts/search/${genre}`,
+        `https://testingcineprismbackend-production.up.railway.app/api/v1/posts/search/${formattedGenre}`,
         {
           withCredentials: true,
           headers,
@@ -614,7 +660,24 @@ export default function ReviewPage() {
       }
     } catch (error) {
       console.error("Error filtering by genre:", error);
-      setError("Failed to filter reviews. Please try again.");
+
+      // Handle different error status codes
+      if (error.response) {
+        const status = error.response.status;
+        if (status === 400) {
+          setError("No posts found with this genre.");
+        } else if (status === 404) {
+          setError("No reviews available for this genre.");
+        } else if (status === 500) {
+          setError("Failed to fetch reviews. Server error.");
+        } else {
+          setError("Failed to filter reviews. Please try again.");
+        }
+      } else if (error.request) {
+        setError("Network error. Please check your connection.");
+      } else {
+        setError("Failed to filter reviews. Please try again.");
+      }
       setPosts([]);
     } finally {
       setIsLoading(false);
