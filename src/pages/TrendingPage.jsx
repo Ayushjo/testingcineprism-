@@ -11,7 +11,7 @@ import {
   Clock,
   Newspaper,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import MovieDetailsModal from "../components/MovieDetailsModal"; // Adjust path as needed
 
@@ -23,6 +23,7 @@ const tabs = [
 
 export default function TrendingPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState("movies");
   const [trendingMoviesData, setTrendingMoviesData] = useState([]);
   const [trendingNewsData, setTrendingNewsData] = useState([]);
@@ -72,6 +73,14 @@ export default function TrendingPage() {
       setLoading(false);
     }
   };
+
+  // Handle URL parameters for tab selection
+  useEffect(() => {
+    const tabFromUrl = searchParams.get('tab');
+    if (tabFromUrl && ['movies', 'news'].includes(tabFromUrl)) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [searchParams]);
 
   // Fetch data when component mounts or when tab is selected
   useEffect(() => {

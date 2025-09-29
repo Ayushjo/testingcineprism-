@@ -1,11 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BrainCircuit, Calendar, ExternalLink } from "lucide-react";
+import { Calendar, ExternalLink, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function ArticlePageLayout({ article }) {
+  const navigate = useNavigate();
   const isNewsArticle = article.source_name;
-  const isAIInsight = article.content_type;
+
+  const handleBackClick = () => {
+    // Navigate back to trending page with news tab active
+    navigate('/trending?tab=news');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 to-slate-900 relative overflow-hidden">
@@ -30,8 +36,24 @@ export default function ArticlePageLayout({ article }) {
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
       </motion.div>
 
+      {/* Back Button */}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 relative z-10"
+      >
+        <button
+          onClick={handleBackClick}
+          className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-xl text-slate-300 hover:text-white hover:bg-white/10 px-4 py-2 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 font-medium text-sm"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to News
+        </button>
+      </motion.div>
+
       {/* Content Container */}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative -mt-32 z-10">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative -mt-24 z-10">
         {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -39,18 +61,6 @@ export default function ArticlePageLayout({ article }) {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="text-center mb-12"
         >
-          {/* Dynamic Header based on article type */}
-          {isAIInsight && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500/20 to-purple-500/20 backdrop-blur-xl text-emerald-300 px-4 py-2 rounded-2xl text-sm font-semibold border border-emerald-400/30 mb-6"
-            >
-              <BrainCircuit className="w-4 h-4" />
-              AI Insight
-            </motion.div>
-          )}
 
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -80,7 +90,7 @@ export default function ArticlePageLayout({ article }) {
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
                   <span>
-                    {new Date(article.published_at).toLocaleDateString(
+                    {new Date(article.published_at || article.created_at).toLocaleDateString(
                       "en-US",
                       {
                         year: "numeric",
@@ -91,19 +101,6 @@ export default function ArticlePageLayout({ article }) {
                   </span>
                 </div>
               </>
-            )}
-
-            {isAIInsight && (
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                <span>
-                  {new Date(article.created_at).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </span>
-              </div>
             )}
           </motion.div>
         </motion.div>
@@ -131,7 +128,7 @@ export default function ArticlePageLayout({ article }) {
         >
           <div className="inline-flex items-center gap-2 text-slate-500 text-sm">
             <div className="w-8 h-px bg-gradient-to-r from-transparent to-slate-500" />
-            <span>{isAIInsight ? "AI Generated Content" : "Latest News"}</span>
+            <span>Latest News</span>
             <div className="w-8 h-px bg-gradient-to-l from-transparent to-slate-500" />
           </div>
         </motion.div>

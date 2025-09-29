@@ -65,11 +65,13 @@ const App = () => {
           <Route path="/180-degree-rule" element={<Rule180Page />} />
           <Route path="/" element={<Homepage />} />
           <Route path="/articles/:slug" element={<ArticlePage />} />
-          <Route path="/reviews" element={<ReviewPage/>} />
+          <Route path="/reviews" element={<ReviewPage />} />
           <Route element={<RedirectIfAuth />}>
             <Route path="/login" element={<LoginPage />} />
           </Route>
           <Route path="/articles" element={<ArticleSection />} />
+          <Route path="/news/:id" element={<NewsArticlePage />} />
+          <Route path="/trending" element={<TrendingPage />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route element={<RedirectIfUser />}>
             <Route path="/box-office" element={<BoxOfficePage />} />
@@ -85,14 +87,13 @@ const App = () => {
             <Route path="/genre/Drama" element={<DramaPage />} />
             <Route path="/genre/Horror" element={<HorrorPage />} />
             <Route path="/genre/Animation" element={<AnimationPage />} />
-            <Route path="/trending" element={<TrendingPage />} />
 
             <Route path="/recommendations-page" element={<TopPicksPage />} />
             <Route
               path="/ai-insights/:id"
               element={<AIInsightsArticlePage />}
             />
-            <Route path="/news/:id" element={<NewsArticlePage />} />
+
             <Route path="/merchandise" element={<Merchandise />} />
           </Route>
 
