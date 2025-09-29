@@ -356,7 +356,7 @@ const ReviewCardsWithFocus = ({ filteredReviews }) => {
 
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
         {filteredReviews.map((review, index) => (
           <motion.article
             key={review.id || review.title}
@@ -382,7 +382,7 @@ const ReviewCardsWithFocus = ({ filteredReviews }) => {
               setHoveredReview(null);
             }}
             onClick={() => navigate(`/post/${review.id}`)}
-            className="group relative aspect-[5/4] sm:aspect-[4/3] lg:aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-visible cursor-pointer"
+            className="group relative aspect-[4/3] sm:aspect-[5/4] lg:aspect-[4/3] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-visible cursor-pointer"
             style={{
               filter:
                 hoveredCard !== null && hoveredCard !== index
@@ -391,7 +391,7 @@ const ReviewCardsWithFocus = ({ filteredReviews }) => {
               transition: "filter 0.3s ease-in-out",
             }}
           >
-            <div className="absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden">
+            <div className="absolute inset-0 rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden">
               {/* Rating Display */}
               <RatingDisplay
                 ratingCriteria={review.ratingCriteria}
@@ -410,13 +410,13 @@ const ReviewCardsWithFocus = ({ filteredReviews }) => {
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20 sm:from-black/80 sm:via-black/40 sm:to-transparent" />
 
-              <div className="relative h-full flex flex-col justify-end p-5 sm:p-6 lg:p-8">
+              <div className="relative h-full flex flex-col justify-end p-4 sm:p-5 md:p-6 lg:p-8">
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-2 tracking-tight group-hover:text-emerald-300 transition-colors duration-300 leading-tight">
+                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1.5 sm:mb-2 tracking-tight group-hover:text-emerald-300 transition-colors duration-300 leading-tight">
                     {review.title}
                   </h2>
 
-                  <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-slate-300 mb-3 sm:mb-4">
+                  <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm text-slate-300 mb-2 sm:mb-3 lg:mb-4">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       <span>{review.year}</span>
@@ -427,14 +427,14 @@ const ReviewCardsWithFocus = ({ filteredReviews }) => {
                     </div>
                   </div>
 
-                  <p className="text-slate-300 leading-relaxed mb-4 sm:mb-6 line-clamp-2 sm:line-clamp-2 text-sm sm:text-base">
+                  <p className="text-slate-300 leading-relaxed mb-3 sm:mb-4 lg:mb-6 line-clamp-2 text-sm sm:text-base">
                     {review.review}
                   </p>
 
                   <motion.button
                     whileHover={{ scale: 1.02, x: 5 }}
                     whileTap={{ scale: 0.98 }}
-                    className="group/btn inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold transition-all duration-300 text-sm sm:text-base"
+                    className="group/btn inline-flex items-center gap-1.5 sm:gap-2 text-emerald-400 hover:text-emerald-300 font-semibold transition-all duration-300 text-xs sm:text-sm lg:text-base"
                   >
                     Read Full Review
                     <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -460,14 +460,14 @@ const ReviewCardsWithFocus = ({ filteredReviews }) => {
 export default function ReviewPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("all");
-  const [sortBy, setSortBy] = useState("rating");
-  const [posts, setPosts] = useState([]); // Initialize as empty array
-  const [isLoading, setIsLoading] = useState(true); // Set to true for API loading
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const token =
     localStorage.getItem("cineprism_auth_token") ||
-    sessionStorage.getItem("cineprism_auth_token");
+    sessionStorage.getItem("cineprism_auth_token") ||
+    "";
 
   // Predefined genres list matching TopPicksPage
   const genres = [
@@ -490,44 +490,163 @@ export default function ReviewPage() {
     { key: "western", label: "Western" },
   ];
 
-  // Sort options
-  const sortOptions = [
-    { key: "rating", label: "Highest Rated" },
-    { key: "year", label: "Newest First" },
-    { key: "title", label: "A-Z" },
-  ];
 
-  // API call to fetch posts
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.post(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
-          {},
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+  // Fetch all reviews (default)
+  const fetchAllReviews = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
 
-        const data = response.data;
-        if (data.posts) {
-          setPosts(data.posts);
-        }
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-        setError("Failed to load reviews. Please try again.");
-      } finally {
-        setIsLoading(false);
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
       }
-    };
 
-    fetchPosts();
-  }, [token]);
+      const response = await axios.post(
+        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+        {},
+        {
+          withCredentials: true,
+          headers,
+        }
+      );
+
+      if (response.data.posts) {
+        setPosts(response.data.posts);
+      } else if (response.data.data) {
+        setPosts(response.data.data);
+      } else {
+        console.warn("Unexpected API response structure:", response.data);
+        setPosts([]);
+      }
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      setError("Failed to load reviews. Please try again.");
+      setPosts([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Search reviews by term
+  const searchReviews = async (searchTerm) => {
+    if (!searchTerm.trim()) {
+      fetchAllReviews();
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
+      const response = await axios.get(
+        `https://testingcineprismbackend-production.up.railway.app/api/v1/posts/search?filter=${encodeURIComponent(searchTerm)}`,
+        {
+          withCredentials: true,
+          headers,
+        }
+      );
+
+      if (response.data.posts) {
+        setPosts(response.data.posts);
+      } else if (response.data.data) {
+        setPosts(response.data.data);
+      } else {
+        console.warn("Unexpected API response structure:", response.data);
+        setError("No reviews found matching your search.");
+        setPosts([]);
+      }
+    } catch (error) {
+      console.error("Error searching reviews:", error);
+      setError("Failed to search reviews. Please try again.");
+      setPosts([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Filter reviews by genre
+  const filterByGenre = async (genre) => {
+    if (genre === "all") {
+      fetchAllReviews();
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
+      const response = await axios.get(
+        `https://testingcineprismbackend-production.up.railway.app/api/v1/posts/search/genre`,
+        {
+          params: { genre: genre },
+          withCredentials: true,
+          headers,
+        }
+      );
+
+      if (response.data.posts) {
+        setPosts(response.data.posts);
+      } else if (response.data.data) {
+        setPosts(response.data.data);
+      } else {
+        console.warn("Unexpected API response structure:", response.data);
+        setError("No reviews found for this genre.");
+        setPosts([]);
+      }
+    } catch (error) {
+      console.error("Error filtering by genre:", error);
+      setError("Failed to filter reviews. Please try again.");
+      setPosts([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Initial load
+  useEffect(() => {
+    fetchAllReviews();
+  }, []);
+
+  // Handle search input changes
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (searchTerm.trim()) {
+        // Reset genre selection when searching
+        if (selectedGenre !== "all") {
+          setSelectedGenre("all");
+        }
+        searchReviews(searchTerm);
+      } else if (selectedGenre !== "all") {
+        // If search is cleared but genre is selected, apply genre filter
+        filterByGenre(selectedGenre);
+      } else {
+        // If both search and genre are cleared, fetch all reviews
+        fetchAllReviews();
+      }
+    }, 500); // Debounce search
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
 
   // Convert API data to match the review format
   const reviews = useMemo(() => {
@@ -557,66 +676,38 @@ export default function ReviewPage() {
     });
   }, [posts]);
 
-  // Filter and sort reviews
+  // Filter and sort reviews - only frontend sorting since API handles search and genre filter
   const filteredReviews = useMemo(() => {
     let filtered = reviews;
 
-    // Filter by search term
-    if (searchTerm.trim()) {
-      const query = searchTerm.toLowerCase().trim();
-      filtered = filtered.filter(
-        (review) =>
-          review.title.toLowerCase().includes(query) ||
-          review.genre.toLowerCase().includes(query) ||
-          review.year?.toString().includes(query)
-      );
-    }
+    // No frontend filtering needed since API handles search and genre filtering
 
-    // Filter by genre
-    if (selectedGenre !== "all") {
-      filtered = filtered.filter((review) => {
-        const reviewGenres = review.genre.toLowerCase().split(", ");
-        const selectedGenreLabel = genres
-          .find((g) => g.key === selectedGenre)
-          ?.label.toLowerCase();
-        return reviewGenres.some(
-          (genre) =>
-            genre === selectedGenreLabel ||
-            (selectedGenreLabel === "sci-fi" && genre === "science fiction") ||
-            (selectedGenreLabel === "biography" && genre === "biographical")
-        );
-      });
-    }
-
-    // Sort reviews
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case "rating":
-          return b.rating - a.rating; // Highest rated first
-        case "year":
-          return b.year - a.year; // Newest first
-        case "title":
-          return a.title.localeCompare(b.title); // A-Z
-        default:
-          return 0;
-      }
-    });
+    // Sort reviews by rating (highest first) as default
+    filtered.sort((a, b) => b.rating - a.rating);
 
     return filtered;
-  }, [reviews, searchTerm, selectedGenre, sortBy, genres]);
+  }, [reviews, searchTerm, selectedGenre, genres]);
 
   const handleGenreSelect = (genreKey) => {
     setSelectedGenre(genreKey);
+
+    // Clear search term when selecting a genre to avoid conflicts
+    if (searchTerm.trim()) {
+      setSearchTerm("");
+    }
+
+    if (genreKey !== "all") {
+      // Use API for genre filtering
+      filterByGenre(genreKey);
+    } else {
+      // Reset to all reviews
+      fetchAllReviews();
+    }
   };
 
-  const handleSortSelect = (sortKey) => {
-    setSortBy(sortKey);
-  };
 
   const activeGenreLabel =
     genres.find((g) => g.key === selectedGenre)?.label || "All Genres";
-  const activeSortLabel =
-    sortOptions.find((s) => s.key === sortBy)?.label || "Highest Rated";
 
   // Loading state
   if (isLoading) {
@@ -680,37 +771,37 @@ export default function ReviewPage() {
             </p>
           </motion.div>
 
-          {/* Search and Filter Controls with ShadCN Dropdowns */}
+          {/* Search and Filter Controls */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex flex-col lg:flex-row gap-4 max-w-6xl mx-auto"
+            className="max-w-4xl mx-auto space-y-4"
           >
-            {/* Wider Search Bar */}
-            <div className="flex-1 max-w-4xl mx-auto relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+            {/* Search Bar */}
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5 z-10" />
               <input
                 type="text"
-                placeholder="Search reviews by title, genre, or year..."
+                placeholder="Search for a movie..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-white/10 transition-all duration-300"
+                className="w-full pl-12 pr-4 py-3 sm:py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-white/10 transition-all duration-300 text-sm sm:text-base"
               />
             </div>
 
-            {/* Genre Filter Dropdown */}
-            <div className="flex justify-center">
+            {/* Genre Filter - Full Width on Mobile */}
+            <div className="w-full">
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center justify-between gap-3 px-6 py-4 min-w-[220px] rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-emerald-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
-                  <div className="flex items-center gap-2">
-                    <Filter className="h-4 w-4" />
-                    <span className="font-medium">{activeGenreLabel}</span>
+                <DropdownMenuTrigger className="flex items-center justify-between w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-emerald-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <Filter className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <span className="font-medium text-sm sm:text-base">{activeGenreLabel}</span>
                   </div>
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-80 max-h-80 overflow-y-auto bg-slate-900/98 border-white/10 backdrop-blur-xl">
-                  <DropdownMenuLabel className="text-slate-300 font-semibold px-4 py-2">
+                <DropdownMenuContent className="w-full sm:w-80 max-h-80 overflow-y-auto bg-slate-900/98 border-white/10 backdrop-blur-xl">
+                  <DropdownMenuLabel className="text-slate-300 font-semibold px-4 py-2 text-sm sm:text-base">
                     Filter by Genre
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-white/10" />
@@ -718,42 +809,13 @@ export default function ReviewPage() {
                     <DropdownMenuItem
                       key={genre.key}
                       onClick={() => handleGenreSelect(genre.key)}
-                      className={`cursor-pointer transition-colors px-4 py-3 ${
+                      className={`cursor-pointer transition-colors px-4 py-3 text-sm sm:text-base ${
                         selectedGenre === genre.key
                           ? "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 focus:bg-emerald-500/30"
                           : "text-slate-300 hover:text-emerald-200 hover:bg-emerald-500/10 focus:bg-emerald-500/10 focus:text-emerald-200"
                       }`}
                     >
                       {genre.label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            {/* Sort Options Dropdown */}
-            <div className="flex justify-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center justify-between gap-3 px-6 py-4 min-w-[180px] rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-emerald-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
-                  <span className="font-medium">{activeSortLabel}</span>
-                  <ChevronDown className="h-4 w-4" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 bg-slate-900/98 border-white/10 backdrop-blur-xl">
-                  <DropdownMenuLabel className="text-slate-300 font-semibold px-4 py-2">
-                    Sort By
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-white/10" />
-                  {sortOptions.map((option) => (
-                    <DropdownMenuItem
-                      key={option.key}
-                      onClick={() => handleSortSelect(option.key)}
-                      className={`cursor-pointer transition-colors px-4 py-3 ${
-                        sortBy === option.key
-                          ? "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 focus:bg-emerald-500/30"
-                          : "text-slate-300 hover:text-emerald-200 hover:bg-emerald-500/10 focus:bg-emerald-500/10 focus:text-emerald-200"
-                      }`}
-                    >
-                      {option.label}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
@@ -804,6 +866,7 @@ export default function ReviewPage() {
                   onClick={() => {
                     setSearchTerm("");
                     setSelectedGenre("all");
+                    fetchAllReviews();
                   }}
                   className="mt-4 text-emerald-400 hover:text-emerald-300 transition-colors duration-200 text-sm underline"
                 >

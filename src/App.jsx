@@ -65,6 +65,7 @@ const App = () => {
           <Route path="/180-degree-rule" element={<Rule180Page />} />
           <Route path="/" element={<Homepage />} />
           <Route path="/articles/:slug" element={<ArticlePage />} />
+          <Route path="/reviews" element={<ReviewPage/>} />
           <Route element={<RedirectIfAuth />}>
             <Route path="/login" element={<LoginPage />} />
           </Route>
@@ -72,7 +73,7 @@ const App = () => {
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route element={<RedirectIfUser />}>
             <Route path="/box-office" element={<BoxOfficePage />} />
-            <Route path="/reviews" element={<ReviewPage />} />
+
             <Route path="/post/:id" element={<PostPage />} />
 
             <Route
