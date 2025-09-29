@@ -213,42 +213,42 @@ const TopPicksPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex flex-col lg:flex-row gap-4 max-w-6xl mx-auto"
+            className="max-w-4xl mx-auto space-y-4"
           >
-            {/* Wider Search Bar */}
-            <div className="flex-1 max-w-4xl mx-auto relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+            {/* Search Bar */}
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5 z-10" />
               <input
                 type="text"
                 placeholder="Search films by title, genre, or year..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="w-full pl-12 pr-10 py-4 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500/50 focus:bg-white/10 transition-all duration-300 text-base"
+                className="w-full pl-12 pr-10 py-3 sm:py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-white/10 transition-all duration-300 text-sm sm:text-base"
               />
               {searchQuery && (
                 <button
                   onClick={clearSearch}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-white/10 rounded-full transition-colors duration-200"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-white/10 rounded-full transition-colors duration-200 z-10"
                 >
                   <X className="h-4 w-4 text-slate-400 hover:text-white" />
                 </button>
               )}
             </div>
 
-            {/* Single Genre Dropdown for All Devices */}
-            <div className="flex justify-center">
+            {/* Genre Filter - Full Width on Mobile */}
+            <div className="w-full">
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center justify-between gap-3 px-6 py-4 min-w-[220px] rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-emerald-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
-                  <div className="flex items-center gap-2">
-                    <Filter className="h-4 w-4" />
-                    <span className="font-medium">
+                <DropdownMenuTrigger className="flex items-center justify-between w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-emerald-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <Filter className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <span className="font-medium text-sm sm:text-base">
                       {activeGenreLabel} ({movieCounts[activeGenre] || 0})
                     </span>
                   </div>
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-80 max-h-80 overflow-y-auto bg-slate-900/98 border-white/10 backdrop-blur-xl">
-                  <DropdownMenuLabel className="text-slate-300 font-semibold px-4 py-2">
+                <DropdownMenuContent className="w-full sm:w-80 max-h-80 overflow-y-auto bg-slate-900/98 border-white/10 backdrop-blur-xl">
+                  <DropdownMenuLabel className="text-slate-300 font-semibold px-4 py-2 text-sm sm:text-base">
                     Filter by Genre
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-white/10" />
@@ -256,7 +256,7 @@ const TopPicksPage = () => {
                     <DropdownMenuItem
                       key={genre.key}
                       onClick={() => handleGenreSelect(genre.key)}
-                      className={`cursor-pointer transition-colors px-4 py-3 ${
+                      className={`cursor-pointer transition-colors px-4 py-3 text-sm sm:text-base ${
                         activeGenre === genre.key
                           ? "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 focus:bg-emerald-500/30"
                           : "text-slate-300 hover:text-emerald-200 hover:bg-emerald-500/10 focus:bg-emerald-500/10 focus:text-emerald-200"
