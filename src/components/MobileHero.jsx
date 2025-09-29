@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Film, Eye, MessageCircle, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import OppenHeimerImage from "../assets/oppenheimer.jpg";
 import FleabagImage2 from "../assets/fleebag2.jpg";
 import PastLivesImage from "../assets/pastlives.jpg";
@@ -15,6 +16,7 @@ import DunkKirkImage from "../assets/dunkirk.jpg";
 
 const MobileHeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
 
   // Hero posters data
   const heroPosters = [
@@ -205,7 +207,7 @@ const MobileHeroSection = () => {
         }
       `}</style>
 
-      <section className="relative min-h-[100dvh] bg-slate-950 text-white overflow-hidden">
+      <section className="relative bg-slate-950 text-white overflow-hidden pb-12 sm:pb-16 md:pb-20">
         {/* Background with subtle pattern */}
         <div className="absolute inset-0 opacity-5 pt-12">
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px] sm:bg-[size:50px_50px] md:bg-[size:60px_60px]" />
@@ -217,7 +219,7 @@ const MobileHeroSection = () => {
           <div className="absolute bottom-1/4 right-1/4 w-48 sm:w-64 md:w-80 h-48 sm:h-64 md:h-80 bg-slate-200/3 rounded-full blur-3xl" />
         </div>
 
-        <div className="relative z-10 pt-24 sm:pt-20 md:pt-24 px-4 sm:px-6 md:px-8 min-h-[100dvh] flex flex-col">
+        <div className="relative z-10 pt-24 sm:pt-20 md:pt-24 px-4 sm:px-6 md:px-8 flex flex-col">
           {/* Full-Width Single Poster Display */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -316,7 +318,7 @@ const MobileHeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-center mb-12 sm:mb-16 md:mb-20 flex-shrink-0 px-4"
+            className="text-center mb-6 sm:mb-8 md:mb-10 flex-shrink-0 px-4"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -337,9 +339,19 @@ const MobileHeroSection = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
-                className="text-slate-300 text-base sm:text-lg md:text-xl leading-relaxed max-w-lg mx-auto mb-8 sm:mb-10 md:mb-12 font-light"
+                className="text-slate-300 text-base sm:text-lg md:text-xl leading-relaxed max-w-lg mx-auto mb-6 sm:mb-8 md:mb-10 font-light"
               >
                 Deep dives, critical essays, and curated collections that celebrate the art of film.
+              </motion.p>
+
+              {/* CTA Description */}
+              <motion.p
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.9 }}
+                className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-md mx-auto mb-6 sm:mb-8 font-medium"
+              >
+                Ready to discover your next favorite film? Explore our carefully curated top picks and trending recommendations.
               </motion.p>
 
               {/* Enhanced CTA Button */}
@@ -349,6 +361,7 @@ const MobileHeroSection = () => {
                 transition={{ duration: 0.6, delay: 1.0 }}
                 whileHover={{ scale: 1.05, y: -3 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={() => navigate("/recommendations-page")}
                 className="group relative bg-white text-slate-950 px-8 sm:px-10 md:px-12 py-4 sm:py-5 md:py-6 rounded-2xl font-semibold hover:bg-slate-100 transition-all duration-300 flex items-center gap-3 mx-auto text-base sm:text-lg md:text-xl shadow-2xl hover:shadow-white/20 overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white via-slate-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
