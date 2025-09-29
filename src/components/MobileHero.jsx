@@ -123,7 +123,7 @@ const MobileHeroSection = () => {
 
       <section className="relative bg-slate-950 text-white overflow-hidden min-h-screen">
 
-        <div className="relative z-10 pt-8 sm:pt-8 md:pt-8 px-4 sm:px-6 md:px-8 flex flex-col min-h-screen justify-center">
+        <div className="relative z-10 pt-12 sm:pt-12 md:pt-14 px-4 sm:px-6 md:px-8 flex flex-col min-h-screen justify-center">
 
           {/* Hero Title Section - Always visible */}
           <motion.div
