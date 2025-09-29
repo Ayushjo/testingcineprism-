@@ -596,9 +596,8 @@ export default function ReviewPage() {
       }
 
       const response = await axios.get(
-        `https://testingcineprismbackend-production.up.railway.app/api/v1/posts/search/genre`,
+        `https://testingcineprismbackend-production.up.railway.app/api/v1/posts/search/${genre}`,
         {
-          params: { genre: genre },
           withCredentials: true,
           headers,
         }
