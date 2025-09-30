@@ -16,94 +16,111 @@ const MovieDetailsModal = ({ movie, onClose }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
-      className="fixed inset-0 bg-slate-950/90 backdrop-blur-lg z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4"
     >
       <motion.div
-        initial={{ scale: 0.95, opacity: 0, y: 20 }}
+        initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.95, opacity: 0, y: 20 }}
+        exit={{ scale: 0.9, opacity: 0, y: 20 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative bg-slate-900/98 backdrop-blur-2xl border-2 border-dashed border-amber-400/30 rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden shadow-2xl shadow-amber-400/10"
+        className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl w-full max-w-md sm:max-w-lg md:max-w-2xl max-h-[85vh] overflow-hidden shadow-2xl shadow-black/50"
       >
+        {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 bg-black/60 backdrop-blur-xl p-2.5 rounded-full border border-white/20 hover:bg-black/80 hover:border-amber-400/50 transition-all duration-300"
+          className="absolute top-4 right-4 z-10 bg-white/10 backdrop-blur-xl p-2.5 rounded-full border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300 group"
         >
-          <X className="w-5 h-5 text-white" />
+          <X className="w-4 h-4 text-white group-hover:text-slate-200 transition-colors" />
         </button>
 
-        <div className="max-h-[90vh] overflow-y-auto scrollbar-hide">
+        {/* Scrollable Content */}
+        <div className="max-h-[85vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/20 hover:scrollbar-thumb-white/30">
+          {/* Hero Section with Poster */}
           <div className="relative">
-            <div className="aspect-[16/10] relative overflow-hidden">
+            {/* Background Image */}
+            <div className="aspect-[16/9] relative overflow-hidden">
               <img
                 src={movie.posterImageUrl || "/placeholder.svg"}
                 alt={movie.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/70 to-transparent" />
+              {/* Dark Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/60 to-slate-950/30" />
+
+              {/* Noise Texture */}
+              <div
+                className="absolute inset-0 opacity-10 mix-blend-overlay"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.4'/%3E%3C/svg%3E")`,
+                }}
+              />
+            </div>
+
+            {/* Movie Poster (Floating) */}
+            <div className="absolute -bottom-12 sm:-bottom-16 left-4 sm:left-6">
+              <div className="w-20 h-28 sm:w-24 sm:h-36 md:w-28 md:h-40 rounded-xl overflow-hidden shadow-2xl border-2 border-white/20">
+                <img
+                  src={movie.posterImageUrl || "/placeholder.svg"}
+                  alt={movie.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
             </div>
           </div>
 
-          <div className="p-8 -mt-24 relative z-10">
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 bg-gradient-to-r from-white via-amber-100 to-slate-300 bg-clip-text text-transparent leading-tight"
-            >
-              {movie.title}
-            </motion.h1>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="flex flex-wrap items-center gap-4 mb-8"
-            >
-              <div className="flex items-center gap-2 bg-slate-800/50 backdrop-blur-sm px-4 py-2 rounded-full border border-slate-700/50">
-                <Calendar className="w-4 h-4 text-amber-400" />
-                <span className="text-sm font-semibold text-white">{movie.year}</span>
+          {/* Content Section */}
+          <div className="pt-16 sm:pt-20 px-4 sm:px-6 pb-6">
+            {/* Title and Year */}
+            <div className="mb-6">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-2 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent leading-tight">
+                {movie.title}
+              </h1>
+              <div className="flex items-center gap-2 text-slate-400">
+                <Calendar className="w-4 h-4" />
+                <span className="text-sm font-medium">{movie.year}</span>
               </div>
-              <div className="flex items-center gap-2 bg-slate-800/50 backdrop-blur-sm px-4 py-2 rounded-full border border-slate-700/50">
-                <Film className="w-4 h-4 text-emerald-400" />
-                <span className="text-sm font-semibold text-white">{movie.directedBy}</span>
-              </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="mb-8"
-            >
-              <h3 className="text-lg font-bold text-amber-400 mb-3 uppercase tracking-wider">Genres</h3>
+            {/* Director */}
+            {movie.directedBy && (
+              <div className="mb-6">
+                <h3 className="text-lg font-bold text-white mb-3 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                  Directed By
+                </h3>
+                <div className="flex items-center gap-2">
+                  <Film className="w-4 h-4 text-slate-400" />
+                  <span className="text-slate-300 font-medium">{movie.directedBy}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Genres */}
+            <div className="mb-6">
+              <h3 className="text-lg font-bold text-white mb-3 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                Genres
+              </h3>
               <div className="flex flex-wrap gap-2">
-                {movie.genre &&
-                  movie.genre.map((g, index) => (
-                    <span
-                      key={index}
-                      className="bg-gradient-to-r from-amber-500/20 to-emerald-500/20 text-amber-300 px-4 py-2 rounded-full text-sm border-2 border-dashed border-amber-400/30 font-semibold hover:border-amber-400/60 transition-all duration-300"
-                    >
-                      {g}
-                    </span>
-                  ))}
+                {movie.genre && movie.genre.map((g, index) => (
+                  <span
+                    key={index}
+                    className="bg-white/5 backdrop-blur-sm text-slate-200 px-3 py-1.5 rounded-full text-xs border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 font-medium"
+                  >
+                    {g}
+                  </span>
+                ))}
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="mb-6"
-            >
-              <h3 className="text-lg font-bold text-amber-400 mb-4 uppercase tracking-wider">Synopsis</h3>
-              <div className="bg-slate-800/30 backdrop-blur-sm border-l-4 border-amber-400/50 rounded-r-xl p-6">
-                <p className="text-slate-200 leading-relaxed text-base">
-                  {movie.synopsis || "No synopsis available."}
-                </p>
-              </div>
-            </motion.div>
+            {/* Synopsis */}
+            <div className="mb-6">
+              <h3 className="text-lg font-bold text-white mb-3 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                Synopsis
+              </h3>
+              <p className="text-slate-300 leading-relaxed text-sm sm:text-base">
+                {movie.synopsis || "No synopsis available for this movie."}
+              </p>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -141,11 +158,6 @@ const MovieCard = ({ movie, onClick, index }) => {
             {movie.title}
           </h3>
           <p className="mb-2 text-sm text-slate-400">{movie.year}</p>
-          {movie.genre && movie.genre.length > 0 && (
-            <span className="inline-block rounded-full bg-emerald-500/20 px-2 py-1 text-xs font-medium text-emerald-400">
-              {movie.genre[0]}
-            </span>
-          )}
         </div>
 
         {/* Hover Glow Effect */}
