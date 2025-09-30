@@ -190,7 +190,7 @@ export default function TrendingPage() {
       >
         {/* Main Story Layout (First Article) */}
         {isMainStory && (
-          <div className="relative bg-white/5 backdrop-blur-xl border-l-4 border-amber-400 rounded-r-2xl p-6 md:p-8 hover:bg-white/8 hover:border-amber-300 transition-all duration-300 min-h-[400px] flex flex-col">
+          <div className="relative bg-white/5 backdrop-blur-xl border-l-4 border-emerald-400 rounded-r-2xl p-6 md:p-8 hover:bg-white/8 hover:border-emerald-300 transition-all duration-300 min-h-[400px] flex flex-col">
             {/* Breaking News Badge */}
             <div className="absolute -left-1 top-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-r-md shadow-lg">
               BREAKING
@@ -199,7 +199,7 @@ export default function TrendingPage() {
             <div className="flex flex-col h-full">
               {/* Category & Date */}
               <div className="flex items-center gap-3 mb-4 text-xs">
-                <span className="bg-amber-400/20 text-amber-300 px-2 py-1 rounded-md font-semibold">
+                <span className="bg-emerald-400/20 text-emerald-300 px-2 py-1 rounded-md font-semibold">
                   CINEMA NEWS
                 </span>
                 <div className="flex items-center gap-1 text-slate-400">
@@ -224,7 +224,7 @@ export default function TrendingPage() {
               )}
 
               {/* Main Headline */}
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-white leading-tight mb-4 group-hover:text-amber-300 transition-colors duration-300">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-white leading-tight mb-4 group-hover:text-emerald-300 transition-colors duration-300">
                 {article.title}
               </h1>
 
@@ -237,7 +237,7 @@ export default function TrendingPage() {
               <div className="flex items-center justify-between text-sm text-slate-400 pt-4 border-t border-white/10">
                 <div className="flex items-center gap-2">
                   <User className="w-4 h-4" />
-                  <span className="font-medium text-amber-300">
+                  <span className="font-medium text-emerald-300">
                     {article.source_name}
                   </span>
                 </div>
@@ -255,8 +255,8 @@ export default function TrendingPage() {
           <div className="relative bg-white/3 backdrop-blur-xl border border-white/10 rounded-xl p-4 md:p-6 hover:bg-white/6 hover:border-white/20 transition-all duration-300 min-h-[300px] flex flex-col">
             {/* Category */}
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
-              <span className="text-amber-300 text-xs font-semibold tracking-wide">
+              <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+              <span className="text-emerald-300 text-xs font-semibold tracking-wide">
                 TOP STORY
               </span>
             </div>
@@ -273,13 +273,13 @@ export default function TrendingPage() {
             )}
 
             {/* Title */}
-            <h2 className="text-lg md:text-xl font-bold text-white leading-tight mb-3 group-hover:text-amber-300 transition-colors duration-300 line-clamp-3 flex-grow">
+            <h2 className="text-lg md:text-xl font-bold text-white leading-tight mb-3 group-hover:text-emerald-300 transition-colors duration-300 line-clamp-3 flex-grow">
               {article.title}
             </h2>
 
             {/* Meta Info */}
             <div className="flex items-center justify-between text-xs text-slate-400 mt-auto pt-3 border-t border-white/5">
-              <span className="font-medium text-amber-300">
+              <span className="font-medium text-emerald-300">
                 {article.source_name}
               </span>
               <span>
@@ -297,7 +297,7 @@ export default function TrendingPage() {
             <div className="flex gap-4 md:gap-6">
               {/* Article Number */}
               <div className="flex-shrink-0 pt-1">
-                <span className="text-xl md:text-2xl font-black text-white/20 group-hover:text-amber-400/40 transition-colors duration-300 font-mono">
+                <span className="text-xl md:text-2xl font-black text-white/20 group-hover:text-emerald-400/40 transition-colors duration-300 font-mono">
                   {String(index + 1).padStart(2, "0")}
                 </span>
               </div>
@@ -319,7 +319,7 @@ export default function TrendingPage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-base md:text-lg font-bold text-white mb-2 leading-tight group-hover:text-amber-300 transition-colors duration-300 line-clamp-2">
+                <h3 className="text-base md:text-lg font-bold text-white mb-2 leading-tight group-hover:text-emerald-300 transition-colors duration-300 line-clamp-2">
                   {article.title}
                 </h3>
 
@@ -433,32 +433,9 @@ export default function TrendingPage() {
         );
       case "news":
         return (
-          <>
-            {/* Newspaper Header */}
-            <div className="mb-8 text-center border-b-2 border-amber-400/30 pb-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center justify-center gap-4 mb-4"
-              >
-                <div className="w-12 h-px bg-amber-400/50"></div>
-                <Newspaper className="w-8 h-8 text-amber-400" />
-                <div className="w-12 h-px bg-amber-400/50"></div>
-              </motion.div>
-              <h2 className="text-2xl md:text-3xl font-black text-amber-200 tracking-wider">
-                THE CINÉPRISM TIMES
-              </h2>
-              <p className="text-amber-400/70 text-sm mt-2 tracking-wide">
-                LATEST CINEMA NEWS • {new Date().toLocaleDateString()} • EDITION
-                #{Math.floor(Math.random() * 1000) + 500}
-              </p>
-            </div>
-
-            {/* Newspaper Grid Layout */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-              {data.map((article, index) => renderNewsCard(article, index))}
-            </div>
-          </>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {data.map((article, index) => renderNewsCard(article, index))}
+          </div>
         );
       default:
         return null;
@@ -532,7 +509,7 @@ export default function TrendingPage() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-base sm:text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed px-4"
           >
-            The latest buzz in the world of cinema, powered by data and AI.
+            The most popular movies our community can't stop talking about
           </motion.p>
         </motion.div>
 
