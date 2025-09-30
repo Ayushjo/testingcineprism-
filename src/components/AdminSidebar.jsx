@@ -32,6 +32,11 @@ const navigationItems = [
     label: "Logout",
     id: "logout",
   },
+  {
+    icon: FilePlus2,
+    label: "Create Quote",
+    id: "create-quote",
+  },
 ];
 
 export default function AdminSidebar({ onNavigate, activeView }) {

@@ -46,6 +46,7 @@ import CreateArticlePage from "./pages/CreateArticlePage";
 import ArticlePage from "./pages/ArticlePage";
 import BoxOfficePage from "./pages/BoxOfficePage";
 import ArticleSection from "./pages/ArticleSection";
+import CreateQuotePage from "./pages/CreateQuotePage";
 
 const App = () => {
   const location = useLocation();
@@ -112,6 +113,7 @@ const App = () => {
               <Route path="edit-post" element={<EditPostPage />} />
               <Route path="edit-rank" element={<TrendingRankManager />} />
               <Route path="create-article" element={<CreateArticlePage />} />
+              <Route path="create-quote" element={<CreateQuotePage />} />
             </Route>
           </Route>
         </Routes>

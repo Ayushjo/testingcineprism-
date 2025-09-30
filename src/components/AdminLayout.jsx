@@ -22,6 +22,7 @@ const navigationItems = [
   { icon: FilePlus2, label: "Edit Post", id: "edit-post" },
   { icon: TrendingUp, label: "Edit Trending Rank", id: "edit-rank" },
   { icon: File, label: "Create Article", id: "create-article" },
+  { icon: File, label: "Create Quote", id: "create-quote" },
 ];
 
 export default function AdminLayout() {
