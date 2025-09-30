@@ -55,16 +55,8 @@ export default function AdminSidebar({ onNavigate, activeView }) {
   return (
     <Sidebar collapsible="icon" className="border-r border-slate-700">
       <div className="flex h-full w-full flex-col bg-slate-900/80 backdrop-blur-xl">
-        <SidebarHeader className="p-4">
-          <motion.div
-            initial={false}
-            animate={{
-              opacity: isCollapsed ? 0 : 1,
-              scale: isCollapsed ? 0.8 : 1,
-            }}
-            transition={{ duration: 0.2 }}
-            className="flex items-center gap-3"
-          >
+        <SidebarHeader className="p-4 flex-shrink-0">
+          <div className="flex items-center gap-3">
             {!isCollapsed && (
               <>
                 <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center">
@@ -78,7 +70,7 @@ export default function AdminSidebar({ onNavigate, activeView }) {
                 </div>
               </>
             )}
-          </motion.div>
+          </div>
         </SidebarHeader>
 
         <SidebarContent className="px-2 overflow-y-auto flex-1">
