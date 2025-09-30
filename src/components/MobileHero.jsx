@@ -11,6 +11,8 @@ const MobileHeroSection = () => {
   const [heroPosters, setHeroPosters] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [quotes, setQuotes] = useState([]);
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const navigate = useNavigate();
 
   // Fetch latest reviews from API for hero posters
@@ -50,6 +52,32 @@ const MobileHeroSection = () => {
 
     fetchHeroPosters();
   }, []);
+
+  // Fetch quotes from API
+  useEffect(() => {
+    const fetchQuotes = async () => {
+      try {
+        const response = await axios.get(
+          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-quotes"
+        );
+        if (response.data.quotes && Array.isArray(response.data.quotes)) {
+          setQuotes(response.data.quotes);
+        }
+      } catch (error) {
+        console.error("Error fetching quotes:", error);
+      }
+    };
+    fetchQuotes();
+  }, []);
+
+  // Auto-rotate quotes every 5 seconds
+  useEffect(() => {
+    if (quotes.length === 0) return;
+    const interval = setInterval(() => {
+      setCurrentQuoteIndex((prev) => (prev + 1) % quotes.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [quotes.length]);
 
   // Auto-slide effect - one poster at a time
   useEffect(() => {
@@ -147,14 +175,44 @@ const MobileHeroSection = () => {
                 </span>
               </h1>
 
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="text-slate-300 text-base sm:text-lg md:text-xl leading-relaxed max-w-lg mx-auto font-light"
-              >
-                Deep dives, critical essays, and curated collections that celebrate the art of film.
-              </motion.p>
+              {/* Rotating Quotes Section */}
+              <div className="min-h-[120px] sm:min-h-[140px] md:min-h-[160px] flex items-center justify-center max-w-2xl mx-auto">
+                {quotes.length > 0 ? (
+                  <motion.div
+                    key={currentQuoteIndex}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.6 }}
+                    className="text-center px-4"
+                  >
+                    <div className="relative">
+                      <svg
+                        className="absolute -top-2 -left-2 w-8 h-8 sm:w-10 sm:h-10 text-emerald-500/20"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z" />
+                      </svg>
+                      <p className="text-slate-300 text-base sm:text-lg md:text-xl leading-relaxed font-light italic pl-6 sm:pl-8">
+                        "{quotes[currentQuoteIndex]?.quote}"
+                      </p>
+                      <p className="text-slate-400 text-sm sm:text-base md:text-lg mt-4 font-medium">
+                        — {quotes[currentQuoteIndex]?.author}
+                      </p>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.6 }}
+                    className="text-slate-300 text-base sm:text-lg md:text-xl leading-relaxed max-w-lg mx-auto font-light"
+                  >
+                    Deep dives, critical essays, and curated collections that celebrate the art of film.
+                  </motion.p>
+                )}
+              </div>
             </motion.div>
           </motion.div>
 
