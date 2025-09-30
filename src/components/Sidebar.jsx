@@ -78,7 +78,7 @@ function Sidebar({
       </div>
 
       {/* Navigation Items */}
-      <nav className="flex-1 p-2">
+      <nav className="flex-1 p-2 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-700 hover:scrollbar-thumb-slate-600">
         <div className="space-y-2">
           {navigationItems.map((item) => {
             const Icon = item.icon;

@@ -81,7 +81,7 @@ export default function AdminSidebar({ onNavigate, activeView }) {
           </motion.div>
         </SidebarHeader>
 
-        <SidebarContent className="px-2">
+        <SidebarContent className="px-2 overflow-y-auto flex-1">
           <SidebarMenu>
             {navigationItems.map((item) => (
               <SidebarMenuItem key={item.id}>
