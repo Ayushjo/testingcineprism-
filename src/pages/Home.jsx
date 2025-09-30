@@ -503,6 +503,7 @@ export default function Homepage() {
         <div className="lg:hidden">
           <MobileHero heroPosters={heroPosters} currentSlide={currentSlide} />
         </div>
+        <ExploreByGenre />
         <LatestReviews />
         <TrendingThisWeek />
 
@@ -510,7 +511,6 @@ export default function Homepage() {
 
         {/* New Sections */}
 
-        <ExploreByGenre />
         <NewsletterCTA />
       </div>
     </>
