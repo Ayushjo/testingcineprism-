@@ -11,6 +11,7 @@ import {
   TrendingUp
 } from "lucide-react";
 import { File } from "lucide-react";
+import { Edit } from "lucide-react";
 
 const navigationItems = [
   { icon: FileText, label: "All Posts", id: "all-posts" },
@@ -23,6 +24,7 @@ const navigationItems = [
   { icon: TrendingUp, label: "Edit Trending Rank", id: "edit-rank" },
   { icon: File, label: "Create Article", id: "create-article" },
   { icon: File, label: "Create Quote", id: "create-quote" },
+  { icon: Edit, label: "Edit Quote", id: "edit-quote" },
 ];
 
 export default function AdminLayout() {

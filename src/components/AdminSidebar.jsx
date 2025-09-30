@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Edit } from "lucide-react";
 
 const navigationItems = [
   {
@@ -37,6 +38,7 @@ const navigationItems = [
     label: "Create Quote",
     id: "create-quote",
   },
+  { icon: Edit, label: "Edit Quote", id: "edit-quote" },
 ];
 
 export default function AdminSidebar({ onNavigate, activeView }) {
