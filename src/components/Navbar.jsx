@@ -58,9 +58,10 @@ export default function Navbar() {
       { href: "/recommendations-page", label: "Top Picks" },
       { href: "/reviews", label: "Reviews" },
       { href: "/trending", label: "Trending" },
-      { href: "/cinema-school", label: "Cinema School" },
-      {href:"/articles",label:"Articles"},
-      {href:"/box-office",label:"Box Office"},
+      { href: "/explore-genres", label: "Explore Genres" },
+      // { href: "/cinema-school", label: "Cinema School" },
+      // {href:"/articles",label:"Articles"},
+      // {href:"/box-office",label:"Box Office"},
     ];
 
     const links = user
