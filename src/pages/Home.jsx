@@ -267,7 +267,7 @@ export default function Homepage() {
     <>
       <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
         {/* Desktop Hero Section - Hidden on Mobile */}
-        <section className="relative h-screen overflow-hidden pt-20 hidden lg:block">
+        <section className="relative min-h-[900px] xl:h-screen overflow-hidden pt-20 hidden xl:block">
           {/* Subtle Background Pattern */}
           <div className="absolute inset-0 opacity-5">
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:60px_60px]" />
@@ -292,7 +292,7 @@ export default function Homepage() {
             <div className="absolute inset-0 bg-gradient-to-br from-slate-950/20 via-slate-950/15 to-slate-950/20" />
           </div>
           {/* Hero Content */}
-          <div className="relative z-20 h-full flex items-center">
+          <div className="relative z-20 h-full flex items-center py-12">
             <div className="max-w-7xl mx-auto px-4 w-full">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 {/* Left Side - Brand */}
@@ -311,7 +311,7 @@ export default function Homepage() {
                   >
                     <span className="inline-flex items-center gap-3 bg-slate-800/30 backdrop-blur-none border border-slate-700/30 px-5 py-2.5 rounded-full text-sm font-medium text-slate-200">
                       <div className="w-2 h-2 bg-slate-200 rounded-full animate-pulse" />
-                      for acquired taste.
+                      Cinema for acquired taste.
                       <Film className="w-4 h-4 text-slate-200" />
                     </span>
                   </motion.div>
@@ -500,7 +500,7 @@ export default function Homepage() {
         </section>
 
         {/* Mobile Hero Section - Only visible on mobile */}
-        <div className="lg:hidden">
+        <div className="xl:hidden">
           <MobileHero heroPosters={heroPosters} currentSlide={currentSlide} />
         </div>
         <ExploreByGenre />
