@@ -49,6 +49,7 @@ import ArticleSection from "./pages/ArticleSection";
 import CreateQuotePage from "./pages/CreateQuotePage";
 import EditQuotePage from "./pages/EditQuotePage";
 import AddByGenrePage from "./components/CreateByGenres";
+import GenreMoviesPage from "./pages/AllGenresPage";
 
 const App = () => {
   const location = useLocation();
@@ -80,8 +81,9 @@ const App = () => {
             <Route path="/box-office" element={<BoxOfficePage />} />
 
             <Route path="/post/:id" element={<PostPage />} />
+            <Route path="/genre/:genre" element={<GenreMoviesPage />} />
 
-            <Route
+            {/* <Route
               path="/genre/Science-Fiction"
               element={<ScienceFictionPage />}
             />
@@ -89,7 +91,7 @@ const App = () => {
             <Route path="/genre/Thriller" element={<ThrillerPage />} />
             <Route path="/genre/Drama" element={<DramaPage />} />
             <Route path="/genre/Horror" element={<HorrorPage />} />
-            <Route path="/genre/Animation" element={<AnimationPage />} />
+            <Route path="/genre/Animation" element={<AnimationPage />} /> */}
 
             <Route path="/recommendations-page" element={<TopPicksPage />} />
             <Route
