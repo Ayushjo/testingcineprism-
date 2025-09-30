@@ -151,7 +151,7 @@ const MobileHeroSection = () => {
 
       <section className="relative bg-slate-950 text-white overflow-hidden min-h-screen">
 
-        <div className="relative z-10 pt-14 sm:pt-14 md:pt-14 px-4 sm:px-6 md:px-8 flex flex-col min-h-screen justify-center pb-4">
+        <div className="relative z-10 pt-[4.5rem] sm:pt-[4.5rem] md:pt-[4.5rem] px-4 sm:px-6 md:px-8 flex flex-col min-h-screen justify-center pb-4">
 
           {/* Hero Title Section - Always visible */}
           <motion.div
@@ -187,13 +187,6 @@ const MobileHeroSection = () => {
                     className="text-center px-4"
                   >
                     <div className="relative">
-                      <svg
-                        className="absolute -top-2 -left-2 w-8 h-8 sm:w-10 sm:h-10 text-emerald-500/20"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z" />
-                      </svg>
                       <p className="text-slate-300 text-base sm:text-lg md:text-xl leading-relaxed font-light italic pl-6 sm:pl-8">
                         "{quotes[currentQuoteIndex]?.quote}"
                       </p>
