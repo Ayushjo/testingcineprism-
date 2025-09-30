@@ -16,72 +16,94 @@ const MovieDetailsModal = ({ movie, onClose }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
-      className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-slate-950/90 backdrop-blur-lg z-50 flex items-center justify-center p-4"
     >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+        exit={{ scale: 0.95, opacity: 0, y: 20 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative bg-slate-900/95 backdrop-blur-xl border border-emerald-500/20 rounded-3xl w-full max-w-2xl max-h-[85vh] overflow-hidden shadow-2xl"
+        className="relative bg-slate-900/98 backdrop-blur-2xl border-2 border-dashed border-amber-400/30 rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden shadow-2xl shadow-amber-400/10"
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 bg-white/10 backdrop-blur-xl p-2.5 rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300"
+          className="absolute top-4 right-4 z-20 bg-black/60 backdrop-blur-xl p-2.5 rounded-full border border-white/20 hover:bg-black/80 hover:border-amber-400/50 transition-all duration-300"
         >
-          <X className="w-4 h-4 text-white" />
+          <X className="w-5 h-5 text-white" />
         </button>
 
-        <div className="max-h-[85vh] overflow-y-auto">
+        <div className="max-h-[90vh] overflow-y-auto scrollbar-hide">
           <div className="relative">
-            <div className="aspect-[3/4] md:aspect-[16/9] relative overflow-hidden">
+            <div className="aspect-[16/10] relative overflow-hidden">
               <img
                 src={movie.posterImageUrl || "/placeholder.svg"}
                 alt={movie.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/70 to-transparent" />
             </div>
           </div>
 
-          <div className="p-6 -mt-20 relative z-10">
-            <h1 className="text-3xl md:text-4xl font-black text-white mb-3 bg-gradient-to-r from-white via-emerald-100 to-slate-300 bg-clip-text text-transparent">
+          <div className="p-8 -mt-24 relative z-10">
+            <motion.h1
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 bg-gradient-to-r from-white via-amber-100 to-slate-300 bg-clip-text text-transparent leading-tight"
+            >
               {movie.title}
-            </h1>
+            </motion.h1>
 
-            <div className="flex flex-wrap items-center gap-4 mb-6">
-              <div className="flex items-center gap-2 text-slate-300">
-                <Calendar className="w-4 h-4" />
-                <span className="text-sm font-medium">{movie.year}</span>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex flex-wrap items-center gap-4 mb-8"
+            >
+              <div className="flex items-center gap-2 bg-slate-800/50 backdrop-blur-sm px-4 py-2 rounded-full border border-slate-700/50">
+                <Calendar className="w-4 h-4 text-amber-400" />
+                <span className="text-sm font-semibold text-white">{movie.year}</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-300">
-                <Film className="w-4 h-4" />
-                <span className="text-sm font-medium">{movie.directedBy}</span>
+              <div className="flex items-center gap-2 bg-slate-800/50 backdrop-blur-sm px-4 py-2 rounded-full border border-slate-700/50">
+                <Film className="w-4 h-4 text-emerald-400" />
+                <span className="text-sm font-semibold text-white">{movie.directedBy}</span>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="mb-6">
-              <h3 className="text-lg font-bold text-white mb-3">Genres</h3>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="mb-8"
+            >
+              <h3 className="text-lg font-bold text-amber-400 mb-3 uppercase tracking-wider">Genres</h3>
               <div className="flex flex-wrap gap-2">
                 {movie.genre &&
                   movie.genre.map((g, index) => (
                     <span
                       key={index}
-                      className="bg-emerald-500/20 text-emerald-300 px-3 py-1.5 rounded-full text-xs border border-emerald-500/30 font-medium"
+                      className="bg-gradient-to-r from-amber-500/20 to-emerald-500/20 text-amber-300 px-4 py-2 rounded-full text-sm border-2 border-dashed border-amber-400/30 font-semibold hover:border-amber-400/60 transition-all duration-300"
                     >
                       {g}
                     </span>
                   ))}
               </div>
-            </div>
+            </motion.div>
 
-            <div className="mb-6">
-              <h3 className="text-lg font-bold text-white mb-3">Synopsis</h3>
-              <p className="text-slate-300 leading-relaxed text-sm">
-                {movie.synopsis || "No synopsis available."}
-              </p>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="mb-6"
+            >
+              <h3 className="text-lg font-bold text-amber-400 mb-4 uppercase tracking-wider">Synopsis</h3>
+              <div className="bg-slate-800/30 backdrop-blur-sm border-l-4 border-amber-400/50 rounded-r-xl p-6">
+                <p className="text-slate-200 leading-relaxed text-base">
+                  {movie.synopsis || "No synopsis available."}
+                </p>
+              </div>
+            </motion.div>
           </div>
         </div>
       </motion.div>
@@ -90,29 +112,45 @@ const MovieDetailsModal = ({ movie, onClose }) => {
 };
 
 // Movie Card Component
-const MovieCard = ({ movie, onClick }) => {
+const MovieCard = ({ movie, onClick, index }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -8 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
       onClick={onClick}
-      className="group cursor-pointer"
+      className="group relative cursor-pointer"
     >
-      <div className="relative aspect-[2/3] rounded-2xl overflow-hidden bg-slate-800 border border-slate-700 hover:border-emerald-500/50 transition-all duration-300 shadow-lg hover:shadow-emerald-500/20">
-        <img
-          src={movie.posterImageUrl || "/placeholder.svg"}
-          alt={movie.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+      {/* Card Container with Dotted Border */}
+      <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-slate-700/50 bg-slate-900/30 backdrop-blur-sm transition-all duration-300 hover:border-amber-400/50 hover:shadow-lg hover:shadow-amber-400/10">
+        {/* Poster Image */}
+        <div className="relative aspect-[2/3] overflow-hidden">
+          <img
+            src={movie.posterImageUrl || "/placeholder.svg"}
+            alt={movie.title}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
 
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          <h3 className="text-white font-bold text-base mb-1 line-clamp-2 group-hover:text-emerald-300 transition-colors">
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        </div>
+
+        {/* Movie Info */}
+        <div className="p-4">
+          <h3 className="mb-1 font-bold text-white line-clamp-2 group-hover:text-amber-400 transition-colors">
             {movie.title}
           </h3>
-          <p className="text-slate-300 text-sm">{movie.year}</p>
+          <p className="mb-2 text-sm text-slate-400">{movie.year}</p>
+          {movie.genre && movie.genre.length > 0 && (
+            <span className="inline-block rounded-full bg-emerald-500/20 px-2 py-1 text-xs font-medium text-emerald-400">
+              {movie.genre[0]}
+            </span>
+          )}
+        </div>
+
+        {/* Hover Glow Effect */}
+        <div className="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-400/5 to-emerald-400/5" />
         </div>
       </div>
     </motion.div>
@@ -225,21 +263,16 @@ const GenreMoviesPage = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6"
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8"
             >
               {movies.map((movie, index) => (
-                <motion.div
+                <MovieCard
                   key={movie.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
-                >
-                  <MovieCard
-                    movie={movie}
-                    onClick={() => handleMovieClick(movie)}
-                  />
-                </motion.div>
+                  movie={movie}
+                  index={index}
+                  onClick={() => handleMovieClick(movie)}
+                />
               ))}
             </motion.div>
           ) : (
@@ -249,7 +282,7 @@ const GenreMoviesPage = () => {
               className="text-center py-16"
             >
               <p className="text-slate-400 text-lg">
-                No {genre.toLowerCase()} movies found.
+                No {genre?.toLowerCase()} movies found.
               </p>
             </motion.div>
           )}
