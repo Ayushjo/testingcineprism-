@@ -85,7 +85,11 @@ const TopPicksPage = () => {
 
         if (response.data && response.data.topPicks) {
           const transformedMovies = transformMovieData(response.data.topPicks);
-          setAllMovies(transformedMovies);
+          // Sort movies alphabetically by title
+          const sortedMovies = transformedMovies.sort((a, b) =>
+            a.title.localeCompare(b.title)
+          );
+          setAllMovies(sortedMovies);
         }
       } catch (err) {
         console.error("Error fetching top picks:", err);
