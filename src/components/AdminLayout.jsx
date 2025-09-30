@@ -25,6 +25,7 @@ const navigationItems = [
   { icon: File, label: "Create Article", id: "create-article" },
   { icon: File, label: "Create Quote", id: "create-quote" },
   { icon: Edit, label: "Edit Quote", id: "edit-quote" },
+  { icon: FilePlus2, label: "Add ByGenres", id: "add-byGenres" },
 ];
 
 export default function AdminLayout() {

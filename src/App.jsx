@@ -48,6 +48,7 @@ import BoxOfficePage from "./pages/BoxOfficePage";
 import ArticleSection from "./pages/ArticleSection";
 import CreateQuotePage from "./pages/CreateQuotePage";
 import EditQuotePage from "./pages/EditQuotePage";
+import AddByGenrePage from "./components/CreateByGenres";
 
 const App = () => {
   const location = useLocation();
@@ -116,6 +117,7 @@ const App = () => {
               <Route path="create-article" element={<CreateArticlePage />} />
               <Route path="create-quote" element={<CreateQuotePage />} />
               <Route path="edit-quote" element={<EditQuotePage/>} />
+              <Route path="add-byGenres" element={<AddByGenrePage/>} />
             </Route>
           </Route>
         </Routes>

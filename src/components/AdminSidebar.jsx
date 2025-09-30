@@ -39,6 +39,7 @@ const navigationItems = [
     id: "create-quote",
   },
   { icon: Edit, label: "Edit Quote", id: "edit-quote" },
+  { icon: FilePlus2, label: "Add ByGenres", id: "add-byGenres" },
 ];
 
 export default function AdminSidebar({ onNavigate, activeView }) {
