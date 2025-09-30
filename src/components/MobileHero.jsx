@@ -227,14 +227,11 @@ const MobileHeroSection = () => {
 
                         {/* Poster Info Overlay - Compact and lower */}
                         <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 md:p-6">
-                          <div className="text-left text-white max-w-2xl">
-                            <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2 leading-tight">
+                          <div className="flex items-center justify-between text-white">
+                            <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
                               {poster.title}
                             </h3>
-                            <p className="text-sm sm:text-base md:text-lg text-slate-200 mb-2 sm:mb-3 leading-relaxed">
-                              {poster.subtitle}
-                            </p>
-                            <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm text-slate-300">
+                            <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm text-slate-300 flex-shrink-0 ml-4">
                               <div className="flex items-center gap-1.5">
                                 <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
                                 <span>{poster.year}</span>
