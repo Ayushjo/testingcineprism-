@@ -1,64 +1,63 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Star, TrendingUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, TrendingUp } from "lucide-react";
 import axios from "axios";
 import MovieDetailsModal from "./MovieDetailsModal"; // Adjust path as needed
 
 const TrendingMovieCard = ({ movie, index, onClick }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      initial={{ opacity: 0, x: -50 }}
+      animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      whileHover={{ y: -5, scale: 1.02 }}
+      whileHover={{ scale: 1.02, x: [0, 5, 10] }}
       onClick={() => onClick(movie)}
-      className="group relative flex-shrink-0 w-48 sm:w-52 md:w-56 cursor-pointer"
+      className="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-6 cursor-pointer hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10"
     >
-      {/* Movie Poster Container */}
-      <div className="relative aspect-[2/3] rounded-2xl overflow-hidden mb-4 shadow-lg group-hover:shadow-xl group-hover:shadow-purple-500/20 transition-all duration-300">
-        <img
-          src={
-            movie.poster_path
-              ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-              : "/abstract-movie-poster.png"
-          }
-          alt={movie.title}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
+      <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
+        {/* Rank Number */}
+        <div className="flex-shrink-0">
+          <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white/20 group-hover:text-purple-400/40 transition-colors duration-300 tracking-tighter leading-none">
+            {String(movie.trending_rank || index + 1).padStart(2, "0")}
+          </span>
+        </div>
 
-        {/* Rank Number Overlay */}
-        <div className="absolute top-3 left-3">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20">
-            <span className="text-white font-bold text-sm sm:text-base">
-              {String(movie.trending_rank || index + 1).padStart(2, "0")}
-            </span>
+        {/* Movie Poster */}
+        <div className="flex-shrink-0">
+          <div className="w-10 h-14 sm:w-12 sm:h-18 md:w-16 md:h-24 rounded-lg sm:rounded-xl overflow-hidden shadow-lg">
+            <img
+              src={
+                movie.poster_path
+                  ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                  : "/placeholder.svg"
+              }
+              alt={movie.title}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
           </div>
         </div>
 
-        {/* Hover Glow Effect */}
-        <div className="absolute inset-0 bg-gradient-to-t from-purple-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-        {/* Subtle Border Glow on Hover */}
-        <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-purple-400/30 transition-colors duration-300" />
+        {/* Movie Info - Flexible Layout */}
+        <div className="flex-1 min-w-0 pr-2 sm:pr-0">
+          <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white mb-1 tracking-tight group-hover:text-purple-300 transition-colors duration-300 line-clamp-2 sm:line-clamp-1">
+            {movie.title}
+          </h3>
+          <p className="text-slate-400 text-xs sm:text-sm leading-relaxed line-clamp-2 md:line-clamp-2 hidden sm:block">
+            {movie.overview || "Most viewed this week"}
+          </p>
+        </div>
       </div>
 
-      {/* Movie Title */}
-      <div className="px-2">
-        <h3 className="text-white font-bold text-sm sm:text-base line-clamp-2 group-hover:text-purple-300 transition-colors duration-300 leading-tight">
-          {movie.title}
-        </h3>
-        {movie.vote_average && (
-          <div className="flex items-center gap-1 mt-2">
-            <Star className="w-3 h-3 text-yellow-400 fill-current" />
-            <span className="text-slate-400 text-xs">
-              {movie.vote_average.toFixed(1)}
-            </span>
-          </div>
-        )}
+      {/* Mobile: Description below (optional) */}
+      <div className="mt-2 sm:hidden">
+        <p className="text-slate-400 text-xs line-clamp-2 leading-relaxed">
+          {movie.overview || "Most viewed this week"}
+        </p>
       </div>
+
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl sm:rounded-3xl" />
     </motion.div>
   );
 };
@@ -69,7 +68,6 @@ export default function TrendingThisWeek() {
   const [error, setError] = useState(null);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [showMovieModal, setShowMovieModal] = useState(false);
-  const scrollContainerRef = useRef(null);
 
   const fetchTrendingMovies = async () => {
     setLoading(true);
@@ -104,24 +102,6 @@ export default function TrendingThisWeek() {
   const closeMovieModal = () => {
     setShowMovieModal(false);
     setSelectedMovie(null);
-  };
-
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: -300,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: 300,
-        behavior: "smooth",
-      });
-    }
   };
 
   return (
@@ -187,45 +167,16 @@ export default function TrendingThisWeek() {
               </p>
             </div>
           ) : (
-            <>
-              {/* Navigation Arrows - Desktop Only */}
-              <button
-                onClick={scrollLeft}
-                className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/60 backdrop-blur-sm rounded-full items-center justify-center border border-white/20 hover:bg-black/80 hover:border-purple-400/50 transition-all duration-300 -translate-x-6"
-              >
-                <ChevronLeft className="w-6 h-6 text-white" />
-              </button>
-
-              <button
-                onClick={scrollRight}
-                className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/60 backdrop-blur-sm rounded-full items-center justify-center border border-white/20 hover:bg-black/80 hover:border-purple-400/50 transition-all duration-300 translate-x-6"
-              >
-                <ChevronRight className="w-6 h-6 text-white" />
-              </button>
-
-              {/* Fade-out edges */}
-              <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
-              <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
-
-              {/* Horizontal Scrolling Container */}
-              <div
-                ref={scrollContainerRef}
-                className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-hide pb-4 px-4 sm:px-8"
-                style={{
-                  scrollbarWidth: "none",
-                  msOverflowStyle: "none",
-                }}
-              >
-                {trendingMoviesData.map((movie, index) => (
-                  <TrendingMovieCard
-                    key={movie.tmdb_id}
-                    movie={movie}
-                    index={index}
-                    onClick={handleMovieClick}
-                  />
-                ))}
-              </div>
-            </>
+            <div className="space-y-3 sm:space-y-4">
+              {trendingMoviesData.map((movie, index) => (
+                <TrendingMovieCard
+                  key={movie.tmdb_id}
+                  movie={movie}
+                  index={index}
+                  onClick={handleMovieClick}
+                />
+              ))}
+            </div>
           )}
         </motion.div>
       </div>
