@@ -135,7 +135,7 @@ const GenreMoviesPage = () => {
 
       try {
         const response = await axios.get(
-          `https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-genre/${genre}`,
+          `https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-byGenre/${genre}`,
           {
             withCredentials: true,
             headers: {
