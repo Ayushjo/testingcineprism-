@@ -1,0 +1,221 @@
+"use client";
+import { motion } from "framer-motion";
+import { Film, Sparkles, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import ActionImage from "../assets/action.jpg";
+import ThrillerImage from "../assets/thriller.jpg";
+import DramaImage from "../assets/drama.jpg";
+import HorrorImage from "../assets/horror.jpg";
+import AnimationImage from "../assets/animation.jpg";
+
+const genresData = [
+  {
+    id: 1,
+    name: "Science-Fiction",
+    imageUrl: "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986",
+    description: "Explore futuristic worlds and mind-bending concepts",
+    color: "from-blue-500/20 to-cyan-500/20",
+  },
+  {
+    id: 2,
+    name: "Action",
+    imageUrl: ActionImage,
+    description: "High-octane thrills and explosive sequences",
+    color: "from-red-500/20 to-orange-500/20",
+  },
+  {
+    id: 3,
+    name: "Thriller",
+    imageUrl: ThrillerImage,
+    description: "Edge-of-your-seat suspense and intrigue",
+    color: "from-purple-500/20 to-pink-500/20",
+  },
+  {
+    id: 4,
+    name: "Drama",
+    imageUrl: DramaImage,
+    description: "Powerful stories that move the soul",
+    color: "from-emerald-500/20 to-teal-500/20",
+  },
+  {
+    id: 5,
+    name: "Horror",
+    imageUrl: HorrorImage,
+    description: "Spine-chilling tales of terror",
+    color: "from-gray-500/20 to-slate-500/20",
+  },
+  {
+    id: 6,
+    name: "Animation",
+    imageUrl: AnimationImage,
+    description: "Imaginative worlds brought to life",
+    color: "from-yellow-500/20 to-amber-500/20",
+  },
+];
+
+export default function ExploreGenresPage() {
+  const navigate = useNavigate();
+
+  const handleGenreClick = (genreName) => {
+    navigate(`/genre/${genreName}`);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 relative overflow-hidden pt-24 pb-16">
+      {/* Ambient Background Effects */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-20 left-20 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl" />
+      </div>
+
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        {/* Page Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16 sm:mb-20"
+        >
+          <div className="inline-block mb-6">
+            <motion.span
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-white/5 backdrop-blur-xl text-emerald-400 px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-sm sm:text-base font-semibold border border-white/10 inline-flex items-center gap-2 shadow-lg shadow-emerald-500/10"
+            >
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+              Discover Your Genre
+            </motion.span>
+          </div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 bg-gradient-to-r from-white via-emerald-200 to-white bg-clip-text text-transparent tracking-tight px-4"
+          >
+            Explore by Genre
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-base sm:text-lg md:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed px-4"
+          >
+            Dive into our carefully curated collections. Each genre offers a
+            unique cinematic journey waiting to be discovered.
+          </motion.p>
+        </motion.div>
+
+        {/* Genres Grid - Bento Box Style */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
+        >
+          {genresData.map((genre, index) => (
+            <motion.div
+              key={genre.id}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+              whileHover={{ scale: 1.03, y: -8 }}
+              onClick={() => handleGenreClick(genre.name)}
+              className={`group relative overflow-hidden rounded-3xl cursor-pointer shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 ${
+                index === 0 ? "sm:col-span-2 lg:col-span-2 lg:row-span-2" : ""
+              }`}
+              style={{ minHeight: index === 0 ? "500px" : "280px" }}
+            >
+              {/* Background Image */}
+              <div className="absolute inset-0">
+                <img
+                  src={genre.imageUrl || "/placeholder.svg"}
+                  alt={genre.name}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                {/* Gradient Overlays */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${genre.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                />
+              </div>
+
+              {/* Content */}
+              <div className="relative h-full flex flex-col justify-between p-6 sm:p-8">
+                {/* Top Badge */}
+                <div className="flex justify-between items-start">
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.8 + index * 0.1 }}
+                    className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl px-3 py-1.5 sm:px-4 sm:py-2"
+                  >
+                    <Film className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
+                  </motion.div>
+                  <motion.div
+                    className="opacity-0 group-hover:opacity-100 transition-all duration-300"
+                    whileHover={{ scale: 1.1 }}
+                  >
+                    <div className="bg-emerald-500/20 backdrop-blur-xl border border-emerald-400/30 rounded-full p-2 sm:p-3">
+                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Bottom Content */}
+                <div>
+                  <h3
+                    className={`font-black text-white mb-2 sm:mb-3 tracking-tight leading-tight group-hover:text-emerald-300 transition-colors duration-300 ${
+                      index === 0
+                        ? "text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+                        : "text-2xl sm:text-3xl md:text-4xl"
+                    }`}
+                  >
+                    {genre.name}
+                  </h3>
+                  <p
+                    className={`text-slate-300 leading-relaxed ${
+                      index === 0
+                        ? "text-sm sm:text-base md:text-lg"
+                        : "text-xs sm:text-sm"
+                    }`}
+                  >
+                    {genre.description}
+                  </p>
+
+                  {/* Hover Indicator Line */}
+                  <motion.div
+                    className="h-1 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mt-4 sm:mt-6 w-0 group-hover:w-full transition-all duration-500"
+                  />
+                </div>
+              </div>
+
+              {/* Border Glow */}
+              <div className="absolute inset-0 border-2 border-transparent group-hover:border-emerald-400/30 rounded-3xl transition-colors duration-500" />
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Bottom CTA */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1.5 }}
+          className="mt-16 sm:mt-20 text-center"
+        >
+          <div className="inline-flex items-center gap-2 text-slate-500 text-xs sm:text-sm">
+            <div className="w-8 sm:w-12 h-px bg-gradient-to-r from-transparent to-slate-500" />
+            <span>More genres coming soon</span>
+            <div className="w-8 sm:w-12 h-px bg-gradient-to-l from-transparent to-slate-500" />
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}

@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
-import { Film } from "lucide-react";
+import { Film, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import ActionImage from "../assets/action.jpg";
 import ThrillerImage from "../assets/thriller.jpg"
 import DramaImage from "../assets/drama.jpg"
@@ -40,6 +41,8 @@ const genresData = [
 ];
 
 export default function ExploreByGenre() {
+  const navigate = useNavigate();
+
   return (
     <section className="py-24 bg-gradient-to-b from-slate-900 to-slate-950 relative overflow-hidden">
       {/* Ambient Background */}
@@ -115,6 +118,28 @@ export default function ExploreByGenre() {
               <div className="absolute inset-0 border border-white/10 group-hover:border-white/20 rounded-3xl transition-colors duration-300" />
             </motion.div>
           ))}
+        </motion.div>
+
+        {/* Explore More Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="mt-12 sm:mt-16 text-center"
+        >
+          <motion.button
+            onClick={() => navigate('/explore-genres')}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="group relative inline-flex items-center gap-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 px-6 sm:px-8 py-3 sm:py-4 rounded-2xl border border-emerald-400/30 hover:border-emerald-400/50 transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 font-semibold text-sm sm:text-base"
+          >
+            <span>Explore More Genres</span>
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
+
+            {/* Glow effect on hover */}
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-emerald-400/10 to-emerald-500/10 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300" />
+          </motion.button>
         </motion.div>
       </div>
     </section>

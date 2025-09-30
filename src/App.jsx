@@ -50,6 +50,7 @@ import CreateQuotePage from "./pages/CreateQuotePage";
 import EditQuotePage from "./pages/EditQuotePage";
 import AddByGenrePage from "./components/CreateByGenres";
 import GenreMoviesPage from "./pages/AllGenresPage";
+import ExploreGenresPage from "./pages/ExploreGenresPage";
 
 const App = () => {
   const location = useLocation();
@@ -76,6 +77,7 @@ const App = () => {
           <Route path="/articles" element={<ArticleSection />} />
           <Route path="/news/:id" element={<NewsArticlePage />} />
           <Route path="/trending" element={<TrendingPage />} />
+          <Route path="/explore-genres" element={<ExploreGenresPage />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route element={<RedirectIfUser />}>
             <Route path="/box-office" element={<BoxOfficePage />} />
