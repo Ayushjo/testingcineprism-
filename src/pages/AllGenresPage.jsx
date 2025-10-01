@@ -256,9 +256,7 @@ const GenreMoviesPage = () => {
             <h1 className="mb-4 sm:mb-6 bg-gradient-to-r from-white via-emerald-200 to-slate-400 bg-clip-text text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-transparent">
               Top {movies.length} {genre} Movies
             </h1>
-            <p className="mx-auto max-w-3xl text-base sm:text-lg lg:text-xl leading-relaxed text-slate-400 px-4">
-              Handpicked {genre.toLowerCase()} films curated by cinema experts
-            </p>
+            
           </motion.div>
         </div>
       </section>
