@@ -44,7 +44,7 @@ export default function ExploreByGenre() {
   const navigate = useNavigate();
 
   return (
-    <section className="py-24 bg-gradient-to-b from-slate-900 to-slate-950 relative overflow-hidden">
+    <section className="py-24 bg-gradient-to-b from-slate-950 to-slate-900 relative overflow-hidden">
       {/* Ambient Background */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.04),transparent_50%)]" />

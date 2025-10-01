@@ -45,6 +45,7 @@ import DarkKnightImage from "../assets/darkknight.jpg";
 import DunkKirkImage from "../assets/dunkirk.jpg";
 import InteractiveVideoGrid from "../components/InteractiveVideoGrid";
 import ArticleSection from "../components/ArticleSection";
+import Top5Picks from "../components/Top5Picks";
 
 export default function Homepage() {
   const [activeCard, setActiveCard] = useState(null);
@@ -503,6 +504,7 @@ export default function Homepage() {
         <div className="xl:hidden">
           <MobileHero heroPosters={heroPosters} currentSlide={currentSlide} />
         </div>
+        <Top5Picks />
         <ExploreByGenre />
         <LatestReviews />
         <TrendingThisWeek />
