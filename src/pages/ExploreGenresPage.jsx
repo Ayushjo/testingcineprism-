@@ -11,7 +11,7 @@ import AnimationImage from "../assets/animation.jpg";
 const genresData = [
   {
     id: 1,
-    name: "Science-Fiction",
+    name: "Sci-Fi",
     imageUrl: "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986",
     description: "Explore futuristic worlds and mind-bending concepts",
     color: "from-blue-500/20 to-cyan-500/20",

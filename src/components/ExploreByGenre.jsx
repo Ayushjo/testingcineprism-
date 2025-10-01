@@ -10,7 +10,7 @@ import AnimationImage from "../assets/animation.jpg"
 const genresData = [
   {
     id: 1,
-    name: "Science-Fiction",
+    name: "Sci-Fi",
     imageUrl: "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986",
   },
   {
