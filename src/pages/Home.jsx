@@ -352,12 +352,7 @@ export default function Homepage() {
                           </p>
                         </div>
 
-                        <div className="flex items-center gap-1 bg-slate-800/40 backdrop-blur-xl border border-slate-600/40 text-slate-200 px-3 py-1.5 rounded-full">
-                          <Star className="w-3 h-3 fill-current text-slate-200" />
-                          <span className="text-xs font-semibold text-slate-200">
-                            {heroPosters[currentSlide].rating}
-                          </span>
-                        </div>
+                        
                       </div>
 
                       <p className="text-slate-300 italic text-sm leading-relaxed text-left">
@@ -433,15 +428,7 @@ export default function Homepage() {
                             transition={{ duration: 0.5 }}
                           />
                         </AnimatePresence>
-                        {/* Rating Badge */}
-                        <div className="absolute top-4 right-4 z-10">
-                          <div className="flex items-center gap-1 bg-black/40 backdrop-blur-xl px-3 py-1.5 rounded-2xl border border-white/10">
-                            <Star className="w-4 h-4 text-slate-200 fill-current" />
-                            <span className="text-white font-semibold text-sm">
-                              {heroPosters[currentSlide].rating}
-                            </span>
-                          </div>
-                        </div>
+                        
                         {/* Information Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
