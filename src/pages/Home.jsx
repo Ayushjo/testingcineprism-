@@ -21,6 +21,7 @@ import InterstellarImage from "../assets/Interstellar.jpg";
 import HowToLoseImage from "../assets/howtoloseaguys.jpg";
 import OppenHeimerImage from "../assets/oppenheimer.jpg";
 import OppenHeimerFireImage from "../assets/oppenheimerfire.jpg";
+import GodImage from "../assets/god.webp";
 import Tilt from "react-parallax-tilt";
 import { DesktopHero, } from "@/components/ScriptHeroSections";
 import LatestReviews from "../components/LatestReviews";
@@ -68,12 +69,12 @@ export default function Homepage() {
       genre: "Sci-Fi",
     },
     {
-      image: InterstellarImage,
-      title: "Interstellar",
-      subtitle: "Space Odyssey Masterpiece",
-      year: "2014",
-      rating: 8.6,
-      genre: "Sci-Fi",
+      image: GodImage,
+      title: "The Godfather",
+      subtitle: "An Offer You Can't Refuse",
+      year: "1972",
+      rating: 9.2,
+      genre: "Crime/Drama",
     },
     {
       image: HowToLoseImage,
