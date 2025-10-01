@@ -51,6 +51,30 @@ const genresData = [
     description: "Imaginative worlds brought to life",
     color: "from-yellow-500/20 to-amber-500/20",
   },
+  {
+    id: 7,
+    name: "Comedy",
+    imageUrl:
+      "https://t3.ftcdn.net/jpg/10/42/97/30/240_F_1042973068_eFm2x9Q62j5RUgqf1bEh1qVKNzLV8B3N.jpg",
+    description: "Laughter, wit, and heartwarming moments",
+    color: "from-pink-500/20 to-rose-500/20",
+  },
+  {
+    id: 8,
+    name: "War",
+    imageUrl:
+      "https://t3.ftcdn.net/jpg/02/57/08/22/240_F_257082284_d14fGehoNkhvw0vnNJpkuPGbQqCbdpd7.jpg",
+    description: "Epic battles and stories of courage",
+    color: "from-amber-500/20 to-orange-500/20",
+  },
+  {
+    id: 9,
+    name: "Crime",
+    imageUrl:
+      "https://t4.ftcdn.net/jpg/02/82/73/97/240_F_282739755_TI9j2FVXnxfFFAASqpU58HXE04vaZuAt.jpg",
+    description: "Gripping tales of mystery and justice",
+    color: "from-indigo-500/20 to-violet-500/20",
+  },
 ];
 
 export default function ExploreGenresPage() {
