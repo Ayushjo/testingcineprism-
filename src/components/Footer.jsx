@@ -24,8 +24,7 @@ const Footer = () => {
     { text: "Top Picks", href: "/recommendations-page" },
     { text: "Reviews", href: "/reviews" },
     { text: "Trending", href: "/trending" },
-
-    { text: "Unpopular Opinions", href: "/unpopular-opinions" },
+    { text: "Explore Genres", href: "/explore-genres" },
     { text: "Merchandise", href: "/merchandise" },
   ];
 

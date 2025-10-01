@@ -59,6 +59,7 @@ export default function Navbar() {
       { href: "/reviews", label: "Reviews" },
       { href: "/trending", label: "Trending" },
       { href: "/explore-genres", label: "Explore Genres" },
+      { href: "/merchandise", label: "Merchandise" },
       // { href: "/cinema-school", label: "Cinema School" },
       // {href:"/articles",label:"Articles"},
       // {href:"/box-office",label:"Box Office"},

@@ -496,11 +496,9 @@ export default function Homepage() {
         <LatestReviews />
         <TrendingThisWeek />
 
-        <ArticleSection />
 
-        {/* New Sections */}
 
-        <NewsletterCTA />
+
       </div>
     </>
   );

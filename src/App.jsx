@@ -65,22 +65,24 @@ const App = () => {
         <ScrollToTop smooth={true} delay={100} />
         <Navbar />
         <Routes>
-          <Route path="/rule-of-thirds" element={<RuleOfThirdsPage />} />
+          {/* <Route path="/rule-of-thirds" element={<RuleOfThirdsPage />} />
           <Route path="/cinema-school" element={<CinemaSchoolPage />} />
-          <Route path="/180-degree-rule" element={<Rule180Page />} />
+          <Route path="/180-degree-rule" element={<Rule180Page />} /> */}
           <Route path="/" element={<Homepage />} />
-          <Route path="/articles/:slug" element={<ArticlePage />} />
-          <Route path="/reviews" element={<ReviewPage />} />
+          {/* <Route path="/articles/:slug" element={<ArticlePage />} /> */}
+
           <Route element={<RedirectIfAuth />}>
             <Route path="/login" element={<LoginPage />} />
           </Route>
-          <Route path="/articles" element={<ArticleSection />} />
-          <Route path="/news/:id" element={<NewsArticlePage />} />
-          <Route path="/trending" element={<TrendingPage />} />
-          <Route path="/explore-genres" element={<ExploreGenresPage />} />
+          {/* <Route path="/articles" element={<ArticleSection />} /> */}
+
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route element={<RedirectIfUser />}>
-            <Route path="/box-office" element={<BoxOfficePage />} />
+            <Route path="/news/:id" element={<NewsArticlePage />} />
+            <Route path="/trending" element={<TrendingPage />} />
+            <Route path="/explore-genres" element={<ExploreGenresPage />} />
+            <Route path="/reviews" element={<ReviewPage />} />
+            {/* <Route path="/box-office" element={<BoxOfficePage />} /> */}
 
             <Route path="/post/:id" element={<PostPage />} />
             <Route path="/genre/:genre" element={<GenreMoviesPage />} />
@@ -96,10 +98,10 @@ const App = () => {
             <Route path="/genre/Animation" element={<AnimationPage />} /> */}
 
             <Route path="/recommendations-page" element={<TopPicksPage />} />
-            <Route
+            {/* <Route
               path="/ai-insights/:id"
               element={<AIInsightsArticlePage />}
-            />
+            /> */}
 
             <Route path="/merchandise" element={<Merchandise />} />
           </Route>
@@ -120,8 +122,8 @@ const App = () => {
               <Route path="edit-rank" element={<TrendingRankManager />} />
               <Route path="create-article" element={<CreateArticlePage />} />
               <Route path="create-quote" element={<CreateQuotePage />} />
-              <Route path="edit-quote" element={<EditQuotePage/>} />
-              <Route path="add-byGenres" element={<AddByGenrePage/>} />
+              <Route path="edit-quote" element={<EditQuotePage />} />
+              <Route path="add-byGenres" element={<AddByGenrePage />} />
             </Route>
           </Route>
         </Routes>
