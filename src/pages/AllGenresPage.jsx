@@ -196,7 +196,11 @@ const GenreMoviesPage = () => {
         );
 
         if (response.data.genrePosts) {
-          setMovies(response.data.genrePosts);
+          // Sort movies alphabetically by title
+          const sortedMovies = response.data.genrePosts.sort((a, b) =>
+            a.title.localeCompare(b.title)
+          );
+          setMovies(sortedMovies);
         } else {
           setError(response.data.message || "Failed to fetch movies");
           setMovies([]);
