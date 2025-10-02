@@ -416,7 +416,7 @@ const ReviewCardsWithFocus = ({ filteredReviews }) => {
                     {review.title}
                   </h2>
 
-                  <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm text-slate-300 mb-2 sm:mb-3 lg:mb-4">
+                  <div className="flex items-center gap-2 sm:gap-2 lg:gap-3 text-xs sm:text-sm text-slate-300 mb-2 sm:mb-3 lg:mb-4">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       <span>{review.year}</span>
@@ -427,18 +427,9 @@ const ReviewCardsWithFocus = ({ filteredReviews }) => {
                     </div>
                   </div>
 
-                  <p className="text-slate-300 leading-relaxed mb-3 sm:mb-4 lg:mb-6 line-clamp-2 text-sm sm:text-base">
+                  <p className="text-slate-300 leading-relaxed mb-2 sm:mb-2 lg:mb-4 line-clamp-2 text-sm sm:text-base">
                     {review.review}
                   </p>
-
-                  <motion.button
-                    whileHover={{ scale: 1.02, x: 5 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group/btn inline-flex items-center gap-1.5 sm:gap-2 text-emerald-400 hover:text-emerald-300 font-semibold transition-all duration-300 text-xs sm:text-sm lg:text-base"
-                  >
-                    Read Full Review
-                    <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:translate-x-1 transition-transform" />
-                  </motion.button>
                 </div>
               </div>
             </div>
