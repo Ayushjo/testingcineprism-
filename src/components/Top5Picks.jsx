@@ -10,7 +10,7 @@ const PickCard = ({ movie, index, onClick }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      whileHover={{ y: -5, scale: 1.02 }}
+      whileHover={{ y: -5 }}
       onClick={onClick}
       className="group relative flex-shrink-0 w-48 sm:w-52 md:w-56 cursor-pointer"
     >
@@ -219,8 +219,7 @@ export default function Top5Picks() {
         >
           <motion.button
             onClick={() => navigate("/recommendations-page")}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.98 }}
             className="group relative inline-flex items-center gap-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 px-6 sm:px-8 py-3 sm:py-4 rounded-2xl border border-emerald-400/30 hover:border-emerald-400/50 transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 font-semibold text-sm sm:text-base"
           >
             <span>View All Recommendations</span>

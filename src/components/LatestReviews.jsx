@@ -11,7 +11,7 @@ const ReviewCard = ({ movie, index, onClick }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      whileHover={{ y: -5, scale: 1.02 }}
+      whileHover={{ y: -5 }}
       onClick={() => onClick(movie.id)}
       className="group relative flex-shrink-0 w-48 sm:w-52 md:w-56 cursor-pointer"
     >

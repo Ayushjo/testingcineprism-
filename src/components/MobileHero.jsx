@@ -304,8 +304,7 @@ const MobileHeroSection = () => {
               {/* Read Review Button */}
               <div className="absolute top-4 right-4 z-20">
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => navigate(`/post/${heroPosters[currentSlide]?.id}`)}
                   className="bg-white/10 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-medium border border-white/20 hover:bg-white/20 transition-all duration-300 flex items-center gap-1"
                 >
@@ -355,7 +354,6 @@ const MobileHeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.6 }}
-              whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate("/recommendations-page")}
               className="group relative bg-white text-slate-950 px-8 sm:px-10 md:px-12 py-4 sm:py-5 md:py-6 rounded-2xl font-semibold hover:bg-slate-100 transition-all duration-300 flex items-center gap-3 mx-auto text-base sm:text-lg md:text-xl shadow-2xl hover:shadow-white/20 overflow-hidden"

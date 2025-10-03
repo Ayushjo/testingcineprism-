@@ -91,7 +91,7 @@ export default function ExploreByGenre() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ scale: 1.05, y: -5 }}
+              whileHover={{ y: -5 }}
               className="group relative h-64 rounded-3xl overflow-hidden cursor-pointer shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500"
             >
               {/* Background Image */}
@@ -130,8 +130,7 @@ export default function ExploreByGenre() {
         >
           <motion.button
             onClick={() => navigate('/explore-genres')}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.98 }}
             className="group relative inline-flex items-center gap-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 px-6 sm:px-8 py-3 sm:py-4 rounded-2xl border border-emerald-400/30 hover:border-emerald-400/50 transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 font-semibold text-sm sm:text-base"
           >
             <span>Explore More Genres</span>

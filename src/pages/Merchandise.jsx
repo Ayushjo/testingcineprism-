@@ -25,45 +25,41 @@ export default function MerchandisePage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white relative overflow-hidden flex items-center justify-center pt-20">
-      {/* Ambient Background Effects */}
+      {/* Ambient Background Effects - Optimized with CSS animations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Slow-moving ambient glows */}
-        <motion.div
-          animate={{
-            x: [0, 100, -50, 0],
-            y: [0, -100, 50, 0],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            x: [0, -80, 60, 0],
-            y: [0, 80, -40, 0],
-          }}
-          transition={{
-            duration: 35,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-500/5 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            x: [0, 60, -80, 0],
-            y: [0, -60, 80, 0],
-          }}
-          transition={{
-            duration: 40,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-500/3 rounded-full blur-3xl"
-        />
+        <style jsx>{`
+          @keyframes ambient1 {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(100px, -100px); }
+            66% { transform: translate(-50px, 50px); }
+          }
+          @keyframes ambient2 {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(-80px, 80px); }
+            66% { transform: translate(60px, -40px); }
+          }
+          @keyframes ambient3 {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(60px, -60px); }
+            66% { transform: translate(-80px, 80px); }
+          }
+          .ambient-glow-1 {
+            animation: ambient1 30s linear infinite;
+            will-change: transform;
+          }
+          .ambient-glow-2 {
+            animation: ambient2 35s linear infinite;
+            will-change: transform;
+          }
+          .ambient-glow-3 {
+            animation: ambient3 40s linear infinite;
+            will-change: transform;
+          }
+        `}</style>
+        {/* Reduced blur from blur-3xl to blur-2xl for better performance */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-2xl ambient-glow-1" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-500/5 rounded-full blur-2xl ambient-glow-2" />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-500/3 rounded-full blur-xl ambient-glow-3" />
       </div>
 
       {/* Subtle Grid Pattern */}

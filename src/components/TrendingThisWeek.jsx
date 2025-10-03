@@ -12,7 +12,7 @@ const TrendingMovieCard = ({ movie, index, onClick }) => {
       initial={{ opacity: 0, x: -50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      whileHover={{ scale: 1.02, x: [0, 5, 10] }}
+      whileHover={{ x: 5 }}
       onClick={() => onClick(movie)}
       className="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-6 cursor-pointer hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10"
     >
