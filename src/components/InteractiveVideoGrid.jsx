@@ -7,8 +7,7 @@ import PastLivesImage from "../assets/pastlives.jpg";
 import DunkKirkImage from "../assets/dunkirk.jpg";
 import OppenHeimerImage from "../assets/oppenheimer.jpg";
 
-// This is your local video file from the assets folder
-import duneVideo from "../assets/duneverylow.mp4";
+
 
 const gridItems = [
   { id: 1, poster: FleabagImage2 },
