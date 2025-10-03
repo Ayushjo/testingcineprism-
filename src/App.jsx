@@ -6,12 +6,7 @@ import { Routes, Route } from "react-router-dom";
 import ReviewPage from "./pages/ReviewPage";
 import Footer from "./components/Footer";
 import PostPage from "./pages/PostPage";
-import ScienceFictionPage from "./components/ScienceFictionPage";
-import ActionPage from "./components/ActionPage";
-import ThrillerPage from "./components/ThrillerPage";
-import DramaPage from "./components/DramaPage";
-import HorrorPage from "./components/HorroPage";
-import AnimationPage from "./components/AnimationPage";
+
 import TrendingPage from "./pages/TrendingPage";
 import LoginPage from "./pages/LoginPage";
 import UnpopularOpinionsPage from "./pages/UnpopularOpinionsPage";
