@@ -412,11 +412,11 @@ const ReviewCardsWithFocus = ({ filteredReviews }) => {
 
               <div className="relative h-full flex flex-col justify-end p-4 sm:p-5 md:p-6 lg:p-8">
                 <div>
-                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1.5 sm:mb-2 tracking-tight group-hover:text-emerald-300 transition-colors duration-300 leading-tight">
+                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1 tracking-tight group-hover:text-emerald-300 transition-colors duration-300 leading-tight">
                     {review.title}
                   </h2>
 
-                  <div className="flex items-center gap-2 sm:gap-2 lg:gap-3 text-xs sm:text-sm text-slate-300 mb-2 sm:mb-3 lg:mb-4">
+                  <div className="flex items-center gap-2 sm:gap-2 lg:gap-3 text-xs sm:text-sm text-slate-300 mb-1.5">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       <span>{review.year}</span>
@@ -427,7 +427,7 @@ const ReviewCardsWithFocus = ({ filteredReviews }) => {
                     </div>
                   </div>
 
-                  <p className="text-slate-300 leading-relaxed mb-2 sm:mb-2 lg:mb-4 line-clamp-2 text-sm sm:text-base">
+                  <p className="text-slate-300 leading-relaxed mb-0 line-clamp-2 text-sm sm:text-base">
                     {review.review}
                   </p>
                 </div>
