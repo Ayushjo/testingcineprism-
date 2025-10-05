@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion";
 import { X, Star, Calendar } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 const MovieDetailsModal = ({ movie, onClose }) => {
+  const { theme } = useTheme();
   if (!movie) return null;
 
   const genreMap = {
@@ -41,7 +43,9 @@ const MovieDetailsModal = ({ movie, onClose }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
-      className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4"
+      className={`fixed inset-0 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-300 ${
+        theme === "light" ? "bg-black/50" : "bg-slate-950/80"
+      }`}
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -49,14 +53,26 @@ const MovieDetailsModal = ({ movie, onClose }) => {
         exit={{ scale: 0.9, opacity: 0, y: 20 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl w-full max-w-md sm:max-w-lg md:max-w-2xl max-h-[85vh] overflow-hidden shadow-2xl shadow-black/50"
+        className={`relative backdrop-blur-xl border rounded-3xl w-full max-w-md sm:max-w-lg md:max-w-2xl max-h-[85vh] overflow-hidden shadow-2xl transition-all duration-300 ${
+          theme === "light"
+            ? "bg-white/95 border-gray-300 shadow-black/20"
+            : "bg-white/5 border-white/10 shadow-black/50"
+        }`}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 bg-white/10 backdrop-blur-xl p-2.5 rounded-full border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300 group"
+          className={`absolute top-4 right-4 z-10 backdrop-blur-xl p-2.5 rounded-full border transition-all duration-300 group ${
+            theme === "light"
+              ? "bg-gray-100 border-gray-300 hover:bg-gray-200 hover:border-gray-400"
+              : "bg-white/10 border-white/20 hover:bg-white/20 hover:border-white/30"
+          }`}
         >
-          <X className="w-4 h-4 text-white group-hover:text-slate-200 transition-colors" />
+          <X className={`w-4 h-4 transition-colors ${
+            theme === "light"
+              ? "text-black group-hover:text-gray-700"
+              : "text-white group-hover:text-slate-200"
+          }`} />
         </button>
 
         {/* Scrollable Content */}
@@ -105,7 +121,11 @@ const MovieDetailsModal = ({ movie, onClose }) => {
 
             {/* Rating and Rank Badges */}
             <div className="absolute top-4 left-4 flex gap-2">
-              <span className="bg-emerald-500/20 text-emerald-300 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-500/30 backdrop-blur-sm">
+              <span className={`px-3 py-1.5 rounded-full text-xs font-semibold border backdrop-blur-sm transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-gray-100 text-black border-gray-300"
+                  : "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+              }`}>
                 #{movie.trending_rank || "N/A"}
               </span>
             </div>
@@ -115,10 +135,16 @@ const MovieDetailsModal = ({ movie, onClose }) => {
           <div className="pt-16 sm:pt-20 px-4 sm:px-6 pb-6">
             {/* Title and Year */}
             <div className="mb-6">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-2 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent leading-tight">
+              <h1 className={`text-2xl sm:text-3xl md:text-4xl font-black mb-2 bg-clip-text text-transparent leading-tight transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                  : "bg-gradient-to-r from-white via-slate-100 to-slate-300"
+              }`}>
                 {movie.title}
               </h1>
-              <div className="flex items-center gap-2 text-slate-400">
+              <div className={`flex items-center gap-2 ${
+                theme === "light" ? "text-gray-600" : "text-slate-400"
+              }`}>
                 <Calendar className="w-4 h-4" />
                 <span className="text-sm font-medium">
                   {new Date(movie.release_date).getFullYear()}
@@ -128,14 +154,22 @@ const MovieDetailsModal = ({ movie, onClose }) => {
 
             {/* Genres */}
             <div className="mb-6">
-              <h3 className="text-lg font-bold text-white mb-3 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+              <h3 className={`text-lg font-bold mb-3 bg-clip-text text-transparent transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-gradient-to-r from-black to-gray-600"
+                  : "bg-gradient-to-r from-white to-slate-300"
+              }`}>
                 Genres
               </h3>
               <div className="flex flex-wrap gap-2">
                 {genreNames.map((genre, index) => (
                   <span
                     key={index}
-                    className="bg-white/5 backdrop-blur-sm text-slate-200 px-3 py-1.5 rounded-full text-xs border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 font-medium"
+                    className={`backdrop-blur-sm px-3 py-1.5 rounded-full text-xs border transition-all duration-300 font-medium ${
+                      theme === "light"
+                        ? "bg-gray-100 text-black border-gray-300 hover:bg-gray-200 hover:border-gray-400"
+                        : "bg-white/5 text-slate-200 border-white/10 hover:bg-white/10 hover:border-white/20"
+                    }`}
                   >
                     {genre}
                   </span>
@@ -145,35 +179,61 @@ const MovieDetailsModal = ({ movie, onClose }) => {
 
             {/* Overview */}
             <div className="mb-6">
-              <h3 className="text-lg font-bold text-white mb-3 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+              <h3 className={`text-lg font-bold mb-3 bg-clip-text text-transparent transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-gradient-to-r from-black to-gray-600"
+                  : "bg-gradient-to-r from-white to-slate-300"
+              }`}>
                 Overview
               </h3>
-              <p className="text-slate-300 leading-relaxed text-sm sm:text-base">
+              <p className={`leading-relaxed text-sm sm:text-base transition-all duration-300 ${
+                theme === "light" ? "text-gray-700" : "text-slate-300"
+              }`}>
                 {movie.overview || "No overview available for this movie."}
               </p>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-white/5 backdrop-blur-sm p-4 rounded-2xl border border-white/10">
-                <h4 className="text-xs font-semibold text-slate-400 mb-2 uppercase tracking-wider">
+              <div className={`backdrop-blur-sm p-4 rounded-2xl border transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-gray-50 border-gray-300"
+                  : "bg-white/5 border-white/10"
+              }`}>
+                <h4 className={`text-xs font-semibold mb-2 uppercase tracking-wider ${
+                  theme === "light" ? "text-gray-600" : "text-slate-400"
+                }`}>
                   Audience Reviews
                 </h4>
-                <p className="text-white text-xl font-bold">
+                <p className={`text-xl font-bold ${
+                  theme === "light" ? "text-black" : "text-white"
+                }`}>
                   {movie.vote_count?.toLocaleString() || "N/A"}
                 </p>
-                <p className="text-xs text-slate-500 mt-1">Total ratings</p>
+                <p className={`text-xs mt-1 ${
+                  theme === "light" ? "text-gray-500" : "text-slate-500"
+                }`}>Total ratings</p>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm p-4 rounded-2xl border border-white/10">
-                <h4 className="text-xs font-semibold text-slate-400 mb-2 uppercase tracking-wider">
+              <div className={`backdrop-blur-sm p-4 rounded-2xl border transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-gray-50 border-gray-300"
+                  : "bg-white/5 border-white/10"
+              }`}>
+                <h4 className={`text-xs font-semibold mb-2 uppercase tracking-wider ${
+                  theme === "light" ? "text-gray-600" : "text-slate-400"
+                }`}>
                   Trending Score
                 </h4>
-                <p className="text-white text-xl font-bold">
+                <p className={`text-xl font-bold ${
+                  theme === "light" ? "text-black" : "text-white"
+                }`}>
                   {movie.popularity_score?.toFixed(1) ||
                     movie.popularity?.toFixed(1) ||
                     "N/A"}
                 </p>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className={`text-xs mt-1 ${
+                  theme === "light" ? "text-gray-500" : "text-slate-500"
+                }`}>
                   Current buzz level
                 </p>
               </div>
