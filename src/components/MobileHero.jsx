@@ -15,6 +15,7 @@ const MobileHeroSection = () => {
   const [error, setError] = useState(null);
   const [quotes, setQuotes] = useState([]);
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const navigate = useNavigate();
 
   // Fetch latest reviews from API for hero posters
@@ -81,15 +82,17 @@ const MobileHeroSection = () => {
     return () => clearInterval(interval);
   }, [quotes.length]);
 
-  // Auto-slide effect - one poster at a time
+  // Auto-slide effect - one poster at a time (pause when dragging)
   useEffect(() => {
+    if (isDragging) return; // Don't auto-slide while dragging
+
     const interval = setInterval(() => {
       setCurrentSlide(
         (prev) => (prev + 1) % heroPosters.length
       );
     }, 5000); // Slower transition for full-width viewing
     return () => clearInterval(interval);
-  }, [heroPosters.length]);
+  }, [heroPosters.length, isDragging]);
 
   // Custom scrollbar hide styles
   useEffect(() => {
@@ -298,8 +301,29 @@ const MobileHeroSection = () => {
                       scale: index === currentSlide ? 1 : 0.8
                     }}
                     transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className={`absolute inset-0 w-full h-full cursor-pointer ${index === currentSlide ? 'z-10' : 'z-0'}`}
-                    onClick={() => navigate(`/post/${poster.id}`)}
+                    className={`absolute inset-0 w-full h-full ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} ${index === currentSlide ? 'z-10' : 'z-0'}`}
+                    onClick={(e) => {
+                      if (!isDragging) navigate(`/post/${poster.id}`);
+                    }}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.2}
+                    onDragStart={() => setIsDragging(true)}
+                    onDragEnd={(e, info) => {
+                      const dragDistance = info.offset.x;
+                      const threshold = 50;
+
+                      if (Math.abs(dragDistance) > threshold) {
+                        if (dragDistance < 0) {
+                          // Dragged left - go to next slide
+                          setCurrentSlide((prev) => (prev + 1) % heroPosters.length);
+                        } else {
+                          // Dragged right - go to previous slide
+                          setCurrentSlide((prev) => (prev - 1 + heroPosters.length) % heroPosters.length);
+                        }
+                      }
+                      setIsDragging(false);
+                    }}
                   >
                     {/* Main Rectangular Poster */}
                     <div className="relative z-10 w-full h-full">

@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "../context/ThemeContext";
 
 export default function GradientCursor() {
+  const { theme } = useTheme();
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -64,9 +66,10 @@ export default function GradientCursor() {
           y: mousePosition.y - glowSize / 2,
           width: glowSize,
           height: glowSize,
-          // This gradient uses your site's emerald and indigo colors
           background:
-            "radial-gradient(circle, rgba(16,185,129,0.3), rgba(79,70,229,0.2), transparent 70%)",
+            theme === "light"
+              ? "radial-gradient(circle, rgba(0,0,0,0.08), rgba(75,85,99,0.06), transparent 70%)"
+              : "radial-gradient(circle, rgba(16,185,129,0.3), rgba(79,70,229,0.2), transparent 70%)",
           filter: "blur(40px)",
         }}
         // The transition creates the smooth, delayed "follow" effect
@@ -75,7 +78,9 @@ export default function GradientCursor() {
 
       {/* The Main Dot (the small, precise pointer) */}
       <motion.div
-        className="pointer-events-none fixed left-0 top-0 z-[9999] h-2 w-2 rounded-full bg-white"
+        className={`pointer-events-none fixed left-0 top-0 z-[9999] h-2 w-2 rounded-full ${
+          theme === "light" ? "bg-black" : "bg-white"
+        }`}
         style={{
           x: mousePosition.x - 4, // Center the dot
           y: mousePosition.y - 4,
