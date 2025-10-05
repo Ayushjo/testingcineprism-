@@ -180,12 +180,10 @@ const MobileHeroSection = () => {
                 </span>
                 <span className={`block font-bold hero-title-large ${
                   theme === "light"
-                    ? "text-white"
+                    ? "bg-gradient-to-r from-gray-900 via-black to-gray-800 bg-clip-text text-transparent"
                     : "bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent"
                 }`} style={theme === "light" ? {
-                  WebkitTextStroke: '3px black',
-                  paintOrder: 'stroke fill',
-                  filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,0.3))'
+                  filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.15))'
                 } : {}}>
                   Acquired Taste
                 </span>
@@ -322,24 +320,20 @@ const MobileHeroSection = () => {
 
                         {/* Poster Info Overlay - Compact and lower */}
                         <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 md:p-6">
-                          <div className={`flex items-center justify-between ${
-                            theme === "light" ? "text-black" : "text-white"
-                          }`}>
+                          <div className="flex items-center justify-between text-white">
                             <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
                               {poster.title}
                             </h3>
-                            <div className={`flex items-center gap-4 sm:gap-6 text-xs sm:text-sm flex-shrink-0 ml-4 ${
-                              theme === "light" ? "text-black/70" : "text-slate-300"
-                            }`}>
+                            <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm flex-shrink-0 ml-4 text-slate-200">
                               <div className="flex items-center gap-1.5">
                                 <span className={`w-1.5 h-1.5 rounded-full ${
-                                  theme === "light" ? "bg-gray-700" : "bg-emerald-400"
+                                  theme === "light" ? "bg-emerald-400" : "bg-emerald-400"
                                 }`}></span>
                                 <span>{poster.year}</span>
                               </div>
                               <div className="flex items-center gap-1.5">
                                 <span className={`w-1.5 h-1.5 rounded-full ${
-                                  theme === "light" ? "bg-gray-900" : "bg-blue-400"
+                                  theme === "light" ? "bg-blue-400" : "bg-blue-400"
                                 }`}></span>
                                 <span>{poster.genre}</span>
                               </div>

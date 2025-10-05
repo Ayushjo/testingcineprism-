@@ -1,8 +1,10 @@
 "use client";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 const EnhancedMovieCard = ({ movie, index }) => {
+  const { theme } = useTheme();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -11,7 +13,11 @@ const EnhancedMovieCard = ({ movie, index }) => {
       className="group relative"
     >
       {/* Card Container with Dotted Border */}
-      <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-slate-700/50 bg-slate-900/30 backdrop-blur-sm transition-all duration-300 hover:border-amber-400/50 hover:shadow-lg hover:shadow-amber-400/10">
+      <div className={`relative overflow-hidden rounded-2xl border-2 border-dashed backdrop-blur-sm transition-all duration-300 ${
+        theme === "light"
+          ? "border-gray-300 bg-gray-50/50 hover:border-black/50 hover:shadow-lg hover:shadow-black/10"
+          : "border-slate-700/50 bg-slate-900/30 hover:border-amber-400/50 hover:shadow-lg hover:shadow-amber-400/10"
+      }`}>
         {/* Poster Image */}
         <div className="relative aspect-[2/3] overflow-hidden">
           <img
@@ -38,12 +44,22 @@ const EnhancedMovieCard = ({ movie, index }) => {
 
         {/* Movie Info */}
         <div className="p-4">
-          <h3 className="mb-1 font-bold text-white line-clamp-2 group-hover:text-amber-400 transition-colors">
+          <h3 className={`mb-1 font-bold line-clamp-2 transition-colors ${
+            theme === "light"
+              ? "text-black group-hover:text-gray-700"
+              : "text-white group-hover:text-amber-400"
+          }`}>
             {movie.title}
           </h3>
-          <p className="mb-2 text-sm text-slate-400">{movie.year}</p>
+          <p className={`mb-2 text-sm ${
+            theme === "light" ? "text-gray-700" : "text-slate-400"
+          }`}>{movie.year}</p>
           {movie.ratingCategory && (
-            <span className="inline-block rounded-full bg-emerald-500/20 px-2 py-1 text-xs font-medium text-emerald-400">
+            <span className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${
+              theme === "light"
+                ? "bg-emerald-500/20 text-emerald-700"
+                : "bg-emerald-500/20 text-emerald-400"
+            }`}>
               {movie.ratingCategory}
             </span>
           )}
@@ -51,7 +67,11 @@ const EnhancedMovieCard = ({ movie, index }) => {
 
         {/* Hover Glow Effect */}
         <div className="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-400/5 to-emerald-400/5" />
+          <div className={`absolute inset-0 rounded-2xl ${
+            theme === "light"
+              ? "bg-gradient-to-r from-gray-300/10 to-gray-400/10"
+              : "bg-gradient-to-r from-amber-400/5 to-emerald-400/5"
+          }`} />
         </div>
       </div>
     </motion.div>
