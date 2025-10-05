@@ -5,9 +5,11 @@ import { X, Calendar, Film } from "lucide-react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 // Modal Component
 const MovieDetailsModal = ({ movie, onClose }) => {
+  const { theme } = useTheme();
   if (!movie) return null;
 
   return (
@@ -16,7 +18,9 @@ const MovieDetailsModal = ({ movie, onClose }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
-      className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4"
+      className={`fixed inset-0 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-300 ${
+        theme === "light" ? "bg-black/50" : "bg-slate-950/80"
+      }`}
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -24,14 +28,26 @@ const MovieDetailsModal = ({ movie, onClose }) => {
         exit={{ scale: 0.9, opacity: 0, y: 20 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl w-full max-w-md sm:max-w-lg md:max-w-2xl max-h-[85vh] overflow-hidden shadow-2xl shadow-black/50"
+        className={`relative backdrop-blur-xl border rounded-3xl w-full max-w-md sm:max-w-lg md:max-w-2xl max-h-[85vh] overflow-hidden shadow-2xl transition-all duration-300 ${
+          theme === "light"
+            ? "bg-white/95 border-gray-300 shadow-black/20"
+            : "bg-white/5 border-white/10 shadow-black/50"
+        }`}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 bg-white/10 backdrop-blur-xl p-2.5 rounded-full border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300 group"
+          className={`absolute top-4 right-4 z-10 backdrop-blur-xl p-2.5 rounded-full border transition-all duration-300 group ${
+            theme === "light"
+              ? "bg-gray-100 border-gray-300 hover:bg-gray-200 hover:border-gray-400"
+              : "bg-white/10 border-white/20 hover:bg-white/20 hover:border-white/30"
+          }`}
         >
-          <X className="w-4 h-4 text-white group-hover:text-slate-200 transition-colors" />
+          <X className={`w-4 h-4 transition-colors ${
+            theme === "light"
+              ? "text-black group-hover:text-gray-700"
+              : "text-white group-hover:text-slate-200"
+          }`} />
         </button>
 
         {/* Scrollable Content */}
@@ -73,10 +89,16 @@ const MovieDetailsModal = ({ movie, onClose }) => {
           <div className="pt-16 sm:pt-20 px-4 sm:px-6 pb-6">
             {/* Title and Year */}
             <div className="mb-6">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-2 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent leading-tight">
+              <h1 className={`text-2xl sm:text-3xl md:text-4xl font-black mb-2 bg-clip-text text-transparent leading-tight transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                  : "bg-gradient-to-r from-white via-slate-100 to-slate-300"
+              }`}>
                 {movie.title}
               </h1>
-              <div className="flex items-center gap-2 text-slate-400">
+              <div className={`flex items-center gap-2 ${
+                theme === "light" ? "text-gray-600" : "text-slate-400"
+              }`}>
                 <Calendar className="w-4 h-4" />
                 <span className="text-sm font-medium">{movie.year}</span>
               </div>
@@ -85,26 +107,42 @@ const MovieDetailsModal = ({ movie, onClose }) => {
             {/* Director */}
             {movie.directedBy && (
               <div className="mb-6">
-                <h3 className="text-lg font-bold text-white mb-3 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                <h3 className={`text-lg font-bold mb-3 bg-clip-text text-transparent transition-all duration-300 ${
+                  theme === "light"
+                    ? "bg-gradient-to-r from-black to-gray-600"
+                    : "bg-gradient-to-r from-white to-slate-300"
+                }`}>
                   Directed By
                 </h3>
                 <div className="flex items-center gap-2">
-                  <Film className="w-4 h-4 text-slate-400" />
-                  <span className="text-slate-300 font-medium">{movie.directedBy}</span>
+                  <Film className={`w-4 h-4 ${
+                    theme === "light" ? "text-gray-600" : "text-slate-400"
+                  }`} />
+                  <span className={`font-medium ${
+                    theme === "light" ? "text-gray-700" : "text-slate-300"
+                  }`}>{movie.directedBy}</span>
                 </div>
               </div>
             )}
 
             {/* Genres */}
             <div className="mb-6">
-              <h3 className="text-lg font-bold text-white mb-3 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+              <h3 className={`text-lg font-bold mb-3 bg-clip-text text-transparent transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-gradient-to-r from-black to-gray-600"
+                  : "bg-gradient-to-r from-white to-slate-300"
+              }`}>
                 Genres
               </h3>
               <div className="flex flex-wrap gap-2">
                 {movie.genre && movie.genre.map((g, index) => (
                   <span
                     key={index}
-                    className="bg-white/5 backdrop-blur-sm text-slate-200 px-3 py-1.5 rounded-full text-xs border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 font-medium"
+                    className={`backdrop-blur-sm px-3 py-1.5 rounded-full text-xs border transition-all duration-300 font-medium ${
+                      theme === "light"
+                        ? "bg-gray-100 text-black border-gray-300 hover:bg-gray-200 hover:border-gray-400"
+                        : "bg-white/5 text-slate-200 border-white/10 hover:bg-white/10 hover:border-white/20"
+                    }`}
                   >
                     {g}
                   </span>
@@ -114,10 +152,16 @@ const MovieDetailsModal = ({ movie, onClose }) => {
 
             {/* Synopsis */}
             <div className="mb-6">
-              <h3 className="text-lg font-bold text-white mb-3 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+              <h3 className={`text-lg font-bold mb-3 bg-clip-text text-transparent transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-gradient-to-r from-black to-gray-600"
+                  : "bg-gradient-to-r from-white to-slate-300"
+              }`}>
                 Synopsis
               </h3>
-              <p className="text-slate-300 leading-relaxed text-sm sm:text-base">
+              <p className={`leading-relaxed text-sm sm:text-base transition-all duration-300 ${
+                theme === "light" ? "text-gray-700" : "text-slate-300"
+              }`}>
                 {movie.synopsis || "No synopsis available for this movie."}
               </p>
             </div>
@@ -130,6 +174,7 @@ const MovieDetailsModal = ({ movie, onClose }) => {
 
 // Movie Card Component
 const MovieCard = ({ movie, onClick, index }) => {
+  const { theme } = useTheme();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -139,7 +184,11 @@ const MovieCard = ({ movie, onClick, index }) => {
       className="group relative cursor-pointer"
     >
       {/* Card Container with Dotted Border */}
-      <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-slate-700/50 bg-slate-900/30 backdrop-blur-sm transition-all duration-300 hover:border-amber-400/50 hover:shadow-lg hover:shadow-amber-400/10">
+      <div className={`relative overflow-hidden rounded-2xl border-2 border-dashed backdrop-blur-sm transition-all duration-300 ${
+        theme === "light"
+          ? "border-gray-300 bg-gray-50 hover:border-black/60 hover:shadow-lg hover:shadow-black/10"
+          : "border-slate-700/50 bg-slate-900/30 hover:border-amber-400/50 hover:shadow-lg hover:shadow-amber-400/10"
+      }`}>
         {/* Poster Image */}
         <div className="relative aspect-[2/3] overflow-hidden">
           <img
@@ -154,15 +203,25 @@ const MovieCard = ({ movie, onClick, index }) => {
 
         {/* Movie Info */}
         <div className="p-4">
-          <h3 className="mb-1 font-bold text-white line-clamp-2 group-hover:text-amber-400 transition-colors">
+          <h3 className={`mb-1 font-bold line-clamp-2 transition-colors ${
+            theme === "light"
+              ? "text-black group-hover:text-gray-700"
+              : "text-white group-hover:text-amber-400"
+          }`}>
             {movie.title}
           </h3>
-          <p className="mb-2 text-sm text-slate-400">{movie.year}</p>
+          <p className={`mb-2 text-sm ${
+            theme === "light" ? "text-gray-600" : "text-slate-400"
+          }`}>{movie.year}</p>
         </div>
 
         {/* Hover Glow Effect */}
         <div className="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-400/5 to-emerald-400/5" />
+          <div className={`absolute inset-0 rounded-2xl ${
+            theme === "light"
+              ? "bg-gradient-to-r from-black/5 to-gray-600/5"
+              : "bg-gradient-to-r from-amber-400/5 to-emerald-400/5"
+          }`} />
         </div>
       </div>
     </motion.div>
@@ -173,6 +232,7 @@ const MovieCard = ({ movie, onClick, index }) => {
 const GenreMoviesPage = () => {
   const { genre } = useParams();
   const { token } = useAuth();
+  const { theme } = useTheme();
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -229,20 +289,37 @@ const GenreMoviesPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950 pt-20">
+      <div className={`flex min-h-screen items-center justify-center pt-20 transition-all duration-300 ${
+        theme === "light" ? "bg-white" : "bg-slate-950"
+      }`}>
         <div className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-emerald-400"></div>
-          <p className="text-slate-400">Loading {genre} Movies...</p>
+          <div className={`mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 ${
+            theme === "light" ? "border-black" : "border-emerald-400"
+          }`}></div>
+          <p className={theme === "light" ? "text-gray-600" : "text-slate-400"}>
+            Loading {genre} Movies...
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 pt-20">
+    <div className={`min-h-screen pt-20 transition-all duration-300 ${
+      theme === "light" ? "bg-white" : "bg-slate-950"
+    }`}>
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(245,158,11,0.03),transparent_50%)]" />
+        {theme === "light" ? (
+          <>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(0,0,0,0.03),transparent_50%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(0,0,0,0.03),transparent_50%)]" />
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(245,158,11,0.03),transparent_50%)]" />
+          </>
+        )}
       </div>
 
       <section className="relative py-12 sm:py-16">
@@ -253,10 +330,14 @@ const GenreMoviesPage = () => {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h1 className="mb-4 sm:mb-6 bg-gradient-to-r from-white via-emerald-200 to-slate-400 bg-clip-text text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-transparent">
+            <h1 className={`mb-4 sm:mb-6 bg-clip-text text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-transparent transition-all duration-300 ${
+              theme === "light"
+                ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                : "bg-gradient-to-r from-white via-emerald-200 to-slate-400"
+            }`}>
               Top {movies.length} {genre} Movies
             </h1>
-            
+
           </motion.div>
         </div>
       </section>
@@ -264,8 +345,14 @@ const GenreMoviesPage = () => {
       {error && (
         <section className="relative pb-4">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-6 rounded-lg border border-red-500/30 bg-red-900/20 p-4">
-              <p className="text-center text-red-400">{error}</p>
+            <div className={`mb-6 rounded-lg border p-4 transition-all duration-300 ${
+              theme === "light"
+                ? "border-red-400/50 bg-red-50"
+                : "border-red-500/30 bg-red-900/20"
+            }`}>
+              <p className={`text-center ${
+                theme === "light" ? "text-red-700" : "text-red-400"
+              }`}>{error}</p>
             </div>
           </div>
         </section>
@@ -295,7 +382,9 @@ const GenreMoviesPage = () => {
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-16"
             >
-              <p className="text-slate-400 text-lg">
+              <p className={`text-lg ${
+                theme === "light" ? "text-gray-600" : "text-slate-400"
+              }`}>
                 No {genre?.toLowerCase()} movies found.
               </p>
             </motion.div>

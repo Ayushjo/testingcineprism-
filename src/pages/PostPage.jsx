@@ -25,6 +25,7 @@ import {
   getAvatarColor,
 } from "../utils/api.js";
 import { useAuth } from "@/context/AuthContext.jsx";
+import { useTheme } from "../context/ThemeContext";
 import toast from "react-hot-toast";
 import { ShareButton } from "@/components/ShareComponent.jsx";
 import { Helmet } from "react-helmet";
@@ -39,6 +40,7 @@ const Comment = ({
   maxDepth = 8,
 }) => {
   const { user } = useAuth();
+  const { theme } = useTheme();
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [replyText, setReplyText] = useState("");
@@ -175,9 +177,9 @@ const Comment = ({
       {/* Threading line for nested comments - thinner on mobile */}
       {depth > 0 && (
         <div
-          className={`absolute top-0 bottom-0 bg-slate-700/30 ${
-            isMobile ? "w-0.5 left-[-6px]" : "w-px left-[-10px]"
-          }`}
+          className={`absolute top-0 bottom-0 ${
+            theme === "light" ? "bg-gray-300/50" : "bg-slate-700/30"
+          } ${isMobile ? "w-0.5 left-[-6px]" : "w-px left-[-10px]"}`}
         />
       )}
 
@@ -204,18 +206,26 @@ const Comment = ({
         <div className="flex-1 min-w-0">
           {/* User info and metadata */}
           <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
-            <span className="text-xs sm:text-sm font-medium text-emerald-400 truncate max-w-[120px] sm:max-w-none">
+            <span className={`text-xs sm:text-sm font-medium truncate max-w-[120px] sm:max-w-none ${
+              theme === "light" ? "text-black" : "text-emerald-400"
+            }`}>
               @{comment.user.username}
             </span>
-            <span className="text-xs text-slate-500 flex-shrink-0">
+            <span className={`text-xs flex-shrink-0 ${
+              theme === "light" ? "text-gray-600" : "text-slate-500"
+            }`}>
               {formatDate(comment.createdAt)}
             </span>
             {comment.updatedAt !== comment.createdAt && (
-              <span className="text-xs text-slate-500">(edited)</span>
+              <span className={`text-xs ${
+                theme === "light" ? "text-gray-600" : "text-slate-500"
+              }`}>(edited)</span>
             )}
             {/* Show depth indicator only on desktop for deep comments */}
             {depth > 2 && !isMobile && (
-              <span className="text-xs text-slate-600 hidden sm:inline">
+              <span className={`text-xs hidden sm:inline ${
+                theme === "light" ? "text-gray-500" : "text-slate-600"
+              }`}>
                 • L{depth}
               </span>
             )}
@@ -228,13 +238,21 @@ const Comment = ({
                 value={editText}
                 onChange={(e) => setEditText(e.target.value)}
                 onInput={handleTextareaInput}
-                className="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none"
+                className={`w-full border rounded-lg px-3 py-2 text-sm transition-all duration-300 resize-none focus:outline-none ${
+                  theme === "light"
+                    ? "bg-gray-100 border-gray-300 text-black placeholder-gray-500 focus:border-black"
+                    : "bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-emerald-400/50"
+                }`}
                 rows={2}
               />
               <div className="flex gap-2 mt-2">
                 <button
                   onClick={handleEditComment}
-                  className="text-xs bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-1 rounded border border-emerald-500/30 transition-all duration-200"
+                  className={`text-xs px-3 py-1 rounded border transition-all duration-200 ${
+                    theme === "light"
+                      ? "bg-black/10 hover:bg-black/20 text-black border-black/30"
+                      : "bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border-emerald-500/30"
+                  }`}
                 >
                   Save
                 </button>
@@ -243,14 +261,20 @@ const Comment = ({
                     setIsEditing(false);
                     setEditText(comment.content);
                   }}
-                  className="text-xs text-slate-500 hover:text-slate-400 px-3 py-1 transition-colors"
+                  className={`text-xs px-3 py-1 transition-colors ${
+                    theme === "light"
+                      ? "text-gray-600 hover:text-black"
+                      : "text-slate-500 hover:text-slate-400"
+                  }`}
                 >
                   Cancel
                 </button>
               </div>
             </div>
           ) : (
-            <div className="text-slate-300 leading-relaxed mb-2 text-sm sm:text-base break-words">
+            <div className={`leading-relaxed mb-2 text-sm sm:text-base break-words ${
+              theme === "light" ? "text-black/90" : "text-slate-300"
+            }`}>
               {comment.content}
             </div>
           )}
@@ -259,7 +283,11 @@ const Comment = ({
           <div className="flex items-center gap-3 sm:gap-4 text-xs">
             <button
               onClick={() => setShowReplyInput(!showReplyInput)}
-              className="text-slate-500 hover:text-emerald-400 font-medium transition-colors duration-200 flex items-center gap-1"
+              className={`font-medium transition-colors duration-200 flex items-center gap-1 ${
+                theme === "light"
+                  ? "text-gray-600 hover:text-black"
+                  : "text-slate-500 hover:text-emerald-400"
+              }`}
             >
               <Reply className="w-3 h-3" />
               <span className="hidden sm:inline">Reply</span>
@@ -268,7 +296,11 @@ const Comment = ({
             {comment.replyCount > 0 && (
               <button
                 onClick={() => setShowReplies(!showReplies)}
-                className="text-slate-500 hover:text-emerald-400 font-medium transition-colors duration-200"
+                className={`font-medium transition-colors duration-200 ${
+                  theme === "light"
+                    ? "text-gray-600 hover:text-black"
+                    : "text-slate-500 hover:text-emerald-400"
+                }`}
               >
                 {showReplies ? "Hide" : "Show"} {comment.replyCount}
                 <span className="hidden sm:inline">
@@ -283,14 +315,22 @@ const Comment = ({
               <div className="flex items-center gap-2 sm:gap-3">
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="text-slate-500 hover:text-slate-400 transition-colors"
+                  className={`transition-colors ${
+                    theme === "light"
+                      ? "text-gray-600 hover:text-black"
+                      : "text-slate-500 hover:text-slate-400"
+                  }`}
                 >
                   <span className="hidden sm:inline">Edit</span>
                   <span className="sm:hidden">✏️</span>
                 </button>
                 <button
                   onClick={handleDeleteComment}
-                  className="text-slate-500 hover:text-red-400 transition-colors"
+                  className={`transition-colors ${
+                    theme === "light"
+                      ? "text-gray-600 hover:text-red-600"
+                      : "text-slate-500 hover:text-red-400"
+                  }`}
                 >
                   <span className="hidden sm:inline">Delete</span>
                   <span className="sm:hidden">🗑️</span>
@@ -309,13 +349,21 @@ const Comment = ({
                     onChange={(e) => setReplyText(e.target.value)}
                     onInput={handleTextareaInput}
                     rows={1}
-                    className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none overflow-hidden"
+                    className={`flex-1 border rounded-lg px-3 py-2 text-sm transition-all duration-300 resize-none overflow-hidden focus:outline-none ${
+                      theme === "light"
+                        ? "bg-gray-100 border-gray-300 text-black placeholder-gray-500 focus:border-black"
+                        : "bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-emerald-400/50"
+                    }`}
                     disabled={isSubmittingReply}
                   />
                   <button
                     type="submit"
                     disabled={!replyText.trim() || isSubmittingReply}
-                    className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-500/30 transition-all duration-300 text-sm self-start sm:self-auto disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1 w-full sm:w-auto"
+                    className={`px-3 py-2 rounded-lg border transition-all duration-300 text-sm self-start sm:self-auto disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1 w-full sm:w-auto ${
+                      theme === "light"
+                        ? "bg-black/10 hover:bg-black/20 text-black border-black/30"
+                        : "bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border-emerald-500/30"
+                    }`}
                   >
                     {isSubmittingReply ? (
                       <Loader2 className="w-3 h-3 animate-spin" />
@@ -333,7 +381,9 @@ const Comment = ({
           {showReplies && (
             <div className="mt-3 sm:mt-4">
               {repliesLoading && replies.length === 0 ? (
-                <div className="flex items-center gap-2 text-slate-500 text-sm">
+                <div className={`flex items-center gap-2 text-sm ${
+                  theme === "light" ? "text-gray-600" : "text-slate-500"
+                }`}>
                   <Loader2 className="w-4 h-4 animate-spin" />
                   Loading replies...
                 </div>
@@ -356,7 +406,11 @@ const Comment = ({
                       <button
                         onClick={loadMoreReplies}
                         disabled={repliesLoading}
-                        className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition-colors flex items-center gap-1 py-2"
+                        className={`text-xs font-semibold transition-colors flex items-center gap-1 py-2 ${
+                          theme === "light"
+                            ? "text-black hover:text-gray-700"
+                            : "text-emerald-400 hover:text-emerald-300"
+                        }`}
                       >
                         {repliesLoading ? (
                           <Loader2 className="w-3 h-3 animate-spin" />
@@ -381,6 +435,7 @@ export default function PostPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { theme } = useTheme();
 
   // Check for initial data from server-side rendering
   const initialData =
@@ -530,9 +585,13 @@ export default function PostPage() {
   // Loading state
   if (!currentPost && (postLoading || initialLikeStatusLoading)) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white pt-20 flex items-center justify-center">
+      <div className={`min-h-screen pt-20 flex items-center justify-center transition-all duration-300 ${
+        theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+      }`}>
         <div className="flex items-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-emerald-400" />
+          <Loader2 className={`w-8 h-8 animate-spin ${
+            theme === "light" ? "text-black" : "text-emerald-400"
+          }`} />
           <span className="text-lg">Loading post...</span>
         </div>
       </div>
@@ -542,13 +601,23 @@ export default function PostPage() {
   // Error state
   if (postError || !currentPost) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white pt-20 flex items-center justify-center">
+      <div className={`min-h-screen pt-20 flex items-center justify-center transition-all duration-300 ${
+        theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+      }`}>
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-400 mb-2">Error</h2>
-          <p className="text-slate-400">{postError || "Post not found"}</p>
+          <h2 className={`text-2xl font-bold mb-2 ${
+            theme === "light" ? "text-red-600" : "text-red-400"
+          }`}>Error</h2>
+          <p className={theme === "light" ? "text-gray-600" : "text-slate-400"}>
+            {postError || "Post not found"}
+          </p>
           <button
             onClick={() => navigate("/")}
-            className="mt-4 px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 rounded-lg border border-emerald-500/30 transition-all duration-200"
+            className={`mt-4 px-4 py-2 rounded-lg border transition-all duration-200 ${
+              theme === "light"
+                ? "bg-black/10 hover:bg-black/20 text-black border-black/30"
+                : "bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border-emerald-500/30"
+            }`}
           >
             Go to Homepage
           </button>
@@ -573,11 +642,22 @@ export default function PostPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white pt-20">
+    <div className={`min-h-screen pt-20 transition-all duration-300 ${
+      theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+    }`}>
       {/* Ambient Background */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(139,92,246,0.03),transparent_50%)]" />
+        {theme === "light" ? (
+          <>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(0,0,0,0.03),transparent_50%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(0,0,0,0.03),transparent_50%)]" />
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(139,92,246,0.03),transparent_50%)]" />
+          </>
+        )}
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -603,7 +683,11 @@ export default function PostPage() {
               {/* Content */}
               <div className="lg:col-span-3 space-y-8">
                 <div>
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-4 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight leading-tight">
+                  <h1 className={`text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black mb-4 bg-clip-text text-transparent tracking-tight leading-tight transition-all duration-300 ${
+                    theme === "light"
+                      ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                      : "bg-gradient-to-r from-white via-slate-200 to-slate-400"
+                  }`}>
                     {currentPost.title}
                   </h1>
                 </div>
@@ -611,9 +695,17 @@ export default function PostPage() {
                 {/* Year and Genres */}
                 <div className="flex gap-3">
                   <div className="flex flex-wrap gap-3">
-                    <div className="flex items-center gap-2 bg-white/5 backdrop-blur-xl px-4 py-3 rounded-2xl border border-white/10">
-                      <Calendar className="w-5 h-5 text-slate-400" />
-                      <span className="text-slate-200 font-medium text-base">
+                    <div className={`flex items-center gap-2 backdrop-blur-xl px-4 py-3 rounded-2xl border transition-all duration-300 ${
+                      theme === "light"
+                        ? "bg-gray-100 border-gray-300"
+                        : "bg-white/5 border-white/10"
+                    }`}>
+                      <Calendar className={`w-5 h-5 ${
+                        theme === "light" ? "text-gray-600" : "text-slate-400"
+                      }`} />
+                      <span className={`font-medium text-base ${
+                        theme === "light" ? "text-black" : "text-slate-200"
+                      }`}>
                         {currentPost.year}
                       </span>
                     </div>
@@ -623,17 +715,33 @@ export default function PostPage() {
                     {currentPost.genres?.map((genre, index) => (
                       <div
                         key={index}
-                        className="flex items-center gap-2 bg-gray-500/10 backdrop-blur-xl px-4 py-2 rounded-xl border border-gray-500/20"
+                        className={`flex items-center gap-2 backdrop-blur-xl px-4 py-2 rounded-xl border transition-all duration-300 ${
+                          theme === "light"
+                            ? "bg-gray-100 border-gray-300"
+                            : "bg-gray-500/10 border-gray-500/20"
+                        }`}
                       >
-                        <Tag className="w-4 h-4 text-gray-400" />
-                        <span className="text-gray-300 font-medium text-sm">
+                        <Tag className={`w-4 h-4 ${
+                          theme === "light" ? "text-gray-600" : "text-gray-400"
+                        }`} />
+                        <span className={`font-medium text-sm ${
+                          theme === "light" ? "text-black" : "text-gray-300"
+                        }`}>
                           {genre}
                         </span>
                       </div>
                     )) || (
-                      <div className="flex items-center gap-2 bg-emerald-500/10 backdrop-blur-xl px-4 py-2 rounded-xl border border-emerald-500/20">
-                        <Tag className="w-4 h-4 text-emerald-400" />
-                        <span className="text-emerald-300 font-medium text-sm">
+                      <div className={`flex items-center gap-2 backdrop-blur-xl px-4 py-2 rounded-xl border transition-all duration-300 ${
+                        theme === "light"
+                          ? "bg-gray-100 border-gray-300"
+                          : "bg-emerald-500/10 border-emerald-500/20"
+                      }`}>
+                        <Tag className={`w-4 h-4 ${
+                          theme === "light" ? "text-gray-600" : "text-emerald-400"
+                        }`} />
+                        <span className={`font-medium text-sm ${
+                          theme === "light" ? "text-black" : "text-emerald-300"
+                        }`}>
                           N/A
                         </span>
                       </div>
@@ -644,23 +752,43 @@ export default function PostPage() {
                 {/* Director & Streaming */}
                 <div className="space-y-3">
                   {currentPost.directedBy && (
-                    <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10">
-                      <User className="w-5 h-5 text-gray-400" />
-                      <span className="text-slate-200 font-medium">
+                    <div className={`flex items-center gap-3 backdrop-blur-xl px-5 py-3 rounded-2xl border transition-all duration-300 ${
+                      theme === "light"
+                        ? "bg-gray-100 border-gray-300"
+                        : "bg-white/5 border-white/10"
+                    }`}>
+                      <User className={`w-5 h-5 ${
+                        theme === "light" ? "text-gray-600" : "text-gray-400"
+                      }`} />
+                      <span className={`font-medium ${
+                        theme === "light" ? "text-gray-700" : "text-slate-200"
+                      }`}>
                         Director:
                       </span>
-                      <span className="text-white font-semibold">
+                      <span className={`font-semibold ${
+                        theme === "light" ? "text-black" : "text-white"
+                      }`}>
                         {currentPost.directedBy}
                       </span>
                     </div>
                   )}
                   {currentPost.streamingAt && (
-                    <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10">
-                      <Play className="w-5 h-5 text-gray-400" />
-                      <span className="text-slate-200 font-medium">
+                    <div className={`flex items-center gap-3 backdrop-blur-xl px-5 py-3 rounded-2xl border transition-all duration-300 ${
+                      theme === "light"
+                        ? "bg-gray-100 border-gray-300"
+                        : "bg-white/5 border-white/10"
+                    }`}>
+                      <Play className={`w-5 h-5 ${
+                        theme === "light" ? "text-gray-600" : "text-gray-400"
+                      }`} />
+                      <span className={`font-medium ${
+                        theme === "light" ? "text-gray-700" : "text-slate-200"
+                      }`}>
                         Streaming:
                       </span>
-                      <span className="text-white font-semibold">
+                      <span className={`font-semibold ${
+                        theme === "light" ? "text-black" : "text-white"
+                      }`}>
                         {currentPost.streamingAt}
                       </span>
                     </div>
@@ -668,12 +796,20 @@ export default function PostPage() {
                 </div>
 
                 {/* Action Bar */}
-                <div className="flex items-center gap-4 sm:gap-6 lg:gap-8 py-6 border-t border-white/10 overflow-x-auto">
+                <div className={`flex items-center gap-4 sm:gap-6 lg:gap-8 py-6 border-t overflow-x-auto transition-all duration-300 ${
+                  theme === "light" ? "border-gray-300" : "border-white/10"
+                }`}>
                   <button
                     onClick={handleLikeClick}
-                    className="flex items-center gap-2 sm:gap-3 text-slate-400 hover:text-pink-500 transition-all duration-300 group flex-shrink-0"
+                    className={`flex items-center gap-2 sm:gap-3 transition-all duration-300 group flex-shrink-0 ${
+                      theme === "light"
+                        ? "text-gray-600 hover:text-pink-500"
+                        : "text-slate-400 hover:text-pink-500"
+                    }`}
                   >
-                    <div className="p-1.5 sm:p-2 rounded-xl bg-white/5 group-hover:bg-pink-500/10 transition-colors duration-300">
+                    <div className={`p-1.5 sm:p-2 rounded-xl group-hover:bg-pink-500/10 transition-colors duration-300 ${
+                      theme === "light" ? "bg-gray-100" : "bg-white/5"
+                    }`}>
                       <Heart
                         className={`w-5 h-5 sm:w-6 sm:h-6 ${
                           isLiked ? "fill-pink-500 text-pink-500" : ""
@@ -684,7 +820,9 @@ export default function PostPage() {
                       <span className="font-bold text-base sm:text-lg">
                         {likeCount.toLocaleString()}
                       </span>
-                      <span className="text-xs sm:text-sm text-slate-500">
+                      <span className={`text-xs sm:text-sm ${
+                        theme === "light" ? "text-gray-500" : "text-slate-500"
+                      }`}>
                         Likes
                       </span>
                     </div>
@@ -692,16 +830,26 @@ export default function PostPage() {
 
                   <button
                     onClick={scrollToDiscussion}
-                    className="flex items-center gap-2 sm:gap-3 text-slate-400 hover:text-emerald-400 transition-all duration-300 group flex-shrink-0"
+                    className={`flex items-center gap-2 sm:gap-3 transition-all duration-300 group flex-shrink-0 ${
+                      theme === "light"
+                        ? "text-gray-600 hover:text-black"
+                        : "text-slate-400 hover:text-emerald-400"
+                    }`}
                   >
-                    <div className="p-1.5 sm:p-2 rounded-xl bg-white/5 group-hover:bg-emerald-500/10 transition-colors duration-300">
+                    <div className={`p-1.5 sm:p-2 rounded-xl transition-colors duration-300 ${
+                      theme === "light"
+                        ? "bg-gray-100 group-hover:bg-black/10"
+                        : "bg-white/5 group-hover:bg-emerald-500/10"
+                    }`}>
                       <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
                     <div className="flex flex-col items-start">
                       <span className="font-bold text-base sm:text-lg">
                         {currentPost.commentCount || 0}
                       </span>
-                      <span className="text-xs sm:text-sm text-slate-500">
+                      <span className={`text-xs sm:text-sm ${
+                        theme === "light" ? "text-gray-500" : "text-slate-500"
+                      }`}>
                         <span className="hidden sm:inline">Comments</span>
                         <span className="sm:hidden">💬</span>
                       </span>
@@ -724,13 +872,17 @@ export default function PostPage() {
 
                 {/* Review Text */}
                 {currentPost.content && (
-                  <div className="prose prose-invert prose-xl max-w-none">
+                  <div className={`prose prose-xl max-w-none ${
+                    theme === "light" ? "prose-slate" : "prose-invert"
+                  }`}>
                     {currentPost.content
                       .split("\n\n")
                       .map((paragraph, index) => (
                         <p
                           key={index}
-                          className="text-slate-300 leading-relaxed mb-6 text-lg lg:text-xl font-light"
+                          className={`leading-relaxed mb-6 text-lg lg:text-xl font-light transition-all duration-300 ${
+                            theme === "light" ? "text-gray-700" : "text-slate-300"
+                          }`}
                         >
                           {paragraph}
                         </p>
@@ -745,7 +897,11 @@ export default function PostPage() {
         {currentPost.images && currentPost.images.length > 0 && (
           <section className="py-16">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-black text-white mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
+              <h2 className={`text-4xl font-black mb-6 bg-clip-text text-transparent tracking-tight transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                  : "bg-gradient-to-r from-white via-slate-200 to-slate-400"
+              }`}>
                 Gallery
               </h2>
             </div>
@@ -777,13 +933,21 @@ export default function PostPage() {
 
                   <button
                     onClick={prevImage}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/60 backdrop-blur-xl hover:bg-black/80 text-white p-3 rounded-full border border-white/10 transition-all duration-300 hover:scale-110"
+                    className={`absolute left-4 top-1/2 transform -translate-y-1/2 backdrop-blur-xl p-3 rounded-full border transition-all duration-300 hover:scale-110 ${
+                      theme === "light"
+                        ? "bg-white/80 hover:bg-white text-black border-gray-300"
+                        : "bg-black/60 hover:bg-black/80 text-white border-white/10"
+                    }`}
                   >
                     <ChevronLeft className="w-6 h-6" />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/60 backdrop-blur-xl hover:bg-black/80 text-white p-3 rounded-full border border-white/10 transition-all duration-300 hover:scale-110"
+                    className={`absolute right-4 top-1/2 transform -translate-y-1/2 backdrop-blur-xl p-3 rounded-full border transition-all duration-300 hover:scale-110 ${
+                      theme === "light"
+                        ? "bg-white/80 hover:bg-white text-black border-gray-300"
+                        : "bg-black/60 hover:bg-black/80 text-white border-white/10"
+                    }`}
                   >
                     <ChevronRight className="w-6 h-6" />
                   </button>
@@ -795,7 +959,11 @@ export default function PostPage() {
                         onClick={() => setCurrentImageIndex(index)}
                         className={`w-3 h-3 rounded-full transition-all duration-300 ${
                           index === currentImageIndex
-                            ? "bg-emerald-400 scale-125"
+                            ? theme === "light"
+                              ? "bg-black scale-125"
+                              : "bg-emerald-400 scale-125"
+                            : theme === "light"
+                            ? "bg-gray-300 hover:bg-gray-400"
                             : "bg-white/30 hover:bg-white/50"
                         }`}
                       />
@@ -810,17 +978,27 @@ export default function PostPage() {
         {/* Section 3: Discussion with Enhanced Nested Comments */}
         <section id="discussion-section" className="py-16">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-black text-white mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
+            <h2 className={`text-4xl font-black mb-6 bg-clip-text text-transparent tracking-tight transition-all duration-300 ${
+              theme === "light"
+                ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                : "bg-gradient-to-r from-white via-slate-200 to-slate-400"
+            }`}>
               Discussion
             </h2>
-            <p className="text-slate-400 text-sm">
+            <p className={`text-sm ${
+              theme === "light" ? "text-gray-600" : "text-slate-400"
+            }`}>
               Join the conversation with unlimited nested replies
             </p>
           </div>
 
           <div className="max-w-4xl mx-auto">
             {/* New Comment Form */}
-            <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-2xl p-6 mb-8">
+            <div className={`backdrop-blur-xl border rounded-2xl p-6 mb-8 transition-all duration-300 ${
+              theme === "light"
+                ? "bg-gray-50 border-gray-300"
+                : "bg-slate-900/50 border-slate-700"
+            }`}>
               <form onSubmit={handleSubmitComment}>
                 <textarea
                   value={newComment}
@@ -830,7 +1008,11 @@ export default function PostPage() {
                       ? "Share your thoughts about this review..."
                       : "Please login to comment..."
                   }
-                  className="w-full h-24 bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-slate-800/70 transition-all duration-300 resize-none mb-4"
+                  className={`w-full h-24 border rounded-xl px-4 py-3 focus:outline-none transition-all duration-300 resize-none mb-4 ${
+                    theme === "light"
+                      ? "bg-gray-100 border-gray-300 text-black placeholder-gray-500 focus:border-black focus:bg-gray-100"
+                      : "bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-emerald-400/50 focus:bg-slate-800/70"
+                  }`}
                   disabled={isSubmittingComment || !user}
                 />
                 <div className="flex justify-end">
@@ -839,7 +1021,11 @@ export default function PostPage() {
                     disabled={
                       !newComment.trim() || isSubmittingComment || !user
                     }
-                    className="bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 shadow-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+                      theme === "light"
+                        ? "bg-gradient-to-r from-black to-gray-800 hover:from-gray-900 hover:to-gray-700 text-white hover:shadow-black/20"
+                        : "bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white hover:shadow-emerald-500/20"
+                    }`}
                   >
                     {isSubmittingComment ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -856,8 +1042,12 @@ export default function PostPage() {
             <div className="space-y-8">
               {commentsLoading && comments.length === 0 ? (
                 <div className="flex items-center justify-center gap-3 py-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-emerald-400" />
-                  <span className="text-slate-400">Loading comments...</span>
+                  <Loader2 className={`w-6 h-6 animate-spin ${
+                    theme === "light" ? "text-black" : "text-emerald-400"
+                  }`} />
+                  <span className={theme === "light" ? "text-gray-600" : "text-slate-400"}>
+                    Loading comments...
+                  </span>
                 </div>
               ) : (
                 <>
@@ -878,7 +1068,11 @@ export default function PostPage() {
                       <button
                         onClick={loadMoreComments}
                         disabled={commentsLoading}
-                        className="bg-slate-800/50 hover:bg-slate-800/70 text-slate-300 hover:text-white px-6 py-3 rounded-xl border border-slate-600 hover:border-slate-500 transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`px-6 py-3 rounded-xl border transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+                          theme === "light"
+                            ? "bg-gray-100 hover:bg-gray-200 text-black border-gray-300 hover:border-gray-400"
+                            : "bg-slate-800/50 hover:bg-slate-800/70 text-slate-300 hover:text-white border-slate-600 hover:border-slate-500"
+                        }`}
                       >
                         {commentsLoading ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
@@ -892,11 +1086,15 @@ export default function PostPage() {
 
                   {comments.length === 0 && !commentsLoading && (
                     <div className="text-center py-12">
-                      <MessageCircle className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold text-slate-400 mb-2">
+                      <MessageCircle className={`w-12 h-12 mx-auto mb-4 ${
+                        theme === "light" ? "text-gray-400" : "text-slate-600"
+                      }`} />
+                      <h3 className={`text-lg font-semibold mb-2 ${
+                        theme === "light" ? "text-gray-600" : "text-slate-400"
+                      }`}>
                         No comments yet
                       </h3>
-                      <p className="text-slate-500">
+                      <p className={theme === "light" ? "text-gray-500" : "text-slate-500"}>
                         Be the first to share your thoughts!
                       </p>
                     </div>
@@ -911,7 +1109,11 @@ export default function PostPage() {
         {relatedPosts && relatedPosts.length > 0 && (
           <section className="py-16">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-black text-white mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
+              <h2 className={`text-4xl font-black mb-6 bg-clip-text text-transparent tracking-tight transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                  : "bg-gradient-to-r from-white via-slate-200 to-slate-400"
+              }`}>
                 You Might Also Like
               </h2>
             </div>
@@ -920,7 +1122,11 @@ export default function PostPage() {
               {relatedPosts.map((relatedPost) => (
                 <div
                   key={relatedPost.id}
-                  className="group relative h-96 rounded-2xl overflow-hidden shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer"
+                  className={`group relative h-96 rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 cursor-pointer ${
+                    theme === "light"
+                      ? "hover:shadow-black/20"
+                      : "hover:shadow-emerald-500/20"
+                  }`}
                   onClick={() =>
                     (window.location.href = `/post/${relatedPost.id}`)
                   }
@@ -940,7 +1146,11 @@ export default function PostPage() {
                   />
 
                   <div className="absolute inset-0 flex flex-col justify-end p-6 z-10">
-                    <h3 className="text-2xl font-bold text-white mb-2 tracking-tight group-hover:text-emerald-300 transition-colors duration-300">
+                    <h3 className={`text-2xl font-bold text-white mb-2 tracking-tight transition-colors duration-300 ${
+                      theme === "light"
+                        ? "group-hover:text-gray-200"
+                        : "group-hover:text-emerald-300"
+                    }`}>
                       {relatedPost.title}
                     </h3>
                     <div className="flex items-center gap-2 text-sm text-slate-300">
