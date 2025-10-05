@@ -70,19 +70,16 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
           </Route>
           {/* <Route path="/articles" element={<ArticleSection />} /> */}
+          <Route path="/news/:id" element={<NewsArticlePage />} />
+          <Route path="/trending" element={<TrendingPage />} />
+          <Route path="/explore-genres" element={<ExploreGenresPage />} />
+          <Route path="/reviews" element={<ReviewPage />} />
+          {/* <Route path="/box-office" element={<BoxOfficePage />} /> */}
 
-          <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route element={<RedirectIfUser />}>
-            <Route path="/news/:id" element={<NewsArticlePage />} />
-            <Route path="/trending" element={<TrendingPage />} />
-            <Route path="/explore-genres" element={<ExploreGenresPage />} />
-            <Route path="/reviews" element={<ReviewPage />} />
-            {/* <Route path="/box-office" element={<BoxOfficePage />} /> */}
+          <Route path="/post/:id" element={<PostPage />} />
+          <Route path="/genre/:genre" element={<GenreMoviesPage />} />
 
-            <Route path="/post/:id" element={<PostPage />} />
-            <Route path="/genre/:genre" element={<GenreMoviesPage />} />
-
-            {/* <Route
+          {/* <Route
               path="/genre/Science-Fiction"
               element={<ScienceFictionPage />}
             />
@@ -92,14 +89,16 @@ const App = () => {
             <Route path="/genre/Horror" element={<HorrorPage />} />
             <Route path="/genre/Animation" element={<AnimationPage />} /> */}
 
-            <Route path="/recommendations-page" element={<TopPicksPage />} />
-            {/* <Route
+          <Route path="/recommendations-page" element={<TopPicksPage />} />
+          {/* <Route
               path="/ai-insights/:id"
               element={<AIInsightsArticlePage />}
             /> */}
 
-            <Route path="/merchandise" element={<Merchandise />} />
-          </Route>
+          <Route path="/merchandise" element={<Merchandise />} />
+
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route element={<RedirectIfUser />}></Route>
 
           <Route element={<AdminProtectedRoute />}>
             <Route path="/admin" element={<AdminLayout />}>

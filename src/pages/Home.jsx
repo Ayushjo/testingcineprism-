@@ -3,6 +3,7 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 import DuneImage from "../assets/Dune.jpg";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "../context/ThemeContext";
 import {
   Star,
   Heart,
@@ -49,6 +50,7 @@ import ArticleSection from "../components/ArticleSection";
 import Top5Picks from "../components/Top5Picks";
 
 export default function Homepage() {
+  const { theme } = useTheme();
   const [activeCard, setActiveCard] = useState(null);
 
   const heroPosters = [
@@ -267,7 +269,11 @@ export default function Homepage() {
 
   return (
     <>
-      <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
+      <div className={`min-h-screen overflow-hidden transition-colors duration-300 ${
+        theme === "light"
+          ? "bg-[#FFF8DC] text-black"
+          : "bg-slate-950 text-white"
+      }`}>
         {/* Desktop Hero Section - Hidden on Mobile */}
         <section className="relative min-h-[900px] xl:h-screen overflow-hidden pt-20 hidden xl:block">
           {/* Subtle Background Pattern */}
@@ -353,7 +359,7 @@ export default function Homepage() {
                           </p>
                         </div>
 
-                        
+
                       </div>
 
                       <p className="text-slate-300 italic text-sm leading-relaxed text-left">

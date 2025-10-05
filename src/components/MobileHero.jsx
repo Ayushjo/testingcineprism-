@@ -5,8 +5,10 @@ import { motion } from "framer-motion";
 import { Film, Eye, MessageCircle, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useTheme } from "../context/ThemeContext";
 
 const MobileHeroSection = () => {
+  const { theme } = useTheme();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [heroPosters, setHeroPosters] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -149,7 +151,11 @@ const MobileHeroSection = () => {
         }
       `}</style>
 
-      <section className="relative bg-slate-950 text-white overflow-hidden min-h-screen">
+      <section className={`relative overflow-hidden min-h-screen transition-colors duration-300 ${
+        theme === "light"
+          ? "bg-white text-black"
+          : "bg-slate-950 text-white"
+      }`}>
 
         <div className="relative z-10 pt-[4.5rem] sm:pt-[4.5rem] md:pt-[4.5rem] px-4 sm:px-6 md:px-8 flex flex-col min-h-screen justify-center pb-4">
 
@@ -167,10 +173,20 @@ const MobileHeroSection = () => {
               className="relative"
             >
               <h1 className="leading-[0.9] tracking-tight mb-6 sm:mb-6 md:mb-8">
-                <span className="block text-slate-100 font-light mb-2 sm:mb-3 hero-title-small">
+                <span className={`block font-light mb-2 sm:mb-3 hero-title-small ${
+                  theme === "light" ? "text-black" : "text-slate-100"
+                }`}>
                   Cinema for
                 </span>
-                <span className="block bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent font-bold hero-title-large">
+                <span className={`block font-bold hero-title-large ${
+                  theme === "light"
+                    ? "text-white"
+                    : "bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent"
+                }`} style={theme === "light" ? {
+                  WebkitTextStroke: '3px black',
+                  paintOrder: 'stroke fill',
+                  filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,0.3))'
+                } : {}}>
                   Acquired Taste
                 </span>
               </h1>
@@ -187,10 +203,14 @@ const MobileHeroSection = () => {
                     className="text-center px-4"
                   >
                     <div className="relative">
-                      <p className="text-slate-300 text-base sm:text-lg md:text-xl leading-relaxed font-light italic pl-6 sm:pl-8">
+                      <p className={`text-base sm:text-lg md:text-xl leading-relaxed font-light italic pl-6 sm:pl-8 ${
+                        theme === "light" ? "text-black/80" : "text-slate-300"
+                      }`}>
                         "{quotes[currentQuoteIndex]?.quote}"
                       </p>
-                      <p className="text-slate-400 text-sm sm:text-base md:text-lg mt-4 font-medium">
+                      <p className={`text-sm sm:text-base md:text-lg mt-4 font-semibold ${
+                        theme === "light" ? "text-gray-900" : "text-slate-400"
+                      }`}>
                         — {quotes[currentQuoteIndex]?.author}
                       </p>
                     </div>
@@ -200,7 +220,9 @@ const MobileHeroSection = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.6 }}
-                    className="text-slate-300 text-base sm:text-lg md:text-xl leading-relaxed max-w-lg mx-auto font-light"
+                    className={`text-base sm:text-lg md:text-xl leading-relaxed max-w-lg mx-auto font-light ${
+                      theme === "light" ? "text-black/80" : "text-slate-300"
+                    }`}
                   >
                     Deep dives, critical essays, and curated collections that celebrate the art of film.
                   </motion.p>
@@ -213,8 +235,14 @@ const MobileHeroSection = () => {
           {isLoading && (
             <div className="flex-1 flex items-center justify-center">
               <div className="flex flex-col items-center gap-4">
-                <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
-                <p className="text-slate-400 text-sm sm:text-base">Loading latest reviews...</p>
+                <div className={`w-12 h-12 border-4 rounded-full animate-spin ${
+                  theme === "light"
+                    ? "border-gray-200 border-t-black"
+                    : "border-white/20 border-t-white"
+                }`}></div>
+                <p className={`text-sm sm:text-base ${
+                  theme === "light" ? "text-black/70" : "text-slate-400"
+                }`}>Loading latest reviews...</p>
               </div>
             </div>
           )}
@@ -223,14 +251,26 @@ const MobileHeroSection = () => {
           {error && !isLoading && (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center max-w-md mx-auto">
-                <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-6 sm:p-8">
-                  <h3 className="text-xl font-bold text-red-400 mb-4">
+                <div className={`rounded-2xl p-6 sm:p-8 ${
+                  theme === "light"
+                    ? "bg-red-100/50 border border-red-600/30"
+                    : "bg-red-500/10 border border-red-500/30"
+                }`}>
+                  <h3 className={`text-xl font-bold mb-4 ${
+                    theme === "light" ? "text-red-600" : "text-red-400"
+                  }`}>
                     Error Loading Reviews
                   </h3>
-                  <p className="text-slate-400 mb-6">{error}</p>
+                  <p className={`mb-6 ${
+                    theme === "light" ? "text-black/70" : "text-slate-400"
+                  }`}>{error}</p>
                   <button
                     onClick={() => window.location.reload()}
-                    className="bg-red-500/20 text-red-300 px-4 py-2 rounded-2xl border border-red-500/30 hover:bg-red-500/30 transition-all"
+                    className={`px-4 py-2 rounded-2xl border transition-all ${
+                      theme === "light"
+                        ? "bg-red-200/50 text-red-600 border-red-600/30 hover:bg-red-300/50"
+                        : "bg-red-500/20 text-red-300 border-red-500/30 hover:bg-red-500/30"
+                    }`}
                   >
                     Try Again
                   </button>
@@ -265,7 +305,11 @@ const MobileHeroSection = () => {
                   >
                     {/* Main Rectangular Poster */}
                     <div className="relative z-10 w-full h-full">
-                      <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-white/20 transition-all duration-300 hover:scale-105 hover:shadow-3xl hover:border-white/40">
+                      <div className={`relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-3xl ${
+                        theme === "light"
+                          ? "border-black/40 hover:border-black/80 hover:shadow-black/20"
+                          : "border-white/20 hover:border-white/40"
+                      }`}>
                         <img
                           src={poster.image || "/placeholder.svg"}
                           alt={poster.title}
@@ -278,17 +322,25 @@ const MobileHeroSection = () => {
 
                         {/* Poster Info Overlay - Compact and lower */}
                         <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 md:p-6">
-                          <div className="flex items-center justify-between text-white">
+                          <div className={`flex items-center justify-between ${
+                            theme === "light" ? "text-black" : "text-white"
+                          }`}>
                             <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
                               {poster.title}
                             </h3>
-                            <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm text-slate-300 flex-shrink-0 ml-4">
+                            <div className={`flex items-center gap-4 sm:gap-6 text-xs sm:text-sm flex-shrink-0 ml-4 ${
+                              theme === "light" ? "text-black/70" : "text-slate-300"
+                            }`}>
                               <div className="flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+                                <span className={`w-1.5 h-1.5 rounded-full ${
+                                  theme === "light" ? "bg-gray-700" : "bg-emerald-400"
+                                }`}></span>
                                 <span>{poster.year}</span>
                               </div>
                               <div className="flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+                                <span className={`w-1.5 h-1.5 rounded-full ${
+                                  theme === "light" ? "bg-gray-900" : "bg-blue-400"
+                                }`}></span>
                                 <span>{poster.genre}</span>
                               </div>
                             </div>
@@ -306,7 +358,11 @@ const MobileHeroSection = () => {
                 <motion.button
                   whileTap={{ scale: 0.98 }}
                   onClick={() => navigate(`/post/${heroPosters[currentSlide]?.id}`)}
-                  className="bg-white/10 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-medium border border-white/20 hover:bg-white/20 transition-all duration-300 flex items-center gap-1"
+                  className={`backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold border-2 transition-all duration-300 flex items-center gap-1 shadow-lg ${
+                    theme === "light"
+                      ? "bg-white/90 text-black border-black/60 hover:bg-black hover:text-white hover:border-black"
+                      : "bg-white/10 text-white border-white/20 hover:bg-white/20"
+                  }`}
                 >
                   <span>Read Review</span>
                   <ArrowRight className="w-3 h-3" />
@@ -322,7 +378,11 @@ const MobileHeroSection = () => {
                   onClick={() => setCurrentSlide(index)}
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${
                     index === currentSlide
-                      ? "bg-white shadow-lg scale-125"
+                      ? theme === "light"
+                        ? "bg-black shadow-lg shadow-black/50 scale-125 ring-2 ring-gray-300"
+                        : "bg-white shadow-lg scale-125"
+                      : theme === "light"
+                      ? "bg-gray-300 hover:bg-gray-500"
                       : "bg-white/40 hover:bg-white/70"
                   }`}
                 />
@@ -344,7 +404,9 @@ const MobileHeroSection = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.4 }}
-              className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-md mx-auto mb-4 sm:mb-6 font-medium"
+              className={`text-sm sm:text-base leading-relaxed max-w-md mx-auto mb-4 sm:mb-6 font-medium ${
+                theme === "light" ? "text-black/70" : "text-slate-400"
+              }`}
             >
               Ready to discover your next favorite film? Explore our carefully curated top picks and trending recommendations.
             </motion.p>
@@ -356,9 +418,17 @@ const MobileHeroSection = () => {
               transition={{ duration: 0.6, delay: 1.6 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate("/recommendations-page")}
-              className="group relative bg-white text-slate-950 px-8 sm:px-10 md:px-12 py-4 sm:py-5 md:py-6 rounded-2xl font-semibold hover:bg-slate-100 transition-all duration-300 flex items-center gap-3 mx-auto text-base sm:text-lg md:text-xl shadow-2xl hover:shadow-white/20 overflow-hidden"
+              className={`group relative px-8 sm:px-10 md:px-12 py-4 sm:py-5 md:py-6 rounded-2xl font-bold transition-all duration-300 flex items-center gap-3 mx-auto text-base sm:text-lg md:text-xl shadow-2xl overflow-hidden border-2 ${
+                theme === "light"
+                  ? "bg-black text-white hover:bg-gray-900 hover:shadow-black/40 border-black hover:scale-105"
+                  : "bg-white text-slate-950 hover:bg-slate-100 hover:shadow-white/20 border-white/20"
+              }`}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-white via-slate-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className={`absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-20 transition-opacity duration-300 ${
+                theme === "light"
+                  ? "from-white via-gray-200 to-white"
+                  : "from-white via-slate-50 to-white"
+              }`} />
               <span className="relative z-10">Start Exploring</span>
               <ArrowRight className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform duration-300" />
             </motion.button>

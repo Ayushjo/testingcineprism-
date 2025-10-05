@@ -12,6 +12,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import axios from "axios";
+import { useTheme } from "../context/ThemeContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -449,6 +450,7 @@ const ReviewCardsWithFocus = ({ filteredReviews }) => {
 };
 
 export default function ReviewPage() {
+  const { theme } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("all");
   const [posts, setPosts] = useState([]);
@@ -765,10 +767,16 @@ export default function ReviewPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white pt-20 flex items-center justify-center">
+      <div className={`min-h-screen pt-20 flex items-center justify-center transition-colors duration-300 ${
+        theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+      }`}>
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-400 text-lg">Loading reviews...</p>
+          <div className={`w-12 h-12 border-4 rounded-full animate-spin mx-auto mb-4 ${
+            theme === "light"
+              ? "border-gray-300 border-t-black"
+              : "border-emerald-500/30 border-t-emerald-500"
+          }`} />
+          <p className={`text-lg ${theme === "light" ? "text-gray-600" : "text-slate-400"}`}>Loading reviews...</p>
         </div>
       </div>
     );
@@ -777,14 +785,26 @@ export default function ReviewPage() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white pt-20 flex items-center justify-center">
+      <div className={`min-h-screen pt-20 flex items-center justify-center transition-colors duration-300 ${
+        theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+      }`}>
         <div className="text-center">
-          <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-8 max-w-md mx-auto">
-            <h3 className="text-2xl font-bold text-red-400 mb-4">Error</h3>
-            <p className="text-slate-400 mb-6">{error}</p>
+          <div className={`border rounded-2xl p-8 max-w-md mx-auto ${
+            theme === "light"
+              ? "bg-red-50 border-red-300"
+              : "bg-red-500/10 border-red-500/30"
+          }`}>
+            <h3 className={`text-2xl font-bold mb-4 ${
+              theme === "light" ? "text-red-700" : "text-red-400"
+            }`}>Error</h3>
+            <p className={`mb-6 ${theme === "light" ? "text-gray-700" : "text-slate-400"}`}>{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="bg-gradient-to-r from-red-500/80 to-red-600/80 hover:from-red-500 hover:to-red-600 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300"
+              className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-red-600 hover:bg-red-700 text-white"
+                  : "bg-gradient-to-r from-red-500/80 to-red-600/80 hover:from-red-500 hover:to-red-600 text-white"
+              }`}
             >
               Try Again
             </button>
@@ -795,11 +815,21 @@ export default function ReviewPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white pt-20">
+    <div className={`min-h-screen pt-20 transition-colors duration-300 ${
+      theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+    }`}>
       {/* Ambient Background */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(139,92,246,0.03),transparent_50%)]" />
+        <div className={`absolute inset-0 ${
+          theme === "light"
+            ? "bg-[radial-gradient(circle_at_25%_25%,rgba(0,0,0,0.03),transparent_50%)]"
+            : "bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]"
+        }`} />
+        <div className={`absolute inset-0 ${
+          theme === "light"
+            ? "bg-[radial-gradient(circle_at_75%_75%,rgba(0,0,0,0.02),transparent_50%)]"
+            : "bg-[radial-gradient(circle_at_75%_75%,rgba(139,92,246,0.03),transparent_50%)]"
+        }`} />
       </div>
 
       {/* Header Section */}
@@ -812,14 +842,24 @@ export default function ReviewPage() {
             className="text-center mb-12"
           >
             <div className="inline-block mb-6">
-              <span className="bg-white/5 backdrop-blur-xl text-emerald-400 px-4 py-2 rounded-2xl text-sm font-semibold border border-white/10">
+              <span className={`backdrop-blur-xl px-4 py-2 rounded-2xl text-sm font-semibold border-2 shadow-md ${
+                theme === "light"
+                  ? "bg-gray-100 text-black border-black/40"
+                  : "bg-white/5 text-emerald-400 border-white/10"
+              }`}>
                 📝 All Reviews
               </span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-white mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
+            <h1 className={`text-5xl md:text-7xl font-black mb-6 bg-clip-text text-transparent tracking-tight ${
+              theme === "light"
+                ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                : "bg-gradient-to-r from-white via-slate-200 to-slate-400"
+            }`}>
               Reviews
             </h1>
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <p className={`text-xl max-w-2xl mx-auto leading-relaxed ${
+              theme === "light" ? "text-black/70" : "text-slate-400"
+            }`}>
               With every good film I see, I feel reborn.
             </p>
           </motion.div>
@@ -833,38 +873,58 @@ export default function ReviewPage() {
           >
             {/* Search Bar */}
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5 z-10" />
+              <Search className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 z-10 ${
+                theme === "light" ? "text-gray-600" : "text-slate-400"
+              }`} />
               <input
                 type="text"
                 placeholder="Search for a movie..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 sm:py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-white/10 transition-all duration-300 text-sm sm:text-base"
+                className={`w-full pl-12 pr-4 py-3 sm:py-4 backdrop-blur-xl border rounded-xl transition-all duration-300 text-sm sm:text-base focus:outline-none ${
+                  theme === "light"
+                    ? "bg-gray-100/70 border-gray-300 text-black placeholder-gray-500 focus:border-black focus:bg-gray-100"
+                    : "bg-white/5 border-white/10 text-white placeholder-slate-400 focus:border-emerald-400/50 focus:bg-white/10"
+                }`}
               />
             </div>
 
             {/* Genre Filter - Full Width on Mobile */}
             <div className="w-full">
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center justify-between w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-emerald-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
+                <DropdownMenuTrigger className={`flex items-center justify-between w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl backdrop-blur-xl border transition-all duration-300 focus:outline-none focus:ring-2 ${
+                  theme === "light"
+                    ? "bg-gray-100/70 border-gray-300 text-black hover:bg-gray-200 hover:border-black/40 focus:ring-black/50"
+                    : "bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-emerald-500/50 focus:ring-emerald-500/50"
+                }`}>
                   <div className="flex items-center gap-2 sm:gap-3">
                     <Filter className="h-4 w-4 sm:h-5 sm:w-5" />
                     <span className="font-medium text-sm sm:text-base">{activeGenreLabel}</span>
                   </div>
                   <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-full sm:w-80 max-h-80 overflow-y-auto bg-slate-900/98 border-white/10 backdrop-blur-xl">
-                  <DropdownMenuLabel className="text-slate-300 font-semibold px-4 py-2 text-sm sm:text-base">
+                <DropdownMenuContent className={`w-full sm:w-80 max-h-80 overflow-y-auto backdrop-blur-xl ${
+                  theme === "light"
+                    ? "bg-white/98 border-gray-300"
+                    : "bg-slate-900/98 border-white/10"
+                }`}>
+                  <DropdownMenuLabel className={`font-semibold px-4 py-2 text-sm sm:text-base ${
+                    theme === "light" ? "text-gray-800" : "text-slate-300"
+                  }`}>
                     Filter by Genre
                   </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-white/10" />
+                  <DropdownMenuSeparator className={theme === "light" ? "bg-gray-300" : "bg-white/10"} />
                   {genres.map((genre) => (
                     <DropdownMenuItem
                       key={genre.key}
                       onClick={() => handleGenreSelect(genre.key)}
                       className={`cursor-pointer transition-colors px-4 py-3 text-sm sm:text-base ${
                         selectedGenre === genre.key
-                          ? "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 focus:bg-emerald-500/30"
+                          ? theme === "light"
+                            ? "bg-black/10 text-black hover:bg-black/20 focus:bg-black/20"
+                            : "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 focus:bg-emerald-500/30"
+                          : theme === "light"
+                          ? "text-gray-700 hover:text-black hover:bg-gray-100 focus:bg-gray-100 focus:text-black"
                           : "text-slate-300 hover:text-emerald-200 hover:bg-emerald-500/10 focus:bg-emerald-500/10 focus:text-emerald-200"
                       }`}
                     >
@@ -883,7 +943,7 @@ export default function ReviewPage() {
               animate={{ opacity: 1, y: 0 }}
               className="mt-6 text-center"
             >
-              <p className="text-slate-400 text-sm">
+              <p className={`text-sm ${theme === "light" ? "text-gray-600" : "text-slate-400"}`}>
                 {filteredReviews.length > 0
                   ? `Found ${filteredReviews.length} review${
                       filteredReviews.length !== 1 ? "s" : ""
@@ -909,7 +969,7 @@ export default function ReviewPage() {
               transition={{ duration: 0.6 }}
               className="text-center py-16"
             >
-              <div className="text-slate-400 text-lg">
+              <div className={`text-lg ${theme === "light" ? "text-gray-600" : "text-slate-400"}`}>
                 {searchTerm || selectedGenre !== "all"
                   ? "No reviews found matching your criteria."
                   : "No reviews available."}
@@ -921,7 +981,11 @@ export default function ReviewPage() {
                     setSelectedGenre("all");
                     fetchAllReviews();
                   }}
-                  className="mt-4 text-emerald-400 hover:text-emerald-300 transition-colors duration-200 text-sm underline"
+                  className={`mt-4 transition-colors duration-200 text-sm underline ${
+                    theme === "light"
+                      ? "text-black hover:text-gray-700"
+                      : "text-emerald-400 hover:text-emerald-300"
+                  }`}
                 >
                   Clear filters and show all reviews
                 </button>

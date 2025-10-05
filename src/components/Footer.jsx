@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 // --- CHANGE 1: Import the new icons and use 'X' for Twitter ---
 import { X, Instagram, Facebook, MessageSquare } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 // --- CHANGE 2: A cleaner, more maintainable way to handle navigation links ---
 
@@ -19,6 +20,7 @@ const socials = [
 import { useAuth } from "../context/AuthContext";
 
 const Footer = () => {
+  const { theme } = useTheme();
   const { user } = useAuth();
   const footerLinks = [
     { text: "Top Picks", href: "/recommendations-page" },
@@ -34,11 +36,19 @@ const Footer = () => {
 
   return (
     <>
-      <footer className="bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-white py-20 relative overflow-hidden">
+      <footer className={`py-20 relative overflow-hidden transition-colors duration-300 ${
+        theme === "light"
+          ? "bg-gradient-to-br from-gray-100 via-gray-50 to-gray-100 text-black"
+          : "bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-white"
+      }`}>
         {/* Ambient Background */}
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+          <div className={`absolute top-0 left-0 w-96 h-96 rounded-full blur-3xl ${
+            theme === "light" ? "bg-gray-400/10" : "bg-emerald-500/10"
+          }`} />
+          <div className={`absolute bottom-0 right-0 w-96 h-96 rounded-full blur-3xl ${
+            theme === "light" ? "bg-gray-500/10" : "bg-blue-500/10"
+          }`} />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -51,7 +61,11 @@ const Footer = () => {
           >
             {/* Logo */}
             <motion.h3
-              className="text-4xl font-black mb-8 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight"
+              className={`text-4xl font-black mb-8 bg-clip-text text-transparent tracking-tight ${
+                theme === "light"
+                  ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                  : "bg-gradient-to-r from-white via-slate-200 to-slate-400"
+              }`}
               whileHover={{ scale: 1.02 }}
             >
               The Cinéprism
@@ -65,7 +79,11 @@ const Footer = () => {
                   href={link.href}
                   whileHover={{ scale: 1.05, y: -2 }}
                   transition={{ duration: 0.2 }}
-                  className="text-slate-400 hover:text-emerald-400 transition-colors duration-200 font-medium text-lg"
+                  className={`transition-colors duration-200 font-medium text-lg ${
+                    theme === "light"
+                      ? "text-black/70 hover:text-gray-900"
+                      : "text-slate-400 hover:text-emerald-400"
+                  }`}
                 >
                   {link.text}
                 </motion.a>
@@ -83,7 +101,11 @@ const Footer = () => {
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   whileTap={{ scale: 0.9 }}
-                  className="w-12 h-12 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center text-emerald-400 hover:text-emerald-300 transition-colors duration-200 hover:bg-white/10"
+                  className={`w-12 h-12 backdrop-blur-xl border-2 rounded-2xl flex items-center justify-center transition-colors duration-200 shadow-md ${
+                    theme === "light"
+                      ? "bg-gray-100 border-black/40 text-black/70 hover:text-white hover:bg-black hover:border-black"
+                      : "bg-white/5 border-white/10 text-emerald-400 hover:text-emerald-300 hover:bg-white/10"
+                  }`}
                 >
                   <social.icon className="h-5 w-5" />
                 </motion.a>
@@ -91,8 +113,12 @@ const Footer = () => {
             </div>
 
             {/* Copyright */}
-            <div className="border-t border-slate-800 pt-8">
-              <p className="text-slate-500 text-sm">
+            <div className={`border-t pt-8 ${
+              theme === "light" ? "border-black/20" : "border-slate-800"
+            }`}>
+              <p className={`text-sm ${
+                theme === "light" ? "text-black/60" : "text-slate-500"
+              }`}>
                 {/* --- CHANGE 5: Year is now generated automatically --- */}©{" "}
                 {new Date().getFullYear()} The Cinéprism — Crafted with{" "}
                 <motion.span

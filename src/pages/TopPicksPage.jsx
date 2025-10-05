@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Search, ChevronDown, X, Filter } from "lucide-react";
 import axios from "axios";
 import MovieGrid from "../components/MovieGrid";
+import { useTheme } from "../context/ThemeContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const TopPicksPage = () => {
+  const { theme } = useTheme();
   const [activeGenre, setActiveGenre] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -161,21 +163,35 @@ const TopPicksPage = () => {
   // Initial loading screen
   if (initialLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950 pt-20 text-white">
+      <div className={`flex min-h-screen items-center justify-center pt-20 transition-colors duration-300 ${
+        theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+      }`}>
         <div className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-emerald-400"></div>
-          <p className="text-slate-400">Loading Top Picks...</p>
+          <div className={`mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 ${
+            theme === "light" ? "border-black" : "border-emerald-400"
+          }`}></div>
+          <p className={theme === "light" ? "text-gray-600" : "text-slate-400"}>Loading Top Picks...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 pt-20">
+    <div className={`min-h-screen pt-20 transition-colors duration-300 ${
+      theme === "light" ? "bg-white" : "bg-slate-950"
+    }`}>
       {/* Ambient Background */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(245,158,11,0.03),transparent_50%)]" />
+        <div className={`absolute inset-0 ${
+          theme === "light"
+            ? "bg-[radial-gradient(circle_at_25%_25%,rgba(0,0,0,0.03),transparent_50%)]"
+            : "bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]"
+        }`} />
+        <div className={`absolute inset-0 ${
+          theme === "light"
+            ? "bg-[radial-gradient(circle_at_75%_75%,rgba(0,0,0,0.02),transparent_50%)]"
+            : "bg-[radial-gradient(circle_at_75%_75%,rgba(245,158,11,0.03),transparent_50%)]"
+        }`} />
       </div>
 
       <section className="relative py-12 sm:py-16">
@@ -186,10 +202,16 @@ const TopPicksPage = () => {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h1 className="mb-4 sm:mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-transparent">
+            <h1 className={`mb-4 sm:mb-6 bg-clip-text text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-transparent ${
+              theme === "light"
+                ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                : "bg-gradient-to-r from-white via-slate-200 to-slate-400"
+            }`}>
               Top Picks
             </h1>
-            <p className="mx-auto max-w-3xl text-base sm:text-lg lg:text-xl leading-relaxed text-slate-400 px-4">
+            <p className={`mx-auto max-w-3xl text-base sm:text-lg lg:text-xl leading-relaxed px-4 ${
+              theme === "light" ? "text-black/70" : "text-slate-400"
+            }`}>
               The Greatest Films in Cinema History - Curated by Leading Film
               Scholars
             </p>
@@ -201,8 +223,14 @@ const TopPicksPage = () => {
       {error && (
         <section className="relative pb-4">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-6 rounded-lg border border-red-500/30 bg-red-900/20 p-4">
-              <p className="text-center text-red-400 text-sm sm:text-base">
+            <div className={`mb-6 rounded-lg border p-4 ${
+              theme === "light"
+                ? "border-red-400/50 bg-red-100/50"
+                : "border-red-500/30 bg-red-900/20"
+            }`}>
+              <p className={`text-center text-sm sm:text-base ${
+                theme === "light" ? "text-red-700" : "text-red-400"
+              }`}>
                 {error}
               </p>
             </div>
@@ -211,7 +239,11 @@ const TopPicksPage = () => {
       )}
 
       {/* Search and Filter Section with ShadCN Dropdown */}
-      <section className="relative border-t border-b border-slate-800/50 bg-slate-900/20 backdrop-blur-sm">
+      <section className={`relative border-t border-b backdrop-blur-sm ${
+        theme === "light"
+          ? "border-gray-200 bg-gray-50/50"
+          : "border-slate-800/50 bg-slate-900/20"
+      }`}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -221,20 +253,34 @@ const TopPicksPage = () => {
           >
             {/* Search Bar */}
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5 z-10" />
+              <Search className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 z-10 ${
+                theme === "light" ? "text-gray-600" : "text-slate-400"
+              }`} />
               <input
                 type="text"
                 placeholder="Search films by title, genre, or year..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="w-full pl-12 pr-10 py-3 sm:py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-white/10 transition-all duration-300 text-sm sm:text-base"
+                className={`w-full pl-12 pr-10 py-3 sm:py-4 backdrop-blur-xl border rounded-xl transition-all duration-300 text-sm sm:text-base focus:outline-none ${
+                  theme === "light"
+                    ? "bg-gray-100/70 border-gray-300 text-black placeholder-gray-500 focus:border-black focus:bg-gray-100"
+                    : "bg-white/5 border-white/10 text-white placeholder-slate-400 focus:border-emerald-400/50 focus:bg-white/10"
+                }`}
               />
               {searchQuery && (
                 <button
                   onClick={clearSearch}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-white/10 rounded-full transition-colors duration-200 z-10"
+                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full transition-colors duration-200 z-10 ${
+                    theme === "light"
+                      ? "hover:bg-gray-200"
+                      : "hover:bg-white/10"
+                  }`}
                 >
-                  <X className="h-4 w-4 text-slate-400 hover:text-white" />
+                  <X className={`h-4 w-4 ${
+                    theme === "light"
+                      ? "text-gray-600 hover:text-black"
+                      : "text-slate-400 hover:text-white"
+                  }`} />
                 </button>
               )}
             </div>
@@ -242,7 +288,11 @@ const TopPicksPage = () => {
             {/* Genre Filter - Full Width on Mobile */}
             <div className="w-full">
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center justify-between w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-emerald-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
+                <DropdownMenuTrigger className={`flex items-center justify-between w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl backdrop-blur-xl border transition-all duration-300 focus:outline-none focus:ring-2 ${
+                  theme === "light"
+                    ? "bg-gray-100/70 border-gray-300 text-black hover:bg-gray-200 hover:border-black/40 focus:ring-black/50"
+                    : "bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-emerald-500/50 focus:ring-emerald-500/50"
+                }`}>
                   <div className="flex items-center gap-2 sm:gap-3">
                     <Filter className="h-4 w-4 sm:h-5 sm:w-5" />
                     <span className="font-medium text-sm sm:text-base">
@@ -251,18 +301,28 @@ const TopPicksPage = () => {
                   </div>
                   <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-full sm:w-80 max-h-80 overflow-y-auto bg-slate-900/98 border-white/10 backdrop-blur-xl">
-                  <DropdownMenuLabel className="text-slate-300 font-semibold px-4 py-2 text-sm sm:text-base">
+                <DropdownMenuContent className={`w-full sm:w-80 max-h-80 overflow-y-auto backdrop-blur-xl ${
+                  theme === "light"
+                    ? "bg-white/98 border-gray-300"
+                    : "bg-slate-900/98 border-white/10"
+                }`}>
+                  <DropdownMenuLabel className={`font-semibold px-4 py-2 text-sm sm:text-base ${
+                    theme === "light" ? "text-gray-800" : "text-slate-300"
+                  }`}>
                     Filter by Genre
                   </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-white/10" />
+                  <DropdownMenuSeparator className={theme === "light" ? "bg-gray-300" : "bg-white/10"} />
                   {genres.map((genre) => (
                     <DropdownMenuItem
                       key={genre.key}
                       onClick={() => handleGenreSelect(genre.key)}
                       className={`cursor-pointer transition-colors px-4 py-3 text-sm sm:text-base ${
                         activeGenre === genre.key
-                          ? "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 focus:bg-emerald-500/30"
+                          ? theme === "light"
+                            ? "bg-black/10 text-black hover:bg-black/20 focus:bg-black/20"
+                            : "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 focus:bg-emerald-500/30"
+                          : theme === "light"
+                          ? "text-gray-700 hover:text-black hover:bg-gray-100 focus:bg-gray-100 focus:text-black"
                           : "text-slate-300 hover:text-emerald-200 hover:bg-emerald-500/10 focus:bg-emerald-500/10 focus:text-emerald-200"
                       }`}
                     >
@@ -286,7 +346,7 @@ const TopPicksPage = () => {
               animate={{ opacity: 1, y: 0 }}
               className="mt-4 text-center"
             >
-              <p className="text-slate-400 text-sm">
+              <p className={`text-sm ${theme === "light" ? "text-gray-600" : "text-slate-400"}`}>
                 {filteredMovies.length > 0
                   ? `Found ${filteredMovies.length} film${
                       filteredMovies.length !== 1 ? "s" : ""
@@ -308,7 +368,9 @@ const TopPicksPage = () => {
             transition={{ duration: 0.5 }}
             className="text-center"
           >
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">
+            <h2 className={`text-2xl sm:text-3xl font-bold ${
+              theme === "light" ? "text-black" : "text-white"
+            }`}>
               {movieCount > 0
                 ? searchQuery
                   ? `${movieCount} Film${movieCount !== 1 ? "s" : ""} Found`
@@ -337,7 +399,9 @@ const TopPicksPage = () => {
               transition={{ duration: 0.6 }}
               className="text-center py-16"
             >
-              <div className="text-slate-400 text-base sm:text-lg">
+              <div className={`text-base sm:text-lg ${
+                theme === "light" ? "text-gray-600" : "text-slate-400"
+              }`}>
                 {searchQuery
                   ? `No films found matching "${searchQuery}"${
                       activeGenre !== "all"
@@ -349,7 +413,11 @@ const TopPicksPage = () => {
               {searchQuery && (
                 <button
                   onClick={clearSearch}
-                  className="mt-4 text-emerald-400 hover:text-emerald-300 transition-colors duration-200 text-sm underline"
+                  className={`mt-4 transition-colors duration-200 text-sm underline ${
+                    theme === "light"
+                      ? "text-black hover:text-gray-700"
+                      : "text-emerald-400 hover:text-emerald-300"
+                  }`}
                 >
                   Clear search and show all films
                 </button>

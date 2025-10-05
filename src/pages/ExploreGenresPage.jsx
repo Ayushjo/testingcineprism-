@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { Film, Sparkles, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 import ActionImage from "../assets/action.jpg";
 import ThrillerImage from "../assets/thriller.jpg";
 import DramaImage from "../assets/drama.jpg";
@@ -78,6 +79,7 @@ const genresData = [
 ];
 
 export default function ExploreGenresPage() {
+  const { theme } = useTheme();
   const navigate = useNavigate();
 
   const handleGenreClick = (genreName) => {
@@ -85,17 +87,31 @@ export default function ExploreGenresPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 relative overflow-hidden pt-24 pb-16">
+    <div className={`min-h-screen bg-gradient-to-b relative overflow-hidden pt-24 pb-16 transition-colors duration-300 ${
+      theme === "light"
+        ? "from-white via-gray-50 to-white"
+        : "from-slate-950 via-slate-900 to-slate-950"
+    }`}>
       {/* Ambient Background Effects */}
       <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl" />
+        <div className={`absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl ${
+          theme === "light" ? "bg-gray-300/15" : "bg-emerald-500/10"
+        }`} />
+        <div className={`absolute bottom-20 right-20 w-96 h-96 rounded-full blur-3xl ${
+          theme === "light" ? "bg-gray-200/15" : "bg-purple-500/10"
+        }`} />
+        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl ${
+          theme === "light" ? "bg-gray-400/8" : "bg-blue-500/5"
+        }`} />
       </div>
 
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      <div className={`absolute inset-0 ${theme === "light" ? "opacity-3" : "opacity-5"}`}>
+        <div className={`absolute inset-0 bg-[size:60px_60px] ${
+          theme === "light"
+            ? "bg-[linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px)]"
+            : "bg-[linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)]"
+        }`} />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -111,7 +127,11 @@ export default function ExploreGenresPage() {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-white/5 backdrop-blur-xl text-emerald-400 px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-sm sm:text-base font-semibold border border-white/10 inline-flex items-center gap-2 shadow-lg shadow-emerald-500/10"
+              className={`backdrop-blur-xl px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-sm sm:text-base font-semibold border-2 inline-flex items-center gap-2 shadow-lg ${
+                theme === "light"
+                  ? "bg-gray-100 text-black border-black/40 shadow-black/10"
+                  : "bg-white/5 text-emerald-400 border-white/10 shadow-emerald-500/10"
+              }`}
             >
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
               Discover Your Genre
@@ -121,7 +141,11 @@ export default function ExploreGenresPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 bg-gradient-to-r from-white via-emerald-200 to-white bg-clip-text text-transparent tracking-tight px-4"
+            className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 bg-clip-text text-transparent tracking-tight px-4 ${
+              theme === "light"
+                ? "bg-gradient-to-r from-black via-gray-800 to-black"
+                : "bg-gradient-to-r from-white via-emerald-200 to-white"
+            }`}
           >
             Explore by Genre
           </motion.h1>
@@ -129,7 +153,9 @@ export default function ExploreGenresPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-base sm:text-lg md:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed px-4"
+            className={`text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed px-4 ${
+              theme === "light" ? "text-black/70" : "text-slate-400"
+            }`}
           >
             Dive into our carefully curated collections. Each genre offers a
             unique cinematic journey waiting to be discovered.
@@ -151,9 +177,11 @@ export default function ExploreGenresPage() {
               transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
               whileHover={{ scale: 1.03, y: -8 }}
               onClick={() => handleGenreClick(genre.name)}
-              className={`group relative overflow-hidden rounded-3xl cursor-pointer shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 ${
-                index === 0 ? "sm:col-span-2 lg:col-span-2 lg:row-span-2" : ""
-              }`}
+              className={`group relative overflow-hidden rounded-3xl cursor-pointer shadow-2xl transition-all duration-500 border-2 ${
+                theme === "light"
+                  ? "border-black/40 hover:shadow-black/20 hover:border-black/80"
+                  : "border-white/20 hover:shadow-emerald-500/20"
+              } ${index === 0 ? "sm:col-span-2 lg:col-span-2 lg:row-span-2" : ""}`}
               style={{ minHeight: index === 0 ? "500px" : "280px" }}
             >
               {/* Background Image */}
@@ -178,16 +206,28 @@ export default function ExploreGenresPage() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.8 + index * 0.1 }}
-                    className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl px-3 py-1.5 sm:px-4 sm:py-2"
+                    className={`backdrop-blur-xl border rounded-2xl px-3 py-1.5 sm:px-4 sm:py-2 ${
+                      theme === "light"
+                        ? "bg-white/80 border-black/30"
+                        : "bg-white/10 border-white/20"
+                    }`}
                   >
-                    <Film className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
+                    <Film className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                      theme === "light" ? "text-black" : "text-emerald-400"
+                    }`} />
                   </motion.div>
                   <motion.div
                     className="opacity-0 group-hover:opacity-100 transition-all duration-300"
                     whileHover={{ scale: 1.1 }}
                   >
-                    <div className="bg-emerald-500/20 backdrop-blur-xl border border-emerald-400/30 rounded-full p-2 sm:p-3">
-                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
+                    <div className={`backdrop-blur-xl border rounded-full p-2 sm:p-3 ${
+                      theme === "light"
+                        ? "bg-black/10 border-black/40"
+                        : "bg-emerald-500/20 border-emerald-400/30"
+                    }`}>
+                      <ArrowRight className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                        theme === "light" ? "text-black" : "text-emerald-400"
+                      }`} />
                     </div>
                   </motion.div>
                 </div>
@@ -195,7 +235,11 @@ export default function ExploreGenresPage() {
                 {/* Bottom Content */}
                 <div>
                   <h3
-                    className={`font-black text-white mb-2 sm:mb-3 tracking-tight leading-tight group-hover:text-emerald-300 transition-colors duration-300 ${
+                    className={`font-black mb-2 sm:mb-3 tracking-tight leading-tight transition-colors duration-300 ${
+                      theme === "light"
+                        ? "text-white group-hover:text-gray-200"
+                        : "text-white group-hover:text-emerald-300"
+                    } ${
                       index === 0
                         ? "text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
                         : "text-2xl sm:text-3xl md:text-4xl"
@@ -204,7 +248,9 @@ export default function ExploreGenresPage() {
                     {genre.name}
                   </h3>
                   <p
-                    className={`text-slate-300 leading-relaxed ${
+                    className={`leading-relaxed ${
+                      theme === "light" ? "text-slate-200" : "text-slate-300"
+                    } ${
                       index === 0
                         ? "text-sm sm:text-base md:text-lg"
                         : "text-xs sm:text-sm"
@@ -215,13 +261,21 @@ export default function ExploreGenresPage() {
 
                   {/* Hover Indicator Line */}
                   <motion.div
-                    className="h-1 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mt-4 sm:mt-6 w-0 group-hover:w-full transition-all duration-500"
+                    className={`h-1 rounded-full mt-4 sm:mt-6 w-0 group-hover:w-full transition-all duration-500 ${
+                      theme === "light"
+                        ? "bg-gradient-to-r from-black to-gray-700"
+                        : "bg-gradient-to-r from-emerald-400 to-cyan-400"
+                    }`}
                   />
                 </div>
               </div>
 
               {/* Border Glow */}
-              <div className="absolute inset-0 border-2 border-transparent group-hover:border-emerald-400/30 rounded-3xl transition-colors duration-500" />
+              <div className={`absolute inset-0 border-2 border-transparent rounded-3xl transition-colors duration-500 ${
+                theme === "light"
+                  ? "group-hover:border-black/30"
+                  : "group-hover:border-emerald-400/30"
+              }`} />
             </motion.div>
           ))}
         </motion.div>
@@ -233,10 +287,20 @@ export default function ExploreGenresPage() {
           transition={{ duration: 1, delay: 1.5 }}
           className="mt-16 sm:mt-20 text-center"
         >
-          <div className="inline-flex items-center gap-2 text-slate-500 text-xs sm:text-sm">
-            <div className="w-8 sm:w-12 h-px bg-gradient-to-r from-transparent to-slate-500" />
+          <div className={`inline-flex items-center gap-2 text-xs sm:text-sm ${
+            theme === "light" ? "text-gray-500" : "text-slate-500"
+          }`}>
+            <div className={`w-8 sm:w-12 h-px ${
+              theme === "light"
+                ? "bg-gradient-to-r from-transparent to-gray-400"
+                : "bg-gradient-to-r from-transparent to-slate-500"
+            }`} />
             <span>More genres coming soon</span>
-            <div className="w-8 sm:w-12 h-px bg-gradient-to-l from-transparent to-slate-500" />
+            <div className={`w-8 sm:w-12 h-px ${
+              theme === "light"
+                ? "bg-gradient-to-l from-transparent to-gray-400"
+                : "bg-gradient-to-l from-transparent to-slate-500"
+            }`} />
           </div>
         </motion.div>
       </div>

@@ -4,8 +4,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
 import TheCineprismLogo from "../assets/thecineprismlogo.jpg";
+import { useTheme } from "../context/ThemeContext";
 
 export default function LoginPage() {
+  const { theme } = useTheme();
   const { loginWithGoogle, user, handleAuthCallback } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -37,35 +39,59 @@ export default function LoginPage() {
   }, [user, navigate]);
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-neutral-950 via-slate-900 to-black">
+    <div className={`min-h-screen relative overflow-hidden transition-colors duration-300 ${
+      theme === "light"
+        ? "bg-gradient-to-br from-gray-50 via-white to-gray-100"
+        : "bg-gradient-to-br from-neutral-950 via-slate-900 to-black"
+    }`}>
       {/* Cinematic Background Layer */}
       <div className="absolute inset-0">
         {/* Main background - Classic cinema aesthetic */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-25"
+          className={`absolute inset-0 bg-cover bg-center bg-no-repeat ${
+            theme === "light" ? "opacity-10" : "opacity-25"
+          }`}
           style={{
             backgroundImage: `url('https://images.unsplash.com/photo-1489599512549-c1b006ad123c?q=80&w=2070')`,
           }}
         />
         {/* Film grain overlay */}
         <div
-          className="absolute inset-0 opacity-[0.08] mix-blend-multiply"
+          className={`absolute inset-0 mix-blend-multiply ${
+            theme === "light" ? "opacity-[0.03]" : "opacity-[0.08]"
+          }`}
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' result='noise'/%3E%3CfeColorMatrix in='noise' type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.4'/%3E%3C/svg%3E")`,
           }}
         />
         {/* Premium gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-neutral-950/75 to-black/90" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-neutral-900/50 to-black/80" />
+        <div className={`absolute inset-0 ${
+          theme === "light"
+            ? "bg-gradient-to-r from-white/60 via-gray-50/40 to-white/60"
+            : "bg-gradient-to-r from-black/90 via-neutral-950/75 to-black/90"
+        }`} />
+        <div className={`absolute inset-0 ${
+          theme === "light"
+            ? "bg-gradient-to-b from-transparent via-gray-100/30 to-white/50"
+            : "bg-gradient-to-b from-transparent via-neutral-900/50 to-black/80"
+        }`} />
         {/* Subtle color accent */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/15 via-transparent to-red-900/10" />
+        <div className={`absolute inset-0 ${
+          theme === "light"
+            ? "bg-gradient-to-br from-gray-200/10 via-transparent to-gray-300/10"
+            : "bg-gradient-to-br from-amber-900/15 via-transparent to-red-900/10"
+        }`} />
       </div>
 
       {/* Cinematic Light Rays */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Projector light effect */}
         <motion.div
-          className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-amber-200/20 via-amber-300/5 to-transparent"
+          className={`absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-full ${
+            theme === "light"
+              ? "bg-gradient-to-b from-gray-300/15 via-gray-200/5 to-transparent"
+              : "bg-gradient-to-b from-amber-200/20 via-amber-300/5 to-transparent"
+          }`}
           style={{
             clipPath: "polygon(45% 0%, 55% 0%, 65% 100%, 35% 100%)",
           }}
@@ -84,7 +110,11 @@ export default function LoginPage() {
         {[...Array(6)].map((_, i) => (
           <motion.div
             key={`film-${i}`}
-            className="absolute w-2 h-8 bg-gradient-to-b from-amber-400/20 to-transparent"
+            className={`absolute w-2 h-8 ${
+              theme === "light"
+                ? "bg-gradient-to-b from-gray-400/15 to-transparent"
+                : "bg-gradient-to-b from-amber-400/20 to-transparent"
+            }`}
             style={{
               left: `${20 + Math.random() * 60}%`,
               top: `${Math.random() * 100}%`,
@@ -108,7 +138,9 @@ export default function LoginPage() {
         {[...Array(12)].map((_, i) => (
           <motion.div
             key={`sparkle-${i}`}
-            className="absolute w-1 h-1 bg-amber-200 rounded-full"
+            className={`absolute w-1 h-1 rounded-full ${
+              theme === "light" ? "bg-gray-400" : "bg-amber-200"
+            }`}
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -141,23 +173,59 @@ export default function LoginPage() {
           {/* Enhanced Login Panel with Film-Inspired Design */}
           <div className="relative group">
             {/* Outer glow effect */}
-            <div className="absolute -inset-2 bg-gradient-to-r from-amber-500/10 via-red-500/5 to-amber-500/10 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700" />
+            <div className={`absolute -inset-2 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700 ${
+              theme === "light"
+                ? "bg-gradient-to-r from-gray-300/20 via-gray-200/10 to-gray-300/20"
+                : "bg-gradient-to-r from-amber-500/10 via-red-500/5 to-amber-500/10"
+            }`} />
 
             {/* Film strip border effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-neutral-700/30 to-neutral-600/30 rounded-3xl">
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-900/20 via-transparent to-red-900/20" />
+            <div className={`absolute -inset-1 rounded-3xl ${
+              theme === "light"
+                ? "bg-gradient-to-r from-gray-200/40 to-gray-300/40"
+                : "bg-gradient-to-r from-neutral-700/30 to-neutral-600/30"
+            }`}>
+              <div className={`absolute inset-0 rounded-3xl ${
+                theme === "light"
+                  ? "bg-gradient-to-r from-gray-300/15 via-transparent to-gray-400/15"
+                  : "bg-gradient-to-r from-amber-900/20 via-transparent to-red-900/20"
+              }`} />
             </div>
 
-            <div className="relative bg-neutral-900/60 backdrop-blur-xl border border-neutral-700/30 rounded-3xl p-10 shadow-2xl overflow-hidden">
+            <div className={`relative backdrop-blur-xl border rounded-3xl p-10 shadow-2xl overflow-hidden ${
+              theme === "light"
+                ? "bg-white/70 border-gray-200/50"
+                : "bg-neutral-900/60 border-neutral-700/30"
+            }`}>
               {/* Inner luxury gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-950/20 via-transparent to-red-950/20 rounded-3xl" />
+              <div className={`absolute inset-0 rounded-3xl ${
+                theme === "light"
+                  ? "bg-gradient-to-br from-gray-100/30 via-transparent to-gray-200/30"
+                  : "bg-gradient-to-br from-amber-950/20 via-transparent to-red-950/20"
+              }`} />
 
               {/* Subtle film strip pattern on sides */}
-              <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-400/30 via-neutral-600/20 to-amber-400/30">
-                <div className="absolute inset-y-0 left-0 w-full bg-gradient-to-b from-transparent via-neutral-800/40 to-transparent" />
+              <div className={`absolute left-0 top-0 bottom-0 w-1 ${
+                theme === "light"
+                  ? "bg-gradient-to-b from-gray-300/40 via-gray-400/25 to-gray-300/40"
+                  : "bg-gradient-to-b from-amber-400/30 via-neutral-600/20 to-amber-400/30"
+              }`}>
+                <div className={`absolute inset-y-0 left-0 w-full ${
+                  theme === "light"
+                    ? "bg-gradient-to-b from-transparent via-gray-300/30 to-transparent"
+                    : "bg-gradient-to-b from-transparent via-neutral-800/40 to-transparent"
+                }`} />
               </div>
-              <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-400/30 via-neutral-600/20 to-amber-400/30">
-                <div className="absolute inset-y-0 right-0 w-full bg-gradient-to-b from-transparent via-neutral-800/40 to-transparent" />
+              <div className={`absolute right-0 top-0 bottom-0 w-1 ${
+                theme === "light"
+                  ? "bg-gradient-to-b from-gray-300/40 via-gray-400/25 to-gray-300/40"
+                  : "bg-gradient-to-b from-amber-400/30 via-neutral-600/20 to-amber-400/30"
+              }`}>
+                <div className={`absolute inset-y-0 right-0 w-full ${
+                  theme === "light"
+                    ? "bg-gradient-to-b from-transparent via-gray-300/30 to-transparent"
+                    : "bg-gradient-to-b from-transparent via-neutral-800/40 to-transparent"
+                }`} />
               </div>
 
               {/* Brand Section */}
@@ -173,8 +241,16 @@ export default function LoginPage() {
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-red-500/20 rounded-2xl blur-md opacity-0 group-hover/logo:opacity-100 transition-opacity duration-500" />
-                  <div className="relative bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-2xl p-2 border border-neutral-700/50 shadow-xl">
+                  <div className={`absolute inset-0 rounded-2xl blur-md opacity-0 group-hover/logo:opacity-100 transition-opacity duration-500 ${
+                    theme === "light"
+                      ? "bg-gradient-to-br from-gray-300/30 to-gray-400/30"
+                      : "bg-gradient-to-br from-amber-400/20 to-red-500/20"
+                  }`} />
+                  <div className={`relative rounded-2xl p-2 border shadow-xl ${
+                    theme === "light"
+                      ? "bg-gradient-to-br from-gray-100 to-gray-200 border-gray-300/50"
+                      : "bg-gradient-to-br from-neutral-800 to-neutral-900 border-neutral-700/50"
+                  }`}>
                     <img
                       src={TheCineprismLogo}
                       alt="The Cinéprism"
@@ -182,20 +258,40 @@ export default function LoginPage() {
                     />
                   </div>
                   {/* Film reel accent */}
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full shadow-lg border border-amber-300/50" />
+                  <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full shadow-lg border ${
+                    theme === "light"
+                      ? "bg-gradient-to-br from-gray-600 to-gray-700 border-gray-500/50"
+                      : "bg-gradient-to-br from-amber-400 to-amber-500 border-amber-300/50"
+                  }`} />
                 </motion.div>
 
                 <h1 className="text-3xl font-light tracking-wider mb-2">
-                  <span className="bg-gradient-to-r from-amber-200 via-neutral-100 to-amber-200 bg-clip-text text-transparent">
+                  <span className={`bg-clip-text text-transparent ${
+                    theme === "light"
+                      ? "bg-gradient-to-r from-black via-gray-700 to-black"
+                      : "bg-gradient-to-r from-amber-200 via-neutral-100 to-amber-200"
+                  }`}>
                     THE CINÉPRISM
                   </span>
                 </h1>
                 <div className="flex items-center justify-center gap-2 mb-4">
-                  <div className="w-8 h-px bg-gradient-to-r from-transparent via-amber-400/60 to-transparent" />
-                  <div className="w-1 h-1 bg-amber-400/60 rounded-full" />
-                  <div className="w-8 h-px bg-gradient-to-r from-transparent via-amber-400/60 to-transparent" />
+                  <div className={`w-8 h-px ${
+                    theme === "light"
+                      ? "bg-gradient-to-r from-transparent via-gray-400/60 to-transparent"
+                      : "bg-gradient-to-r from-transparent via-amber-400/60 to-transparent"
+                  }`} />
+                  <div className={`w-1 h-1 rounded-full ${
+                    theme === "light" ? "bg-gray-400/60" : "bg-amber-400/60"
+                  }`} />
+                  <div className={`w-8 h-px ${
+                    theme === "light"
+                      ? "bg-gradient-to-r from-transparent via-gray-400/60 to-transparent"
+                      : "bg-gradient-to-r from-transparent via-amber-400/60 to-transparent"
+                  }`} />
                 </div>
-                <p className="text-neutral-400 font-light text-sm tracking-wide leading-relaxed">
+                <p className={`font-light text-sm tracking-wide leading-relaxed ${
+                  theme === "light" ? "text-gray-600" : "text-neutral-400"
+                }`}>
                   Where Cinema Meets Critique
                 </p>
               </motion.div>
@@ -207,10 +303,14 @@ export default function LoginPage() {
                 transition={{ duration: 0.8, delay: 0.4 }}
                 className="text-center mb-8"
               >
-                <h2 className="text-neutral-300 text-lg font-light mb-2">
+                <h2 className={`text-lg font-light mb-2 ${
+                  theme === "light" ? "text-gray-800" : "text-neutral-300"
+                }`}>
                   Welcome Back
                 </h2>
-                <p className="text-neutral-500 text-sm leading-relaxed">
+                <p className={`text-sm leading-relaxed ${
+                  theme === "light" ? "text-gray-600" : "text-neutral-500"
+                }`}>
                   Continue your cinematic journey with us
                 </p>
               </motion.div>
@@ -225,17 +325,31 @@ export default function LoginPage() {
                 <motion.button
                   whileHover={{
                     scale: 1.01,
-                    boxShadow: "0 8px 32px rgba(245, 158, 11, 0.15)",
+                    boxShadow: theme === "light"
+                      ? "0 8px 32px rgba(107, 114, 128, 0.15)"
+                      : "0 8px 32px rgba(245, 158, 11, 0.15)",
                   }}
                   whileTap={{ scale: 0.99 }}
                   onClick={loginWithGoogle}
                   className="relative w-full group overflow-hidden"
                 >
                   {/* Button background with premium styling */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-neutral-100 to-white rounded-2xl shadow-lg" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-amber-50/50 to-neutral-50/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className={`absolute inset-0 rounded-2xl shadow-lg ${
+                    theme === "light"
+                      ? "bg-gradient-to-r from-white to-gray-50"
+                      : "bg-gradient-to-r from-neutral-100 to-white"
+                  }`} />
+                  <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+                    theme === "light"
+                      ? "bg-gradient-to-r from-gray-50/50 to-gray-100/50"
+                      : "bg-gradient-to-r from-amber-50/50 to-neutral-50/50"
+                  }`} />
 
-                  <div className="relative bg-white text-neutral-800 font-medium py-4 px-6 rounded-2xl transition-all duration-300 border border-neutral-200/80 flex items-center justify-center gap-3 group-hover:border-amber-300/40">
+                  <div className={`relative bg-white font-medium py-4 px-6 rounded-2xl transition-all duration-300 border flex items-center justify-center gap-3 ${
+                    theme === "light"
+                      ? "text-gray-900 border-gray-300/80 group-hover:border-gray-400/60"
+                      : "text-neutral-800 border-neutral-200/80 group-hover:border-amber-300/40"
+                  }`}>
                     {/* Enhanced Google Icon */}
                     <motion.div
                       className="relative"
@@ -300,18 +414,28 @@ export default function LoginPage() {
                 transition={{ duration: 0.8, delay: 0.8 }}
                 className="text-center"
               >
-                <p className="text-neutral-500 text-xs leading-relaxed font-light">
+                <p className={`text-xs leading-relaxed font-light ${
+                  theme === "light" ? "text-gray-600" : "text-neutral-500"
+                }`}>
                   By continuing, you agree to our{" "}
                   <a
                     href="#"
-                    className="text-amber-400/80 hover:text-amber-300 transition-colors duration-200 underline decoration-amber-400/30 hover:decoration-amber-300/50 underline-offset-2"
+                    className={`transition-colors duration-200 underline underline-offset-2 ${
+                      theme === "light"
+                        ? "text-gray-700 hover:text-black decoration-gray-400/40 hover:decoration-black/60"
+                        : "text-amber-400/80 hover:text-amber-300 decoration-amber-400/30 hover:decoration-amber-300/50"
+                    }`}
                   >
                     Terms of Service
                   </a>{" "}
                   and{" "}
                   <a
                     href="#"
-                    className="text-amber-400/80 hover:text-amber-300 transition-colors duration-200 underline decoration-amber-400/30 hover:decoration-amber-300/50 underline-offset-2"
+                    className={`transition-colors duration-200 underline underline-offset-2 ${
+                      theme === "light"
+                        ? "text-gray-700 hover:text-black decoration-gray-400/40 hover:decoration-black/60"
+                        : "text-amber-400/80 hover:text-amber-300 decoration-amber-400/30 hover:decoration-amber-300/50"
+                    }`}
                   >
                     Privacy Policy
                   </a>
@@ -326,7 +450,11 @@ export default function LoginPage() {
       <div className="absolute inset-0 pointer-events-none">
         {/* Large cinematic orb */}
         <motion.div
-          className="absolute top-1/3 right-1/4 w-96 h-96 bg-gradient-to-br from-amber-500/8 to-red-500/5 rounded-full blur-3xl"
+          className={`absolute top-1/3 right-1/4 w-96 h-96 rounded-full blur-3xl ${
+            theme === "light"
+              ? "bg-gradient-to-br from-gray-300/10 to-gray-400/8"
+              : "bg-gradient-to-br from-amber-500/8 to-red-500/5"
+          }`}
           animate={{
             scale: [1, 1.1, 1],
             opacity: [0.4, 0.7, 0.4],
@@ -340,7 +468,11 @@ export default function LoginPage() {
 
         {/* Secondary ambient light */}
         <motion.div
-          className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-gradient-to-br from-neutral-500/5 to-amber-500/8 rounded-full blur-3xl"
+          className={`absolute bottom-1/4 left-1/3 w-80 h-80 rounded-full blur-3xl ${
+            theme === "light"
+              ? "bg-gradient-to-br from-gray-200/8 to-gray-300/10"
+              : "bg-gradient-to-br from-neutral-500/5 to-amber-500/8"
+          }`}
           animate={{
             scale: [1.1, 1, 1.1],
             opacity: [0.3, 0.6, 0.3],
@@ -354,7 +486,11 @@ export default function LoginPage() {
         />
 
         {/* Central subtle glow */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-radial from-amber-500/3 via-transparent to-transparent rounded-full blur-2xl" />
+        <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full rounded-full blur-2xl ${
+          theme === "light"
+            ? "bg-gradient-radial from-gray-300/5 via-transparent to-transparent"
+            : "bg-gradient-radial from-amber-500/3 via-transparent to-transparent"
+        }`} />
       </div>
     </div>
   );

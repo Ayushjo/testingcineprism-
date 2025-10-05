@@ -2,8 +2,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, ArrowRight } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 export default function MerchandisePage() {
+  const { theme } = useTheme();
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -24,7 +26,11 @@ export default function MerchandisePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white relative overflow-hidden flex items-center justify-center pt-20">
+    <div className={`min-h-screen relative overflow-hidden flex items-center justify-center pt-20 transition-colors duration-300 ${
+      theme === "light"
+        ? "bg-white text-black"
+        : "bg-slate-950 text-white"
+    }`}>
       {/* Ambient Background Effects - Optimized with CSS animations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <style jsx>{`
@@ -57,14 +63,24 @@ export default function MerchandisePage() {
           }
         `}</style>
         {/* Reduced blur from blur-3xl to blur-2xl for better performance */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-2xl ambient-glow-1" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-500/5 rounded-full blur-2xl ambient-glow-2" />
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-500/3 rounded-full blur-xl ambient-glow-3" />
+        <div className={`absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-2xl ambient-glow-1 ${
+          theme === "light" ? "bg-gray-300/8" : "bg-emerald-500/5"
+        }`} />
+        <div className={`absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-2xl ambient-glow-2 ${
+          theme === "light" ? "bg-gray-200/8" : "bg-indigo-500/5"
+        }`} />
+        <div className={`absolute top-1/2 left-1/2 w-64 h-64 rounded-full blur-xl ambient-glow-3 ${
+          theme === "light" ? "bg-gray-400/5" : "bg-purple-500/3"
+        }`} />
       </div>
 
       {/* Subtle Grid Pattern */}
-      <div className="absolute inset-0 opacity-[0.02]">
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:100px_100px]" />
+      <div className={`absolute inset-0 ${theme === "light" ? "opacity-[0.03]" : "opacity-[0.02]"}`}>
+        <div className={`absolute inset-0 bg-[size:100px_100px] ${
+          theme === "light"
+            ? "bg-[linear-gradient(90deg,rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(rgba(0,0,0,0.05)_1px,transparent_1px)]"
+            : "bg-[linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)]"
+        }`} />
       </div>
 
       {/* Main Content */}
@@ -77,7 +93,9 @@ export default function MerchandisePage() {
           className="mb-16"
         >
           {/* --- CHANGE: Updated heading style for a cleaner, more elegant look --- */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none">
+          <h1 className={`text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none ${
+            theme === "light" ? "text-black" : "text-white"
+          }`}>
             The Collection
           </h1>
         </motion.div>
@@ -92,37 +110,71 @@ export default function MerchandisePage() {
           {/* Main Product Image Container */}
           <div className="relative max-w-2xl mx-auto">
             {/* --- CHANGE: Added hover shadow effect --- */}
-            <div className="aspect-[4/3] relative rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-slate-700/50 transition-shadow duration-500">
+            <div className={`aspect-[4/3] relative rounded-3xl overflow-hidden shadow-xl transition-shadow duration-500 ${
+              theme === "light"
+                ? "hover:shadow-2xl hover:shadow-gray-400/50"
+                : "hover:shadow-2xl hover:shadow-slate-700/50"
+            }`}>
               {/* Placeholder for atmospheric product photo */}
-              <div className="w-full h-full bg-gradient-to-br from-slate-800 via-slate-900 to-black flex items-center justify-center relative">
-                {/* Simulated product mockup - black notebook corner */}
+              <div className={`w-full h-full flex items-center justify-center relative ${
+                theme === "light"
+                  ? "bg-gradient-to-br from-gray-200 via-gray-100 to-white"
+                  : "bg-gradient-to-br from-slate-800 via-slate-900 to-black"
+              }`}>
+                {/* Simulated product mockup - notebook corner */}
                 <div className="relative">
-                  <div className="w-80 h-60 bg-black rounded-lg shadow-2xl transform rotate-12 relative overflow-hidden">
+                  <div className={`w-80 h-60 rounded-lg shadow-2xl transform rotate-12 relative overflow-hidden ${
+                    theme === "light" ? "bg-gray-300" : "bg-black"
+                  }`}>
                     {/* Notebook texture */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-black to-slate-800" />
+                    <div className={`absolute inset-0 ${
+                      theme === "light"
+                        ? "bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400"
+                        : "bg-gradient-to-br from-slate-900 via-black to-slate-800"
+                    }`} />
 
                     {/* Subtle embossed logo area */}
-                    <div className="absolute bottom-8 right-8 w-16 h-16 bg-slate-800/30 rounded-full flex items-center justify-center">
-                      <div className="w-8 h-8 border border-slate-700/50 rounded-full flex items-center justify-center">
-                        <div className="w-3 h-3 bg-slate-600/50 rounded-full" />
+                    <div className={`absolute bottom-8 right-8 w-16 h-16 rounded-full flex items-center justify-center ${
+                      theme === "light" ? "bg-gray-400/30" : "bg-slate-800/30"
+                    }`}>
+                      <div className={`w-8 h-8 border rounded-full flex items-center justify-center ${
+                        theme === "light" ? "border-gray-500/50" : "border-slate-700/50"
+                      }`}>
+                        <div className={`w-3 h-3 rounded-full ${
+                          theme === "light" ? "bg-gray-600/50" : "bg-slate-600/50"
+                        }`} />
                       </div>
                     </div>
 
                     {/* Leather-like texture lines */}
                     <div className="absolute inset-0 opacity-20">
-                      <div className="absolute top-4 left-4 right-4 h-px bg-slate-700" />
-                      <div className="absolute top-8 left-4 right-4 h-px bg-slate-700" />
-                      <div className="absolute bottom-16 left-4 right-4 h-px bg-slate-700" />
+                      <div className={`absolute top-4 left-4 right-4 h-px ${
+                        theme === "light" ? "bg-gray-500" : "bg-slate-700"
+                      }`} />
+                      <div className={`absolute top-8 left-4 right-4 h-px ${
+                        theme === "light" ? "bg-gray-500" : "bg-slate-700"
+                      }`} />
+                      <div className={`absolute bottom-16 left-4 right-4 h-px ${
+                        theme === "light" ? "bg-gray-500" : "bg-slate-700"
+                      }`} />
                     </div>
                   </div>
 
                   {/* Dramatic lighting effect */}
-                  <div className="absolute -top-20 -left-20 w-40 h-40 bg-white/5 rounded-full blur-3xl" />
-                  <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl" />
+                  <div className={`absolute -top-20 -left-20 w-40 h-40 rounded-full blur-3xl ${
+                    theme === "light" ? "bg-gray-400/10" : "bg-white/5"
+                  }`} />
+                  <div className={`absolute -bottom-10 -right-10 w-32 h-32 rounded-full blur-2xl ${
+                    theme === "light" ? "bg-gray-300/15" : "bg-emerald-500/10"
+                  }`} />
                 </div>
               </div>
               {/* Overlay gradient for mystery */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-slate-950/40" />
+              <div className={`absolute inset-0 ${
+                theme === "light"
+                  ? "bg-gradient-to-t from-white/40 via-transparent to-white/30"
+                  : "bg-gradient-to-t from-slate-950/60 via-transparent to-slate-950/40"
+              }`} />
             </div>
 
             {/* --- CHANGE: Added subtle greyish highlight on hover --- */}
@@ -143,7 +195,9 @@ export default function MerchandisePage() {
           transition={{ duration: 0.8, delay: 1 }}
           className="mb-16"
         >
-          <p className="text-xl md:text-2xl text-slate-400 tracking-[0.2em] font-light leading-relaxed">
+          <p className={`text-xl md:text-2xl tracking-[0.2em] font-light leading-relaxed ${
+            theme === "light" ? "text-gray-600" : "text-slate-400"
+          }`}>
             Curated for the true cinephile. Coming Fall 2025.
           </p>
         </motion.div>
@@ -156,14 +210,18 @@ export default function MerchandisePage() {
           className="max-w-md mx-auto"
         >
           {/* Instructional Text */}
-          <p className="text-sm text-slate-500 mb-6 tracking-wide">
+          <p className={`text-sm mb-6 tracking-wide ${
+            theme === "light" ? "text-gray-600" : "text-slate-500"
+          }`}>
             Be the first to know.
           </p>
 
           {/* Email Form */}
           <form onSubmit={handleSubmit} className="flex gap-3">
             <div className="flex-1 relative">
-              <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+              <Mail className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
+                theme === "light" ? "text-gray-600" : "text-slate-400"
+              }`} />
               <input
                 type="email"
                 value={email}
@@ -171,7 +229,11 @@ export default function MerchandisePage() {
                 placeholder="your.email@example.com"
                 required
                 disabled={isSubmitting || isSubmitted}
-                className="w-full pl-12 pr-4 py-4 bg-slate-800/50 backdrop-blur-xl border border-slate-700 rounded-full text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-slate-800/70 transition-all duration-300 disabled:opacity-50"
+                className={`w-full pl-12 pr-4 py-4 backdrop-blur-xl border rounded-full transition-all duration-300 disabled:opacity-50 focus:outline-none ${
+                  theme === "light"
+                    ? "bg-gray-100/70 border-gray-300 text-black placeholder-gray-500 focus:border-black focus:bg-gray-100"
+                    : "bg-slate-800/50 border-slate-700 text-white placeholder-slate-400 focus:border-emerald-400/50 focus:bg-slate-800/70"
+                }`}
               />
             </div>
 
@@ -180,14 +242,26 @@ export default function MerchandisePage() {
               disabled={isSubmitting || isSubmitted}
               whileHover={{ scale: isSubmitting || isSubmitted ? 1 : 1.02 }}
               whileTap={{ scale: isSubmitting || isSubmitted ? 1 : 0.98 }}
-              className="group bg-transparent hover:bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-400/50 px-8 py-4 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] justify-center"
+              className={`group bg-transparent px-8 py-4 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] justify-center border ${
+                theme === "light"
+                  ? "text-black border-black/60 hover:bg-black/5 hover:border-black"
+                  : "text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10 hover:border-emerald-400/50"
+              }`}
             >
               {isSubmitting ? (
-                <div className="w-5 h-5 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
+                <div className={`w-5 h-5 border-2 rounded-full animate-spin ${
+                  theme === "light"
+                    ? "border-gray-400/30 border-t-black"
+                    : "border-emerald-400/30 border-t-emerald-400"
+                }`} />
               ) : isSubmitted ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-emerald-400 rounded-full flex items-center justify-center">
-                    <div className="w-2 h-2 bg-emerald-400 rounded-full" />
+                  <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center ${
+                    theme === "light" ? "border-black" : "border-emerald-400"
+                  }`}>
+                    <div className={`w-2 h-2 rounded-full ${
+                      theme === "light" ? "bg-black" : "bg-emerald-400"
+                    }`} />
                   </div>
                   <span>Subscribed</span>
                 </>
@@ -205,7 +279,9 @@ export default function MerchandisePage() {
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-emerald-400 text-sm mt-4 text-center"
+              className={`text-sm mt-4 text-center ${
+                theme === "light" ? "text-black" : "text-emerald-400"
+              }`}
             >
               You'll be the first to know when we launch.
             </motion.p>
@@ -219,7 +295,9 @@ export default function MerchandisePage() {
           transition={{ duration: 1, delay: 2 }}
           className="mt-20"
         >
-          <p className="text-xs text-slate-600 tracking-wider">
+          <p className={`text-xs tracking-wider ${
+            theme === "light" ? "text-gray-500" : "text-slate-600"
+          }`}>
             Quality. Craftsmanship. Cinema.
           </p>
         </motion.div>
