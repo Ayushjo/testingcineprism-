@@ -469,22 +469,6 @@ export default function Homepage() {
                             <span>{heroPosters[currentSlide].genre}</span>
                           </motion.div>
                         </div>
-                        {/* Hover Play Button */}
-                        <AnimatePresence>
-                          {isHoveringCard && (
-                            <motion.div
-                              initial={{ opacity: 0, scale: 0.8 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              exit={{ opacity: 0, scale: 0.8 }}
-                              transition={{ duration: 0.2 }}
-                              className="absolute inset-0 flex items-center justify-center"
-                            >
-                              <div className="w-16 h-16 bg-white/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/20 shadow-lg">
-                                <Play className="w-6 h-6 text-white ml-1" />
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
                       </div>
                     </div>
                   </Tilt>
