@@ -196,12 +196,7 @@ const TopPicksPage = () => {
 
       <section className="relative py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center"
-          >
+          <div className="text-center animate-fade-in-up">
             <h1 className={`mb-4 sm:mb-6 bg-clip-text text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-transparent ${
               theme === "light"
                 ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
@@ -215,7 +210,7 @@ const TopPicksPage = () => {
               The Greatest Films in Cinema History - Curated by Leading Film
               Scholars
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 

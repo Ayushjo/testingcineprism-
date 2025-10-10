@@ -85,11 +85,8 @@ export default function Navbar() {
   // Show loading state briefly if auth is still loading
   if (loading) {
     return (
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b transition-colors duration-300 ${
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b transition-colors duration-300 animate-fade-in-down ${
           theme === "light"
             ? "bg-[#FFF8DC]/95 border-black/30"
             : "bg-slate-950/90 border-white/5"
@@ -115,16 +112,13 @@ export default function Navbar() {
             }`}></div>
           </div>
         </div>
-      </motion.nav>
+      </nav>
     );
   }
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 animate-fade-in-down ${
         isScrolled || isMobileMenuOpen
           ? theme === "light"
             ? "bg-white/95 backdrop-blur-xl border-b border-black/20"
@@ -135,10 +129,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-          >
+          <div className="transition-transform duration-200 hover:scale-105">
             <Link
               to="/"
               className={`flex items-center gap-2 text-xl font-bold tracking-tight transition-all duration-300 ${
@@ -156,7 +147,7 @@ export default function Navbar() {
               />
               The Cinéprism
             </Link>
-          </motion.div>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
@@ -638,6 +629,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </nav>
   );
 }

@@ -86,27 +86,17 @@ export default function MerchandisePage() {
       {/* Main Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Section 1: Main Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2 }}
-          className="mb-16"
-        >
+        <div className="mb-16 animate-fade-in-up animation-delay-200">
           {/* --- CHANGE: Updated heading style for a cleaner, more elegant look --- */}
           <h1 className={`text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none ${
             theme === "light" ? "text-black" : "text-white"
           }`}>
             The Collection
           </h1>
-        </motion.div>
+        </div>
 
         {/* Section 2: Teaser Image */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.5 }}
-          className="mb-16 relative group" // Added group for hover effects
-        >
+        <div className="mb-16 relative group animate-scale-in animation-delay-500">
           {/* Main Product Image Container */}
           <div className="relative max-w-2xl mx-auto">
             {/* --- CHANGE: Added hover shadow effect --- */}
@@ -186,29 +176,19 @@ export default function MerchandisePage() {
               }}
             />
           </div>
-        </motion.div>
+        </div>
 
         {/* Section 3: Text Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
-          className="mb-16"
-        >
+        <div className="mb-16 animate-fade-in-up animation-delay-1000">
           <p className={`text-xl md:text-2xl tracking-[0.2em] font-light leading-relaxed ${
             theme === "light" ? "text-gray-600" : "text-slate-400"
           }`}>
             Curated for the true cinephile. Coming Fall 2025.
           </p>
-        </motion.div>
+        </div>
 
         {/* Section 4: Email Notification Form */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.3 }}
-          className="max-w-md mx-auto"
-        >
+        <div className="max-w-md mx-auto animate-fade-in-up animation-delay-1000">
           {/* Instructional Text */}
           <p className={`text-sm mb-6 tracking-wide ${
             theme === "light" ? "text-gray-600" : "text-slate-500"
@@ -286,21 +266,16 @@ export default function MerchandisePage() {
               You'll be the first to know when we launch.
             </motion.p>
           )}
-        </motion.div>
+        </div>
 
         {/* Subtle Footer Text */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 2 }}
-          className="mt-20"
-        >
+        <div className="mt-20 animate-fade-in animation-delay-1000">
           <p className={`text-xs tracking-wider ${
             theme === "light" ? "text-gray-500" : "text-slate-600"
           }`}>
             Quality. Craftsmanship. Cinema.
           </p>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

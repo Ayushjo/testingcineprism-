@@ -303,46 +303,26 @@ export default function Homepage() {
             <div className="max-w-7xl mx-auto px-4 w-full">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 {/* Left Side - Brand */}
-                <motion.div
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  className="text-center lg:text-left space-y-8"
-                >
+                <div className="text-center lg:text-left space-y-8 animate-fade-in-left animation-delay-300">
                   {/* Badge */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.5 }}
-                    className="hidden md:flex sm:flex-row sm:items-center sm:justify-center md:justify-start"
-                  >
+                  <div className="hidden md:flex sm:flex-row sm:items-center sm:justify-center md:justify-start animate-fade-in-up animation-delay-500">
                     <span className="inline-flex items-center gap-3 bg-slate-800/30 backdrop-blur-none border border-slate-700/30 px-5 py-2.5 rounded-full text-sm font-medium text-slate-200">
                       <div className="w-2 h-2 bg-slate-200 rounded-full animate-pulse" />
                       Cinema for acquired taste.
                       <Film className="w-4 h-4 text-slate-200" />
                     </span>
-                  </motion.div>
+                  </div>
                   {/* Title */}
-                  <motion.h1
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.7 }}
-                    className="text-8xl md:text-8xl lg:text-8xl xl:text-8xl font-light leading-[0.9] tracking-tight"
-                  >
+                  <h1 className="text-8xl md:text-8xl lg:text-8xl xl:text-8xl font-light leading-[0.9] tracking-tight animate-fade-in-up animation-delay-700">
                     <span className="text-slate-100 font-extralight">The</span>
                     <br />
                     <span className="bg-gradient-to-r from-slate-100 via-white to-slate-200 bg-clip-text text-transparent font-normal">
                       Cinéprism
                     </span>
-                  </motion.h1>
+                  </h1>
 
                   {/* Desktop Featured Content Card - Added here */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 0.9 }}
-                    className="relative group max-w-md mx-auto lg:mx-0"
-                  >
+                  <div className="relative group max-w-md mx-auto lg:mx-0 animate-fade-in-up animation-delay-900">
                     <div className="relative bg-slate-800/20 backdrop-blur-sm border border-slate-600/30 rounded-3xl p-6 transition-all duration-500">
                       <div className="flex items-start justify-between mb-4">
                         <div className="text-left">
@@ -382,16 +362,11 @@ export default function Homepage() {
                         />
                       ))}
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
 
                 {/* Right Side - Movie Card */}
-                <motion.div
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  className="hidden lg:block"
-                >
+                <div className="hidden lg:block animate-fade-in-right animation-delay-500">
                   <Tilt
                     glareEnable={true}
                     glareMaxOpacity={0.1}
@@ -406,17 +381,12 @@ export default function Homepage() {
                       onMouseLeave={() => setIsHoveringCard(false)}
                     >
                       {/* "Now Featuring" Badge */}
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.8 }}
-                        className="absolute -top-4 left-4 z-20"
-                      >
+                      <div className="absolute -top-4 left-4 z-20 animate-fade-in-down animation-delay-800">
                         <div className="flex items-center gap-2 bg-white/10 backdrop-blur-xl text-slate-200 px-4 py-2 rounded-2xl text-sm font-medium border border-white/10">
                           <div className="w-2 h-2 bg-slate-200 rounded-full animate-pulse" />
                           Now Featuring
                         </div>
-                      </motion.div>
+                      </div>
                       {/* Movie Poster */}
                       <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl">
                         <AnimatePresence mode="wait">
@@ -440,40 +410,31 @@ export default function Homepage() {
                         {/* Information Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                          <motion.h3
+                          <h3
                             key={`title-${currentSlide}`}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5 }}
-                            className="text-2xl font-bold mb-2 tracking-tight"
+                            className="text-2xl font-bold mb-2 tracking-tight animate-fade-in-up"
                           >
                             {heroPosters[currentSlide].title}
-                          </motion.h3>
-                          <motion.p
+                          </h3>
+                          <p
                             key={`subtitle-${currentSlide}`}
-                            initial={{ opacity: 0, y: 15 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.1 }}
-                            className="text-slate-300 mb-3 leading-relaxed"
+                            className="text-slate-300 mb-3 leading-relaxed animate-fade-in-up animation-delay-100"
                           >
                             {heroPosters[currentSlide].subtitle}
-                          </motion.p>
-                          <motion.div
+                          </p>
+                          <div
                             key={`meta-${currentSlide}`}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.2 }}
-                            className="flex items-center gap-3 text-sm text-slate-400"
+                            className="flex items-center gap-3 text-sm text-slate-400 animate-fade-in-up animation-delay-200"
                           >
                             <span>{heroPosters[currentSlide].year}</span>
                             <span>•</span>
                             <span>{heroPosters[currentSlide].genre}</span>
-                          </motion.div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </Tilt>
-                </motion.div>
+                </div>
               </div>
             </div>
           </div>
