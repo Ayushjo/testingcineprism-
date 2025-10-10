@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Twitter, LogOut, User, Sun, Moon } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import TheCineprismLogo from "../assets/thecineprismlogo.jpg";
@@ -16,6 +16,10 @@ export default function Navbar() {
   const { user, logout: authLogout, loading } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check if we're on the home page
+  const isHomePage = location.pathname === "/";
 
   const handleScroll = useCallback(() => {
     setIsScrolled(window.scrollY > 20);
@@ -138,7 +142,9 @@ export default function Navbar() {
             <Link
               to="/"
               className={`flex items-center gap-2 text-xl font-bold tracking-tight transition-all duration-300 ${
-                theme === "light"
+                !isScrolled && !isMobileMenuOpen && isHomePage
+                  ? "text-white hover:text-gray-200"
+                  : theme === "light"
                   ? "text-black hover:text-gray-700"
                   : "text-white hover:text-emerald-400"
               }`}
@@ -167,7 +173,9 @@ export default function Navbar() {
                 <Link
                   to={link.href}
                   className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-2xl block z-10 ${
-                    theme === "light"
+                    !isScrolled && !isMobileMenuOpen && isHomePage
+                      ? "text-white/90 hover:text-white"
+                      : theme === "light"
                       ? "text-black/70 hover:text-black"
                       : "text-slate-300 hover:text-white"
                   }`}
@@ -177,7 +185,9 @@ export default function Navbar() {
 
                 <motion.div
                   className={`absolute inset-0 backdrop-blur-xl rounded-2xl border ${
-                    theme === "light"
+                    !isScrolled && !isMobileMenuOpen && isHomePage
+                      ? "bg-white/5 border-white/10"
+                      : theme === "light"
                       ? "bg-gray-100 border-black/30"
                       : "bg-white/5 border-white/10"
                   }`}
@@ -207,7 +217,11 @@ export default function Navbar() {
                   className="relative"
                 >
                   <div className={`flex items-center gap-2 px-3 py-2 rounded-2xl relative z-10 ${
-                    theme === "light" ? "text-black" : "text-slate-300"
+                    !isScrolled && !isMobileMenuOpen && isHomePage
+                      ? "text-white/90"
+                      : theme === "light"
+                      ? "text-black"
+                      : "text-slate-300"
                   }`}>
                     <User className="h-4 w-4" />
                     <span className="text-sm font-medium hidden lg:block">
@@ -218,7 +232,9 @@ export default function Navbar() {
                   </div>
                   <motion.div
                     className={`absolute inset-0 backdrop-blur-xl rounded-2xl border ${
-                      theme === "light"
+                      !isScrolled && !isMobileMenuOpen && isHomePage
+                        ? "bg-white/5 border-white/10"
+                        : theme === "light"
                         ? "bg-gray-100 border-black/30"
                         : "bg-white/5 border-white/10"
                     }`}
@@ -242,7 +258,9 @@ export default function Navbar() {
                     disabled={isLoggingOut}
                     whileTap={{ scale: isLoggingOut ? 1 : 0.95 }}
                     className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed z-10 ${
-                      theme === "light"
+                      !isScrolled && !isMobileMenuOpen && isHomePage
+                        ? "text-white/90 hover:text-red-400"
+                        : theme === "light"
                         ? "text-black/70 hover:text-red-600"
                         : "text-slate-300 hover:text-red-400"
                     }`}
@@ -306,7 +324,9 @@ export default function Navbar() {
                 whileHover={{ scale: 1.05, rotate: theme === "dark" ? 0 : 180 }}
                 whileTap={{ scale: 0.95 }}
                 className={`p-2.5 rounded-2xl transition-all duration-300 relative z-10 ${
-                  theme === "light"
+                  !isScrolled && !isMobileMenuOpen && isHomePage
+                    ? "text-white/90 hover:text-white"
+                    : theme === "light"
                     ? "text-black/70 hover:text-black"
                     : "text-slate-300 hover:text-emerald-400"
                 }`}
@@ -337,7 +357,9 @@ export default function Navbar() {
               </motion.button>
               <motion.div
                 className={`absolute inset-0 backdrop-blur-xl rounded-2xl border ${
-                  theme === "light"
+                  !isScrolled && !isMobileMenuOpen && isHomePage
+                    ? "bg-white/5 border-white/10"
+                    : theme === "light"
                     ? "bg-gray-100 border-black/30"
                     : "bg-white/5 border-white/10"
                 }`}
@@ -362,7 +384,9 @@ export default function Navbar() {
                 whileHover={{ scale: 1.05, rotate: 5 }}
                 whileTap={{ scale: 0.95 }}
                 className={`p-2.5 rounded-2xl transition-all duration-300 relative z-10 block ${
-                  theme === "light"
+                  !isScrolled && !isMobileMenuOpen && isHomePage
+                    ? "text-white/90 hover:text-white"
+                    : theme === "light"
                     ? "text-black/70 hover:text-black"
                     : "text-slate-300 hover:text-emerald-400"
                 }`}
@@ -371,7 +395,9 @@ export default function Navbar() {
               </motion.a>
               <motion.div
                 className={`absolute inset-0 backdrop-blur-xl rounded-2xl border ${
-                  theme === "light"
+                  !isScrolled && !isMobileMenuOpen && isHomePage
+                    ? "bg-white/5 border-white/10"
+                    : theme === "light"
                     ? "bg-gray-100 border-black/30"
                     : "bg-white/5 border-white/10"
                 }`}
