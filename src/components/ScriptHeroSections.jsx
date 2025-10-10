@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Film, Play, Star, ArrowRight } from "lucide-react";
+import OptimizedImage from "./OptimizedImage";
 
 // Enhanced typewriter hook with better animations
 const useTypewriter = (text, speed = 50) => {
@@ -261,13 +262,18 @@ THE CINÉPRISM`;
                     }}
                   >
                     <div className="aspect-[3/4] relative overflow-hidden">
-                      <motion.img
-                        src={heroPosters[currentSlide].image}
-                        alt={heroPosters[currentSlide].title}
-                        className="w-full h-full object-cover"
+                      <motion.div
                         whileHover={{ scale: 1.05 }}
                         transition={{ duration: 0.6, ease: "easeOut" }}
-                      />
+                        className="w-full h-full"
+                      >
+                        <OptimizedImage
+                          src={heroPosters[currentSlide].image}
+                          alt={heroPosters[currentSlide].title}
+                          className="w-full h-full object-cover"
+                          priority={true}
+                        />
+                      </motion.div>
 
                       {/* Enhanced Rating Badge */}
                       <motion.div
@@ -521,14 +527,19 @@ THE CINÉPRISM`;
                 className="mt-8 bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-slate-700/50"
               >
                 <div className="aspect-[16/9] relative overflow-hidden">
-                  <motion.img
-                    src={heroPosters[currentSlide].image}
-                    alt={heroPosters[currentSlide].title}
-                    className="w-full h-full object-cover"
+                  <motion.div
                     initial={{ scale: 1.1 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.8 }}
-                  />
+                    className="w-full h-full"
+                  >
+                    <OptimizedImage
+                      src={heroPosters[currentSlide].image}
+                      alt={heroPosters[currentSlide].title}
+                      className="w-full h-full object-cover"
+                      priority={true}
+                    />
+                  </motion.div>
 
                   <motion.div
                     initial={{ scale: 0, rotate: -90 }}

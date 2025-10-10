@@ -1,5 +1,4 @@
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
+import OptimizedImage from "../components/OptimizedImage";
 import DuneImage from "../assets/Dune.jpg";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -421,19 +420,21 @@ export default function Homepage() {
                       {/* Movie Poster */}
                       <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl">
                         <AnimatePresence mode="wait">
-                          <motion.img
+                          <motion.div
                             key={currentSlide}
-                            src={
-                              heroPosters[currentSlide].image ||
-                              "/placeholder.svg"
-                            }
-                            alt={heroPosters[currentSlide].title}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.5 }}
-                          />
+                            className="w-full h-full"
+                          >
+                            <OptimizedImage
+                              src={heroPosters[currentSlide].image || "/placeholder.svg"}
+                              alt={heroPosters[currentSlide].title}
+                              priority={true}
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                          </motion.div>
                         </AnimatePresence>
                         
                         {/* Information Overlay */}

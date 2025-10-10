@@ -2,8 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, useTransform, useScroll } from "framer-motion";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
+import OptimizedImage from "./OptimizedImage";
 
 // This is the individual card that will have the 3D effect
 const Card = ({ movie, index, totalItems, scrollXProgress }) => {
@@ -28,10 +27,9 @@ const Card = ({ movie, index, totalItems, scrollXProgress }) => {
       className="w-48 flex-shrink-0 cursor-pointer group"
     >
       <div className="aspect-[2/3] relative rounded-2xl overflow-hidden shadow-2xl">
-        <img
+        <OptimizedImage
           alt={movie.title}
           src={movie.image? movie.image : movie.posterUrl}
-          effect="blur"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent" />

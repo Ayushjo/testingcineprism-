@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import OptimizedImage from "./OptimizedImage";
 
 // Your exact imports
 import DuneImage from "../assets/Dune.jpg";
@@ -112,7 +113,7 @@ export const ThreeDMarquee = ({ images, className }) => {
                 {subarray.map((image, imageIndex) => (
                   <div className="relative" key={imageIndex + image}>
                     <GridLineHorizontal className="-top-4" offset="30px" />
-                    <motion.img
+                    <motion.div
                       whileHover={{
                         y: -15,
                         scale: 1.08,
@@ -122,12 +123,15 @@ export const ThreeDMarquee = ({ images, className }) => {
                         ease: "easeInOut",
                       }}
                       key={imageIndex + image}
-                      src={image}
-                      alt={`Movie Poster ${imageIndex + 1}`}
-                      className="aspect-[2/3] w-48 rounded-xl object-cover ring ring-white/15 hover:shadow-2xl hover:ring-emerald-400/40 transition-all duration-300"
-                      width={192}
-                      height={288}
-                    />
+                    >
+                      <OptimizedImage
+                        src={image}
+                        alt={`Movie Poster ${imageIndex + 1}`}
+                        className="aspect-[2/3] w-48 rounded-xl object-cover ring ring-white/15 hover:shadow-2xl hover:ring-emerald-400/40 transition-all duration-300"
+                        width={192}
+                        height={288}
+                      />
+                    </motion.div>
                   </div>
                 ))}
               </motion.div>

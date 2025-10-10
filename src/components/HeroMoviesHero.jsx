@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import OptimizedImage from "./OptimizedImage";
 import imiGame from "../assets/imigame.jpg";
 import whiImage from "../assets/whiimage.jpg";
 import theoryImage from "../assets/theory.jpg";
@@ -196,16 +197,21 @@ export default function HeroMoviesHero() {
       {/* Background Image with AnimatePresence */}
       <div className="absolute inset-0">
         <AnimatePresence mode="wait">
-          <motion.img
+          <motion.div
             key={`${featured.id}-${activeIndex}`}
-            src={featured.posterUrl || "/placeholder.svg"}
-            alt={featured.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full"
             variants={backgroundVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-          />
+          >
+            <OptimizedImage
+              src={featured.posterUrl || "/placeholder.svg"}
+              alt={featured.title}
+              className="w-full h-full object-cover"
+              priority={true}
+            />
+          </motion.div>
         </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />

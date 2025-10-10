@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import OptimizedImage from "./OptimizedImage";
 
 // Your exact imports
 import DuneImage from "../assets/Dune.jpg";
@@ -219,7 +220,7 @@ export default function ThreeDPosterMarquee() {
                                 className="-top-4"
                                 offset="20px"
                               />
-                              <motion.img
+                              <motion.div
                                 whileHover={{
                                   y: -15,
                                   scale: 1.05,
@@ -230,12 +231,15 @@ export default function ThreeDPosterMarquee() {
                                   ease: "easeInOut",
                                 }}
                                 key={imageIndex + image}
-                                src={image}
-                                alt={`Movie Poster ${imageIndex + 1}`}
-                                className="aspect-[2/3] w-32 rounded-xl object-cover ring-2 ring-white/10 hover:ring-emerald-400/30 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300"
-                                width={128}
-                                height={192}
-                              />
+                              >
+                                <OptimizedImage
+                                  src={image}
+                                  alt={`Movie Poster ${imageIndex + 1}`}
+                                  className="aspect-[2/3] w-32 rounded-xl object-cover ring-2 ring-white/10 hover:ring-emerald-400/30 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300"
+                                  width={128}
+                                  height={192}
+                                />
+                              </motion.div>
                             </div>
                           ))}
                         </motion.div>

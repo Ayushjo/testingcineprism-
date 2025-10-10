@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import OptimizedImage from "./OptimizedImage";
 
 const EnhancedMovieCard = ({ movie, index }) => {
   const { theme } = useTheme();
@@ -20,7 +21,7 @@ const EnhancedMovieCard = ({ movie, index }) => {
       }`}>
         {/* Poster Image */}
         <div className="relative aspect-[2/3] overflow-hidden">
-          <img
+          <OptimizedImage
             src={
               movie.posterImageUrl || "/placeholder.svg?height=450&width=300"
             }
