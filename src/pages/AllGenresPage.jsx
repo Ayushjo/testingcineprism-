@@ -7,7 +7,9 @@ import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import OptimizedImage from "../components/OptimizedImage";
-import { FixedSizeGrid } from "react-window";
+import * as ReactWindow from "react-window";
+
+const FixedSizeGrid = ReactWindow.FixedSizeGrid;
 
 // Modal Component
 const MovieDetailsModal = ({ movie, onClose }) => {

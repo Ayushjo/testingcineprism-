@@ -1,8 +1,10 @@
 "use client";
 import { motion } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
-import { FixedSizeGrid } from "react-window";
+import * as ReactWindow from "react-window";
 import EnhancedMovieCard from "./EnhancedMovieCard";
+
+const FixedSizeGrid = ReactWindow.FixedSizeGrid;
 
 const MovieGrid = ({ movies, isLoading, useVirtualScroll = false }) => {
   const [dimensions, setDimensions] = useState({ width: 1200, columnCount: 5 });
