@@ -7,9 +7,6 @@ import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import OptimizedImage from "../components/OptimizedImage";
-import * as ReactWindow from "react-window";
-
-const FixedSizeGrid = ReactWindow.FixedSizeGrid;
 
 // Modal Component
 const MovieDetailsModal = ({ movie, onClose }) => {
@@ -234,100 +231,24 @@ const MovieCard = ({ movie, onClick, index }) => {
   );
 };
 
-// Virtualized Movie Grid Component for large lists
-const VirtualizedMovieGrid = ({ movies, onMovieClick }) => {
-  const [dimensions, setDimensions] = useState({ width: 1200, columnCount: 5 });
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    const updateDimensions = () => {
-      if (containerRef.current) {
-        const width = containerRef.current.offsetWidth;
-        let columnCount = 5;
-
-        if (width < 640) columnCount = 2;
-        else if (width < 768) columnCount = 3;
-        else if (width < 1024) columnCount = 4;
-        else columnCount = 5;
-
-        setDimensions({ width, columnCount });
-      }
-    };
-
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
-  }, []);
-
-  // Use virtual scrolling for large lists (more than 20 items)
-  const shouldUseVirtualScroll = movies.length > 20;
-
-  if (shouldUseVirtualScroll) {
-    const { width, columnCount } = dimensions;
-    const gap = width < 640 ? 16 : width < 1024 ? 24 : 32;
-    const columnWidth = (width - gap * (columnCount - 1)) / columnCount;
-    const rowHeight = columnWidth * 1.5 + 120;
-    const rowCount = Math.ceil(movies.length / columnCount);
-
-    const Cell = ({ columnIndex, rowIndex, style }) => {
-      const index = rowIndex * columnCount + columnIndex;
-      const movie = movies[index];
-
-      if (!movie) return null;
-
-      return (
-        <div style={{ ...style, padding: `${gap / 2}px` }}>
-          <MovieCard
-            movie={movie}
-            index={index}
-            onClick={() => onMovieClick(movie)}
-          />
-        </div>
-      );
-    };
-
-    return (
-      <div ref={containerRef} className="w-full">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-        >
-          <FixedSizeGrid
-            columnCount={columnCount}
-            columnWidth={columnWidth}
-            height={Math.min(rowCount * rowHeight, 2000)}
-            rowCount={rowCount}
-            rowHeight={rowHeight}
-            width={width}
-            style={{ margin: '0 auto' }}
-          >
-            {Cell}
-          </FixedSizeGrid>
-        </motion.div>
-      </div>
-    );
-  }
-
-  // Regular grid for smaller lists
+// Movie Grid Component
+const MovieGrid = ({ movies, onMovieClick }) => {
   return (
-    <div ref={containerRef} className="w-full">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.1 }}
-        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8"
-      >
-        {movies.map((movie, index) => (
-          <MovieCard
-            key={movie.id}
-            movie={movie}
-            index={index}
-            onClick={() => onMovieClick(movie)}
-          />
-        ))}
-      </motion.div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4, delay: 0.1 }}
+      className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8"
+    >
+      {movies.map((movie, index) => (
+        <MovieCard
+          key={movie.id}
+          movie={movie}
+          index={index}
+          onClick={() => onMovieClick(movie)}
+        />
+      ))}
+    </motion.div>
   );
 };
 
@@ -464,7 +385,7 @@ const GenreMoviesPage = () => {
       <section className="relative pb-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {movies.length > 0 ? (
-            <VirtualizedMovieGrid
+            <MovieGrid
               movies={movies}
               onMovieClick={handleMovieClick}
             />
