@@ -7,7 +7,7 @@ import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import OptimizedImage from "../components/OptimizedImage";
-import { FixedSizeGrid as Grid } from "react-window";
+import { FixedSizeGrid } from "react-window";
 
 // Modal Component
 const MovieDetailsModal = ({ movie, onClose }) => {
@@ -291,7 +291,7 @@ const VirtualizedMovieGrid = ({ movies, onMovieClick }) => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <Grid
+          <FixedSizeGrid
             columnCount={columnCount}
             columnWidth={columnWidth}
             height={Math.min(rowCount * rowHeight, 2000)}
@@ -301,7 +301,7 @@ const VirtualizedMovieGrid = ({ movies, onMovieClick }) => {
             style={{ margin: '0 auto' }}
           >
             {Cell}
-          </Grid>
+          </FixedSizeGrid>
         </motion.div>
       </div>
     );

@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
-import { FixedSizeGrid as Grid } from "react-window";
+import { FixedSizeGrid } from "react-window";
 import EnhancedMovieCard from "./EnhancedMovieCard";
 
 const MovieGrid = ({ movies, isLoading, useVirtualScroll = false }) => {
@@ -98,7 +98,7 @@ const MovieGrid = ({ movies, isLoading, useVirtualScroll = false }) => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <Grid
+          <FixedSizeGrid
             columnCount={columnCount}
             columnWidth={columnWidth}
             height={Math.min(rowCount * rowHeight, 2000)} // Max height 2000px
@@ -108,7 +108,7 @@ const MovieGrid = ({ movies, isLoading, useVirtualScroll = false }) => {
             style={{ margin: '0 auto' }}
           >
             {Cell}
-          </Grid>
+          </FixedSizeGrid>
         </motion.div>
       </div>
     );
