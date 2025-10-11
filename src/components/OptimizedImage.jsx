@@ -49,16 +49,24 @@ const OptimizedImage = ({
     ...(aspectRatio && { aspectRatio }),
   };
 
+  // Calculate dimensions for proper aspect ratio
+  const inferredWidth = width || (height && aspectRatio) ? Math.round(height * parseFloat(aspectRatio.split('/')[0] / aspectRatio.split('/')[1])) : undefined;
+  const inferredHeight = height || (width && aspectRatio) ? Math.round(width / parseFloat(aspectRatio.split('/')[0] / aspectRatio.split('/')[1])) : undefined;
+
+  const finalWidth = width || inferredWidth;
+  const finalHeight = height || inferredHeight;
+
   if (priority) {
-    // Don't lazy load priority images (above the fold)
+    // Don't lazy load priority images (above the fold, LCP elements)
     return (
       <img
         src={getOptimizedUrl(src)}
         alt={alt}
-        width={width}
-        height={height}
+        width={finalWidth}
+        height={finalHeight}
         loading="eager"
         fetchPriority="high"
+        decoding="sync"
         className={className}
         onClick={onClick}
         style={imgStyle}
@@ -70,12 +78,14 @@ const OptimizedImage = ({
     <LazyLoadImage
       src={getOptimizedUrl(src)}
       alt={alt}
-      width={width}
-      height={height}
+      width={finalWidth}
+      height={finalHeight}
       effect={effect}
       className={className}
       onClick={onClick}
       style={imgStyle}
+      loading="lazy"
+      decoding="async"
       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'%3E%3Crect fill='%231a1a1a' width='400' height='600'/%3E%3C/svg%3E"
     />
   );
