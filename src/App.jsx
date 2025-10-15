@@ -47,6 +47,9 @@ const EditQuotePage = lazy(() => import("./pages/EditQuotePage"));
 const AddByGenrePage = lazy(() => import("./components/CreateByGenres"));
 const GenreMoviesPage = lazy(() => import("./pages/AllGenresPage"));
 const ExploreGenresPage = lazy(() => import("./pages/ExploreGenresPage"));
+const IndiePage = lazy(() => import("./pages/IndiePage"));
+const IndianIndiePage = lazy(() => import("./pages/IndianIndiePage"));
+const WorldIndiePage = lazy(() => import("./pages/WorldIndiePage"));
 
 // Loading component for Suspense fallback
 const PageLoader = () => (
@@ -80,6 +83,9 @@ const App = () => {
             <Route path="/news/:id" element={<NewsArticlePage />} />
             <Route path="/trending" element={<TrendingPage />} />
             <Route path="/explore-genres" element={<ExploreGenresPage />} />
+            <Route path="/indie" element={<IndiePage />} />
+            <Route path="/indie/indian" element={<IndianIndiePage />} />
+            <Route path="/indie/world" element={<WorldIndiePage />} />
             <Route path="/reviews" element={<ReviewPage />} />
             <Route path="/post/:id" element={<PostPage />} />
             <Route path="/genre/:genre" element={<GenreMoviesPage />} />

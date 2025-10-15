@@ -64,6 +64,7 @@ export default function Navbar() {
       { href: "/recommendations-page", label: "Top Picks" },
       { href: "/reviews", label: "Reviews" },
       { href: "/trending", label: "Trending" },
+      { href: "/indie", label: "Indie" },
       { href: "/explore-genres", label: "Explore Genres" },
       { href: "/merchandise", label: "Merchandise" },
       // { href: "/cinema-school", label: "Cinema School" },
