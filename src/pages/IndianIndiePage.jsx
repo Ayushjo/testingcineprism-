@@ -300,7 +300,7 @@ const IndianIndiePage = () => {
       try {
         // Using Sci-fi genre as dummy data
         const response = await axios.get(
-          `https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-byGenre/Sci-fi`,
+          `https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-byGenre/Sci-Fi`,
           {
             withCredentials: true,
             headers: {
