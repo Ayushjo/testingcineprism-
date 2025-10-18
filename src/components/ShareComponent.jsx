@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 const BACKEND_BASE_URL =
-  "https://testingcineprismbackend-production.up.railway.app";
+  "https://api.thecineprism.com";
 
 // Social Media Share Component
 const SharePopup = ({

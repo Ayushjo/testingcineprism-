@@ -94,7 +94,7 @@ export default function TrendingThisWeek() {
     setError(null);
     try {
       const response = await axios.get(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/movies"
+        "https://api.thecineprism.com/api/v1/movies"
       );
       if (response.data.success) {
         // Take only first 5 movies

@@ -55,7 +55,7 @@ export default function AllPostsPage() {
     const fetchPosts = async () => {
       try {
         const response = await axios.post(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+          "https://api.thecineprism.com/api/v1/admin/fetch-posts",
           {
             withCredentials: true,
           }
@@ -130,7 +130,7 @@ export default function AllPostsPage() {
     setIsDeleting(true);
     try {
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/delete-post",
+        "https://api.thecineprism.com/api/v1/admin/delete-post",
         { postId: deleteConfirmation.id },
         {
           withCredentials: true,
@@ -169,7 +169,7 @@ export default function AllPostsPage() {
     setIsDeleting(true);
     try {
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/delete-image",
+        "https://api.thecineprism.com/api/v1/admin/delete-image",
         { imageId: deleteConfirmation.id },
         {
           withCredentials: true,

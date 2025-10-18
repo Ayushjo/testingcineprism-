@@ -74,7 +74,7 @@ const TopPicksPage = () => {
       setError(null);
       try {
         const response = await axios.post(
-          `https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-top-picks`,
+          `https://api.thecineprism.com/api/v1/admin/fetch-top-picks`,
           {},
           {
             withCredentials: true,

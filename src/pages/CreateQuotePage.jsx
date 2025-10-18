@@ -36,7 +36,7 @@ export default function CreateQuotePage() {
 
     try {
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/add-quotes",
+        "https://api.thecineprism.com/api/v1/admin/add-quotes",
         formData,
         {
           withCredentials: true,

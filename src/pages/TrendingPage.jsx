@@ -40,7 +40,7 @@ export default function TrendingPage() {
     setError(null);
     try {
       const response = await axios.get(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/movies"
+        "https://api.thecineprism.com/api/v1/movies"
       );
       if (response.data.success) {
         setTrendingMoviesData(response.data.data);
@@ -61,7 +61,7 @@ export default function TrendingPage() {
     setError(null);
     try {
       const response = await axios.get(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/news"
+        "https://api.thecineprism.com/api/v1/news"
       );
       if (response.data.success) {
         setTrendingNewsData(response.data.data);

@@ -21,7 +21,7 @@ export default function UploadPosterPage() {
     const fetchPosts = async () => {
       try {
         const response = await axios.post(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+          "https://api.thecineprism.com/api/v1/admin/fetch-posts",
           {
             withCredentials: true,
             headers: {
@@ -110,7 +110,7 @@ export default function UploadPosterPage() {
       formData.append("postId", selectedPost.id);
 
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/add-poster",
+        "https://api.thecineprism.com/api/v1/admin/add-poster",
         formData,
         { withCredentials: true }
       );

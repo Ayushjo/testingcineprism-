@@ -160,7 +160,7 @@ export default function ArticlesPage() {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/articles/get-articles",
+          "https://api.thecineprism.com/api/v1/articles/get-articles",
           {
             withCredentials: true,
             headers: {

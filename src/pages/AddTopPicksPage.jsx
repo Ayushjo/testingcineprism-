@@ -55,7 +55,7 @@ export default function AddTopPicksPage() {
     setIsLoadingTopPicks(true);
     try {
       const response = await fetch(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-top-picks",
+        "https://api.thecineprism.com/api/v1/admin/fetch-top-picks",
         {
           method: "POST",
           credentials: "include",
@@ -97,7 +97,7 @@ export default function AddTopPicksPage() {
       formData.append("file", posterFile);
 
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/create-top-picks",
+        "https://api.thecineprism.com/api/v1/admin/create-top-picks",
         formData,
         {
           headers: {

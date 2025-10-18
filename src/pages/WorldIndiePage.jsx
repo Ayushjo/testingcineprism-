@@ -300,7 +300,7 @@ const WorldIndiePage = () => {
       try {
         // Using Horror genre as dummy data
         const response = await axios.get(
-          `https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-byGenre/Horror`,
+          `https://api.thecineprism.com/api/v1/admin/fetch-byGenre/Horror`,
           {
             withCredentials: true,
             headers: {

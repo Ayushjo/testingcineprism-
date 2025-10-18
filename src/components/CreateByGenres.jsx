@@ -120,7 +120,7 @@ export default function AddByGenrePage() {
       formDataToSend.append("file", posterImage);
 
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/add-byGenres",
+        "https://api.thecineprism.com/api/v1/admin/add-byGenres",
         formDataToSend,
         {
           withCredentials: true,

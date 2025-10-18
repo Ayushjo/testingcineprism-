@@ -5,8 +5,7 @@ import axios from "axios";
 import { useState, useEffect, useCallback } from "react";
 
 const TOKEN_KEY = "cineprism_auth_token";
-const API_BASE_URL =
-  "https://testingcineprismbackend-production.up.railway.app/api/v1/articles";
+const API_BASE_URL = "https://api.thecineprism.com/api/v1/articles";
 
 // Helper function to get current token
 const getCurrentToken = () => {

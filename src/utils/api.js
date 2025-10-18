@@ -4,10 +4,8 @@ import axios from "axios";
 import { useState, useEffect, useCallback } from "react";
 
 const TOKEN_KEY = "cineprism_auth_token";
-const API_BASE_URL =
-  "https://testingcineprismbackend-production.up.railway.app/api/v1";
-const BACKEND_BASE_URL =
-  "https://testingcineprismbackend-production.up.railway.app";
+const API_BASE_URL = "https://api.thecineprism.com/api/v1";
+const BACKEND_BASE_URL = "https://api.thecineprism.com";
 
 // Create base API instance WITHOUT token
 const api = axios.create({

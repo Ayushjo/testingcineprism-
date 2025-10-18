@@ -212,7 +212,7 @@ export default function UnpopularOpinionsPage() {
   const fetchCommentsForOpinion = async (opinionId) => {
     try {
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/fetch-comments",
+        "https://api.thecineprism.com/api/v1/user/fetch-comments",
         { opinionId, loadReplies: false },
         { withCredentials: true }
       );
@@ -227,7 +227,7 @@ export default function UnpopularOpinionsPage() {
   const loadMoreRepliesForComment = async (commentId) => {
     try {
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/load-more-replies",
+        "https://api.thecineprism.com/api/v1/user/load-more-replies",
         { parentCommentId: commentId, page: 1, limit: 20 },
         { withCredentials: true }
       );
@@ -281,7 +281,7 @@ export default function UnpopularOpinionsPage() {
     const fetchOpinions = async () => {
       try {
         const response = await axios.get(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/user/fetch-opinions"
+          "https://api.thecineprism.com/api/v1/user/fetch-opinions"
         );
         const opinionsFromApi = response.data.opinions;
 
@@ -341,7 +341,7 @@ export default function UnpopularOpinionsPage() {
   const fetchOpinions = async () => {
     try {
       const response = await axios.get(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/fetch-opinions"
+        "https://api.thecineprism.com/api/v1/user/fetch-opinions"
       );
       const opinionsFromApi = response.data.opinions;
 
@@ -386,7 +386,7 @@ export default function UnpopularOpinionsPage() {
 
     try {
       await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/opinion-comment",
+        "https://api.thecineprism.com/api/v1/user/opinion-comment",
         {
           content: newComment,
           opinionId: opinionId,
@@ -442,7 +442,7 @@ export default function UnpopularOpinionsPage() {
 
     try {
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/opinion-comment",
+        "https://api.thecineprism.com/api/v1/user/opinion-comment",
         {
           content: replyText,
           opinionId: opinion.id,
@@ -534,7 +534,7 @@ export default function UnpopularOpinionsPage() {
     setIsSubmitting(true);
     try {
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/create-opinion",
+        "https://api.thecineprism.com/api/v1/user/create-opinion",
         {
           content: newOpinion,
           genres: selectedGenres,
@@ -630,7 +630,7 @@ export default function UnpopularOpinionsPage() {
 
     try {
       await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/user/like",
+        "https://api.thecineprism.com/api/v1/user/like",
         { opinionId },
         { withCredentials: true }
       );

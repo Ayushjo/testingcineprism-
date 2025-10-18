@@ -103,7 +103,7 @@ export default function EditPostPage() {
     const fetchPosts = async () => {
       try {
         const response = await fetch(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+          "https://api.thecineprism.com/api/v1/admin/fetch-posts",
           {
             method: "POST",
             credentials: "include",
@@ -259,7 +259,7 @@ export default function EditPostPage() {
       console.log(finalSubmitData);
 
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/edit-post",
+        "https://api.thecineprism.com/api/v1/admin/edit-post",
         submitData,
         {
           withCredentials: true,
@@ -278,7 +278,7 @@ export default function EditPostPage() {
 
         // Refresh posts list
         const refreshResponse = await fetch(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+          "https://api.thecineprism.com/api/v1/admin/fetch-posts",
           {
             method: "POST",
             credentials: "include",

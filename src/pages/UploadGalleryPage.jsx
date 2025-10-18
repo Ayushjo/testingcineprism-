@@ -23,7 +23,7 @@ export default function UploadGalleryPage() {
     const fetchPosts = async () => {
       try {
         const response = await axios.post(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+          "https://api.thecineprism.com/api/v1/admin/fetch-posts",
           { withCredentials: true }
         );
         const data = await response.data;
@@ -137,7 +137,7 @@ export default function UploadGalleryPage() {
       }, 200);
 
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/upload-images",
+        "https://api.thecineprism.com/api/v1/admin/upload-images",
         formData,
         { withCredentials: true }
       );
@@ -157,7 +157,7 @@ export default function UploadGalleryPage() {
         );
 
         const refreshResponse = await axios.post(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+          "https://api.thecineprism.com/api/v1/admin/fetch-posts",
           { withCredentials: true }
         );
         const refreshData = await refreshResponse.data;

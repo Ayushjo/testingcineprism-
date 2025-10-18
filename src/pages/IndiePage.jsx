@@ -487,7 +487,7 @@ export default function IndiePage() {
       setIsLoading(true);
       try {
         const response = await axios.get(
-          `https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-byGenre/Thriller`,
+          `https://api.thecineprism.com/api/v1/admin/fetch-byGenre/Thriller`,
           {
             withCredentials: true,
             headers: {

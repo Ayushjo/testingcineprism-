@@ -19,7 +19,7 @@ const TrendingRankManager = () => {
     sessionStorage.getItem("cineprism_auth_token");
 
   const API_BASE_URL =
-    "https://testingcineprismbackend-production.up.railway.app/api/v1";
+    "https://api.thecineprism.com/api/v1";
 
   // Fetch trending movies
   const fetchTrendingMovies = useCallback(async () => {

@@ -158,7 +158,7 @@ export default function CreateArticlePage() {
       formData.append("blocks", JSON.stringify(blocksForBackend));
 
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/articles/create-article",
+        "https://api.thecineprism.com/api/v1/articles/create-article",
         formData,
         {
           withCredentials: true,

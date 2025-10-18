@@ -12,8 +12,7 @@ const AuthContext = createContext();
 
 // Token management
 const TOKEN_KEY = "cineprism_auth_token";
-const API_BASE_URL =
-  "https://testingcineprismbackend-production.up.railway.app/api/v1";
+const API_BASE_URL = "https://api.thecineprism.com/api/v1";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

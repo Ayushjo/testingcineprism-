@@ -112,7 +112,7 @@ export default function LatestReviews() {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/latest-reviews"
+          "https://api.thecineprism.com/api/v1/admin/latest-reviews"
         );
 
         const data = response.data;

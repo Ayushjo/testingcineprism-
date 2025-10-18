@@ -23,7 +23,7 @@ export default function EditQuotePage() {
     const fetchQuotes = async () => {
       try {
         const response = await axios.get(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-quotes",
+          "https://api.thecineprism.com/api/v1/admin/fetch-quotes",
           {
             withCredentials: true,
             headers: {
@@ -94,7 +94,7 @@ export default function EditQuotePage() {
         author: formData.author,
       };
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/edit-quote",
+        "https://api.thecineprism.com/api/v1/admin/edit-quote",
         submitData,
         {
           withCredentials: true,
@@ -109,7 +109,7 @@ export default function EditQuotePage() {
         setSubmitStatus("success");
         setSubmitMessage(response.data.message || "Quote updated successfully!");
         const refreshResponse = await axios.get(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-quotes",
+          "https://api.thecineprism.com/api/v1/admin/fetch-quotes",
           {
             withCredentials: true,
             headers: {

@@ -399,7 +399,7 @@ const ArticlePage = () => {
     const fetchArticle = async () => {
       try {
         const response = await fetch(
-          `https://testingcineprismbackend-production.up.railway.app/api/v1/articles/get-article/${slug}`
+          `https://api.thecineprism.com/api/v1/articles/get-article/${slug}`
         );
         const data = await response.json();
 

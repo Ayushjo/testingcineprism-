@@ -490,7 +490,7 @@ export default function PostPage() {
 
     try {
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/has-liked",
+        "https://api.thecineprism.com/api/v1/admin/has-liked",
         { postId: id },
         {
           withCredentials: true,

@@ -499,7 +499,7 @@ export default function ReviewPage() {
       }
 
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+        "https://api.thecineprism.com/api/v1/admin/fetch-posts",
         {},
         {
           withCredentials: true,
@@ -565,7 +565,7 @@ export default function ReviewPage() {
       }
 
       const response = await axios.get(
-        `https://testingcineprismbackend-production.up.railway.app/api/v1/posts/search?filter=${encodeURIComponent(searchTerm)}`,
+        `https://api.thecineprism.com/api/v1/posts/search?filter=${encodeURIComponent(searchTerm)}`,
         {
           withCredentials: true,
           headers,
@@ -635,7 +635,7 @@ export default function ReviewPage() {
       }
 
       const response = await axios.get(
-        `https://testingcineprismbackend-production.up.railway.app/api/v1/posts/search/${formattedGenre}`,
+        `https://api.thecineprism.com/api/v1/posts/search/${formattedGenre}`,
         {
           withCredentials: true,
           headers,

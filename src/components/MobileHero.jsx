@@ -26,7 +26,7 @@ const MobileHeroSection = () => {
         setError(null);
 
         const response = await axios.get(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/latest-reviews"
+          "https://api.thecineprism.com/api/v1/admin/latest-reviews"
         );
 
         const data = response.data;
@@ -61,7 +61,7 @@ const MobileHeroSection = () => {
     const fetchQuotes = async () => {
       try {
         const response = await axios.get(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-quotes"
+          "https://api.thecineprism.com/api/v1/admin/fetch-quotes"
         );
         if (response.data.quotes && Array.isArray(response.data.quotes)) {
           setQuotes(response.data.quotes);

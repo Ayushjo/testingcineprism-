@@ -87,7 +87,7 @@ export default function CreatePostPage() {
     const fetchPosts = async () => {
       try {
         const response = await axios.post(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts",
+          "https://api.thecineprism.com/api/v1/admin/fetch-posts",
           { withCredentials: true }
         );
         const data = await response.data;
@@ -192,7 +192,7 @@ export default function CreatePostPage() {
       console.log(submitData);
 
       const response = await axios.post(
-        "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/create-post",
+        "https://api.thecineprism.com/api/v1/admin/create-post",
         submitData,
         { withCredentials: true }
       );
@@ -223,7 +223,7 @@ export default function CreatePostPage() {
 
         // Refresh posts list to include the new post
         const refreshResponse = await axios.post(
-          "https://testingcineprismbackend-production.up.railway.app/api/v1/admin/fetch-posts"
+          "https://api.thecineprism.com/api/v1/admin/fetch-posts"
         );
         const refreshData = await refreshResponse.data;
         if (refreshData.posts) {
