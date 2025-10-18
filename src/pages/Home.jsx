@@ -445,8 +445,8 @@ export default function Homepage() {
           <MobileHero heroPosters={heroPosters} currentSlide={currentSlide} />
         </div>
         <Top5Picks />
-        <ExploreByGenre />
         <LatestReviews />
+        <ExploreByGenre />
         <TrendingThisWeek />
 
 
