@@ -27,6 +27,9 @@ const genres = [
   "Thriller",
   "War",
   "Western",
+  "Indie",
+  "IndianIndie",
+  "WorldIndie",
 ];
 
 export default function AddByGenrePage() {
