@@ -3,8 +3,10 @@
 import { motion } from "framer-motion";
 import { Calendar, ExternalLink, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 
 export default function ArticlePageLayout({ article }) {
+  const { theme } = useTheme();
   const navigate = useNavigate();
   const isNewsArticle = article.source_name;
 
@@ -14,11 +16,24 @@ export default function ArticlePageLayout({ article }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 to-slate-900 relative overflow-hidden">
+    <div className={`min-h-screen bg-gradient-to-b relative overflow-hidden transition-colors duration-300 ${
+      theme === "light"
+        ? "from-gray-50 to-white"
+        : "from-slate-950 to-slate-900"
+    }`}>
       {/* Ambient Background Effects */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(139,92,246,0.05),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(16,185,129,0.05),transparent_50%)]" />
+        {theme === "light" ? (
+          <>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(0,0,0,0.03),transparent_50%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(0,0,0,0.02),transparent_50%)]" />
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(139,92,246,0.05),transparent_50%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(16,185,129,0.05),transparent_50%)]" />
+          </>
+        )}
       </div>
 
       {/* Hero Image */}
@@ -33,24 +48,14 @@ export default function ArticlePageLayout({ article }) {
           alt={article.title}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
+        <div className={`absolute inset-0 bg-gradient-to-t ${
+          theme === "light"
+            ? "from-gray-50 via-gray-50/50 to-transparent"
+            : "from-slate-950 via-slate-950/50 to-transparent"
+        }`} />
       </motion.div>
 
-      {/* Back Button */}
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 relative z-10"
-      >
-        <button
-          onClick={handleBackClick}
-          className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-xl text-slate-300 hover:text-white hover:bg-white/10 px-4 py-2 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 font-medium text-sm"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to News
-        </button>
-      </motion.div>
+
 
       {/* Content Container */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative -mt-24 z-10">
@@ -66,7 +71,11 @@ export default function ArticlePageLayout({ article }) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight leading-tight"
+            className={`text-4xl md:text-5xl lg:text-6xl font-black mb-6 bg-clip-text text-transparent tracking-tight leading-tight ${
+              theme === "light"
+                ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                : "bg-gradient-to-r from-white via-slate-200 to-slate-400"
+            }`}
           >
             {article.title}
           </motion.h1>
@@ -76,17 +85,23 @@ export default function ArticlePageLayout({ article }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex items-center justify-center gap-4 text-slate-400"
+            className={`flex items-center justify-center gap-4 ${
+              theme === "light" ? "text-gray-600" : "text-slate-400"
+            }`}
           >
             {isNewsArticle && (
               <>
                 <div className="flex items-center gap-2">
-                  <ExternalLink className="w-4 h-4 text-purple-400" />
-                  <span className="text-purple-300 font-medium">
+                  <ExternalLink className={`w-4 h-4 ${
+                    theme === "light" ? "text-[#8B4513]" : "text-purple-400"
+                  }`} />
+                  <span className={`font-medium ${
+                    theme === "light" ? "text-[#654321]" : "text-purple-300"
+                  }`}>
                     {article.source_name}
                   </span>
                 </div>
-                <span className="text-slate-600">•</span>
+                <span className={theme === "light" ? "text-gray-400" : "text-slate-600"}>•</span>
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
                   <span>
@@ -110,10 +125,18 @@ export default function ArticlePageLayout({ article }) {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 mb-16"
+          className={`backdrop-blur-xl border rounded-3xl p-8 md:p-12 mb-16 transition-colors duration-300 ${
+            theme === "light"
+              ? "bg-white/80 border-gray-300"
+              : "bg-white/5 border-white/10"
+          }`}
         >
-          <div className="prose prose-lg prose-invert max-w-none">
-            <p className="text-slate-300 leading-relaxed text-lg">
+          <div className={`prose prose-lg max-w-none ${
+            theme === "light" ? "prose-gray" : "prose-invert"
+          }`}>
+            <p className={`leading-relaxed text-lg ${
+              theme === "light" ? "text-gray-700" : "text-slate-300"
+            }`}>
               {article.content}
             </p>
           </div>
@@ -126,10 +149,20 @@ export default function ArticlePageLayout({ article }) {
           transition={{ duration: 1, delay: 1 }}
           className="text-center pb-16"
         >
-          <div className="inline-flex items-center gap-2 text-slate-500 text-sm">
-            <div className="w-8 h-px bg-gradient-to-r from-transparent to-slate-500" />
+          <div className={`inline-flex items-center gap-2 text-sm ${
+            theme === "light" ? "text-gray-500" : "text-slate-500"
+          }`}>
+            <div className={`w-8 h-px ${
+              theme === "light"
+                ? "bg-gradient-to-r from-transparent to-gray-400"
+                : "bg-gradient-to-r from-transparent to-slate-500"
+            }`} />
             <span>Latest News</span>
-            <div className="w-8 h-px bg-gradient-to-l from-transparent to-slate-500" />
+            <div className={`w-8 h-px ${
+              theme === "light"
+                ? "bg-gradient-to-l from-transparent to-gray-400"
+                : "bg-gradient-to-l from-transparent to-slate-500"
+            }`} />
           </div>
         </motion.div>
       </div>
