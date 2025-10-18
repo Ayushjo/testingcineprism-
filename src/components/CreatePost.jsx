@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { X, Save, Search, Plus, Trash2, ChevronDown } from "lucide-react";
 import axios from "axios";
+import { showSuccessToast, showErrorToast, showLoadingToast, dismissToast } from "../utils/toast";
 
 const genres = [
   "Action",
@@ -85,6 +86,8 @@ export default function CreatePostPage() {
   // Fetch posts for related posts selection
   useEffect(() => {
     const fetchPosts = async () => {
+      const loadingToastId = showLoadingToast("Loading related posts...");
+
       try {
         const response = await axios.post(
           "https://api.thecineprism.com/api/v1/admin/fetch-posts",
@@ -93,9 +96,15 @@ export default function CreatePostPage() {
         const data = await response.data;
         if (data.posts) {
           setPosts(data.posts);
+          dismissToast(loadingToastId);
+        } else {
+          dismissToast(loadingToastId);
+          showErrorToast("No posts found");
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
+        dismissToast(loadingToastId);
+        showErrorToast("Failed to load related posts. Please refresh the page.");
       } finally {
         setIsLoadingPosts(false);
       }
@@ -177,6 +186,8 @@ export default function CreatePostPage() {
     setSubmitStatus(null);
     setSubmitMessage("");
 
+    const loadingToastId = showLoadingToast("Creating post...");
+
     try {
       // Filter out empty rating categories
       const validRatingCategories = formData.ratingCategories.filter(
@@ -200,10 +211,11 @@ export default function CreatePostPage() {
       const result = await response.data;
 
       if (response.status === 201) {
+        dismissToast(loadingToastId);
         setSubmitStatus("success");
-        setSubmitMessage(
-          `Post created successfully! Post ID: ${result.post?.id || "Unknown"}`
-        );
+        const successMsg = `Post created successfully! Post ID: ${result.post?.id || "Unknown"}`;
+        setSubmitMessage(successMsg);
+        showSuccessToast(successMsg);
 
         // Reset form after successful submission
         setFormData({
@@ -230,17 +242,32 @@ export default function CreatePostPage() {
           setPosts(refreshData.posts);
         }
       } else {
+        dismissToast(loadingToastId);
+        const errorMsg = result.message || "Failed to create post. Please try again.";
         setSubmitStatus("error");
-        setSubmitMessage(
-          result.message || "Failed to create post. Please try again."
-        );
+        setSubmitMessage(errorMsg);
+        showErrorToast(errorMsg);
       }
     } catch (error) {
       console.error("Submit error:", error);
+      dismissToast(loadingToastId);
+
+      let errorMsg;
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        errorMsg = "Authentication failed. Please log in again.";
+      } else if (error.response?.status === 400) {
+        errorMsg = error.response?.data?.message || "Invalid post data. Please check all fields.";
+      } else if (error.response?.status >= 500) {
+        errorMsg = "Server error. Please try again later.";
+      } else if (error.code === 'ECONNABORTED' || error.message === 'Network Error') {
+        errorMsg = "Network error. Please check your connection.";
+      } else {
+        errorMsg = error.response?.data?.message || "Failed to create post. Please try again.";
+      }
+
       setSubmitStatus("error");
-      setSubmitMessage(
-        "Network error. Please check your connection and try again."
-      );
+      setSubmitMessage(errorMsg);
+      showErrorToast(errorMsg);
     } finally {
       setIsSubmitting(false);
     }

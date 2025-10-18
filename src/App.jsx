@@ -68,7 +68,29 @@ const App = () => {
   return (
     <>
       <ParallaxProvider>
-        <Toaster />
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          gutter={8}
+          containerClassName=""
+          containerStyle={{}}
+          toastOptions={{
+            // Default options
+            className: '',
+            duration: 4000,
+            style: {
+              background: 'rgba(15, 23, 42, 0.95)',
+              color: '#f1f5f9',
+              border: '1px solid rgba(251, 191, 36, 0.2)',
+              borderRadius: '16px',
+              padding: '16px 20px',
+              fontSize: '14px',
+              fontWeight: '500',
+              backdropFilter: 'blur(12px)',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+            },
+          }}
+        />
         <MeteorCursor />
         <ScrollToTop smooth={true} delay={100} />
         <Navbar />

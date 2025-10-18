@@ -7,6 +7,7 @@ import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import OptimizedImage from "../components/OptimizedImage";
+import { showSuccessToast, showErrorToast, showLoadingToast, dismissToast } from "../utils/toast";
 
 // Modal Component
 const MovieDetailsModal = ({ movie, onClose }) => {
@@ -271,7 +272,9 @@ const GenreMoviesPage = () => {
 
       // Check if user is authenticated
       if (!token) {
-        setError("Please log in to view movies");
+        const errorMsg = "Please log in to view movies";
+        setError(errorMsg);
+        showErrorToast(errorMsg);
         setIsLoading(false);
         setMovies([]);
         return;
@@ -279,7 +282,9 @@ const GenreMoviesPage = () => {
 
       // Validate genre parameter
       if (!genre) {
-        setError("Invalid genre parameter");
+        const errorMsg = "Invalid genre parameter";
+        setError(errorMsg);
+        showErrorToast(errorMsg);
         setIsLoading(false);
         setMovies([]);
         return;
@@ -287,6 +292,9 @@ const GenreMoviesPage = () => {
 
       setIsLoading(true);
       setError(null);
+
+      // Show loading toast
+      const loadingToastId = showLoadingToast(`Loading ${genre} movies...`);
 
       try {
         const response = await axios.get(
@@ -306,27 +314,39 @@ const GenreMoviesPage = () => {
             a.title.localeCompare(b.title)
           );
           setMovies(sortedMovies);
+
+          // Dismiss loading and show success
+          dismissToast(loadingToastId);
+          showSuccessToast(`Loaded ${sortedMovies.length} ${genre} movies`);
         } else {
-          setError(response.data.message || "No movies found for this genre");
+          const errorMsg = response.data.message || "No movies found for this genre";
+          setError(errorMsg);
+          dismissToast(loadingToastId);
+          showErrorToast(errorMsg);
           setMovies([]);
         }
       } catch (err) {
         console.error("Error fetching genre movies:", err);
 
+        // Dismiss loading toast
+        dismissToast(loadingToastId);
+
+        let errorMsg;
         // Provide specific error messages based on error type
         if (err.response?.status === 401 || err.response?.status === 403) {
-          setError("Authentication failed. Please log in again.");
+          errorMsg = "Authentication failed. Please log in again.";
         } else if (err.response?.status === 404) {
-          setError(`No movies found for genre: ${genre}`);
+          errorMsg = `No movies found for genre: ${genre}`;
         } else if (err.response?.status === 500) {
-          setError("Server error. Please try again later.");
+          errorMsg = "Server error. Please try again later.";
         } else if (err.code === 'ECONNABORTED' || err.message === 'Network Error') {
-          setError("Network error. Please check your connection.");
+          errorMsg = "Network error. Please check your connection.";
         } else {
-          setError(
-            err.response?.data?.message || "Failed to load movies. Please try again."
-          );
+          errorMsg = err.response?.data?.message || "Failed to load movies. Please try again.";
         }
+
+        setError(errorMsg);
+        showErrorToast(errorMsg);
         setMovies([]);
       } finally {
         setIsLoading(false);
