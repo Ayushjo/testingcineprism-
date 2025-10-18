@@ -16,7 +16,9 @@ const ReviewPage = lazy(() => import("./pages/ReviewPage"));
 const PostPage = lazy(() => import("./pages/PostPage"));
 const TrendingPage = lazy(() => import("./pages/TrendingPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
-const UnpopularOpinionsPage = lazy(() => import("./pages/UnpopularOpinionsPage"));
+const UnpopularOpinionsPage = lazy(() =>
+  import("./pages/UnpopularOpinionsPage")
+);
 const Merchandise = lazy(() => import("./pages/Merchandise"));
 const RedirectIfAuth = lazy(() => import("./components/RedirectIfAuth"));
 const RedirectIfUser = lazy(() => import("./components/RedirectIfUser"));
@@ -25,13 +27,17 @@ const CreatePostPage = lazy(() => import("./components/CreatePost"));
 const UploadPosterPage = lazy(() => import("./pages/UploadPosterPage"));
 const UploadGalleryPage = lazy(() => import("./pages/UploadGalleryPage"));
 const AllPostsPage = lazy(() => import("./pages/AllPostsPage"));
-const AdminProtectedRoute = lazy(() => import("./components/AdminProtectedRoute"));
+const AdminProtectedRoute = lazy(() =>
+  import("./components/AdminProtectedRoute")
+);
 const ReviewPosterPage = lazy(() => import("./pages/UploadReviewPoster"));
 const TopPicksPage = lazy(() => import("./pages/TopPicksPage"));
 const AddTopPicksPage = lazy(() => import("./pages/AddTopPicksPage"));
 const CinemaSchoolPage = lazy(() => import("./pages/CinemaSchoolPage"));
 const ArticlePageLayout = lazy(() => import("./components/ArticlePageLayout"));
-const AIInsightsArticlePage = lazy(() => import("./pages/AIInsightsArticlePage"));
+const AIInsightsArticlePage = lazy(() =>
+  import("./pages/AIInsightsArticlePage")
+);
 const NewsArticlePage = lazy(() => import("./pages/NewsArticlePage"));
 const AuthCallback = lazy(() => import("./components/AuthCallback"));
 const EditPostPage = lazy(() => import("./pages/EditPostPage"));
@@ -86,18 +92,18 @@ const App = () => {
           containerStyle={{}}
           toastOptions={{
             // Default options
-            className: '',
+            className: "",
             duration: 4000,
             style: {
-              background: 'rgba(15, 23, 42, 0.95)',
-              color: '#f1f5f9',
-              border: '1px solid rgba(251, 191, 36, 0.2)',
-              borderRadius: '16px',
-              padding: '16px 20px',
-              fontSize: '14px',
-              fontWeight: '500',
-              backdropFilter: 'blur(12px)',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+              background: "rgba(15, 23, 42, 0.95)",
+              color: "#f1f5f9",
+              border: "1px solid rgba(251, 191, 36, 0.2)",
+              borderRadius: "16px",
+              padding: "16px 20px",
+              fontSize: "14px",
+              fontWeight: "500",
+              backdropFilter: "blur(12px)",
+              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
             },
           }}
         />
@@ -112,32 +118,33 @@ const App = () => {
               <Route path="/login" element={<LoginPage />} />
             </Route>
 
-            <Route path="/news/:id" element={<NewsArticlePage />} />
-            <Route path="/trending" element={<TrendingPage />} />
-            <Route path="/explore-genres" element={<ExploreGenresPage />} />
+            <Route element={<RedirectIfUser />}>
+              <Route path="/news/:id" element={<NewsArticlePage />} />
+              <Route path="/trending" element={<TrendingPage />} />
+              <Route path="/explore-genres" element={<ExploreGenresPage />} />
 
-            {/* Individual Genre Pages */}
-            <Route path="/sci-fi" element={<SciFiPage />} />
-            <Route path="/action" element={<ActionPage />} />
-            <Route path="/thriller" element={<ThrillerPage />} />
-            <Route path="/drama" element={<DramaPage />} />
-            <Route path="/horror" element={<HorrorPage />} />
-            <Route path="/animation" element={<AnimationPage />} />
-            <Route path="/comedy" element={<ComedyPage />} />
-            <Route path="/war" element={<WarPage />} />
+              {/* Individual Genre Pages */}
+              <Route path="/sci-fi" element={<SciFiPage />} />
+              <Route path="/action" element={<ActionPage />} />
+              <Route path="/thriller" element={<ThrillerPage />} />
+              <Route path="/drama" element={<DramaPage />} />
+              <Route path="/horror" element={<HorrorPage />} />
+              <Route path="/animation" element={<AnimationPage />} />
+              <Route path="/comedy" element={<ComedyPage />} />
+              <Route path="/war" element={<WarPage />} />
 
-            {/* Indie Pages */}
-            <Route path="/indie" element={<IndiePage />} />
-            <Route path="/indie/indian" element={<IndianIndiePage />} />
-            <Route path="/indie/world" element={<WorldIndiePage />} />
+              {/* Indie Pages */}
+              <Route path="/indie" element={<IndiePage />} />
+              <Route path="/indie/indian" element={<IndianIndiePage />} />
+              <Route path="/indie/world" element={<WorldIndiePage />} />
 
-            <Route path="/reviews" element={<ReviewPage />} />
-            <Route path="/post/:id" element={<PostPage />} />
-            <Route path="/genre/:genre" element={<GenreMoviesPage />} />
-            <Route path="/recommendations-page" element={<TopPicksPage />} />
-            <Route path="/merchandise" element={<Merchandise />} />
-            <Route path="/auth/callback" element={<AuthCallback />} />
-            <Route element={<RedirectIfUser />}></Route>
+              <Route path="/reviews" element={<ReviewPage />} />
+              <Route path="/post/:id" element={<PostPage />} />
+              <Route path="/genre/:genre" element={<GenreMoviesPage />} />
+              <Route path="/recommendations-page" element={<TopPicksPage />} />
+              <Route path="/merchandise" element={<Merchandise />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
+            </Route>
 
             <Route element={<AdminProtectedRoute />}>
               <Route path="/admin" element={<AdminLayout />}>
@@ -146,7 +153,10 @@ const App = () => {
                 <Route path="upload-poster" element={<UploadPosterPage />} />
                 <Route path="upload-gallery" element={<UploadGalleryPage />} />
                 <Route path="all-posts" element={<AllPostsPage />} />
-                <Route path="upload-review-poster" element={<ReviewPosterPage />} />
+                <Route
+                  path="upload-review-poster"
+                  element={<ReviewPosterPage />}
+                />
                 <Route path="add-top-picks" element={<AddTopPicksPage />} />
                 <Route path="edit-post" element={<EditPostPage />} />
                 <Route path="edit-rank" element={<TrendingRankManager />} />
