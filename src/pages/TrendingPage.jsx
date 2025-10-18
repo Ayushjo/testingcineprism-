@@ -212,7 +212,11 @@ export default function TrendingPage() {
       >
         {/* Main Story Layout (First Article) */}
         {isMainStory && (
-          <div className="relative bg-white/5 backdrop-blur-xl border-l-4 border-emerald-400 rounded-r-2xl p-6 md:p-8 hover:bg-white/8 hover:border-emerald-300 transition-all duration-300 min-h-[400px] flex flex-col">
+          <div className={`relative backdrop-blur-xl border-l-4 rounded-r-2xl p-6 md:p-8 transition-all duration-300 min-h-[400px] flex flex-col ${
+            theme === "light"
+              ? "bg-gray-100 border-[#8B4513] hover:bg-gray-200 hover:border-[#654321]"
+              : "bg-white/5 border-emerald-400 hover:bg-white/8 hover:border-emerald-300"
+          }`}>
             {/* Breaking News Badge */}
             <div className="absolute -left-1 top-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-r-md shadow-lg">
               BREAKING
@@ -221,10 +225,16 @@ export default function TrendingPage() {
             <div className="flex flex-col h-full">
               {/* Category & Date */}
               <div className="flex items-center gap-3 mb-4 text-xs">
-                <span className="bg-emerald-400/20 text-emerald-300 px-2 py-1 rounded-md font-semibold">
+                <span className={`px-2 py-1 rounded-md font-semibold ${
+                  theme === "light"
+                    ? "bg-[#8B4513]/20 text-[#654321]"
+                    : "bg-emerald-400/20 text-emerald-300"
+                }`}>
                   CINEMA NEWS
                 </span>
-                <div className="flex items-center gap-1 text-slate-400">
+                <div className={`flex items-center gap-1 ${
+                  theme === "light" ? "text-gray-600" : "text-slate-400"
+                }`}>
                   <Calendar className="w-3 h-3" />
                   <span>
                     {new Date(
@@ -246,20 +256,32 @@ export default function TrendingPage() {
               )}
 
               {/* Main Headline */}
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-white leading-tight mb-4 group-hover:text-emerald-300 transition-colors duration-300">
+              <h1 className={`text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-4 transition-colors duration-300 ${
+                theme === "light"
+                  ? "text-black group-hover:text-[#8B4513]"
+                  : "text-white group-hover:text-emerald-300"
+              }`}>
                 {article.title}
               </h1>
 
               {/* Lead Paragraph */}
-              <p className="text-slate-300 text-base md:text-lg leading-relaxed mb-4 flex-grow line-clamp-4">
+              <p className={`text-base md:text-lg leading-relaxed mb-4 flex-grow line-clamp-4 ${
+                theme === "light" ? "text-gray-700" : "text-slate-300"
+              }`}>
                 {article.description || article.content}
               </p>
 
               {/* Byline */}
-              <div className="flex items-center justify-between text-sm text-slate-400 pt-4 border-t border-white/10">
+              <div className={`flex items-center justify-between text-sm pt-4 border-t ${
+                theme === "light"
+                  ? "text-gray-600 border-gray-300"
+                  : "text-slate-400 border-white/10"
+              }`}>
                 <div className="flex items-center gap-2">
                   <User className="w-4 h-4" />
-                  <span className="font-medium text-emerald-300">
+                  <span className={`font-medium ${
+                    theme === "light" ? "text-[#8B4513]" : "text-emerald-300"
+                  }`}>
                     {article.source_name}
                   </span>
                 </div>
@@ -274,11 +296,19 @@ export default function TrendingPage() {
 
         {/* Headline Stories Layout (Articles 2-3) */}
         {isHeadline && !isMainStory && (
-          <div className="relative bg-white/3 backdrop-blur-xl border border-white/10 rounded-xl p-4 md:p-6 hover:bg-white/6 hover:border-white/20 transition-all duration-300 min-h-[300px] flex flex-col">
+          <div className={`relative backdrop-blur-xl border rounded-xl p-4 md:p-6 transition-all duration-300 min-h-[300px] flex flex-col ${
+            theme === "light"
+              ? "bg-gray-50 border-gray-300 hover:bg-gray-100 hover:border-gray-400"
+              : "bg-white/3 border-white/10 hover:bg-white/6 hover:border-white/20"
+          }`}>
             {/* Category */}
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-              <span className="text-emerald-300 text-xs font-semibold tracking-wide">
+              <div className={`w-2 h-2 rounded-full ${
+                theme === "light" ? "bg-[#8B4513]" : "bg-emerald-400"
+              }`}></div>
+              <span className={`text-xs font-semibold tracking-wide ${
+                theme === "light" ? "text-[#654321]" : "text-emerald-300"
+              }`}>
                 TOP STORY
               </span>
             </div>
@@ -295,13 +325,23 @@ export default function TrendingPage() {
             )}
 
             {/* Title */}
-            <h2 className="text-lg md:text-xl font-bold text-white leading-tight mb-3 group-hover:text-emerald-300 transition-colors duration-300 line-clamp-3 flex-grow">
+            <h2 className={`text-lg md:text-xl font-bold leading-tight mb-3 transition-colors duration-300 line-clamp-3 flex-grow ${
+              theme === "light"
+                ? "text-black group-hover:text-[#8B4513]"
+                : "text-white group-hover:text-emerald-300"
+            }`}>
               {article.title}
             </h2>
 
             {/* Meta Info */}
-            <div className="flex items-center justify-between text-xs text-slate-400 mt-auto pt-3 border-t border-white/5">
-              <span className="font-medium text-emerald-300">
+            <div className={`flex items-center justify-between text-xs mt-auto pt-3 border-t ${
+              theme === "light"
+                ? "text-gray-600 border-gray-200"
+                : "text-slate-400 border-white/5"
+            }`}>
+              <span className={`font-medium ${
+                theme === "light" ? "text-[#8B4513]" : "text-emerald-300"
+              }`}>
                 {article.source_name}
               </span>
               <span>
@@ -315,11 +355,19 @@ export default function TrendingPage() {
 
         {/* Regular Articles Layout (Articles 4+) */}
         {!isHeadline && (
-          <div className="relative bg-white/2 backdrop-blur-xl border-b border-white/10 p-4 md:p-5 hover:bg-white/4 transition-all duration-300 group">
+          <div className={`relative backdrop-blur-xl border-b p-4 md:p-5 transition-all duration-300 group ${
+            theme === "light"
+              ? "bg-white/80 border-gray-200 hover:bg-gray-50"
+              : "bg-white/2 border-white/10 hover:bg-white/4"
+          }`}>
             <div className="flex gap-4 md:gap-6">
               {/* Article Number */}
               <div className="flex-shrink-0 pt-1">
-                <span className="text-xl md:text-2xl font-black text-white/20 group-hover:text-emerald-400/40 transition-colors duration-300 font-mono">
+                <span className={`text-xl md:text-2xl font-black transition-colors duration-300 font-mono ${
+                  theme === "light"
+                    ? "text-black/20 group-hover:text-[#8B4513]/40"
+                    : "text-white/20 group-hover:text-emerald-400/40"
+                }`}>
                   {String(index + 1).padStart(2, "0")}
                 </span>
               </div>
@@ -328,12 +376,20 @@ export default function TrendingPage() {
               <div className="flex-1 min-w-0">
                 {/* Category Tag */}
                 <div className="flex items-center gap-2 mb-2">
-                  <ExternalLink className="w-3 h-3 text-slate-500" />
-                  <span className="text-xs text-slate-500 font-medium tracking-wide">
+                  <ExternalLink className={`w-3 h-3 ${
+                    theme === "light" ? "text-gray-500" : "text-slate-500"
+                  }`} />
+                  <span className={`text-xs font-medium tracking-wide ${
+                    theme === "light" ? "text-gray-600" : "text-slate-500"
+                  }`}>
                     {article.source_name}
                   </span>
-                  <span className="text-xs text-slate-600">•</span>
-                  <span className="text-xs text-slate-600">
+                  <span className={`text-xs ${
+                    theme === "light" ? "text-gray-400" : "text-slate-600"
+                  }`}>•</span>
+                  <span className={`text-xs ${
+                    theme === "light" ? "text-gray-500" : "text-slate-600"
+                  }`}>
                     {new Date(
                       article.published_at || article.created_at
                     ).toLocaleDateString()}
@@ -341,12 +397,18 @@ export default function TrendingPage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-base md:text-lg font-bold text-white mb-2 leading-tight group-hover:text-emerald-300 transition-colors duration-300 line-clamp-2">
+                <h3 className={`text-base md:text-lg font-bold mb-2 leading-tight transition-colors duration-300 line-clamp-2 ${
+                  theme === "light"
+                    ? "text-black group-hover:text-[#8B4513]"
+                    : "text-white group-hover:text-emerald-300"
+                }`}>
                   {article.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-sm text-slate-400 leading-relaxed line-clamp-2 hidden sm:block">
+                <p className={`text-sm leading-relaxed line-clamp-2 hidden sm:block ${
+                  theme === "light" ? "text-gray-600" : "text-slate-400"
+                }`}>
                   {article.description || article.content}
                 </p>
               </div>
@@ -367,7 +429,9 @@ export default function TrendingPage() {
 
             {/* Mobile description */}
             <div className="mt-3 sm:hidden">
-              <p className="text-sm text-slate-400 leading-relaxed line-clamp-2">
+              <p className={`text-sm leading-relaxed line-clamp-2 ${
+                theme === "light" ? "text-gray-600" : "text-slate-400"
+              }`}>
                 {article.description || article.content}
               </p>
             </div>
