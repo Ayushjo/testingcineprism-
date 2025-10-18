@@ -83,7 +83,20 @@ export default function ExploreGenresPage() {
   const navigate = useNavigate();
 
   const handleGenreClick = (genreName) => {
-    navigate(`/genre/${genreName}`);
+    // Map genre names to URL-friendly paths
+    const genreRoutes = {
+      "Sci-Fi": "/sci-fi",
+      "Action": "/action",
+      "Thriller": "/thriller",
+      "Drama": "/drama",
+      "Horror": "/horror",
+      "Animation": "/animation",
+      "Comedy": "/comedy",
+      "War": "/war",
+      "Crime": "/genre/Crime" // Fallback to dynamic route for Crime
+    };
+
+    navigate(genreRoutes[genreName] || `/genre/${genreName}`);
   };
 
   return (

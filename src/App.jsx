@@ -51,6 +51,16 @@ const IndiePage = lazy(() => import("./pages/IndiePage"));
 const IndianIndiePage = lazy(() => import("./pages/IndianIndiePage"));
 const WorldIndiePage = lazy(() => import("./pages/WorldIndiePage"));
 
+// Individual Genre Pages
+const SciFiPage = lazy(() => import("./pages/SciFiPage"));
+const ActionPage = lazy(() => import("./pages/ActionPage"));
+const ThrillerPage = lazy(() => import("./pages/ThrillerPage"));
+const DramaPage = lazy(() => import("./pages/DramaPage"));
+const HorrorPage = lazy(() => import("./pages/HorrorPage"));
+const AnimationPage = lazy(() => import("./pages/AnimationPage"));
+const ComedyPage = lazy(() => import("./pages/ComedyPage"));
+const WarPage = lazy(() => import("./pages/WarPage"));
+
 // Loading component for Suspense fallback
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-screen bg-slate-950">
@@ -105,9 +115,22 @@ const App = () => {
             <Route path="/news/:id" element={<NewsArticlePage />} />
             <Route path="/trending" element={<TrendingPage />} />
             <Route path="/explore-genres" element={<ExploreGenresPage />} />
+
+            {/* Individual Genre Pages */}
+            <Route path="/sci-fi" element={<SciFiPage />} />
+            <Route path="/action" element={<ActionPage />} />
+            <Route path="/thriller" element={<ThrillerPage />} />
+            <Route path="/drama" element={<DramaPage />} />
+            <Route path="/horror" element={<HorrorPage />} />
+            <Route path="/animation" element={<AnimationPage />} />
+            <Route path="/comedy" element={<ComedyPage />} />
+            <Route path="/war" element={<WarPage />} />
+
+            {/* Indie Pages */}
             <Route path="/indie" element={<IndiePage />} />
             <Route path="/indie/indian" element={<IndianIndiePage />} />
             <Route path="/indie/world" element={<WorldIndiePage />} />
+
             <Route path="/reviews" element={<ReviewPage />} />
             <Route path="/post/:id" element={<PostPage />} />
             <Route path="/genre/:genre" element={<GenreMoviesPage />} />

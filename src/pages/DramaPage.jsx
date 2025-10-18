@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, Film } from "lucide-react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
@@ -36,7 +35,6 @@ const MovieDetailsModal = ({ movie, onClose }) => {
             : "bg-white/5 border-white/10 shadow-black/50"
         }`}
       >
-        {/* Close Button */}
         <button
           onClick={onClose}
           className={`absolute top-4 right-4 z-10 backdrop-blur-xl p-2.5 rounded-full border transition-all duration-300 group ${
@@ -52,11 +50,8 @@ const MovieDetailsModal = ({ movie, onClose }) => {
           }`} />
         </button>
 
-        {/* Scrollable Content */}
         <div className="max-h-[85vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/20 hover:scrollbar-thumb-white/30">
-          {/* Hero Section with Poster */}
           <div className="relative">
-            {/* Background Image */}
             <div className="aspect-[16/9] relative overflow-hidden">
               <OptimizedImage
                 src={movie.posterImageUrl || "/placeholder.svg"}
@@ -64,10 +59,7 @@ const MovieDetailsModal = ({ movie, onClose }) => {
                 className="w-full h-full object-cover"
                 priority={true}
               />
-              {/* Dark Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/60 to-slate-950/30" />
-
-              {/* Noise Texture */}
               <div
                 className="absolute inset-0 opacity-10 mix-blend-overlay"
                 style={{
@@ -76,7 +68,6 @@ const MovieDetailsModal = ({ movie, onClose }) => {
               />
             </div>
 
-            {/* Movie Poster (Floating) */}
             <div className="absolute -bottom-12 sm:-bottom-16 left-4 sm:left-6">
               <div className="w-20 h-28 sm:w-24 sm:h-36 md:w-28 md:h-40 rounded-xl overflow-hidden shadow-2xl border-2 border-white/20">
                 <OptimizedImage
@@ -89,9 +80,7 @@ const MovieDetailsModal = ({ movie, onClose }) => {
             </div>
           </div>
 
-          {/* Content Section */}
           <div className="pt-16 sm:pt-20 px-4 sm:px-6 pb-6">
-            {/* Title and Year */}
             <div className="mb-6">
               <h1 className={`text-2xl sm:text-3xl md:text-4xl font-black mb-2 bg-clip-text text-transparent leading-tight transition-all duration-300 ${
                 theme === "light"
@@ -108,7 +97,6 @@ const MovieDetailsModal = ({ movie, onClose }) => {
               </div>
             </div>
 
-            {/* Director */}
             {movie.directedBy && (
               <div className="mb-6">
                 <h3 className={`text-lg font-bold mb-3 bg-clip-text text-transparent transition-all duration-300 ${
@@ -129,7 +117,6 @@ const MovieDetailsModal = ({ movie, onClose }) => {
               </div>
             )}
 
-            {/* Genres */}
             <div className="mb-6">
               <h3 className={`text-lg font-bold mb-3 bg-clip-text text-transparent transition-all duration-300 ${
                 theme === "light"
@@ -154,7 +141,6 @@ const MovieDetailsModal = ({ movie, onClose }) => {
               </div>
             </div>
 
-            {/* Synopsis */}
             <div className="mb-6">
               <h3 className={`text-lg font-bold mb-3 bg-clip-text text-transparent transition-all duration-300 ${
                 theme === "light"
@@ -187,25 +173,20 @@ const MovieCard = ({ movie, onClick, index }) => {
       onClick={onClick}
       className="group relative cursor-pointer"
     >
-      {/* Card Container with Dotted Border */}
       <div className={`relative overflow-hidden rounded-2xl border-2 border-dashed backdrop-blur-sm transition-all duration-300 ${
         theme === "light"
           ? "border-gray-300 bg-gray-50 hover:border-black/60 hover:shadow-lg hover:shadow-black/10"
           : "border-slate-700/50 bg-slate-900/30 hover:border-amber-400/50 hover:shadow-lg hover:shadow-amber-400/10"
       }`}>
-        {/* Poster Image */}
         <div className="relative aspect-[2/3] overflow-hidden">
           <OptimizedImage
             src={movie.posterImageUrl || "/placeholder.svg"}
             alt={movie.title}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
-
-          {/* Dark Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         </div>
 
-        {/* Movie Info */}
         <div className="p-4">
           <h3 className={`mb-1 font-bold line-clamp-2 transition-colors ${
             theme === "light"
@@ -219,7 +200,6 @@ const MovieCard = ({ movie, onClick, index }) => {
           }`}>{movie.year}</p>
         </div>
 
-        {/* Hover Glow Effect */}
         <div className="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           <div className={`absolute inset-0 rounded-2xl ${
             theme === "light"
@@ -254,8 +234,8 @@ const MovieGrid = ({ movies, onMovieClick }) => {
 };
 
 // Main Page Component
-const GenreMoviesPage = () => {
-  const { genre } = useParams();
+const DramaPage = () => {
+  const GENRE = "Drama";
   const { token, loading: authLoading } = useAuth();
   const { theme } = useTheme();
   const [movies, setMovies] = useState([]);
@@ -265,24 +245,12 @@ const GenreMoviesPage = () => {
 
   useEffect(() => {
     const fetchGenreMovies = async () => {
-      // Don't fetch if auth is still loading
       if (authLoading) {
         return;
       }
 
-      // Check if user is authenticated
       if (!token) {
         const errorMsg = "Please log in to view movies";
-        setError(errorMsg);
-        showErrorToast(errorMsg);
-        setIsLoading(false);
-        setMovies([]);
-        return;
-      }
-
-      // Validate genre parameter
-      if (!genre) {
-        const errorMsg = "Invalid genre parameter";
         setError(errorMsg);
         showErrorToast(errorMsg);
         setIsLoading(false);
@@ -293,12 +261,11 @@ const GenreMoviesPage = () => {
       setIsLoading(true);
       setError(null);
 
-      // Show loading toast
-      const loadingToastId = showLoadingToast(`Loading ${genre} movies...`);
+      const loadingToastId = showLoadingToast(`Loading ${GENRE} movies...`);
 
       try {
         const response = await axios.get(
-          `https://api.thecineprism.com/api/v1/admin/fetch-byGenre/${genre}`,
+          `https://api.thecineprism.com/api/v1/admin/fetch-byGenre/${GENRE}`,
           {
             withCredentials: true,
             headers: {
@@ -308,9 +275,6 @@ const GenreMoviesPage = () => {
           }
         );
 
-        console.log("API Response for genre:", genre, response.data);
-
-        // Check if response has genrePosts
         if (response.data.genrePosts && Array.isArray(response.data.genrePosts)) {
           const sortedMovies = response.data.genrePosts.sort((a, b) =>
             a.title.localeCompare(b.title)
@@ -318,17 +282,13 @@ const GenreMoviesPage = () => {
           setMovies(sortedMovies);
           dismissToast(loadingToastId);
 
-          // Only show success toast if we actually have movies
           if (sortedMovies.length > 0) {
-            showSuccessToast(`Loaded ${sortedMovies.length} ${genre} movies`);
+            showSuccessToast(`Loaded ${sortedMovies.length} ${GENRE} movies`);
           } else {
-            // No error, just no movies found - this is not an error condition
-            showInfoToast(`No ${genre} movies available yet`);
+            showInfoToast(`No ${GENRE} movies available yet`);
           }
-          // Clear any previous errors
           setError(null);
         } else {
-          // API responded but without expected data structure
           const errorMsg = response.data.message || "Unexpected response format";
           setError(errorMsg);
           dismissToast(loadingToastId);
@@ -337,22 +297,13 @@ const GenreMoviesPage = () => {
         }
       } catch (err) {
         console.error("Error fetching genre movies:", err);
-        console.error("Error details:", {
-          status: err.response?.status,
-          data: err.response?.data,
-          message: err.message,
-          code: err.code
-        });
-
-        // Dismiss loading toast
         dismissToast(loadingToastId);
 
         let errorMsg;
-        // Provide specific error messages based on error type
         if (err.response?.status === 401 || err.response?.status === 403) {
           errorMsg = "Authentication failed. Please log in again.";
         } else if (err.response?.status === 404) {
-          errorMsg = `No movies found for genre: ${genre}`;
+          errorMsg = `No movies found for genre: ${GENRE}`;
         } else if (err.response?.status === 500) {
           errorMsg = "Server error. Please try again later.";
         } else if (err.code === 'ECONNABORTED' || err.message === 'Network Error') {
@@ -370,7 +321,7 @@ const GenreMoviesPage = () => {
     };
 
     fetchGenreMovies();
-  }, [genre, token, authLoading]);
+  }, [token, authLoading]);
 
   const handleMovieClick = (movie) => {
     setSelectedMovie(movie);
@@ -390,7 +341,7 @@ const GenreMoviesPage = () => {
             theme === "light" ? "border-black" : "border-emerald-400"
           }`}></div>
           <p className={theme === "light" ? "text-gray-600" : "text-slate-400"}>
-            Loading {genre} Movies...
+            Loading {GENRE} Movies...
           </p>
         </div>
       </div>
@@ -428,9 +379,8 @@ const GenreMoviesPage = () => {
                 ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
                 : "bg-gradient-to-r from-white via-emerald-200 to-slate-400"
             }`}>
-              {movies.length > 0 ? `Top ${movies.length} ${genre} Movies` : `${genre} Movies`}
+              {movies.length > 0 ? `Top ${movies.length} ${GENRE} Movies` : `${GENRE} Movies`}
             </h1>
-
           </motion.div>
         </div>
       </section>
@@ -529,7 +479,7 @@ const GenreMoviesPage = () => {
                 <p className={`text-xl font-medium mb-2 ${
                   theme === "light" ? "text-gray-700" : "text-slate-300"
                 }`}>
-                  No {genre} movies available yet
+                  No {GENRE} movies available yet
                 </p>
                 <p className={`text-sm ${
                   theme === "light" ? "text-gray-500" : "text-slate-500"
@@ -551,4 +501,4 @@ const GenreMoviesPage = () => {
   );
 };
 
-export default GenreMoviesPage;
+export default DramaPage;
