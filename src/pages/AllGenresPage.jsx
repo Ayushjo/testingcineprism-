@@ -298,14 +298,7 @@ const GenreMoviesPage = () => {
 
       try {
         const response = await axios.get(
-          `https://api.thecineprism.com/api/v1/admin/fetch-byGenre/${genre}`,
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          `https://api.thecineprism.com/api/v1/admin/fetch-byGenre/${genre}`
         );
 
         console.log("API Response for genre:", genre, response.data);
