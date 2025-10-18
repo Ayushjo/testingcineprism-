@@ -26,7 +26,7 @@ import {
 } from "../utils/api.js";
 import { useAuth } from "@/context/AuthContext.jsx";
 import { useTheme } from "../context/ThemeContext";
-import toast from "react-hot-toast";
+import { showSuccessToast, showErrorToast, showInfoToast } from "../utils/toast";
 import { ShareButton } from "@/components/ShareComponent.jsx";
 import { Helmet } from "react-helmet";
 
@@ -64,7 +64,7 @@ const Comment = ({
     if (!replyText.trim() || isSubmittingReply) return;
 
     if (!user) {
-      alert("Please login to reply to comments");
+      showErrorToast("Please login to reply to comments");
       return;
     }
 
@@ -79,9 +79,10 @@ const Comment = ({
       setReplyText("");
       setShowReplyInput(false);
       if (!showReplies) setShowReplies(true);
+      showSuccessToast("Reply posted successfully");
     } catch (error) {
       console.error("Error creating reply:", error);
-      alert(error.message || "Failed to create reply");
+      showErrorToast(error.message || "Failed to create reply");
     } finally {
       setIsSubmittingReply(false);
     }
@@ -101,9 +102,10 @@ const Comment = ({
       );
       onCommentUpdated(updatedComment);
       setIsEditing(false);
+      showSuccessToast("Comment updated successfully");
     } catch (error) {
       console.error("Error updating comment:", error);
-      alert(error.message || "Failed to update comment");
+      showErrorToast(error.message || "Failed to update comment");
       setEditText(comment.content);
       setIsEditing(false);
     }
@@ -115,9 +117,10 @@ const Comment = ({
     try {
       await commentApi.deleteComment(comment.id);
       onCommentDeleted(comment.id);
+      showSuccessToast("Comment deleted successfully");
     } catch (error) {
       console.error("Error deleting comment:", error);
-      alert(error.message || "Failed to delete comment");
+      showErrorToast(error.message || "Failed to delete comment");
     }
   };
 

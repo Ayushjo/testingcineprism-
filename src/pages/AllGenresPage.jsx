@@ -7,7 +7,7 @@ import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import OptimizedImage from "../components/OptimizedImage";
-import { showSuccessToast, showErrorToast, showLoadingToast, dismissToast } from "../utils/toast";
+import { showSuccessToast, showErrorToast, showLoadingToast, showInfoToast, dismissToast } from "../utils/toast";
 
 // Modal Component
 const MovieDetailsModal = ({ movie, onClose }) => {
@@ -308,18 +308,28 @@ const GenreMoviesPage = () => {
           }
         );
 
-        if (response.data.genrePosts) {
-          // Sort movies alphabetically by title
+        console.log("API Response for genre:", genre, response.data);
+
+        // Check if response has genrePosts
+        if (response.data.genrePosts && Array.isArray(response.data.genrePosts)) {
           const sortedMovies = response.data.genrePosts.sort((a, b) =>
             a.title.localeCompare(b.title)
           );
           setMovies(sortedMovies);
-
-          // Dismiss loading and show success
           dismissToast(loadingToastId);
-          showSuccessToast(`Loaded ${sortedMovies.length} ${genre} movies`);
+
+          // Only show success toast if we actually have movies
+          if (sortedMovies.length > 0) {
+            showSuccessToast(`Loaded ${sortedMovies.length} ${genre} movies`);
+          } else {
+            // No error, just no movies found - this is not an error condition
+            showInfoToast(`No ${genre} movies available yet`);
+          }
+          // Clear any previous errors
+          setError(null);
         } else {
-          const errorMsg = response.data.message || "No movies found for this genre";
+          // API responded but without expected data structure
+          const errorMsg = response.data.message || "Unexpected response format";
           setError(errorMsg);
           dismissToast(loadingToastId);
           showErrorToast(errorMsg);
@@ -412,7 +422,7 @@ const GenreMoviesPage = () => {
                 ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
                 : "bg-gradient-to-r from-white via-emerald-200 to-slate-400"
             }`}>
-              Top {movies.length} {genre} Movies
+              {movies.length > 0 ? `Top ${movies.length} ${genre} Movies` : `${genre} Movies`}
             </h1>
 
           </motion.div>
@@ -484,19 +494,45 @@ const GenreMoviesPage = () => {
               movies={movies}
               onMovieClick={handleMovieClick}
             />
-          ) : (
+          ) : !error && !isLoading ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-16"
             >
-              <p className={`text-lg ${
-                theme === "light" ? "text-gray-600" : "text-slate-400"
+              <div className={`inline-block p-8 rounded-2xl backdrop-blur-sm border ${
+                theme === "light"
+                  ? "bg-gray-50/50 border-gray-200"
+                  : "bg-slate-900/50 border-slate-700/50"
               }`}>
-                No {genre?.toLowerCase()} movies found.
-              </p>
+                <svg
+                  className={`w-16 h-16 mx-auto mb-4 ${
+                    theme === "light" ? "text-gray-400" : "text-slate-500"
+                  }`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"
+                  />
+                </svg>
+                <p className={`text-xl font-medium mb-2 ${
+                  theme === "light" ? "text-gray-700" : "text-slate-300"
+                }`}>
+                  No {genre} movies available yet
+                </p>
+                <p className={`text-sm ${
+                  theme === "light" ? "text-gray-500" : "text-slate-500"
+                }`}>
+                  Check back later for new additions to this genre
+                </p>
+              </div>
             </motion.div>
-          )}
+          ) : null}
         </div>
       </section>
 

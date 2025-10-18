@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Search, Upload, X, Image } from "lucide-react";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
+import { showSuccessToast, showErrorToast, showLoadingToast, dismissToast } from "../utils/toast";
 export default function UploadPosterPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPost, setSelectedPost] = useState(null);
@@ -19,6 +20,8 @@ export default function UploadPosterPage() {
   // Fetch posts from API
   useEffect(() => {
     const fetchPosts = async () => {
+      const loadingToastId = showLoadingToast("Loading posts...");
+
       try {
         const response = await axios.post(
           "https://api.thecineprism.com/api/v1/admin/fetch-posts",
@@ -33,15 +36,22 @@ export default function UploadPosterPage() {
         const data = await response.data;
         if (data.posts) {
           setPosts(data.posts);
+          dismissToast(loadingToastId);
+          showSuccessToast(`Loaded ${data.posts.length} posts`);
+        } else {
+          dismissToast(loadingToastId);
+          showErrorToast("No posts found");
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
+        dismissToast(loadingToastId);
+        showErrorToast("Failed to load posts. Please try again.");
       } finally {
         setIsLoading(false);
       }
     };
     fetchPosts();
-  }, []);
+  }, [token]);
 
   // Filter posts based on search term
   const filteredPosts = posts.filter((post) =>
@@ -75,6 +85,7 @@ export default function UploadPosterPage() {
     } else if (file) {
       setUploadStatus("error");
       setUploadMessage("Please select a valid image file.");
+      showErrorToast("Please select a valid image file");
     }
   };
 
@@ -104,6 +115,8 @@ export default function UploadPosterPage() {
     setUploadStatus(null);
     setUploadMessage("");
 
+    const loadingToastId = showLoadingToast("Uploading poster...");
+
     try {
       const formData = new FormData();
       formData.append("file", selectedFile);
@@ -120,6 +133,8 @@ export default function UploadPosterPage() {
       if (response.status === 201) {
         setUploadStatus("success");
         setUploadMessage(result.message || "Poster uploaded successfully!");
+        dismissToast(loadingToastId);
+        showSuccessToast(result.message || "Poster uploaded successfully!");
 
         setPosts((prevPosts) =>
           prevPosts.map((post) =>
@@ -137,17 +152,19 @@ export default function UploadPosterPage() {
           handleCloseModal();
         }, 2000);
       } else {
+        const errorMsg = result.message || "Failed to upload poster. Please try again.";
         setUploadStatus("error");
-        setUploadMessage(
-          result.message || "Failed to upload poster. Please try again."
-        );
+        setUploadMessage(errorMsg);
+        dismissToast(loadingToastId);
+        showErrorToast(errorMsg);
       }
     } catch (error) {
       console.error("Upload error:", error);
+      const errorMsg = error.response?.data?.message || "Network error. Please check your connection and try again.";
       setUploadStatus("error");
-      setUploadMessage(
-        "Network error. Please check your connection and try again."
-      );
+      setUploadMessage(errorMsg);
+      dismissToast(loadingToastId);
+      showErrorToast(errorMsg);
     } finally {
       setIsUploading(false);
     }

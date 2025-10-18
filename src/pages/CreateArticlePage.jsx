@@ -20,6 +20,7 @@ import { useCallback } from "react";
 import BlockEditor from "@/components/BlockEditor";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
+import { showSuccessToast, showErrorToast, showLoadingToast, dismissToast } from "../utils/toast";
 export default function CreateArticlePage() {
   const [article, setArticle] = useState({
     title: "",
@@ -157,24 +158,27 @@ export default function CreateArticlePage() {
       // Add blocks as JSON string
       formData.append("blocks", JSON.stringify(blocksForBackend));
 
+      const loadingToastId = showLoadingToast("Creating article...");
+
       const response = await axios.post(
         "https://api.thecineprism.com/api/v1/articles/create-article",
         formData,
         {
           withCredentials: true,
           headers: {
-            Authorization: `Bearer ${token}`, 
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
       if (response.status === 200 || response.status === 201) {
+        const successMsg = `Article created successfully! Slug: ${
+          response.data.article?.slug || "Unknown"
+        }`;
         setSubmitStatus("success");
-        setSubmitMessage(
-          `Article created successfully! Slug: ${
-            response.data.article?.slug || "Unknown"
-          }`
-        );
+        setSubmitMessage(successMsg);
+        dismissToast(loadingToastId);
+        showSuccessToast(successMsg);
 
         // Reset form
         setArticle({
@@ -189,11 +193,12 @@ export default function CreateArticlePage() {
       }
     } catch (error) {
       console.error("Submit error:", error);
+      const errorMsg = error.response?.data?.message ||
+        "Network error. Please check your connection and try again.";
       setSubmitStatus("error");
-      setSubmitMessage(
-        error.response?.data?.message ||
-          "Network error. Please check your connection and try again."
-      );
+      setSubmitMessage(errorMsg);
+      dismissToast(loadingToastId);
+      showErrorToast(errorMsg);
     } finally {
       setIsSubmitting(false);
     }
