@@ -45,6 +45,22 @@ export default function ExploreByGenre() {
   const { theme } = useTheme();
   const navigate = useNavigate();
 
+  const handleGenreClick = (genreName) => {
+    // Map genre names to URL-friendly paths
+    const genreRoutes = {
+      "Sci-Fi": "/sci-fi",
+      "Action": "/action",
+      "Thriller": "/thriller",
+      "Drama": "/drama",
+      "Horror": "/horror",
+      "Animation": "/animation",
+      "Comedy": "/comedy",
+      "War": "/war",
+    };
+
+    navigate(genreRoutes[genreName] || `/genre/${genreName}`);
+  };
+
   return (
     <section className={`py-24 relative overflow-hidden transition-colors duration-300 ${
       theme === "light"
@@ -109,7 +125,7 @@ export default function ExploreByGenre() {
         >
           {genresData.map((genre, index) => (
             <motion.div
-            onClick={() => window.location.href = `/genre/${genre.name}`}
+              onClick={() => handleGenreClick(genre.name)}
               key={genre.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
