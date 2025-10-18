@@ -255,7 +255,7 @@ const MovieGrid = ({ movies, onMovieClick }) => {
 // Main Page Component
 const GenreMoviesPage = () => {
   const { genre } = useParams();
-  const { token } = useAuth();
+  const { token, loading: authLoading } = useAuth();
   const { theme } = useTheme();
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -264,6 +264,27 @@ const GenreMoviesPage = () => {
 
   useEffect(() => {
     const fetchGenreMovies = async () => {
+      // Don't fetch if auth is still loading
+      if (authLoading) {
+        return;
+      }
+
+      // Check if user is authenticated
+      if (!token) {
+        setError("Please log in to view movies");
+        setIsLoading(false);
+        setMovies([]);
+        return;
+      }
+
+      // Validate genre parameter
+      if (!genre) {
+        setError("Invalid genre parameter");
+        setIsLoading(false);
+        setMovies([]);
+        return;
+      }
+
       setIsLoading(true);
       setError(null);
 
@@ -286,14 +307,26 @@ const GenreMoviesPage = () => {
           );
           setMovies(sortedMovies);
         } else {
-          setError(response.data.message || "Failed to fetch movies");
+          setError(response.data.message || "No movies found for this genre");
           setMovies([]);
         }
       } catch (err) {
         console.error("Error fetching genre movies:", err);
-        setError(
-          err.response?.data?.message || "Failed to load movies"
-        );
+
+        // Provide specific error messages based on error type
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          setError("Authentication failed. Please log in again.");
+        } else if (err.response?.status === 404) {
+          setError(`No movies found for genre: ${genre}`);
+        } else if (err.response?.status === 500) {
+          setError("Server error. Please try again later.");
+        } else if (err.code === 'ECONNABORTED' || err.message === 'Network Error') {
+          setError("Network error. Please check your connection.");
+        } else {
+          setError(
+            err.response?.data?.message || "Failed to load movies. Please try again."
+          );
+        }
         setMovies([]);
       } finally {
         setIsLoading(false);
@@ -301,7 +334,7 @@ const GenreMoviesPage = () => {
     };
 
     fetchGenreMovies();
-  }, [genre, token]);
+  }, [genre, token, authLoading]);
 
   const handleMovieClick = (movie) => {
     setSelectedMovie(movie);
@@ -369,15 +402,57 @@ const GenreMoviesPage = () => {
       {error && (
         <section className="relative pb-4">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className={`mb-6 rounded-lg border p-4 transition-all duration-300 ${
-              theme === "light"
-                ? "border-red-400/50 bg-red-50"
-                : "border-red-500/30 bg-red-900/20"
-            }`}>
-              <p className={`text-center ${
-                theme === "light" ? "text-red-700" : "text-red-400"
-              }`}>{error}</p>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`mb-6 rounded-xl border p-6 transition-all duration-300 shadow-lg ${
+                theme === "light"
+                  ? "border-red-400/50 bg-red-50"
+                  : "border-red-500/30 bg-red-900/20"
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <svg
+                  className={`w-6 h-6 flex-shrink-0 ${
+                    theme === "light" ? "text-red-600" : "text-red-400"
+                  }`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <div className="flex-1">
+                  <h3 className={`font-bold mb-1 ${
+                    theme === "light" ? "text-red-800" : "text-red-300"
+                  }`}>
+                    Error Loading Movies
+                  </h3>
+                  <p className={`${
+                    theme === "light" ? "text-red-700" : "text-red-400"
+                  }`}>
+                    {error}
+                  </p>
+                  {error.includes("log in") && (
+                    <button
+                      onClick={() => window.location.href = '/'}
+                      className={`mt-3 px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                        theme === "light"
+                          ? "bg-red-600 text-white hover:bg-red-700"
+                          : "bg-red-500 text-white hover:bg-red-600"
+                      }`}
+                    >
+                      Go to Login
+                    </button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
           </div>
         </section>
       )}
