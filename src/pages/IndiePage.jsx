@@ -2,102 +2,287 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Globe, ChevronLeft, ChevronRight } from "lucide-react";
+import { MapPin, Globe, ChevronLeft, ChevronRight, X, Calendar, Film } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
-import MovieDetailsModal from "../components/MovieDetailsModal";
 
-// Article Card Component (reusable from ArticleSection)
-const ArticleCard = ({ article, index, hoveredCard, setHoveredCard }) => {
+// Modal Component
+const MovieDetailsModal = ({ movie, onClose }) => {
   const { theme } = useTheme();
+  if (!movie) return null;
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{
-        duration: 0.6,
-        delay: index * 0.1,
-        opacity: { duration: 0.3 },
-        scale: { duration: 0.3 },
-      }}
-      animate={{
-        opacity: hoveredCard !== null && hoveredCard !== index ? 0.3 : 1,
-        scale: hoveredCard === index ? 1.02 : 1,
-      }}
-      whileHover={{ y: -8 }}
-      onMouseEnter={() => setHoveredCard(index)}
-      onMouseLeave={() => setHoveredCard(null)}
-      className="group relative aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-visible cursor-pointer"
-      style={{
-        filter:
-          hoveredCard !== null && hoveredCard !== index
-            ? "blur(2px)"
-            : "blur(0px)",
-        transition: "filter 0.3s ease-in-out",
-      }}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+      className={`fixed inset-0 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-300 ${
+        theme === "light" ? "bg-black/50" : "bg-slate-950/80"
+      }`}
     >
-      <div className="absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden">
-        <img
-          src={article.imageUrl || "/placeholder.svg"}
-          alt={article.title}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div
-          className={`absolute inset-0 transition-all duration-300 ${
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        onClick={(e) => e.stopPropagation()}
+        className={`relative backdrop-blur-xl border rounded-3xl w-full max-w-md sm:max-w-lg md:max-w-2xl max-h-[85vh] overflow-hidden shadow-2xl transition-all duration-300 ${
+          theme === "light"
+            ? "bg-white/95 border-gray-300 shadow-black/20"
+            : "bg-white/5 border-white/10 shadow-black/50"
+        }`}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className={`absolute top-4 right-4 z-10 backdrop-blur-xl p-2.5 rounded-full border transition-all duration-300 group ${
             theme === "light"
-              ? "bg-gradient-to-t from-black/80 via-black/40 to-black/20"
-              : "bg-gradient-to-t from-black/90 via-black/50 to-black/20"
+              ? "bg-gray-100 border-gray-300 hover:bg-gray-200 hover:border-gray-400"
+              : "bg-white/10 border-white/20 hover:bg-white/20 hover:border-white/30"
           }`}
-        />
+        >
+          <X
+            className={`w-4 h-4 transition-colors ${
+              theme === "light"
+                ? "text-black group-hover:text-gray-700"
+                : "text-white group-hover:text-slate-200"
+            }`}
+          />
+        </button>
 
-        <div className="relative h-full flex flex-col justify-end p-5 sm:p-6 lg:p-8">
-          <div>
-            {article.category && (
-              <span
-                className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3 backdrop-blur-sm border ${
+        {/* Scrollable Content */}
+        <div className="max-h-[85vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/20 hover:scrollbar-thumb-white/30">
+          {/* Hero Section with Poster */}
+          <div className="relative">
+            {/* Background Image */}
+            <div className="aspect-[16/9] relative overflow-hidden">
+              <img
+                src={movie.posterImageUrl || "/placeholder.svg"}
+                alt={movie.title}
+                className="w-full h-full object-cover"
+              />
+              {/* Dark Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/60 to-slate-950/30" />
+
+              {/* Noise Texture */}
+              <div
+                className="absolute inset-0 opacity-10 mix-blend-overlay"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.4'/%3E%3C/svg%3E")`,
+                }}
+              />
+            </div>
+
+            {/* Movie Poster (Floating) */}
+            <div className="absolute -bottom-12 sm:-bottom-16 left-4 sm:left-6">
+              <div className="w-20 h-28 sm:w-24 sm:h-36 md:w-28 md:h-40 rounded-xl overflow-hidden shadow-2xl border-2 border-white/20">
+                <img
+                  src={movie.posterImageUrl || "/placeholder.svg"}
+                  alt={movie.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Content Section */}
+          <div className="pt-16 sm:pt-20 px-4 sm:px-6 pb-6">
+            {/* Title and Year */}
+            <div className="mb-6">
+              <h1
+                className={`text-2xl sm:text-3xl md:text-4xl font-black mb-2 bg-clip-text text-transparent leading-tight transition-all duration-300 ${
                   theme === "light"
-                    ? "bg-white/20 text-white border-white/30"
-                    : "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                    ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                    : "bg-gradient-to-r from-white via-slate-100 to-slate-300"
                 }`}
               >
-                {article.category}
-              </span>
-            )}
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-2 tracking-tight group-hover:text-emerald-300 transition-colors duration-300 leading-tight">
-              {article.title}
-            </h2>
-            <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 gap-y-2 text-xs sm:text-sm text-slate-300">
-              <span>{article.author}</span>
-              <span className="text-slate-500">•</span>
-              <span>
-                {new Date(article.publishedAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
-              </span>
-              {article.viewCount && (
-                <>
-                  <span className="text-slate-500">•</span>
-                  <span>
-                    {article.viewCount >= 1000
-                      ? `${(article.viewCount / 1000).toFixed(1)}k`
-                      : article.viewCount}{" "}
-                    views
+                {movie.title}
+              </h1>
+              <div
+                className={`flex items-center gap-2 ${
+                  theme === "light" ? "text-gray-600" : "text-slate-400"
+                }`}
+              >
+                <Calendar className="w-4 h-4" />
+                <span className="text-sm font-medium">{movie.year}</span>
+              </div>
+            </div>
+
+            {/* Director */}
+            {movie.directedBy && (
+              <div className="mb-6">
+                <h3
+                  className={`text-lg font-bold mb-3 bg-clip-text text-transparent transition-all duration-300 ${
+                    theme === "light"
+                      ? "bg-gradient-to-r from-black to-gray-600"
+                      : "bg-gradient-to-r from-white to-slate-300"
+                  }`}
+                >
+                  Directed By
+                </h3>
+                <div className="flex items-center gap-2">
+                  <Film
+                    className={`w-4 h-4 ${
+                      theme === "light" ? "text-gray-600" : "text-slate-400"
+                    }`}
+                  />
+                  <span
+                    className={`font-medium ${
+                      theme === "light" ? "text-gray-700" : "text-slate-300"
+                    }`}
+                  >
+                    {movie.directedBy}
                   </span>
-                </>
-              )}
+                </div>
+              </div>
+            )}
+
+            {/* Genres */}
+            <div className="mb-6">
+              <h3
+                className={`text-lg font-bold mb-3 bg-clip-text text-transparent transition-all duration-300 ${
+                  theme === "light"
+                    ? "bg-gradient-to-r from-black to-gray-600"
+                    : "bg-gradient-to-r from-white to-slate-300"
+                }`}
+              >
+                Genres
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {movie.genre &&
+                  movie.genre.map((g, index) => (
+                    <span
+                      key={index}
+                      className={`backdrop-blur-sm px-3 py-1.5 rounded-full text-xs border transition-all duration-300 font-medium ${
+                        theme === "light"
+                          ? "bg-gray-100 text-black border-gray-300 hover:bg-gray-200 hover:border-gray-400"
+                          : "bg-white/5 text-slate-200 border-white/10 hover:bg-white/10 hover:border-white/20"
+                      }`}
+                    >
+                      {g}
+                    </span>
+                  ))}
+              </div>
+            </div>
+
+            {/* Synopsis */}
+            <div className="mb-6">
+              <h3
+                className={`text-lg font-bold mb-3 bg-clip-text text-transparent transition-all duration-300 ${
+                  theme === "light"
+                    ? "bg-gradient-to-r from-black to-gray-600"
+                    : "bg-gradient-to-r from-white to-slate-300"
+                }`}
+              >
+                Synopsis
+              </h3>
+              <p
+                className={`leading-relaxed text-sm sm:text-base transition-all duration-300 ${
+                  theme === "light" ? "text-gray-700" : "text-slate-300"
+                }`}
+              >
+                {movie.synopsis || "No synopsis available for this movie."}
+              </p>
             </div>
           </div>
         </div>
-      </div>
-    </motion.article>
+      </motion.div>
+    </motion.div>
   );
 };
+
+// Article Card Component (reusable from ArticleSection)
+// const ArticleCard = ({ article, index, hoveredCard, setHoveredCard }) => {
+//   const { theme } = useTheme();
+
+//   return (
+//     <motion.article
+//       initial={{ opacity: 0, y: 30 }}
+//       whileInView={{ opacity: 1, y: 0 }}
+//       viewport={{ once: true }}
+//       transition={{
+//         duration: 0.6,
+//         delay: index * 0.1,
+//         opacity: { duration: 0.3 },
+//         scale: { duration: 0.3 },
+//       }}
+//       animate={{
+//         opacity: hoveredCard !== null && hoveredCard !== index ? 0.3 : 1,
+//         scale: hoveredCard === index ? 1.02 : 1,
+//       }}
+//       whileHover={{ y: -8 }}
+//       onMouseEnter={() => setHoveredCard(index)}
+//       onMouseLeave={() => setHoveredCard(null)}
+//       className="group relative aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-visible cursor-pointer"
+//       style={{
+//         filter:
+//           hoveredCard !== null && hoveredCard !== index
+//             ? "blur(2px)"
+//             : "blur(0px)",
+//         transition: "filter 0.3s ease-in-out",
+//       }}
+//     >
+//       <div className="absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden">
+//         <img
+//           src={article.imageUrl || "/placeholder.svg"}
+//           alt={article.title}
+//           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+//         />
+//         <div
+//           className={`absolute inset-0 transition-all duration-300 ${
+//             theme === "light"
+//               ? "bg-gradient-to-t from-black/80 via-black/40 to-black/20"
+//               : "bg-gradient-to-t from-black/90 via-black/50 to-black/20"
+//           }`}
+//         />
+
+//         <div className="relative h-full flex flex-col justify-end p-5 sm:p-6 lg:p-8">
+//           <div>
+//             {article.category && (
+//               <span
+//                 className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3 backdrop-blur-sm border ${
+//                   theme === "light"
+//                     ? "bg-white/20 text-white border-white/30"
+//                     : "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+//                 }`}
+//               >
+//                 {article.category}
+//               </span>
+//             )}
+//             <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-2 tracking-tight group-hover:text-emerald-300 transition-colors duration-300 leading-tight">
+//               {article.title}
+//             </h2>
+//             <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 gap-y-2 text-xs sm:text-sm text-slate-300">
+//               <span>{article.author}</span>
+//               <span className="text-slate-500">•</span>
+//               <span>
+//                 {new Date(article.publishedAt).toLocaleDateString("en-US", {
+//                   year: "numeric",
+//                   month: "short",
+//                   day: "numeric",
+//                 })}
+//               </span>
+//               {article.viewCount && (
+//                 <>
+//                   <span className="text-slate-500">•</span>
+//                   <span>
+//                     {article.viewCount >= 1000
+//                       ? `${(article.viewCount / 1000).toFixed(1)}k`
+//                       : article.viewCount}{" "}
+//                     views
+//                   </span>
+//                 </>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </motion.article>
+//   );
+// };
 
 // Movie Poster Card with Rank
 const MoviePosterCard = ({ movie, onClick, index }) => {
@@ -291,7 +476,7 @@ export default function IndiePage() {
   const { theme } = useTheme();
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [showMovieModal, setShowMovieModal] = useState(false);
-  const [hoveredArticle, setHoveredArticle] = useState(null);
+  // const [hoveredArticle, setHoveredArticle] = useState(null);
   const [topIndieFilms, setTopIndieFilms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const scrollContainerRef = useRef(null);
@@ -335,38 +520,38 @@ export default function IndiePage() {
   }, [token]);
 
 
-  const featuredIndieArticles = [
-    {
-      id: "art1",
-      title: "The Rise of A24: A Decade of Independent Excellence",
-      author: "Jane Doe",
-      publishedAt: "2025-10-15T00:00:00.000Z",
-      imageUrl:
-        "https://images.unsplash.com/photo-1595769816263-9b910be24d5f?w=800&q=80",
-      viewCount: 1254,
-      category: "Analysis",
-    },
-    {
-      id: "art2",
-      title: "How 'Masaan' Redefined Modern Indian Indie Cinema",
-      author: "Rohan Kumar",
-      publishedAt: "2025-10-12T00:00:00.000Z",
-      imageUrl:
-        "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&q=80",
-      viewCount: 2345,
-      category: "Deep Dive",
-    },
-    {
-      id: "art3",
-      title: "A Guide to the Korean New Wave for Beginners",
-      author: "Emily Chen",
-      publishedAt: "2025-10-10T00:00:00.000Z",
-      imageUrl:
-        "https://images.unsplash.com/photo-1574267432644-f71916e8eeb0?w=800&q=80",
-      viewCount: 987,
-      category: "Guide",
-    },
-  ];
+  // const featuredIndieArticles = [
+  //   {
+  //     id: "art1",
+  //     title: "The Rise of A24: A Decade of Independent Excellence",
+  //     author: "Jane Doe",
+  //     publishedAt: "2025-10-15T00:00:00.000Z",
+  //     imageUrl:
+  //       "https://images.unsplash.com/photo-1595769816263-9b910be24d5f?w=800&q=80",
+  //     viewCount: 1254,
+  //     category: "Analysis",
+  //   },
+  //   {
+  //     id: "art2",
+  //     title: "How 'Masaan' Redefined Modern Indian Indie Cinema",
+  //     author: "Rohan Kumar",
+  //     publishedAt: "2025-10-12T00:00:00.000Z",
+  //     imageUrl:
+  //       "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&q=80",
+  //     viewCount: 2345,
+  //     category: "Deep Dive",
+  //   },
+  //   {
+  //     id: "art3",
+  //     title: "A Guide to the Korean New Wave for Beginners",
+  //     author: "Emily Chen",
+  //     publishedAt: "2025-10-10T00:00:00.000Z",
+  //     imageUrl:
+  //       "https://images.unsplash.com/photo-1574267432644-f71916e8eeb0?w=800&q=80",
+  //     viewCount: 987,
+  //     category: "Guide",
+  //   },
+  // ];
 
   const handleMovieClick = (movie) => {
     setSelectedMovie(movie);
@@ -544,7 +729,7 @@ export default function IndiePage() {
           </motion.section>
 
           {/* Section 4: Featured Articles */}
-          <motion.section
+          {/* <motion.section
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
@@ -570,7 +755,7 @@ export default function IndiePage() {
                 />
               ))}
             </div>
-          </motion.section>
+          </motion.section> */}
         </div>
       </div>
 
