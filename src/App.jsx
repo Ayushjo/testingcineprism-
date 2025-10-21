@@ -130,7 +130,8 @@ const App = () => {
 
             {/* Auth callback - must be outside protected routes */}
             <Route path="/auth/callback" element={<AuthCallback />} />
-
+            <Route path="/post/:id" element={<PostPage />} />
+            <Route path="/reviews" element={<ReviewPage />} />
             <Route element={<RedirectIfUser />}>
               <Route path="/news/:id" element={<NewsArticlePage />} />
               <Route path="/trending" element={<TrendingPage />} />
@@ -155,8 +156,6 @@ const App = () => {
               <Route path="/indie/indian" element={<IndianIndiePage />} />
               <Route path="/indie/world" element={<WorldIndiePage />} /> */}
 
-              <Route path="/reviews" element={<ReviewPage />} />
-              <Route path="/post/:id" element={<PostPage />} />
               <Route path="/genre/:genre" element={<GenreMoviesPage />} />
               <Route path="/recommendations-page" element={<TopPicksPage />} />
               <Route path="/merchandise" element={<Merchandise />} />
