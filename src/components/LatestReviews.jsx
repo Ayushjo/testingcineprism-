@@ -165,23 +165,29 @@ export default function LatestReviews() {
   };
 
   return (
-    <section className={`py-12 sm:py-16 md:py-24 relative overflow-hidden transition-colors duration-300 ${
-      theme === "light"
-        ? "bg-gradient-to-b from-white to-gray-50"
-        : "bg-gradient-to-b from-slate-900 to-slate-950"
-    }`}>
+    <section
+      className={`py-12 sm:py-16 md:py-24 relative overflow-hidden transition-colors duration-300 ${
+        theme === "light"
+          ? "bg-gradient-to-b from-white to-gray-50"
+          : "bg-gradient-to-b from-slate-900 to-slate-950"
+      }`}
+    >
       {/* Ambient Background */}
       <div className="absolute inset-0 opacity-20">
-        <div className={`absolute inset-0 ${
-          theme === "light"
-            ? "bg-[radial-gradient(circle_at_30%_40%,rgba(0,0,0,0.03),transparent_50%)]"
-            : "bg-[radial-gradient(circle_at_30%_40%,rgba(16,185,129,0.05),transparent_50%)]"
-        }`} />
-        <div className={`absolute inset-0 ${
-          theme === "light"
-            ? "bg-[radial-gradient(circle_at_70%_60%,rgba(0,0,0,0.02),transparent_50%)]"
-            : "bg-[radial-gradient(circle_at_70%_60%,rgba(139,92,246,0.05),transparent_50%)]"
-        }`} />
+        <div
+          className={`absolute inset-0 ${
+            theme === "light"
+              ? "bg-[radial-gradient(circle_at_30%_40%,rgba(0,0,0,0.03),transparent_50%)]"
+              : "bg-[radial-gradient(circle_at_30%_40%,rgba(16,185,129,0.05),transparent_50%)]"
+          }`}
+        />
+        <div
+          className={`absolute inset-0 ${
+            theme === "light"
+              ? "bg-[radial-gradient(circle_at_70%_60%,rgba(0,0,0,0.02),transparent_50%)]"
+              : "bg-[radial-gradient(circle_at_70%_60%,rgba(139,92,246,0.05),transparent_50%)]"
+          }`}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 relative">
@@ -194,26 +200,32 @@ export default function LatestReviews() {
           className="text-center mb-8 sm:mb-12 md:mb-16"
         >
           <div className="inline-block mb-4 sm:mb-6">
-            <span className={`backdrop-blur-xl px-3 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-semibold border-2 flex items-center gap-2 shadow-md ${
-              theme === "light"
-                ? "bg-gray-100 text-black border-black/40"
-                : "bg-white/5 text-emerald-400 border-white/10"
-            }`}>
+            <span
+              className={`backdrop-blur-xl px-3 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-semibold border-2 flex items-center gap-2 shadow-md ${
+                theme === "light"
+                  ? "bg-gray-100 text-black border-black/40"
+                  : "bg-white/5 text-emerald-400 border-white/10"
+              }`}
+            >
               <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" />
               Fresh Reviews
             </span>
           </div>
-          <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-4 sm:mb-6 bg-clip-text text-transparent tracking-tight px-4 ${
-            theme === "light"
-              ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
-              : "bg-gradient-to-r from-white via-slate-200 to-slate-400"
-          }`}>
+          <h2
+            className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-4 sm:mb-6 bg-clip-text text-transparent tracking-tight px-4 ${
+              theme === "light"
+                ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                : "bg-gradient-to-r from-white via-slate-200 to-slate-400"
+            }`}
+          >
             Latest Reviews
           </h2>
-          <p className={`text-base sm:text-lg md:text-xl max-w-2xl mx-auto leading-relaxed px-4 ${
-            theme === "light" ? "text-black/70" : "text-slate-400"
-          }`}>
-            Our newest takes on the films everyone's talking about
+          <p
+            className={`text-base sm:text-lg md:text-xl max-w-2xl mx-auto leading-relaxed px-4 ${
+              theme === "light" ? "text-black/70" : "text-slate-400"
+            }`}
+          >
+            Our take on the films everyone's talking about
           </p>
         </motion.div>
 
@@ -226,9 +238,11 @@ export default function LatestReviews() {
         >
           {isLoading ? (
             <div className="flex justify-center items-center py-12 sm:py-20">
-              <div className={`animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 ${
-                theme === "light" ? "border-black" : "border-emerald-400"
-              }`}></div>
+              <div
+                className={`animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 ${
+                  theme === "light" ? "border-black" : "border-emerald-400"
+                }`}
+              ></div>
             </div>
           ) : error ? (
             <div className="flex justify-center items-center py-12 sm:py-20">
@@ -250,7 +264,11 @@ export default function LatestReviews() {
             </div>
           ) : latestReviews.length === 0 ? (
             <div className="flex justify-center items-center py-12 sm:py-20">
-              <p className={`text-sm sm:text-base ${theme === "light" ? "text-black/70" : "text-slate-400"}`}>
+              <p
+                className={`text-sm sm:text-base ${
+                  theme === "light" ? "text-black/70" : "text-slate-400"
+                }`}
+              >
                 No reviews available
               </p>
             </div>
@@ -265,7 +283,11 @@ export default function LatestReviews() {
                     : "bg-black/60 border-white/20 hover:bg-black/80 hover:border-emerald-400/50"
                 }`}
               >
-                <ChevronLeft className={`w-6 h-6 ${theme === "light" ? "text-black" : "text-white"}`} />
+                <ChevronLeft
+                  className={`w-6 h-6 ${
+                    theme === "light" ? "text-black" : "text-white"
+                  }`}
+                />
               </button>
 
               <button
@@ -276,16 +298,24 @@ export default function LatestReviews() {
                     : "bg-black/60 border-white/20 hover:bg-black/80 hover:border-emerald-400/50"
                 }`}
               >
-                <ChevronRight className={`w-6 h-6 ${theme === "light" ? "text-black" : "text-white"}`} />
+                <ChevronRight
+                  className={`w-6 h-6 ${
+                    theme === "light" ? "text-black" : "text-white"
+                  }`}
+                />
               </button>
 
               {/* Fade-out edges */}
-              <div className={`absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r to-transparent z-10 pointer-events-none ${
-                theme === "light" ? "from-gray-50" : "from-slate-950"
-              }`} />
-              <div className={`absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l to-transparent z-10 pointer-events-none ${
-                theme === "light" ? "from-gray-50" : "from-slate-950"
-              }`} />
+              <div
+                className={`absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r to-transparent z-10 pointer-events-none ${
+                  theme === "light" ? "from-gray-50" : "from-slate-950"
+                }`}
+              />
+              <div
+                className={`absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l to-transparent z-10 pointer-events-none ${
+                  theme === "light" ? "from-gray-50" : "from-slate-950"
+                }`}
+              />
 
               {/* Horizontal Scrolling Container */}
               <div

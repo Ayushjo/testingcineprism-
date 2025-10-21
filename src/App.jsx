@@ -137,9 +137,7 @@ const App = () => {
               <Route path="/war" element={<WarPage />} />
 
               {/* Indie Pages */}
-              <Route path="/indie" element={<IndiePage />} />
-              <Route path="/indie/indian" element={<IndianIndiePage />} />
-              <Route path="/indie/world" element={<WorldIndiePage />} />
+              
 
               <Route path="/reviews" element={<ReviewPage />} />
               <Route path="/post/:id" element={<PostPage />} />

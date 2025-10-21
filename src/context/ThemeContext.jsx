@@ -7,7 +7,7 @@ const THEME_KEY = "cineprism_theme";
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem(THEME_KEY);
-    return savedTheme || "dark";
+    return savedTheme || "light";
   });
 
   useEffect(() => {

@@ -446,8 +446,8 @@ export default function Homepage() {
         </div>
         <Top5Picks />
         <LatestReviews />
-        <ExploreByGenre />
         <TrendingThisWeek />
+        <ExploreByGenre />
 
 
 
