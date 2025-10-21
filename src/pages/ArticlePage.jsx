@@ -652,37 +652,42 @@ const ArticlePage = () => {
           ))}
       </Helmet>
       {article.mainImageUrl ? (
-        <section className="relative h-[60vh] overflow-hidden">
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${article.mainImageUrl})` }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent" />
-
-          <div className="absolute bottom-0 left-0 right-0 z-10">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 pt-20 text-center">
+        <section className="relative">
+          {/* Compact Header Section */}
+          <div className={`py-4 px-4 sm:px-6 lg:px-8 ${
+            theme === "light" ? "bg-white" : "bg-slate-950"
+          }`}>
+            <div className="max-w-6xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="max-w-4xl mx-auto"
+                className="text-center"
               >
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight drop-shadow-2xl">
+                <h1 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 leading-tight ${
+                  theme === "light" ? "text-black" : "text-white"
+                }`}>
                   {article.title}
                 </h1>
                 {article.shortDescription && (
-                  <p className="text-lg sm:text-xl md:text-2xl text-white/95 leading-relaxed mb-6 max-w-3xl mx-auto drop-shadow-lg font-light">
+                  <p className={`text-sm sm:text-base md:text-lg leading-relaxed mb-3 max-w-3xl mx-auto ${
+                    theme === "light" ? "text-gray-700" : "text-slate-300"
+                  }`}>
                     {article.shortDescription}
                   </p>
                 )}
-                
-                <div className="flex items-center justify-center gap-4">
+
+                <div className="flex items-center justify-center gap-2 sm:gap-3">
                   <button
                     onClick={handleLikeClick}
-                    className="flex items-center gap-2 text-white/80 hover:text-pink-400 transition-all duration-300 group bg-white/10 backdrop-blur-sm px-4 py-2.5 rounded-xl border border-white/20 hover:border-pink-400/50"
+                    className={`flex items-center gap-1.5 transition-all duration-300 px-3 py-1.5 rounded-lg border text-sm ${
+                      theme === "light"
+                        ? "bg-gray-100 border-gray-300 text-gray-700 hover:border-pink-400 hover:text-pink-500"
+                        : "bg-white/10 backdrop-blur-sm border-white/20 text-white/80 hover:text-pink-400 hover:border-pink-400/50"
+                    }`}
                   >
                     <Heart
-                      className={`w-5 h-5 ${
+                      className={`w-4 h-4 ${
                         isLiked ? "fill-pink-500 text-pink-500" : ""
                       }`}
                     />
@@ -692,9 +697,13 @@ const ArticlePage = () => {
                   </button>
                   <button
                     onClick={scrollToDiscussion}
-                    className="flex items-center gap-2 text-white/80 hover:text-emerald-400 transition-all duration-300 group bg-white/10 backdrop-blur-sm px-4 py-2.5 rounded-xl border border-white/20 hover:border-emerald-400/50"
+                    className={`flex items-center gap-1.5 transition-all duration-300 px-3 py-1.5 rounded-lg border text-sm ${
+                      theme === "light"
+                        ? "bg-gray-100 border-gray-300 text-gray-700 hover:border-emerald-500 hover:text-emerald-600"
+                        : "bg-white/10 backdrop-blur-sm border-white/20 text-white/80 hover:text-emerald-400 hover:border-emerald-400/50"
+                    }`}
                   >
-                    <MessageCircle className="w-5 h-5" />
+                    <MessageCircle className="w-4 h-4" />
                     <span className="font-medium">{comments.length || 0}</span>
                   </button>
                   <ShareButton
@@ -710,6 +719,23 @@ const ArticlePage = () => {
                 </div>
               </motion.div>
             </div>
+          </div>
+
+          {/* Image Section - Rectangular with proper aspect ratio */}
+          <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="relative w-full overflow-hidden rounded-xl shadow-2xl"
+              style={{ aspectRatio: '16/9' }}
+            >
+              <img
+                src={article.mainImageUrl}
+                alt={article.title}
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
           </div>
         </section>
       ) : (
