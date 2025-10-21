@@ -17,6 +17,8 @@ import {
   Calendar,
   Clock,
 } from "lucide-react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import InterstellarImage from "../assets/Interstellar.jpg";
 import HowToLoseImage from "../assets/howtoloseaguys.jpg";
 import OppenHeimerImage from "../assets/oppenheimer.jpg";
@@ -51,6 +53,10 @@ import Top5Picks from "../components/Top5Picks";
 export default function Homepage() {
   const { theme } = useTheme();
   const [activeCard, setActiveCard] = useState(null);
+  const navigate = useNavigate();
+  const [quotes, setQuotes] = useState([]);
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const [latestReviews, setLatestReviews] = useState([]);
 
   const heroPosters = [
     {
@@ -235,6 +241,60 @@ export default function Homepage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHoveringCard, setIsHoveringCard] = useState(false);
 
+  // Fetch quotes from API
+  useEffect(() => {
+    const fetchQuotes = async () => {
+      try {
+        const response = await axios.get(
+          "https://api.thecineprism.com/api/v1/admin/fetch-quotes"
+        );
+        if (response.data.quotes && Array.isArray(response.data.quotes)) {
+          setQuotes(response.data.quotes);
+        }
+      } catch (error) {
+        console.error("Error fetching quotes:", error);
+      }
+    };
+    fetchQuotes();
+  }, []);
+
+  // Auto-rotate quotes every 5 seconds
+  useEffect(() => {
+    if (quotes.length === 0) return;
+    const interval = setInterval(() => {
+      setCurrentQuoteIndex((prev) => (prev + 1) % quotes.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [quotes.length]);
+
+  // Fetch latest reviews from API
+  useEffect(() => {
+    const fetchLatestReviews = async () => {
+      try {
+        const response = await axios.get(
+          "https://api.thecineprism.com/api/v1/admin/latest-reviews"
+        );
+        const data = response.data;
+        if (data.latestReviews && Array.isArray(data.latestReviews)) {
+          const excludedTitles = [
+            "heat",
+            "kaala patthar",
+            "head-on",
+            "blue ruins",
+          ];
+          const filteredReviews = data.latestReviews.filter(
+            (review) =>
+              !excludedTitles.includes(review.title.trim().toLowerCase())
+          );
+          setLatestReviews(filteredReviews.slice(0, 6));
+        }
+      } catch (error) {
+        console.error("Error fetching latest reviews:", error);
+      }
+    };
+    fetchLatestReviews();
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroPosters.length);
@@ -321,51 +381,66 @@ export default function Homepage() {
                     </span>
                   </h1>
 
-                  {/* Desktop Featured Content Card - Added here */}
-                  <div className="relative group max-w-md mx-auto lg:mx-0 animate-fade-in-up animation-delay-900">
-                    <div className="relative bg-slate-800/20 backdrop-blur-sm border border-slate-600/30 rounded-3xl p-6 transition-all duration-500">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="text-left">
-                          <p className="text-xs text-slate-200 font-medium mb-2 uppercase tracking-wider">
-                            Featured Review
-                          </p>
-                          <h3 className="text-lg font-light text-slate-100 mb-1">
-                            {heroPosters[currentSlide].title}
-                          </h3>
-                          <p className="text-slate-400 text-xs">
-                            {heroPosters[currentSlide].year} •{" "}
-                            {heroPosters[currentSlide].genre}
-                          </p>
-                        </div>
+                  {/* Quotes Section - From MobileHero */}
+                  <div className="relative max-w-2xl lg:mx-0 animate-fade-in-up animation-delay-900">
+                    <style>{`
+                      @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');
+                      .font-editorial { font-family: 'EB Garamond', Georgia, serif; }
+                    `}</style>
+                    <div className="min-h-[180px] flex items-center">
+                      {quotes.length > 0 ? (
+                        <motion.div
+                          key={currentQuoteIndex}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{ duration: 0.6 }}
+                          className="w-full"
+                        >
+                          <div className="relative flex flex-col items-center">
+                            {/* Quote text - centered */}
+                            <div className="text-center mb-6 relative inline-block">
+                              {/* Opening quote mark */}
+                              <span className="absolute -left-4 -top-4 text-6xl font-editorial leading-none text-white/20">
+                                "
+                              </span>
 
+                              <p
+                                className="text-xl leading-relaxed font-editorial italic tracking-wide text-slate-200"
+                                style={{ fontWeight: 400 }}
+                              >
+                                {quotes[currentQuoteIndex]?.quote}
+                              </p>
 
-                      </div>
+                              {/* Closing quote mark */}
+                              <span className="absolute -right-4 -bottom-2 text-6xl font-editorial leading-none text-white/20">
+                                "
+                              </span>
+                            </div>
 
-                      <p className="text-slate-300 italic text-sm leading-relaxed text-left">
-                        "{heroPosters[currentSlide].subtitle}"
-                      </p>
-                    </div>
-
-                    {/* Desktop Film Navigation */}
-                    <div className="flex items-center justify-center gap-3 mt-6">
-                      {heroPosters.map((poster, index) => (
-                        <motion.button
-                          key={index}
-                          onClick={() => setCurrentSlide(index)}
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.95 }}
-                          className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                            index === currentSlide
-                              ? "bg-slate-200 shadow-lg shadow-slate-200/20"
-                              : "bg-slate-600/40 hover:bg-slate-500/60"
-                          }`}
-                        />
-                      ))}
+                            {/* Author attribution - centered with lines matching quote width */}
+                            <div className="flex items-center gap-3 w-full justify-center">
+                              <div className="h-px flex-1 bg-white/30 max-w-[100px]"></div>
+                              <p
+                                className="text-base font-editorial tracking-wider uppercase text-slate-400 whitespace-nowrap"
+                                style={{ letterSpacing: "0.2em", fontWeight: 600 }}
+                              >
+                                {quotes[currentQuoteIndex]?.author}
+                              </p>
+                              <div className="h-px flex-1 bg-white/30 max-w-[100px]"></div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ) : (
+                        <p className="text-lg leading-relaxed text-slate-300 font-light">
+                          Deep dives, critical essays, and curated collections that celebrate the art of film.
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
 
-                {/* Right Side - Movie Card */}
+                {/* Right Side - Latest Review Card */}
                 <div className="hidden lg:block animate-fade-in-right animation-delay-500">
                   <Tilt
                     glareEnable={true}
@@ -375,63 +450,97 @@ export default function Homepage() {
                     tiltMaxAngleY={10}
                     scale={1.02}
                   >
-                    <div
-                      className="relative group cursor-pointer"
-                      onMouseEnter={() => setIsHoveringCard(true)}
-                      onMouseLeave={() => setIsHoveringCard(false)}
-                    >
-                      {/* "Now Featuring" Badge */}
+                    <div className="relative group cursor-pointer">
+                      {/* "Latest Review" Badge */}
                       <div className="absolute -top-4 left-4 z-20 animate-fade-in-down animation-delay-800">
                         <div className="flex items-center gap-2 bg-white/10 backdrop-blur-xl text-slate-200 px-4 py-2 rounded-2xl text-sm font-medium border border-white/10">
                           <div className="w-2 h-2 bg-slate-200 rounded-full animate-pulse" />
-                          Now Featuring
+                          Latest Review
                         </div>
                       </div>
+
                       {/* Movie Poster */}
-                      <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl">
+                      <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl max-w-md mx-auto">
                         <AnimatePresence mode="wait">
-                          <motion.div
-                            key={currentSlide}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.5 }}
-                            className="w-full h-full"
-                          >
-                            <OptimizedImage
-                              src={heroPosters[currentSlide].image || "/placeholder.svg"}
-                              alt={heroPosters[currentSlide].title}
-                              priority={true}
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            />
-                          </motion.div>
+                          {latestReviews.length > 0 && (
+                            <motion.div
+                              key={latestReviews[currentSlide % latestReviews.length]?.id}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.5 }}
+                              className="w-full h-full"
+                            >
+                              <img
+                                src={
+                                  latestReviews[currentSlide % latestReviews.length]
+                                    ?.posterImageUrl ||
+                                  "/placeholder.svg"
+                                }
+                                alt={latestReviews[currentSlide % latestReviews.length]?.title}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              />
+                            </motion.div>
+                          )}
                         </AnimatePresence>
-                        
+
+                        {/* Dark overlay for text readability */}
+                        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
+
                         {/* Information Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                          <h3
-                            key={`title-${currentSlide}`}
-                            className="text-2xl font-bold mb-2 tracking-tight animate-fade-in-up"
-                          >
-                            {heroPosters[currentSlide].title}
-                          </h3>
-                          <p
-                            key={`subtitle-${currentSlide}`}
-                            className="text-slate-300 mb-3 leading-relaxed animate-fade-in-up animation-delay-100"
-                          >
-                            {heroPosters[currentSlide].subtitle}
-                          </p>
-                          <div
-                            key={`meta-${currentSlide}`}
-                            className="flex items-center gap-3 text-sm text-slate-400 animate-fade-in-up animation-delay-200"
-                          >
-                            <span>{heroPosters[currentSlide].year}</span>
-                            <span>•</span>
-                            <span>{heroPosters[currentSlide].genre}</span>
+                        {latestReviews.length > 0 && (
+                          <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                            <h3 className="text-2xl font-bold mb-2 tracking-tight">
+                              {latestReviews[currentSlide % latestReviews.length]?.title}
+                            </h3>
+                            <div className="flex items-center justify-between text-xs text-slate-200 mb-3">
+                              <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                  <span>{latestReviews[currentSlide % latestReviews.length]?.year}</span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                                  <span>{latestReviews[currentSlide % latestReviews.length]?.genres?.[0]}</span>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
+
+                      {/* Read Review Button */}
+                      {latestReviews.length > 0 && (
+                        <div className="absolute top-4 right-4 z-20">
+                          <motion.button
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() =>
+                              navigate(`/post/${latestReviews[currentSlide % latestReviews.length]?.id}`)
+                            }
+                            className="backdrop-blur-md bg-white/90 text-black border-2 border-white/60 hover:bg-white hover:border-white px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 flex items-center gap-1 shadow-lg"
+                          >
+                            <span>Read Review</span>
+                            <ArrowUpRight className="w-3 h-3" />
+                          </motion.button>
+                        </div>
+                      )}
+
+                      {/* Slide Indicators */}
+                      {latestReviews.length > 0 && (
+                        <div className="flex justify-center gap-2 mt-4">
+                          {latestReviews.map((_, index) => (
+                            <button
+                              key={index}
+                              onClick={() => setCurrentSlide(index)}
+                              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                index === currentSlide % latestReviews.length
+                                  ? "bg-white shadow-lg scale-125"
+                                  : "bg-white/40 hover:bg-white/70"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </Tilt>
                 </div>

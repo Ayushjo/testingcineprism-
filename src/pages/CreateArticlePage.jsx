@@ -21,6 +21,7 @@ import BlockEditor from "@/components/BlockEditor";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { showSuccessToast, showErrorToast, showLoadingToast, dismissToast } from "../utils/toast";
+import { useNavigate } from "react-router-dom";
 export default function CreateArticlePage() {
   const [article, setArticle] = useState({
     title: "",
@@ -35,7 +36,9 @@ export default function CreateArticlePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
   const [submitMessage, setSubmitMessage] = useState("");
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const { token } = useAuth();
+  const navigate = useNavigate();
   const blockTypes = [
     { type: "PARAGRAPH", icon: Type, label: "Paragraph" },
     { type: "HEADING", icon: Type, label: "Heading" },
@@ -117,8 +120,27 @@ export default function CreateArticlePage() {
     reader.readAsDataURL(file);
   }, []);
 
+  const handlePreview = () => {
+    // Navigate to preview page with article data
+    navigate("/admin/article-preview", {
+      state: {
+        article,
+        mainImagePreview,
+        blocks,
+      },
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Show confirmation dialog
+    if (!showConfirmDialog) {
+      setShowConfirmDialog(true);
+      return;
+    }
+
+    setShowConfirmDialog(false);
     setIsSubmitting(true);
     setSubmitStatus(null);
     setSubmitMessage("");
@@ -206,6 +228,38 @@ export default function CreateArticlePage() {
 
   return (
     <div className="min-h-screen bg-slate-950 p-6">
+      {/* Confirmation Dialog */}
+      {showConfirmDialog && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-md w-full shadow-2xl"
+          >
+            <h3 className="text-2xl font-bold text-white mb-3">
+              Confirm Article Creation
+            </h3>
+            <p className="text-slate-300 mb-6">
+              Are you sure you want to create this article? Please review all details before publishing.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowConfirmDialog(false)}
+                className="flex-1 px-4 py-3 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700 transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                className="flex-1 px-4 py-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors font-medium"
+              >
+                Yes, Create Article
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
@@ -435,6 +489,7 @@ export default function CreateArticlePage() {
 
             <motion.button
               type="button"
+              onClick={handlePreview}
               disabled={isSubmitting}
               whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
               whileTap={{ scale: isSubmitting ? 1 : 0.98 }}

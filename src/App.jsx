@@ -8,7 +8,6 @@ import { initGA, logPageView } from "./lib/analytics.js";
 // Critical components - load immediately (above the fold)
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import MeteorCursor from "./components/MeteorCursor";
 import ScrollToTop from "./components/ScrollToTop";
 import Homepage from "./pages/Home";
 
@@ -47,6 +46,7 @@ const TrendingRankManager = lazy(() => import("./pages/TrendingRankManager"));
 const RuleOfThirdsPage = lazy(() => import("./pages/RuleOfThirdsPage"));
 const CreateArticlePage = lazy(() => import("./pages/CreateArticlePage"));
 const ArticlePage = lazy(() => import("./pages/ArticlePage"));
+const ArticlePreviewPage = lazy(() => import("./pages/ArticlePreviewPage"));
 const BoxOfficePage = lazy(() => import("./pages/BoxOfficePage"));
 const ArticleSection = lazy(() => import("./pages/ArticleSection"));
 const CreateQuotePage = lazy(() => import("./pages/CreateQuotePage"));
@@ -118,7 +118,6 @@ const App = () => {
             },
           }}
         />
-        <MeteorCursor />
         <ScrollToTop smooth={true} delay={100} />
         <Navbar />
         <Suspense fallback={<PageLoader />}>
@@ -178,6 +177,11 @@ const App = () => {
                 <Route path="edit-post" element={<EditPostPage />} />
                 <Route path="edit-rank" element={<TrendingRankManager />} />
                 <Route path="create-article" element={<CreateArticlePage />} />
+                <Route
+                  path="article-preview"
+                  element={<ArticlePreviewPage />}
+                />
+
                 <Route path="create-quote" element={<CreateQuotePage />} />
                 <Route path="edit-quote" element={<EditQuotePage />} />
                 <Route path="add-byGenres" element={<AddByGenrePage />} />

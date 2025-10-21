@@ -1,9 +1,10 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ThemedLoader from "./ThemeLoader";
 
 const RedirectIfUser = () => {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return <ThemedLoader />;
@@ -13,7 +14,8 @@ const RedirectIfUser = () => {
     return <Outlet />;
   }
 
-  return <Navigate to="/login" replace />;
+  // Save the current location so we can redirect back after login
+  return <Navigate to="/login" state={{ from: location.pathname + location.search }} replace />;
 };
 
 export default RedirectIfUser;

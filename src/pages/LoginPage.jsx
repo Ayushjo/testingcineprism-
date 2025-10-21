@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
 import TheCineprismLogo from "../assets/thecineprismlogo.jpg";
@@ -11,6 +11,10 @@ export default function LoginPage() {
   const { loginWithGoogle, user, handleAuthCallback } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
+
+  // Get the redirect path from location state, or default to home
+  const from = location.state?.from || "/";
 
   useEffect(() => {
     // Handle OAuth callback
@@ -20,7 +24,8 @@ export default function LoginPage() {
     if (token) {
       handleAuthCallback(token);
       toast.success("Login successful!");
-      navigate("/");
+      // Redirect to the original page they were trying to access
+      navigate(from, { replace: true });
     } else if (error) {
       const errorMessages = {
         auth_failed: "Authentication failed. Please try again.",
@@ -29,14 +34,14 @@ export default function LoginPage() {
       };
       toast.error(errorMessages[error] || "Login failed");
     }
-  }, [searchParams, handleAuthCallback, navigate]);
+  }, [searchParams, handleAuthCallback, navigate, from]);
 
   useEffect(() => {
     // Redirect if already logged in
     if (user) {
-      navigate("/");
+      navigate(from, { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, navigate, from]);
 
   return (
     <div className={`min-h-screen relative overflow-hidden transition-colors duration-300 ${
@@ -306,12 +311,12 @@ export default function LoginPage() {
                 <h2 className={`text-lg font-light mb-2 ${
                   theme === "light" ? "text-gray-800" : "text-neutral-300"
                 }`}>
-                  Welcome Back
+                  Welcome to Cinéprism
                 </h2>
                 <p className={`text-sm leading-relaxed ${
                   theme === "light" ? "text-gray-600" : "text-neutral-500"
                 }`}>
-                  Continue your cinematic journey with us
+                  Begin your cinematic journey with us
                 </p>
               </motion.div>
 
