@@ -1,8 +1,9 @@
-// App.jsx - Updated with lazy loading for better performance
-import { lazy, Suspense } from "react";
+// App.jsx - Updated with Google Analytics
+import { lazy, Suspense, useEffect } from "react";
 import { ParallaxProvider } from "react-scroll-parallax";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import { initGA, logPageView } from "./lib/analytics.js";
 
 // Critical components - load immediately (above the fold)
 import Navbar from "./components/Navbar";
@@ -81,6 +82,16 @@ const App = () => {
   const location = useLocation();
   const hideFooter = location.pathname.startsWith("/admin");
 
+  // Initialize Google Analytics once on mount
+  useEffect(() => {
+    initGA();
+  }, []);
+
+  // Track page views on route change
+  useEffect(() => {
+    logPageView(location.pathname + location.search);
+  }, [location]);
+
   return (
     <>
       <ParallaxProvider>
@@ -137,7 +148,9 @@ const App = () => {
               <Route path="/war" element={<WarPage />} />
 
               {/* Indie Pages */}
-              
+              {/* <Route path="/indie" element={<IndiePage />} />
+              <Route path="/indie/indian" element={<IndianIndiePage />} />
+              <Route path="/indie/world" element={<WorldIndiePage />} /> */}
 
               <Route path="/reviews" element={<ReviewPage />} />
               <Route path="/post/:id" element={<PostPage />} />
