@@ -65,7 +65,7 @@ export default function Navbar() {
   }, []);
 
   const handleResize = useCallback(() => {
-    if (window.innerWidth >= 1024) {
+    if (window.innerWidth >= 1280) {
       setIsMobileMenuOpen(false);
     }
   }, []);
@@ -103,6 +103,7 @@ export default function Navbar() {
       { href: "/reviews", label: "Reviews" },
       { href: "/trending", label: "Trending" },
       { href: "/explore-genres", label: "Explore Genres" },
+      { href: "/articles", label: "Articles" },
       { href: "/merchandise", label: "Merchandise" },
     ];
 
@@ -184,7 +185,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-0.5">
+          <div className="hidden xl:flex items-center gap-0.5">
             {navLinks.map((link, index) => (
               <motion.div
                 key={`nav-${link.href}`}
@@ -337,7 +338,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Social Actions */}
-          <div className="hidden lg:flex items-center gap-1.5">
+          <div className="hidden xl:flex items-center gap-1.5">
             {/* Theme Toggle */}
             <motion.div
               onMouseEnter={() => setHoveredItem("theme")}
@@ -442,7 +443,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden">
+          <div className="xl:hidden">
             <motion.button
               aria-label="Toggle menu"
               whileTap={{ scale: 0.95 }}
@@ -493,14 +494,14 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className={`lg:hidden backdrop-blur-xl border-t ${
+            className={`xl:hidden backdrop-blur-xl border-t ${
               theme === "light"
                 ? "bg-white/95 border-black/20"
                 : "bg-slate-950/95 border-white/5"
             }`}
           >
             {/* Scrollable Container with Max Height */}
-            <div className="max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain">
+            <div className="max-h-[50vh] overflow-y-auto overscroll-contain">
               <div className="px-4 py-4 space-y-2">
               {navLinks.map((link, index) => (
                 <motion.div

@@ -7,20 +7,10 @@ import {
   Calendar,
   User,
   Search,
-  Filter,
-  ArrowRight,
-  ChevronDown,
   Eye,
 } from "lucide-react";
 import axios from "axios";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { useTheme } from "../context/ThemeContext";
 
 // Article Cards with Focus (Blur effect)
 const ArticleCardsWithFocus = ({ filteredArticles }) => {
@@ -83,40 +73,7 @@ const ArticleCardsWithFocus = ({ filteredArticles }) => {
                     {article.title}
                   </h2>
 
-                  {/* Updated metadata line with integrated view count */}
-                  <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 gap-y-2 text-xs sm:text-sm text-slate-300 mb-3 sm:mb-4">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      <span>
-                        {new Date(
-                          article.publishedAt || article.createdAt
-                        ).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </span>
-                    </div>
-
-                    <span className="text-slate-500">•</span>
-
-                    <div className="flex items-center gap-1">
-                      <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      <span className="truncate">{article.author}</span>
-                    </div>
-
-                    <span className="text-slate-500">•</span>
-
-                    <div className="flex items-center gap-1">
-                      <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      <span>
-                        {article.viewCount >= 1000
-                          ? `${(article.viewCount / 1000).toFixed(1)}k`
-                          : article.viewCount}{" "}
-                        views
-                      </span>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
             </div>
@@ -128,9 +85,8 @@ const ArticleCardsWithFocus = ({ filteredArticles }) => {
 };
 
 export default function ArticlesPage() {
+  const { theme } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("all");
-  const [sortBy, setSortBy] = useState("newest");
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -138,21 +94,6 @@ export default function ArticlesPage() {
   const token =
     localStorage.getItem("cineprism_auth_token") ||
     sessionStorage.getItem("cineprism_auth_token");
-
-  // Status filter options
-  const statusOptions = [
-    { key: "all", label: "All Articles" },
-    { key: "published", label: "Published" },
-    { key: "draft", label: "Drafts" },
-  ];
-
-  // Sort options
-  const sortOptions = [
-    { key: "newest", label: "Newest First" },
-    { key: "oldest", label: "Oldest First" },
-    { key: "title", label: "A-Z" },
-    { key: "views", label: "Most Viewed" },
-  ];
 
   // API call to fetch articles
   useEffect(() => {
@@ -185,7 +126,7 @@ export default function ArticlesPage() {
     fetchArticles();
   }, [token]);
 
-  // Filter and sort articles
+  // Filter articles
   const filteredArticles = useMemo(() => {
     let filtered = articles;
 
@@ -200,64 +141,31 @@ export default function ArticlesPage() {
       );
     }
 
-    // Filter by status
-    if (selectedStatus !== "all") {
-      filtered = filtered.filter((article) => {
-        if (selectedStatus === "published") {
-          return article.published;
-        } else if (selectedStatus === "draft") {
-          return !article.published;
-        }
-        return true;
-      });
-    }
-
-    // Sort articles
+    // Sort by newest first (default)
     filtered.sort((a, b) => {
-      switch (sortBy) {
-        case "newest":
-          return (
-            new Date(b.publishedAt || b.createdAt) -
-            new Date(a.publishedAt || a.createdAt)
-          );
-        case "oldest":
-          return (
-            new Date(a.publishedAt || a.createdAt) -
-            new Date(b.publishedAt || b.createdAt)
-          );
-        case "title":
-          return a.title.localeCompare(b.title);
-        case "views":
-          return b.viewCount - a.viewCount;
-        default:
-          return 0;
-      }
+      return (
+        new Date(b.publishedAt || b.createdAt) -
+        new Date(a.publishedAt || a.createdAt)
+      );
     });
 
     return filtered;
-  }, [articles, searchTerm, selectedStatus, sortBy]);
+  }, [articles, searchTerm]);
 
-  const handleStatusSelect = (statusKey) => {
-    setSelectedStatus(statusKey);
-  };
-
-  const handleSortSelect = (sortKey) => {
-    setSortBy(sortKey);
-  };
-
-  const activeStatusLabel =
-    statusOptions.find((s) => s.key === selectedStatus)?.label ||
-    "All Articles";
-  const activeSortLabel =
-    sortOptions.find((s) => s.key === sortBy)?.label || "Newest First";
 
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white pt-20 flex items-center justify-center">
+      <div className={`min-h-screen pt-20 flex items-center justify-center transition-colors duration-300 ${
+        theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+      }`}>
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-400 text-lg">Loading articles...</p>
+          <div className={`w-12 h-12 border-4 rounded-full animate-spin mx-auto mb-4 ${
+            theme === "light"
+              ? "border-gray-300 border-t-black"
+              : "border-emerald-500/30 border-t-emerald-500"
+          }`} />
+          <p className={`text-lg ${theme === "light" ? "text-gray-600" : "text-slate-400"}`}>Loading articles...</p>
         </div>
       </div>
     );
@@ -266,14 +174,26 @@ export default function ArticlesPage() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white pt-20 flex items-center justify-center">
+      <div className={`min-h-screen pt-20 flex items-center justify-center transition-colors duration-300 ${
+        theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+      }`}>
         <div className="text-center">
-          <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-8 max-w-md mx-auto">
-            <h3 className="text-2xl font-bold text-red-400 mb-4">Error</h3>
-            <p className="text-slate-400 mb-6">{error}</p>
+          <div className={`border rounded-2xl p-8 max-w-md mx-auto ${
+            theme === "light"
+              ? "bg-red-50 border-red-300"
+              : "bg-red-500/10 border-red-500/30"
+          }`}>
+            <h3 className={`text-2xl font-bold mb-4 ${
+              theme === "light" ? "text-red-700" : "text-red-400"
+            }`}>Error</h3>
+            <p className={`mb-6 ${theme === "light" ? "text-gray-700" : "text-slate-400"}`}>{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="bg-gradient-to-r from-red-500/80 to-red-600/80 hover:from-red-500 hover:to-red-600 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300"
+              className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-red-600 hover:bg-red-700 text-white"
+                  : "bg-gradient-to-r from-red-500/80 to-red-600/80 hover:from-red-500 hover:to-red-600 text-white"
+              }`}
             >
               Try Again
             </button>
@@ -284,11 +204,22 @@ export default function ArticlesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white pt-20">
+    <div className={`min-h-screen pt-20 transition-colors duration-300 ${
+      theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+    }`}>
       {/* Ambient Background */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(139,92,246,0.03),transparent_50%)]" />
+        {theme === "light" ? (
+          <>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(0,0,0,0.03),transparent_50%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(0,0,0,0.03),transparent_50%)]" />
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(16,185,129,0.03),transparent_50%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(139,92,246,0.03),transparent_50%)]" />
+          </>
+        )}
       </div>
 
       {/* Header Section */}
@@ -301,115 +232,69 @@ export default function ArticlesPage() {
             className="text-center mb-12"
           >
             <div className="inline-block mb-6">
-              <span className="bg-white/5 backdrop-blur-xl text-emerald-400 px-4 py-2 rounded-2xl text-sm font-semibold border border-white/10">
+              <span className={`backdrop-blur-xl px-4 py-2 rounded-2xl text-sm font-semibold border-2 shadow-md ${
+                theme === "light"
+                  ? "bg-gray-100 text-black border-black/40"
+                  : "bg-white/5 text-emerald-400 border-white/10"
+              }`}>
                 📰 All Articles
               </span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-white mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
+            <h1 className={`text-5xl md:text-7xl font-black mb-6 bg-clip-text text-transparent tracking-tight ${
+              theme === "light"
+                ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                : "bg-gradient-to-r from-white via-slate-200 to-slate-400"
+            }`}>
               Articles
             </h1>
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <p className={`text-xl max-w-2xl mx-auto leading-relaxed ${
+              theme === "light" ? "text-black/70" : "text-slate-400"
+            }`}>
               Dive deep into the world of cinema with our latest insights and
               stories.
             </p>
           </motion.div>
 
-          {/* Search and Filter Controls */}
+          {/* Search Controls */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex flex-col lg:flex-row gap-4 max-w-6xl mx-auto"
+            className="max-w-4xl mx-auto"
           >
             {/* Search Bar */}
-            <div className="flex-1 max-w-4xl mx-auto relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+            <div className="relative">
+              <Search className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 z-10 ${
+                theme === "light" ? "text-gray-600" : "text-slate-400"
+              }`} />
               <input
                 type="text"
                 placeholder="Search articles by title, author, or description..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-white/10 transition-all duration-300"
+                className={`w-full pl-12 pr-4 py-3 sm:py-4 backdrop-blur-xl border rounded-xl transition-all duration-300 text-sm sm:text-base focus:outline-none ${
+                  theme === "light"
+                    ? "bg-gray-100/70 border-gray-300 text-black placeholder-gray-500 focus:border-black focus:bg-gray-100"
+                    : "bg-white/5 border-white/10 text-white placeholder-slate-400 focus:border-emerald-400/50 focus:bg-white/10"
+                }`}
               />
-            </div>
-
-            {/* Status Filter Dropdown */}
-            <div className="flex justify-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center justify-between gap-3 px-6 py-4 min-w-[200px] rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-emerald-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
-                  <div className="flex items-center gap-2">
-                    <Filter className="h-4 w-4" />
-                    <span className="font-medium">{activeStatusLabel}</span>
-                  </div>
-                  <ChevronDown className="h-4 w-4" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 bg-slate-900/98 border-white/10 backdrop-blur-xl">
-                  <DropdownMenuLabel className="text-slate-300 font-semibold px-4 py-2">
-                    Filter by Status
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-white/10" />
-                  {statusOptions.map((status) => (
-                    <DropdownMenuItem
-                      key={status.key}
-                      onClick={() => handleStatusSelect(status.key)}
-                      className={`cursor-pointer transition-colors px-4 py-3 ${
-                        selectedStatus === status.key
-                          ? "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 focus:bg-emerald-500/30"
-                          : "text-slate-300 hover:text-emerald-200 hover:bg-emerald-500/10 focus:bg-emerald-500/10 focus:text-emerald-200"
-                      }`}
-                    >
-                      {status.label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            {/* Sort Options Dropdown */}
-            <div className="flex justify-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center justify-between gap-3 px-6 py-4 min-w-[180px] rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-emerald-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
-                  <span className="font-medium">{activeSortLabel}</span>
-                  <ChevronDown className="h-4 w-4" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 bg-slate-900/98 border-white/10 backdrop-blur-xl">
-                  <DropdownMenuLabel className="text-slate-300 font-semibold px-4 py-2">
-                    Sort By
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-white/10" />
-                  {sortOptions.map((option) => (
-                    <DropdownMenuItem
-                      key={option.key}
-                      onClick={() => handleSortSelect(option.key)}
-                      className={`cursor-pointer transition-colors px-4 py-3 ${
-                        sortBy === option.key
-                          ? "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 focus:bg-emerald-500/30"
-                          : "text-slate-300 hover:text-emerald-200 hover:bg-emerald-500/10 focus:bg-emerald-500/10 focus:text-emerald-200"
-                      }`}
-                    >
-                      {option.label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
             </div>
           </motion.div>
 
           {/* Results Summary */}
-          {(searchTerm || selectedStatus !== "all") && (
+          {searchTerm && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className="mt-6 text-center"
             >
-              <p className="text-slate-400 text-sm">
+              <p className={`text-sm ${theme === "light" ? "text-gray-600" : "text-slate-400"}`}>
                 {filteredArticles.length > 0
                   ? `Found ${filteredArticles.length} article${
                       filteredArticles.length !== 1 ? "s" : ""
                     }`
                   : "No articles found"}
                 {searchTerm && ` matching "${searchTerm}"`}
-                {selectedStatus !== "all" && ` in ${activeStatusLabel}`}
               </p>
             </motion.div>
           )}
@@ -428,20 +313,21 @@ export default function ArticlesPage() {
               transition={{ duration: 0.6 }}
               className="text-center py-16"
             >
-              <div className="text-slate-400 text-lg">
-                {searchTerm || selectedStatus !== "all"
-                  ? "No articles found matching your criteria."
+              <div className={`text-lg ${theme === "light" ? "text-gray-600" : "text-slate-400"}`}>
+                {searchTerm
+                  ? "No articles found matching your search."
                   : "No articles available."}
               </div>
-              {(searchTerm || selectedStatus !== "all") && (
+              {searchTerm && (
                 <button
-                  onClick={() => {
-                    setSearchTerm("");
-                    setSelectedStatus("all");
-                  }}
-                  className="mt-4 text-emerald-400 hover:text-emerald-300 transition-colors duration-200 text-sm underline"
+                  onClick={() => setSearchTerm("")}
+                  className={`mt-4 transition-colors duration-200 text-sm underline ${
+                    theme === "light"
+                      ? "text-black hover:text-gray-700"
+                      : "text-emerald-400 hover:text-emerald-300"
+                  }`}
                 >
-                  Clear filters and show all articles
+                  Clear search and show all articles
                 </button>
               )}
             </motion.div>

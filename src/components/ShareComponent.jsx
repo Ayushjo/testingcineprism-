@@ -35,7 +35,7 @@ const SharePopup = ({
   const getShareableUrl = () => {
     if (type === "article") {
       if (articleSlug) {
-        return `${BACKEND_BASE_URL}/api/v1/articles/${articleSlug}`;
+        return `${BACKEND_BASE_URL}/api/v1/articles/share/${articleSlug}`;
       } else if (articleId) {
         return `${BACKEND_BASE_URL}/article/${articleId}`;
       }

@@ -25,6 +25,7 @@ import {
   formatDate,
   getAvatarColor,
 } from "../utils/articleApi.js";
+import { useTheme } from "../context/ThemeContext";
 
 const Comment = ({
   comment,
@@ -34,6 +35,7 @@ const Comment = ({
   depth = 0,
   maxDepth = 8,
 }) => {
+  const { theme } = useTheme();
   const [user, setUser] = useState(null); // Simple user state - you can replace with your auth context
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
@@ -171,7 +173,9 @@ const Comment = ({
     <div className="relative">
       {depth > 0 && (
         <div
-          className={`absolute top-0 bottom-0 bg-slate-700/30 ${
+          className={`absolute top-0 bottom-0 ${
+            theme === "light" ? "bg-gray-300/50" : "bg-slate-700/30"
+          } ${
             isMobile ? "w-0.5 left-[-6px]" : "w-px left-[-10px]"
           }`}
         />
@@ -197,17 +201,25 @@ const Comment = ({
 
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
-            <span className="text-xs sm:text-sm font-medium text-emerald-400 truncate max-w-[120px] sm:max-w-none">
+            <span className={`text-xs sm:text-sm font-medium truncate max-w-[120px] sm:max-w-none ${
+              theme === "light" ? "text-black" : "text-emerald-400"
+            }`}>
               @{comment.user.username}
             </span>
-            <span className="text-xs text-slate-500 flex-shrink-0">
+            <span className={`text-xs flex-shrink-0 ${
+              theme === "light" ? "text-gray-600" : "text-slate-500"
+            }`}>
               {formatDate(comment.createdAt)}
             </span>
             {comment.updatedAt !== comment.createdAt && (
-              <span className="text-xs text-slate-500">(edited)</span>
+              <span className={`text-xs ${
+                theme === "light" ? "text-gray-600" : "text-slate-500"
+              }`}>(edited)</span>
             )}
             {depth > 2 && !isMobile && (
-              <span className="text-xs text-slate-600 hidden sm:inline">
+              <span className={`text-xs hidden sm:inline ${
+                theme === "light" ? "text-gray-500" : "text-slate-600"
+              }`}>
                 • L{depth}
               </span>
             )}
@@ -219,13 +231,21 @@ const Comment = ({
                 value={editText}
                 onChange={(e) => setEditText(e.target.value)}
                 onInput={handleTextareaInput}
-                className="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 transition-all duration-300 resize-none"
+                className={`w-full border rounded-lg px-3 py-2 text-sm transition-all duration-300 resize-none focus:outline-none ${
+                  theme === "light"
+                    ? "bg-gray-100 border-gray-300 text-black placeholder-gray-500 focus:border-black"
+                    : "bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-emerald-400/50"
+                }`}
                 rows={2}
               />
               <div className="flex gap-2 mt-2">
                 <button
                   onClick={handleEditComment}
-                  className="text-xs bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-3 py-1 rounded border border-emerald-500/30 transition-all duration-200"
+                  className={`text-xs px-3 py-1 rounded border transition-all duration-200 ${
+                    theme === "light"
+                      ? "bg-black/10 hover:bg-black/20 text-black border-black/30"
+                      : "bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border-emerald-500/30"
+                  }`}
                 >
                   Save
                 </button>
@@ -234,14 +254,20 @@ const Comment = ({
                     setIsEditing(false);
                     setEditText(comment.content);
                   }}
-                  className="text-xs text-slate-500 hover:text-slate-400 px-3 py-1 transition-colors"
+                  className={`text-xs px-3 py-1 transition-colors ${
+                    theme === "light"
+                      ? "text-gray-600 hover:text-black"
+                      : "text-slate-500 hover:text-slate-400"
+                  }`}
                 >
                   Cancel
                 </button>
               </div>
             </div>
           ) : (
-            <div className="text-slate-300 leading-relaxed mb-2 text-sm sm:text-base break-words">
+            <div className={`leading-relaxed mb-2 text-sm sm:text-base break-words ${
+              theme === "light" ? "text-black/90" : "text-slate-300"
+            }`}>
               {comment.content}
             </div>
           )}
@@ -249,7 +275,11 @@ const Comment = ({
           <div className="flex items-center gap-3 sm:gap-4 text-xs">
             <button
               onClick={() => setShowReplyInput(!showReplyInput)}
-              className="text-slate-500 hover:text-emerald-400 font-medium transition-colors duration-200 flex items-center gap-1"
+              className={`font-medium transition-colors duration-200 flex items-center gap-1 ${
+                theme === "light"
+                  ? "text-gray-600 hover:text-black"
+                  : "text-slate-500 hover:text-emerald-400"
+              }`}
             >
               <Reply className="w-3 h-3" />
               <span className="hidden sm:inline">Reply</span>
@@ -258,7 +288,11 @@ const Comment = ({
             {comment.replyCount > 0 && (
               <button
                 onClick={() => setShowReplies(!showReplies)}
-                className="text-slate-500 hover:text-emerald-400 font-medium transition-colors duration-200"
+                className={`font-medium transition-colors duration-200 ${
+                  theme === "light"
+                    ? "text-gray-600 hover:text-black"
+                    : "text-slate-500 hover:text-emerald-400"
+                }`}
               >
                 {showReplies ? "Hide" : "Show"} {comment.replyCount}
                 <span className="hidden sm:inline">
@@ -272,14 +306,22 @@ const Comment = ({
               <div className="flex items-center gap-2 sm:gap-3">
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="text-slate-500 hover:text-slate-400 transition-colors"
+                  className={`transition-colors ${
+                    theme === "light"
+                      ? "text-gray-600 hover:text-black"
+                      : "text-slate-500 hover:text-slate-400"
+                  }`}
                 >
                   <span className="hidden sm:inline">Edit</span>
                   <span className="sm:hidden">✏️</span>
                 </button>
                 <button
                   onClick={handleDeleteComment}
-                  className="text-slate-500 hover:text-red-400 transition-colors"
+                  className={`transition-colors ${
+                    theme === "light"
+                      ? "text-gray-600 hover:text-red-600"
+                      : "text-slate-500 hover:text-red-400"
+                  }`}
                 >
                   <span className="hidden sm:inline">Delete</span>
                   <span className="sm:hidden">🗑️</span>
@@ -297,18 +339,26 @@ const Comment = ({
                     onChange={(e) => setReplyText(e.target.value)}
                     onInput={handleTextareaInput}
                     rows={1}
-                    className="flex-1 bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-slate-800/70 transition-all duration-300 resize-none overflow-hidden"
+                    className={`flex-1 border rounded-lg px-3 py-2 text-sm transition-all duration-300 resize-none overflow-hidden focus:outline-none ${
+                      theme === "light"
+                        ? "bg-gray-100 border-gray-300 text-black placeholder-gray-500 focus:border-black"
+                        : "bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-emerald-400/50"
+                    }`}
                     disabled={isSubmittingReply}
                   />
                   <button
                     type="submit"
                     disabled={!replyText.trim() || isSubmittingReply || !user}
-                    className="bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                    className={`px-3 py-2 rounded-lg border transition-all duration-300 text-sm self-start sm:self-auto disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1 w-full sm:w-auto ${
+                      theme === "light"
+                        ? "bg-black/10 hover:bg-black/20 text-black border-black/30"
+                        : "bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border-emerald-500/30"
+                    }`}
                   >
                     {isSubmittingReply ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-3 h-3 animate-spin" />
                     ) : (
-                      <Send className="w-4 h-4" />
+                      <Send className="w-3 h-3" />
                     )}
                     <span className="sm:inline">Reply</span>
                   </button>
@@ -320,9 +370,11 @@ const Comment = ({
           {showReplies && (
             <div className="mt-3 sm:mt-4">
               {repliesLoading && replies.length === 0 ? (
-                <div className="flex items-center justify-center gap-3 py-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-emerald-400" />
-                  <span className="text-slate-400">Loading replies...</span>
+                <div className={`flex items-center gap-2 text-sm ${
+                  theme === "light" ? "text-gray-600" : "text-slate-500"
+                }`}>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Loading replies...
                 </div>
               ) : (
                 <>
@@ -343,14 +395,18 @@ const Comment = ({
                       <button
                         onClick={loadMoreReplies}
                         disabled={repliesLoading}
-                        className="bg-slate-800/50 hover:bg-slate-800/70 text-slate-300 hover:text-white px-6 py-3 rounded-xl border border-slate-600 hover:border-slate-500 transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`text-xs font-semibold transition-colors flex items-center gap-1 py-2 ${
+                          theme === "light"
+                            ? "text-black hover:text-gray-700"
+                            : "text-emerald-400 hover:text-emerald-300"
+                        }`}
                       >
                         {repliesLoading ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <Loader2 className="w-3 h-3 animate-spin" />
                         ) : (
-                          <MoreHorizontal className="w-4 h-4" />
+                          <MoreHorizontal className="w-3 h-3" />
                         )}
-                        Load More Replies
+                        Load more replies
                       </button>
                     </div>
                   )}
@@ -365,6 +421,7 @@ const Comment = ({
 };
 
 const ArticlePage = () => {
+  const { theme } = useTheme();
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -479,10 +536,16 @@ const ArticlePage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center transition-all duration-300 ${
+        theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+      }`}>
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin mx-auto mb-6"></div>
-          <p className="text-slate-400 text-lg">Loading article...</p>
+          <div className={`w-16 h-16 border-4 rounded-full animate-spin mx-auto mb-6 ${
+            theme === "light"
+              ? "border-gray-300 border-t-black"
+              : "border-emerald-500/30 border-t-emerald-500"
+          }`}></div>
+          <p className={`text-lg ${theme === "light" ? "text-gray-600" : "text-slate-400"}`}>Loading article...</p>
         </div>
       </div>
     );
@@ -490,15 +553,23 @@ const ArticlePage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center transition-all duration-300 ${
+        theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+      }`}>
         <div className="text-center max-w-md mx-auto px-6">
-          <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h1 className={`text-4xl lg:text-5xl font-bold mb-6 ${
+            theme === "light" ? "text-black" : "text-white"
+          }`}>
             Article Not Found
           </h1>
-          <p className="text-slate-400 mb-8 text-lg">{error}</p>
+          <p className={`mb-8 text-lg ${theme === "light" ? "text-gray-600" : "text-slate-400"}`}>{error}</p>
           <button
             onClick={() => navigate(-1)}
-            className="px-8 py-4 bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-emerald-500/20"
+            className={`px-8 py-4 rounded-2xl font-semibold transition-all duration-300 shadow-lg ${
+              theme === "light"
+                ? "bg-black hover:bg-gray-800 text-white hover:shadow-black/20"
+                : "bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white hover:shadow-emerald-500/20"
+            }`}
           >
             Go Back
           </button>
@@ -510,7 +581,9 @@ const ArticlePage = () => {
   if (!article) return null;
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className={`min-h-screen transition-all duration-300 ${
+      theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+    }`}>
       <Helmet>
         <title>{article.title} | TheCinePrism</title>
         <meta
@@ -602,18 +675,7 @@ const ArticlePage = () => {
                     {article.shortDescription}
                   </p>
                 )}
-                <div className="flex items-center justify-center gap-3 text-white/90 mb-6">
-                  <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-semibold shadow-lg">
-                    {article.author[0].toUpperCase()}
-                  </div>
-                  <div className="text-sm font-medium sm:flex ">
-                    <span>{article.author}</span>
-                    <span className="mx-2">•</span>
-                    <span>
-                      {formatDate(article.publishedAt || article.createdAt)}
-                    </span>
-                  </div>
-                </div>
+                
                 <div className="flex items-center justify-center gap-4">
                   <button
                     onClick={handleLikeClick}
@@ -635,10 +697,16 @@ const ArticlePage = () => {
                     <MessageCircle className="w-5 h-5" />
                     <span className="font-medium">{comments.length || 0}</span>
                   </button>
-                  <button className="flex items-center gap-2 text-white/80 hover:text-white transition-all duration-300 bg-white/10 backdrop-blur-sm px-4 py-2.5 rounded-xl border border-white/20 hover:border-white/40">
-                    <Share2 className="w-5 h-5" />
-                    <span className="font-medium">Share</span>
-                  </button>
+                  <ShareButton
+                    url={window.location.href}
+                    title={article.title}
+                    description={
+                      article.shortDescription ||
+                      `Check out this article: ${article.title}`
+                    }
+                    articleSlug={slug}
+                    type="article"
+                  />
                 </div>
               </motion.div>
             </div>
@@ -750,33 +818,44 @@ const ArticlePage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.05 * index }}
                 >
-                  {renderContentBlock(block)}
+                  {renderContentBlock(block, theme)}
                 </motion.div>
               ))
             ) : (
               <div className="text-center py-16">
-                <Tag className="w-12 h-12 text-slate-500 mx-auto mb-4" />
-                <p className="text-slate-400">
+                <Tag className={`w-12 h-12 mx-auto mb-4 ${
+                  theme === "light" ? "text-gray-400" : "text-slate-500"
+                }`} />
+                <p className={theme === "light" ? "text-gray-600" : "text-slate-400"}>
                   No content available for this article.
                 </p>
               </div>
             )}
           </div>
-
         </div>
       </motion.article>
 
       <section id="discussion-section" className="py-16">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-black text-white mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
+            <h2 className={`text-4xl font-black mb-6 bg-clip-text text-transparent tracking-tight transition-all duration-300 ${
+              theme === "light"
+                ? "bg-gradient-to-r from-black via-gray-800 to-gray-600"
+                : "bg-gradient-to-r from-white via-slate-200 to-slate-400"
+            }`}>
               Discussion
             </h2>
-            <p className="text-slate-400 text-sm">
+            <p className={`text-sm ${
+              theme === "light" ? "text-gray-600" : "text-slate-400"
+            }`}>
               Join the conversation with unlimited nested replies
             </p>
           </div>
-          <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-2xl p-6 mb-8">
+          <div className={`backdrop-blur-xl border rounded-2xl p-6 mb-8 transition-all duration-300 ${
+            theme === "light"
+              ? "bg-gray-50 border-gray-300"
+              : "bg-slate-900/50 border-slate-700"
+          }`}>
             <form onSubmit={handleSubmitComment}>
               <textarea
                 value={newComment}
@@ -786,14 +865,22 @@ const ArticlePage = () => {
                     ? "Share your thoughts about this article..."
                     : "Please login to comment..."
                 }
-                className="w-full h-24 bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400/50 focus:bg-slate-800/70 transition-all duration-300 resize-none mb-4"
+                className={`w-full h-24 border rounded-xl px-4 py-3 focus:outline-none transition-all duration-300 resize-none mb-4 ${
+                  theme === "light"
+                    ? "bg-gray-100 border-gray-300 text-black placeholder-gray-500 focus:border-black focus:bg-gray-100"
+                    : "bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-emerald-400/50 focus:bg-slate-800/70"
+                }`}
                 disabled={isSubmittingComment || !user}
               />
               <div className="flex justify-end">
                 <button
                   type="submit"
                   disabled={!newComment.trim() || isSubmittingComment || !user}
-                  className="bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 shadow-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    theme === "light"
+                      ? "bg-gradient-to-r from-black to-gray-800 hover:from-gray-900 hover:to-gray-700 text-white hover:shadow-black/20"
+                      : "bg-gradient-to-r from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 text-white hover:shadow-emerald-500/20"
+                  }`}
                 >
                   {isSubmittingComment ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -808,8 +895,12 @@ const ArticlePage = () => {
           <div className="space-y-8">
             {commentsLoading && comments.length === 0 ? (
               <div className="flex items-center justify-center gap-3 py-8">
-                <Loader2 className="w-6 h-6 animate-spin text-emerald-400" />
-                <span className="text-slate-400">Loading comments...</span>
+                <Loader2 className={`w-6 h-6 animate-spin ${
+                  theme === "light" ? "text-black" : "text-emerald-400"
+                }`} />
+                <span className={theme === "light" ? "text-gray-600" : "text-slate-400"}>
+                  Loading comments...
+                </span>
               </div>
             ) : (
               <>
@@ -829,7 +920,11 @@ const ArticlePage = () => {
                     <button
                       onClick={loadMoreComments}
                       disabled={commentsLoading}
-                      className="bg-slate-800/50 hover:bg-slate-800/70 text-slate-300 hover:text-white px-6 py-3 rounded-xl border border-slate-600 hover:border-slate-500 transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className={`px-6 py-3 rounded-xl border transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+                        theme === "light"
+                          ? "bg-gray-100 hover:bg-gray-200 text-black border-gray-300 hover:border-gray-400"
+                          : "bg-slate-800/50 hover:bg-slate-800/70 text-slate-300 hover:text-white border-slate-600 hover:border-slate-500"
+                      }`}
                     >
                       {commentsLoading ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -842,11 +937,15 @@ const ArticlePage = () => {
                 )}
                 {comments.length === 0 && !commentsLoading && (
                   <div className="text-center py-12">
-                    <MessageCircle className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-slate-400 mb-2">
+                    <MessageCircle className={`w-12 h-12 mx-auto mb-4 ${
+                      theme === "light" ? "text-gray-400" : "text-slate-600"
+                    }`} />
+                    <h3 className={`text-lg font-semibold mb-2 ${
+                      theme === "light" ? "text-gray-600" : "text-slate-400"
+                    }`}>
                       No comments yet
                     </h3>
-                    <p className="text-slate-500">
+                    <p className={theme === "light" ? "text-gray-500" : "text-slate-500"}>
                       Be the first to share your thoughts!
                     </p>
                   </div>
@@ -860,7 +959,7 @@ const ArticlePage = () => {
   );
 };
 
-const renderContentBlock = (block) => {
+const renderContentBlock = (block, theme) => {
   const { type, content } = block;
 
   switch (type) {
@@ -868,11 +967,15 @@ const renderContentBlock = (block) => {
       return (
         <div className="mb-8">
           {content.hasTitle && content.title && (
-            <h3 className="text-2xl font-semibold text-white mb-4 leading-tight">
+            <h3 className={`text-2xl font-semibold mb-4 leading-tight ${
+              theme === "light" ? "text-black" : "text-white"
+            }`}>
               {content.title}
             </h3>
           )}
-          <p className="text-slate-200 leading-[1.8] text-lg font-normal tracking-normal whitespace-pre-wrap">
+          <p className={`leading-[1.8] text-lg font-normal tracking-normal whitespace-pre-wrap ${
+            theme === "light" ? "text-gray-700" : "text-slate-200"
+          }`}>
             {content.text}
           </p>
         </div>
@@ -881,9 +984,15 @@ const renderContentBlock = (block) => {
     case "HEADING":
       const HeadingTag = `h${content.level}`;
       const headingClasses = {
-        2: "text-3xl font-bold text-white mb-6 mt-12 leading-tight",
-        3: "text-2xl font-semibold text-white mb-4 mt-10 leading-tight",
-        4: "text-xl font-medium text-white mb-3 mt-8 leading-tight",
+        2: `text-3xl font-bold mb-6 mt-12 leading-tight ${
+          theme === "light" ? "text-black" : "text-white"
+        }`,
+        3: `text-2xl font-semibold mb-4 mt-10 leading-tight ${
+          theme === "light" ? "text-black" : "text-white"
+        }`,
+        4: `text-xl font-medium mb-3 mt-8 leading-tight ${
+          theme === "light" ? "text-black" : "text-white"
+        }`,
       };
 
       return React.createElement(
@@ -914,8 +1023,12 @@ const renderContentBlock = (block) => {
       const ListTag = content.type === "numbered" ? "ol" : "ul";
       const listClasses =
         content.type === "numbered"
-          ? "list-decimal list-inside space-y-3 mb-8 text-slate-200 text-lg"
-          : "list-disc list-inside space-y-3 mb-8 text-slate-200 text-lg";
+          ? `list-decimal list-inside space-y-3 mb-8 text-lg ${
+              theme === "light" ? "text-gray-700" : "text-slate-200"
+            }`
+          : `list-disc list-inside space-y-3 mb-8 text-lg ${
+              theme === "light" ? "text-gray-700" : "text-slate-200"
+            }`;
 
       return React.createElement(
         ListTag,
@@ -931,12 +1044,20 @@ const renderContentBlock = (block) => {
 
     case "QUOTE":
       return (
-        <blockquote className="border-l-4 border-emerald-500 pl-6 py-4 my-8 bg-slate-900/20 rounded-r-lg">
-          <p className="text-xl italic text-slate-200 leading-relaxed mb-3">
+        <blockquote className={`border-l-4 pl-6 py-4 my-8 rounded-r-lg ${
+          theme === "light"
+            ? "border-black/70 bg-gray-100"
+            : "border-emerald-500 bg-slate-900/20"
+        }`}>
+          <p className={`text-xl italic leading-relaxed mb-3 ${
+            theme === "light" ? "text-gray-700" : "text-slate-200"
+          }`}>
             {content.text}
           </p>
           {content.author && (
-            <cite className="text-emerald-400 font-medium text-sm">
+            <cite className={`font-medium text-sm ${
+              theme === "light" ? "text-black" : "text-emerald-400"
+            }`}>
               — {content.author}
             </cite>
           )}
@@ -946,7 +1067,9 @@ const renderContentBlock = (block) => {
     case "DIVIDER":
       return (
         <div className="flex items-center justify-center my-12">
-          <div className="w-32 h-px bg-slate-700"></div>
+          <div className={`w-32 h-px ${
+            theme === "light" ? "bg-gray-300" : "bg-slate-700"
+          }`}></div>
         </div>
       );
 

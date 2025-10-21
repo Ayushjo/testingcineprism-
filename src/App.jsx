@@ -147,6 +147,10 @@ const App = () => {
               <Route path="/comedy" element={<ComedyPage />} />
               <Route path="/war" element={<WarPage />} />
 
+              {/* Article Page */}
+              <Route path="/articles" element={<ArticleSection />} />
+              <Route path="/articles/:slug" element={<ArticlePage />} />
+
               {/* Indie Pages */}
               {/* <Route path="/indie" element={<IndiePage />} />
               <Route path="/indie/indian" element={<IndianIndiePage />} />
