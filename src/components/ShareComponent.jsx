@@ -182,10 +182,10 @@ const SharePopup = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4 sm:p-4 pb-0 sm:pb-4">
       <div
         ref={popupRef}
-        className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md transform transition-all duration-300 scale-100 opacity-100"
+        className="bg-slate-900 border border-slate-700 rounded-t-2xl sm:rounded-2xl p-6 w-full max-w-md transform transition-all duration-300 scale-100 opacity-100 max-h-[90vh] overflow-y-auto"
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -281,12 +281,67 @@ export const ShareButton = ({
   articleId,
   articleSlug,
   type = "post",
+  variant = "default", // 'default' or 'compact'
 }) => {
   const [showSharePopup, setShowSharePopup] = useState(false);
 
   const handleShareClick = () => {
     setShowSharePopup(true);
   };
+
+  // Mobile variant for bottom toolbar
+  if (variant === "mobile") {
+    return (
+      <>
+        <button
+          onClick={handleShareClick}
+          className="flex flex-col items-center gap-1 transition-all active:scale-95"
+        >
+          <Share className="w-5 h-5" />
+          <span className="text-xs font-medium">Share</span>
+        </button>
+
+        <SharePopup
+          isOpen={showSharePopup}
+          onClose={() => setShowSharePopup(false)}
+          url={url}
+          title={title}
+          description={description}
+          postId={postId}
+          articleId={articleId}
+          articleSlug={articleSlug}
+          type={type}
+        />
+      </>
+    );
+  }
+
+  // Compact variant for article page buttons
+  if (variant === "compact") {
+    return (
+      <>
+        <button
+          onClick={handleShareClick}
+          className="flex items-center gap-2 transition-all duration-300"
+        >
+          <Share className="w-4 h-4" />
+          <span className="text-sm font-semibold">Share</span>
+        </button>
+
+        <SharePopup
+          isOpen={showSharePopup}
+          onClose={() => setShowSharePopup(false)}
+          url={url}
+          title={title}
+          description={description}
+          postId={postId}
+          articleId={articleId}
+          articleSlug={articleSlug}
+          type={type}
+        />
+      </>
+    );
+  }
 
   return (
     <>

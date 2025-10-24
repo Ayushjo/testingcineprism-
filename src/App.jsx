@@ -128,10 +128,14 @@ const App = () => {
               <Route path="/login" element={<LoginPage />} />
             </Route>
 
-            {/* Auth callback - must be outside protected routes */}
-            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/post/:id" element={<PostPage />} />
             <Route path="/reviews" element={<ReviewPage />} />
+            <Route path="/articles" element={<ArticleSection />} />
+            <Route path="/articles/:slug" element={<ArticlePage />} />
+
+            {/* Auth callback - must be outside protected routes */}
+            <Route path="/auth/callback" element={<AuthCallback />} />
+
             <Route element={<RedirectIfUser />}>
               <Route path="/news/:id" element={<NewsArticlePage />} />
               <Route path="/trending" element={<TrendingPage />} />
@@ -148,8 +152,6 @@ const App = () => {
               <Route path="/war" element={<WarPage />} />
 
               {/* Article Page */}
-              <Route path="/articles" element={<ArticleSection />} />
-              <Route path="/articles/:slug" element={<ArticlePage />} />
 
               {/* Indie Pages */}
               {/* <Route path="/indie" element={<IndiePage />} />
