@@ -712,112 +712,203 @@ const ArticlePage = () => {
         </div>
       </div>
 
-      {/* Classic Newspaper Header Block */}
-      <header className="relative pt-20 pb-12 md:pt-24 md:pb-16">
-        <div className="max-w-3xl mx-auto px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            {/* Optional Category Tag */}
-            {article.category && (
-              <div className="mb-6">
-                <span className={`inline-block text-xs font-bold px-3 py-1.5 rounded uppercase tracking-wide shadow-sm ${
-                  theme === "light"
-                    ? "bg-black text-white"
-                    : "bg-emerald-600 text-white"
+      {/* Hero Image with Title Overlay */}
+      {article.mainImageUrl ? (
+        <section className="relative h-[60vh] md:h-[70vh] overflow-hidden">
+          {/* Background Image */}
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${article.mainImageUrl})` }}
+          />
+          {/* Dark Gradient Overlay */}
+          <div className={`absolute inset-0 ${
+            theme === "light"
+              ? "bg-gradient-to-t from-white via-white/70 to-transparent"
+              : "bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent"
+          }`} />
+
+          {/* Content Overlay */}
+          <div className="absolute bottom-0 left-0 right-0 z-10">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 pt-20 text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="max-w-4xl mx-auto"
+              >
+                {/* Title */}
+                <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight drop-shadow-2xl ${
+                  theme === "light" ? "text-black" : "text-white"
                 }`}>
-                  {article.category || "Film Analysis"}
-                </span>
-              </div>
-            )}
+                  {article.title}
+                </h1>
 
-            {/* Large Serif Title with Refined Typography */}
-            <h1 className={`font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.15] md:leading-[1.1] mb-6 tracking-tight ${
-              theme === "light" ? "text-black" : "text-white"
-            }`}>
-              {article.title}
-            </h1>
+                {/* Short Description */}
+                {article.shortDescription && (
+                  <p className={`text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed mb-6 max-w-3xl mx-auto drop-shadow-lg font-light ${
+                    theme === "light" ? "text-gray-800" : "text-white/95"
+                  }`}>
+                    {article.shortDescription}
+                  </p>
+                )}
 
-            {/* Subtitle with Enhanced Readability */}
-            {article.shortDescription && (
-              <p className={`text-lg md:text-xl leading-[1.7] mb-8 font-light max-w-2xl ${
-                theme === "light" ? "text-gray-700" : "text-slate-300"
-              }`}>
-                {article.shortDescription}
-              </p>
-            )}
-
-            {/* Elegant Horizontal Rule */}
-            <hr className={`border-t mb-6 ${
-              theme === "light" ? "border-gray-300" : "border-slate-700"
-            }`} />
-
-            {/* Metadata Block with Better Visual Hierarchy */}
-            <div className="flex flex-wrap items-start gap-4 mb-2">
-              {/* Author Avatar & Name */}
-              <div className="flex items-center gap-3">
-                <div className={`w-11 h-11 rounded-full flex items-center justify-center text-white font-semibold text-base shadow-md transition-transform hover:scale-105 ${
-                  theme === "light" ? "bg-black" : "bg-emerald-600"
+                {/* Author Info */}
+                <div className={`flex items-center justify-center gap-3 mb-6 ${
+                  theme === "light" ? "text-gray-700" : "text-white/90"
                 }`}>
-                  {article.author[0].toUpperCase()}
-                </div>
-                <div>
-                  <p className={`text-sm font-semibold tracking-tight ${
-                    theme === "light" ? "text-black" : "text-white"
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold shadow-lg ${
+                    theme === "light" ? "bg-black" : "bg-emerald-600"
                   }`}>
-                    {article.author}
-                  </p>
-                  <p className={`text-xs ${
-                    theme === "light" ? "text-gray-500" : "text-slate-500"
-                  }`}>
-                    Author
-                  </p>
+                    {article.author[0].toUpperCase()}
+                  </div>
+                  <div className="text-sm font-medium sm:flex ">
+                    <span>{article.author}</span>
+                    <span className="mx-2">•</span>
+                    <span>
+                      {formatDate(article.publishedAt || article.createdAt)}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              {/* Metadata with Better Spacing */}
-              <div className={`flex flex-wrap items-start gap-3 text-sm pt-1 ${
-                theme === "light" ? "text-gray-600" : "text-slate-400"
-              }`}>
-                <time className="font-medium">{formatDate(article.publishedAt || article.createdAt)}</time>
-              </div>
+                {/* Action Buttons - Desktop */}
+                <div className="hidden md:flex items-center justify-center gap-4">
+                  <button
+                    onClick={handleLikeClick}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-300 ${
+                      isLiked
+                        ? theme === "light"
+                          ? "border-pink-500 text-pink-500 bg-pink-50 shadow-pink-100"
+                          : "border-pink-500 text-pink-500 bg-pink-500/10 shadow-pink-500/20"
+                        : theme === "light"
+                        ? "border-gray-700 text-gray-800 bg-white/80 backdrop-blur-sm hover:bg-white"
+                        : "border-white/20 text-white/80 bg-white/10 backdrop-blur-sm hover:text-pink-400 hover:border-pink-400/50"
+                    }`}
+                  >
+                    <Heart
+                      className={`w-5 h-5 ${
+                        isLiked ? "fill-pink-500 text-pink-500" : ""
+                      }`}
+                    />
+                    <span className="font-medium">
+                      {likeCount.toLocaleString()}
+                    </span>
+                  </button>
+                  <button
+                    onClick={scrollToDiscussion}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-300 ${
+                      theme === "light"
+                        ? "border-gray-700 text-gray-800 bg-white/80 backdrop-blur-sm hover:bg-white"
+                        : "border-white/20 text-white/80 bg-white/10 backdrop-blur-sm hover:text-emerald-400 hover:border-emerald-400/50"
+                    }`}
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    <span className="font-medium">{comments.length || 0}</span>
+                  </button>
+                  <ShareButton
+                    url={window.location.href}
+                    title={article.title}
+                    description={
+                      article.shortDescription ||
+                      `Check out this article: ${article.title}`
+                    }
+                    articleSlug={slug}
+                    type="article"
+                    variant="hero"
+                    theme={theme}
+                  />
+                </div>
+              </motion.div>
             </div>
+          </div>
+        </section>
+      ) : (
+        // Fallback for articles without main image
+        <header className="relative pt-20 pb-8 md:pt-24 md:pb-12">
+          <div className="max-w-4xl mx-auto px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              {article.category && (
+                <div className="mb-6">
+                  <span className={`inline-block text-xs font-bold px-3 py-1.5 rounded uppercase tracking-wide shadow-sm ${
+                    theme === "light"
+                      ? "bg-black text-white"
+                      : "bg-emerald-600 text-white"
+                  }`}>
+                    {article.category || "Film Analysis"}
+                  </span>
+                </div>
+              )}
 
-            {/* Desktop Action Buttons with Enhanced Styling */}
-            <div className="hidden md:flex items-center gap-3 mt-8">
-              <button
-                onClick={handleLikeClick}
-                className={`group flex items-center gap-2 px-5 py-2.5 rounded-lg border transition-all duration-300 hover:shadow-md ${
-                  isLiked
-                    ? theme === "light"
-                      ? "border-pink-500 text-pink-500 bg-pink-50 shadow-pink-100"
-                      : "border-pink-500 text-pink-500 bg-pink-500/10 shadow-pink-500/20"
-                    : theme === "light"
-                    ? "border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50"
-                    : "border-slate-700 text-slate-400 hover:border-slate-600 hover:bg-slate-800/50"
-                }`}
-              >
-                <Heart className={`w-4 h-4 transition-transform group-hover:scale-110 ${isLiked ? "fill-pink-500" : ""}`} />
-                <span className="text-sm font-semibold">{likeCount.toLocaleString()}</span>
-              </button>
-              <button
-                onClick={scrollToDiscussion}
-                className={`group flex items-center gap-2 px-5 py-2.5 rounded-lg border transition-all duration-300 hover:shadow-md ${
-                  theme === "light"
-                    ? "border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50"
-                    : "border-slate-700 text-slate-400 hover:border-slate-600 hover:bg-slate-800/50"
-                }`}
-              >
-                <MessageCircle className="w-4 h-4 transition-transform group-hover:scale-110" />
-                <span className="text-sm font-semibold">{comments.length || 0} {comments.length === 1 ? 'Comment' : 'Comments'}</span>
-              </button>
-              <button className={`group flex items-center gap-2 px-5 py-2.5 rounded-lg border transition-all duration-300 hover:shadow-md ${
-                theme === "light"
-                  ? "border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50"
-                  : "border-slate-700 text-slate-400 hover:border-slate-600 hover:bg-slate-800/50"
+              <h1 className={`font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.2] sm:leading-[1.1] md:leading-[1.08] mb-4 sm:mb-6 tracking-tight ${
+                theme === "light" ? "text-black" : "text-white"
               }`}>
+                {article.title}
+              </h1>
+
+              {article.shortDescription && (
+                <p className={`text-base sm:text-xl md:text-2xl leading-[1.5] sm:leading-[1.6] md:leading-[1.65] mb-6 sm:mb-8 font-light max-w-3xl ${
+                  theme === "light" ? "text-gray-700" : "text-slate-300"
+                }`}>
+                  {article.shortDescription}
+                </p>
+              )}
+
+              <div className="flex flex-wrap items-center gap-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-white font-semibold text-sm sm:text-base shadow-md transition-transform hover:scale-105 ${
+                    theme === "light" ? "bg-black" : "bg-emerald-600"
+                  }`}>
+                    {article.author[0].toUpperCase()}
+                  </div>
+                  <div>
+                    <p className={`text-sm font-semibold tracking-tight ${
+                      theme === "light" ? "text-black" : "text-white"
+                    }`}>
+                      {article.author}
+                    </p>
+                    <p className={`text-xs ${
+                      theme === "light" ? "text-gray-500" : "text-slate-500"
+                    }`}>
+                      {formatDate(article.publishedAt || article.createdAt)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <hr className={`border-t mb-4 sm:mb-6 ${
+                theme === "light" ? "border-gray-300" : "border-slate-700"
+              }`} />
+
+              <div className="hidden md:flex items-center gap-3">
+                <button
+                  onClick={handleLikeClick}
+                  className={`group flex items-center gap-2 px-5 py-2.5 rounded-lg border transition-all duration-300 hover:shadow-md ${
+                    isLiked
+                      ? theme === "light"
+                        ? "border-pink-500 text-pink-500 bg-pink-50 shadow-pink-100"
+                        : "border-pink-500 text-pink-500 bg-pink-500/10 shadow-pink-500/20"
+                      : theme === "light"
+                      ? "border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50"
+                      : "border-slate-700 text-slate-400 hover:border-slate-600 hover:bg-slate-800/50"
+                  }`}
+                >
+                  <Heart className={`w-4 h-4 transition-transform group-hover:scale-110 ${isLiked ? "fill-pink-500" : ""}`} />
+                  <span className="text-sm font-semibold">{likeCount.toLocaleString()}</span>
+                </button>
+                <button
+                  onClick={scrollToDiscussion}
+                  className={`group flex items-center gap-2 px-5 py-2.5 rounded-lg border transition-all duration-300 hover:shadow-md ${
+                    theme === "light"
+                      ? "border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50"
+                      : "border-slate-700 text-slate-400 hover:border-slate-600 hover:bg-slate-800/50"
+                  }`}
+                >
+                  <MessageCircle className="w-4 h-4 transition-transform group-hover:scale-110" />
+                  <span className="text-sm font-semibold">{comments.length || 0} {comments.length === 1 ? 'Comment' : 'Comments'}</span>
+                </button>
                 <ShareButton
                   url={window.location.href}
                   title={article.title}
@@ -829,34 +920,10 @@ const ArticlePage = () => {
                   type="article"
                   variant="compact"
                 />
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </header>
-
-      {/* Hero Image - Conditional, below header */}
-      {article.mainImageUrl && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="max-w-4xl mx-auto px-6 lg:px-8 mb-12"
-        >
-          <figure className="relative overflow-hidden rounded-xl shadow-2xl group">
-            <img
-              src={article.mainImageUrl}
-              alt={article.title}
-              className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            {/* Subtle Overlay on Hover */}
-            <div className={`absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100 ${
-              theme === "light"
-                ? "bg-gradient-to-t from-black/10 to-transparent"
-                : "bg-gradient-to-t from-emerald-900/20 to-transparent"
-            }`}></div>
-          </figure>
-        </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </header>
       )}
 
       {/* Article Body - Single Column */}
@@ -864,7 +931,7 @@ const ArticlePage = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="relative pb-20 md:pb-16"
+        className="relative pb-16 md:pb-16"
       >
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
           <div className="prose prose-lg max-w-none">
@@ -1023,15 +1090,15 @@ const renderContentBlock = (block, theme) => {
   switch (type) {
     case "PARAGRAPH":
       return (
-        <div className="mb-8">
+        <div className="mb-5 sm:mb-6">
           {content.hasTitle && content.title && (
-            <h3 className={`text-2xl md:text-3xl font-bold mb-5 leading-tight tracking-tight ${
+            <h3 className={`text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 leading-tight tracking-tight ${
               theme === "light" ? "text-black" : "text-white"
             }`}>
               {content.title}
             </h3>
           )}
-          <p className={`leading-[1.9] text-[17px] md:text-lg font-normal tracking-wide whitespace-pre-wrap hyphens-auto ${
+          <p className={`leading-[1.7] sm:leading-[1.8] text-[16px] sm:text-[17px] md:text-lg font-normal tracking-normal whitespace-pre-wrap hyphens-auto ${
             theme === "light" ? "text-gray-800" : "text-slate-300"
           }`} style={{ textAlign: 'justify' }}>
             {content.text}
@@ -1042,13 +1109,13 @@ const renderContentBlock = (block, theme) => {
     case "HEADING":
       const HeadingTag = `h${content.level}`;
       const headingClasses = {
-        2: `text-3xl md:text-4xl font-bold mb-6 mt-14 leading-[1.2] tracking-tight ${
+        2: `text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-5 mt-8 sm:mt-10 md:mt-12 leading-[1.2] tracking-tight ${
           theme === "light" ? "text-black" : "text-white"
         }`,
-        3: `text-2xl md:text-3xl font-semibold mb-5 mt-12 leading-tight tracking-tight ${
+        3: `text-xl sm:text-2xl md:text-3xl font-semibold mb-3 sm:mb-4 mt-7 sm:mt-9 md:mt-10 leading-tight tracking-tight ${
           theme === "light" ? "text-black" : "text-white"
         }`,
-        4: `text-xl md:text-2xl font-medium mb-4 mt-10 leading-tight tracking-tight ${
+        4: `text-lg sm:text-xl md:text-2xl font-medium mb-3 mt-6 sm:mt-8 md:mt-9 leading-tight tracking-tight ${
           theme === "light" ? "text-black" : "text-white"
         }`,
       };
@@ -1061,7 +1128,7 @@ const renderContentBlock = (block, theme) => {
 
     case "IMAGE":
       return (
-        <figure className="mb-12 my-14 group">
+        <figure className="mb-6 sm:mb-8 my-6 sm:my-8 group">
           <div className="relative overflow-hidden rounded-xl shadow-xl">
             <img
               src={content.url || "/placeholder.svg"}
@@ -1076,7 +1143,7 @@ const renderContentBlock = (block, theme) => {
             }`}></div>
           </div>
           {content.caption && (
-            <figcaption className={`text-center mt-4 italic text-sm ${
+            <figcaption className={`text-center mt-3 italic text-sm ${
               theme === "light" ? "text-gray-600" : "text-slate-400"
             }`}>
               {content.caption}
@@ -1089,10 +1156,10 @@ const renderContentBlock = (block, theme) => {
       const ListTag = content.type === "numbered" ? "ol" : "ul";
       const listClasses =
         content.type === "numbered"
-          ? `list-decimal list-outside ml-6 space-y-3 mb-8 text-[17px] md:text-lg ${
+          ? `list-decimal list-outside ml-5 sm:ml-6 space-y-2 mb-5 sm:mb-6 text-[16px] sm:text-[17px] md:text-lg ${
               theme === "light" ? "text-gray-800" : "text-slate-300"
             }`
-          : `list-disc list-outside ml-6 space-y-3 mb-8 text-[17px] md:text-lg ${
+          : `list-disc list-outside ml-5 sm:ml-6 space-y-2 mb-5 sm:mb-6 text-[16px] sm:text-[17px] md:text-lg ${
               theme === "light" ? "text-gray-800" : "text-slate-300"
             }`;
 
@@ -1102,7 +1169,7 @@ const renderContentBlock = (block, theme) => {
         content.items.map((item, index) =>
           React.createElement(
             "li",
-            { key: index, className: "leading-[1.8] pl-2 marker:font-medium" },
+            { key: index, className: "leading-[1.7] pl-2 marker:font-medium" },
             item
           )
         )
@@ -1110,12 +1177,12 @@ const renderContentBlock = (block, theme) => {
 
     case "QUOTE":
       return (
-        <blockquote className={`border-l-[3px] pl-6 md:pl-8 py-5 my-10 rounded-r-lg transition-all duration-300 ${
+        <blockquote className={`border-l-[3px] pl-4 sm:pl-6 md:pl-8 py-4 sm:py-5 my-6 sm:my-8 rounded-r-lg transition-all duration-300 ${
           theme === "light"
             ? "border-black bg-gray-50/80 hover:bg-gray-100/80"
             : "border-emerald-500 bg-slate-900/30 hover:bg-slate-900/50"
         }`}>
-          <p className={`text-xl md:text-2xl italic leading-relaxed mb-4 font-serif ${
+          <p className={`text-lg sm:text-xl md:text-2xl italic leading-relaxed mb-3 font-serif ${
             theme === "light" ? "text-gray-800" : "text-slate-200"
           }`}>
             "{content.text}"
@@ -1132,7 +1199,7 @@ const renderContentBlock = (block, theme) => {
 
     case "DIVIDER":
       return (
-        <div className="flex items-center justify-center my-14">
+        <div className="flex items-center justify-center my-6 sm:my-8">
           <div className={`flex items-center gap-3 ${
             theme === "light" ? "text-gray-300" : "text-slate-700"
           }`}>
