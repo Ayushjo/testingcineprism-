@@ -255,27 +255,47 @@ const MobileHeroSection = () => {
                         "
                       </span>
 
-                      <div className="mt-6 sm:mt-8 flex items-center justify-center gap-3">
-                        <div
-                          className={`h-px w-8 sm:w-12 ${
-                            theme === "light" ? "bg-black/30" : "bg-white/30"
-                          }`}
-                        ></div>
+                      <div className="mt-6 sm:mt-8 flex flex-col items-center gap-2">
+                        <div className="flex items-center justify-center gap-3">
+                          <div
+                            className={`h-px w-8 sm:w-12 ${
+                              theme === "light" ? "bg-black/30" : "bg-white/30"
+                            }`}
+                          ></div>
+                          <p
+                            className={`text-sm sm:text-base md:text-lg font-editorial tracking-wider uppercase ${
+                              theme === "light"
+                                ? "text-gray-700"
+                                : "text-slate-400"
+                            }`}
+                            style={{ letterSpacing: "0.2em", fontWeight: 600 }}
+                          >
+                            {quotes[currentQuoteIndex]?.author?.replace(
+                              /\s*\(\d{4}\)\s*$/,
+                              ""
+                            )}
+                          </p>
+                          <div
+                            className={`h-px w-8 sm:w-12 ${
+                              theme === "light" ? "bg-black/30" : "bg-white/30"
+                            }`}
+                          ></div>
+                        </div>
+                        {/* Year Display */}
                         <p
-                          className={`text-sm sm:text-base md:text-lg font-editorial tracking-wider uppercase ${
+                          className={`text-md sm:text-base md:text-lg font-editorial tracking-wide ${
                             theme === "light"
-                              ? "text-gray-700"
-                              : "text-slate-400"
+                              ? "text-gray-600"
+                              : "text-slate-500"
                           }`}
-                          style={{ letterSpacing: "0.2em", fontWeight: 600 }}
+                          style={{ fontWeight: 400 }}
                         >
-                          {quotes[currentQuoteIndex]?.author}
+                          {
+                            `(${quotes[currentQuoteIndex]?.author?.match(
+                              /\((\d{4})\)/
+                            )?.[1]})`
+                          }
                         </p>
-                        <div
-                          className={`h-px w-8 sm:w-12 ${
-                            theme === "light" ? "bg-black/30" : "bg-white/30"
-                          }`}
-                        ></div>
                       </div>
                     </div>
                   </motion.div>
