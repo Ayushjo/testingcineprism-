@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import Homepage from "./pages/Home";
+import UpdateArticlePage from "./pages/UpdateArticlePage.jsx";
 
 // Lazy load components for code splitting
 const ReviewPage = lazy(() => import("./pages/ReviewPage"));
@@ -135,6 +136,7 @@ const App = () => {
 
             {/* Auth callback - must be outside protected routes */}
             <Route path="/auth/callback" element={<AuthCallback />} />
+            {/* <Route path="/update-article/:slug" element={<UpdateArticlePage />} /> */}
 
             <Route element={<RedirectIfUser />}>
               <Route path="/news/:id" element={<NewsArticlePage />} />
@@ -178,6 +180,7 @@ const App = () => {
                 <Route path="edit-post" element={<EditPostPage />} />
                 <Route path="edit-rank" element={<TrendingRankManager />} />
                 <Route path="create-article" element={<CreateArticlePage />} />
+                <Route path="update-article" element={<UpdateArticlePage />} />
                 <Route
                   path="article-preview"
                   element={<ArticlePreviewPage />}
