@@ -180,7 +180,7 @@ const App = () => {
                 <Route path="edit-post" element={<EditPostPage />} />
                 <Route path="edit-rank" element={<TrendingRankManager />} />
                 <Route path="create-article" element={<CreateArticlePage />} />
-                <Route path="update-article" element={<UpdateArticlePage />} />
+                <Route path="update-article/:slug" element={<UpdateArticlePage />} />
                 <Route
                   path="article-preview"
                   element={<ArticlePreviewPage />}
