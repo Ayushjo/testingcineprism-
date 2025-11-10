@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, Reorder } from "framer-motion";
 import {
   Save,
   Plus,
@@ -15,13 +15,22 @@ import {
   Quote,
   Minus,
   Eye,
+  Camera,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { useCallback } from "react";
 import BlockEditor from "@/components/BlockEditor";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
-import { showSuccessToast, showErrorToast, showLoadingToast, dismissToast } from "../utils/toast";
+import {
+  showSuccessToast,
+  showErrorToast,
+  showLoadingToast,
+  dismissToast,
+} from "../utils/toast";
 import { useNavigate } from "react-router-dom";
+
 export default function CreateArticlePage() {
   const [article, setArticle] = useState({
     title: "",
@@ -37,15 +46,42 @@ export default function CreateArticlePage() {
   const [submitStatus, setSubmitStatus] = useState(null);
   const [submitMessage, setSubmitMessage] = useState("");
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showAddBlockMenu, setShowAddBlockMenu] = useState(false);
   const { token } = useAuth();
   const navigate = useNavigate();
+
   const blockTypes = [
-    { type: "PARAGRAPH", icon: Type, label: "Paragraph" },
-    { type: "HEADING", icon: Type, label: "Heading" },
-    { type: "IMAGE", icon: Image, label: "Image" },
-    { type: "LIST", icon: List, label: "List" },
-    { type: "QUOTE", icon: Quote, label: "Quote" },
-    { type: "DIVIDER", icon: Minus, label: "Divider" },
+    {
+      type: "PARAGRAPH",
+      icon: Type,
+      label: "Paragraph",
+      description: "Add text content",
+    },
+    {
+      type: "HEADING",
+      icon: Type,
+      label: "Heading",
+      description: "Add a title",
+    },
+    {
+      type: "IMAGE",
+      icon: Image,
+      label: "Image",
+      description: "Upload an image",
+    },
+    {
+      type: "LIST",
+      icon: List,
+      label: "List",
+      description: "Bullet or numbered",
+    },
+    { type: "QUOTE", icon: Quote, label: "Quote", description: "Add a quote" },
+    {
+      type: "DIVIDER",
+      icon: Minus,
+      label: "Divider",
+      description: "Section separator",
+    },
   ];
 
   const handleInputChange = (field, value) => {
@@ -66,6 +102,11 @@ export default function CreateArticlePage() {
     reader.readAsDataURL(file);
   };
 
+  // Mobile camera upload
+  const handleMainImageCamera = (e) => {
+    handleMainImageUpload(e);
+  };
+
   const addBlock = (type) => {
     const newBlock = {
       id: crypto.randomUUID(),
@@ -74,6 +115,7 @@ export default function CreateArticlePage() {
       order: blocks.length,
     };
     setBlocks([...blocks, newBlock]);
+    setShowAddBlockMenu(false);
   };
 
   const getDefaultContent = (type) => {
@@ -99,6 +141,27 @@ export default function CreateArticlePage() {
     setBlocks(blocks.filter((_, i) => i !== index));
   };
 
+  // Move block up/down (mobile alternative to drag)
+  const moveBlockUp = (index) => {
+    if (index === 0) return;
+    const newBlocks = [...blocks];
+    [newBlocks[index - 1], newBlocks[index]] = [
+      newBlocks[index],
+      newBlocks[index - 1],
+    ];
+    setBlocks(newBlocks);
+  };
+
+  const moveBlockDown = (index) => {
+    if (index === blocks.length - 1) return;
+    const newBlocks = [...blocks];
+    [newBlocks[index], newBlocks[index + 1]] = [
+      newBlocks[index + 1],
+      newBlocks[index],
+    ];
+    setBlocks(newBlocks);
+  };
+
   const handleBlockImageUpload = useCallback((blockIndex, file) => {
     if (!file) return;
 
@@ -121,7 +184,6 @@ export default function CreateArticlePage() {
   }, []);
 
   const handlePreview = () => {
-    // Navigate to preview page with article data
     navigate("/admin/article-preview", {
       state: {
         article,
@@ -134,7 +196,6 @@ export default function CreateArticlePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Show confirmation dialog
     if (!showConfirmDialog) {
       setShowConfirmDialog(true);
       return;
@@ -148,24 +209,18 @@ export default function CreateArticlePage() {
     try {
       const formData = new FormData();
 
-      // Basic article data
       formData.append("title", article.title);
       formData.append("shortDescription", article.shortDescription);
       formData.append("author", article.author);
       formData.append("published", article.published.toString());
 
-      // Main image
       if (mainImageFile) {
         formData.append("mainImage", mainImageFile);
       }
 
-      // Process blocks and add block images
       const blocksForBackend = blocks.map((block, index) => {
         if (block.type === "IMAGE" && block.content.file) {
-          // Add the image file with specific fieldname
           formData.append(`blockImage_${index}`, block.content.file);
-
-          // Return block without the file object
           return {
             ...block,
             content: {
@@ -177,7 +232,6 @@ export default function CreateArticlePage() {
         return block;
       });
 
-      // Add blocks as JSON string
       formData.append("blocks", JSON.stringify(blocksForBackend));
 
       const loadingToastId = showLoadingToast("Creating article...");
@@ -202,7 +256,6 @@ export default function CreateArticlePage() {
         dismissToast(loadingToastId);
         showSuccessToast(successMsg);
 
-        // Reset form
         setArticle({
           title: "",
           shortDescription: "",
@@ -215,7 +268,8 @@ export default function CreateArticlePage() {
       }
     } catch (error) {
       console.error("Submit error:", error);
-      const errorMsg = error.response?.data?.message ||
+      const errorMsg =
+        error.response?.data?.message ||
         "Network error. Please check your connection and try again.";
       setSubmitStatus("error");
       setSubmitMessage(errorMsg);
@@ -227,7 +281,7 @@ export default function CreateArticlePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 p-6">
+    <div className="min-h-screen bg-slate-950 p-4 sm:p-6">
       {/* Confirmation Dialog */}
       {showConfirmDialog && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -236,24 +290,25 @@ export default function CreateArticlePage() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-md w-full shadow-2xl"
           >
-            <h3 className="text-2xl font-bold text-white mb-3">
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">
               Confirm Article Creation
             </h3>
-            <p className="text-slate-300 mb-6">
-              Are you sure you want to create this article? Please review all details before publishing.
+            <p className="text-slate-300 mb-6 text-sm sm:text-base">
+              Are you sure you want to create this article? Please review all
+              details before publishing.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowConfirmDialog(false)}
-                className="flex-1 px-4 py-3 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700 transition-colors font-medium"
+                className="flex-1 px-4 py-3 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700 transition-colors font-medium text-sm sm:text-base"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmit}
-                className="flex-1 px-4 py-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors font-medium"
+                className="flex-1 px-4 py-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors font-medium text-sm sm:text-base"
               >
-                Yes, Create Article
+                Yes, Create
               </button>
             </div>
           </motion.div>
@@ -265,12 +320,12 @@ export default function CreateArticlePage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
             Create New Article
           </h1>
-          <p className="text-slate-400">
+          <p className="text-slate-400 text-sm sm:text-base">
             Write engaging articles for your audience
           </p>
         </motion.div>
@@ -280,7 +335,7 @@ export default function CreateArticlePage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`mb-6 p-4 rounded-xl border ${
+            className={`mb-6 p-4 rounded-xl border text-sm sm:text-base ${
               submitStatus === "success"
                 ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
                 : "bg-red-500/10 border-red-500/30 text-red-400"
@@ -299,8 +354,8 @@ export default function CreateArticlePage() {
           className="space-y-6"
         >
           {/* Article Details */}
-          <div className="bg-slate-900/30 backdrop-blur-xl p-6 rounded-xl border border-slate-700 space-y-4">
-            <h2 className="text-xl font-semibold text-white mb-4">
+          <div className="bg-slate-900/30 backdrop-blur-xl p-4 sm:p-6 rounded-xl border border-slate-700 space-y-4">
+            <h2 className="text-lg sm:text-xl font-semibold text-white mb-4">
               Article Details
             </h2>
 
@@ -309,7 +364,7 @@ export default function CreateArticlePage() {
               placeholder="Article Title"
               value={article.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
-              className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300 text-lg font-medium"
+              className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300 text-base sm:text-lg font-medium"
               required
               disabled={isSubmitting}
             />
@@ -321,7 +376,7 @@ export default function CreateArticlePage() {
                 handleInputChange("shortDescription", e.target.value)
               }
               rows={2}
-              className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300 resize-none"
+              className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300 resize-none text-sm sm:text-base"
               required
               disabled={isSubmitting}
             />
@@ -331,17 +386,17 @@ export default function CreateArticlePage() {
               placeholder="Author"
               value={article.author}
               onChange={(e) => handleInputChange("author", e.target.value)}
-              className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
+              className="w-full bg-slate-900/50 backdrop-blur-xl border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300 text-sm sm:text-base"
               required
               disabled={isSubmitting}
             />
 
-            {/* Main Image Upload */}
+            {/* Main Image Upload - Enhanced for Mobile */}
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">
                 Main Article Image
               </label>
-              <div className="border-2 border-dashed border-slate-600 rounded-xl p-6 bg-slate-900/30">
+              <div className="border-2 border-dashed border-slate-600 rounded-xl p-4 sm:p-6 bg-slate-900/30">
                 {mainImagePreview ? (
                   <div className="space-y-3">
                     <img
@@ -363,23 +418,47 @@ export default function CreateArticlePage() {
                 ) : (
                   <div className="text-center">
                     <Upload className="mx-auto mb-2 text-slate-400" size={24} />
-                    <p className="text-slate-400 mb-2">
+                    <p className="text-slate-400 mb-3 text-sm sm:text-base">
                       Upload main article image
                     </p>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleMainImageUpload}
-                      className="hidden"
-                      id="main-image-upload"
-                      disabled={isSubmitting}
-                    />
-                    <label
-                      htmlFor="main-image-upload"
-                      className="inline-block px-4 py-2 bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 rounded-lg hover:bg-emerald-500/30 cursor-pointer transition-all duration-200 disabled:opacity-50"
-                    >
-                      Choose File
-                    </label>
+
+                    {/* Desktop and Mobile upload options */}
+                    <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                      {/* File picker */}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleMainImageUpload}
+                        className="hidden"
+                        id="main-image-upload"
+                        disabled={isSubmitting}
+                      />
+                      <label
+                        htmlFor="main-image-upload"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 rounded-lg hover:bg-emerald-500/30 cursor-pointer transition-all duration-200 text-sm sm:text-base"
+                      >
+                        <Upload size={16} />
+                        Choose File
+                      </label>
+
+                      {/* Camera option (mobile only) */}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        onChange={handleMainImageCamera}
+                        className="hidden"
+                        id="main-image-camera"
+                        disabled={isSubmitting}
+                      />
+                      <label
+                        htmlFor="main-image-camera"
+                        className="sm:hidden inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-500/20 text-blue-300 border border-blue-400/30 rounded-lg hover:bg-blue-500/30 cursor-pointer transition-all duration-200 text-sm"
+                      >
+                        <Camera size={16} />
+                        Take Photo
+                      </label>
+                    </div>
                   </div>
                 )}
               </div>
@@ -395,89 +474,164 @@ export default function CreateArticlePage() {
                 className="rounded bg-slate-800 border-slate-600 text-emerald-500 focus:ring-emerald-500/50"
                 disabled={isSubmitting}
               />
-              <span className="text-slate-300">Publish immediately</span>
+              <span className="text-slate-300 text-sm sm:text-base">
+                Publish immediately
+              </span>
             </label>
           </div>
 
-          {/* Content Blocks */}
+          {/* Content Blocks with Drag & Drop */}
           <div className="space-y-6">
-            <h2 className="text-xl font-semibold text-white">
-              Article Content
-            </h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg sm:text-xl font-semibold text-white">
+                Article Content
+              </h2>
+              <span className="text-xs sm:text-sm text-slate-400 hidden sm:block">
+                Drag blocks to reorder
+              </span>
+            </div>
 
-            {blocks.map((block, index) => (
-              <motion.div
-                key={block.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-slate-900/30 backdrop-blur-xl border border-slate-700 rounded-xl p-4"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <GripVertical
-                      size={16}
-                      className="text-slate-400 cursor-move"
-                    />
-                    <span className="text-sm font-medium text-slate-400 capitalize">
-                      {block.type.toLowerCase()}
-                    </span>
+            {/* Desktop: Drag & Drop / Mobile: Up/Down buttons */}
+            <Reorder.Group
+              axis="y"
+              values={blocks}
+              onReorder={setBlocks}
+              className="space-y-4"
+            >
+              {blocks.map((block, index) => (
+                <Reorder.Item
+                  key={block.id}
+                  value={block}
+                  className="bg-slate-900/30 backdrop-blur-xl border border-slate-700 rounded-xl p-3 sm:p-4 cursor-move touch-none"
+                  dragListener={false}
+                  dragControls={false}
+                  whileDrag={{
+                    scale: 1.02,
+                    boxShadow: "0 10px 40px rgba(16, 185, 129, 0.2)",
+                  }}
+                >
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    {/* Desktop drag handle */}
+                    <div className="hidden sm:flex items-center pt-1 cursor-grab active:cursor-grabbing">
+                      <GripVertical size={20} className="text-slate-400" />
+                    </div>
+
+                    {/* Mobile reorder buttons */}
+                    <div className="flex sm:hidden flex-col gap-1 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => moveBlockUp(index)}
+                        disabled={index === 0}
+                        className={`p-1 rounded transition-colors ${
+                          index === 0
+                            ? "text-slate-600 cursor-not-allowed"
+                            : "text-slate-400 hover:text-emerald-400 hover:bg-slate-800"
+                        }`}
+                      >
+                        <ChevronUp size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => moveBlockDown(index)}
+                        disabled={index === blocks.length - 1}
+                        className={`p-1 rounded transition-colors ${
+                          index === blocks.length - 1
+                            ? "text-slate-600 cursor-not-allowed"
+                            : "text-slate-400 hover:text-emerald-400 hover:bg-slate-800"
+                        }`}
+                      >
+                        <ChevronDown size={16} />
+                      </button>
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs sm:text-sm font-medium text-slate-400 capitalize">
+                          {block.type.toLowerCase()}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removeBlock(index)}
+                          className="text-red-400 hover:text-red-300 p-1 transition-colors"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+
+                      <BlockEditor
+                        block={block}
+                        index={index}
+                        setBlocks={setBlocks}
+                        isSubmitting={isSubmitting}
+                        handleBlockImageUpload={handleBlockImageUpload}
+                      />
+                    </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => removeBlock(index)}
-                    className="text-red-400 hover:text-red-300 p-1 transition-colors"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
+                </Reorder.Item>
+              ))}
+            </Reorder.Group>
 
-                <BlockEditor
-                  block={block}
-                  index={index}
-                  setBlocks={setBlocks}
-                  isSubmitting={isSubmitting}
-                  handleBlockImageUpload={handleBlockImageUpload}
-                />
-              </motion.div>
-            ))}
+            {/* Add Block Button - Mobile Optimized */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowAddBlockMenu(!showAddBlockMenu)}
+                className="w-full border-2 border-dashed border-slate-600 rounded-xl p-4 sm:p-6 bg-slate-900/20 hover:bg-slate-900/30 transition-all text-slate-400 hover:text-emerald-400 hover:border-emerald-500/50 flex items-center justify-center gap-2"
+              >
+                <Plus size={20} />
+                <span className="text-sm sm:text-base font-medium">
+                  Add Content Block
+                </span>
+              </button>
 
-            {/* Add Block Buttons */}
-            <div className="border-2 border-dashed border-slate-600 rounded-xl p-6 bg-slate-900/20">
-              <p className="text-center text-slate-400 mb-4">
-                Add a new content block
-              </p>
-              <div className="flex flex-wrap gap-2 justify-center">
-                {blockTypes.map(({ type, icon: Icon, label }) => (
-                  <motion.button
-                    key={type}
-                    type="button"
-                    onClick={() => addBlock(type)}
-                    disabled={isSubmitting}
-                    whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
-                    whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
-                    className="flex items-center gap-2 px-3 py-2 bg-slate-800/50 text-slate-300 border border-slate-600 rounded-lg hover:bg-slate-700/50 hover:text-white text-sm transition-all duration-200 disabled:opacity-50"
-                  >
-                    <Icon size={16} />
-                    {label}
-                  </motion.button>
-                ))}
-              </div>
+              {/* Block Type Menu */}
+              {showAddBlockMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute z-10 mt-2 w-full bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-2 max-h-[60vh] overflow-y-auto"
+                >
+                  {blockTypes.map(
+                    ({ type, icon: Icon, label, description }) => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => addBlock(type)}
+                        disabled={isSubmitting}
+                        className="w-full flex items-start gap-3 p-3 rounded-lg hover:bg-slate-800 transition-colors text-left disabled:opacity-50"
+                      >
+                        <div className="p-2 bg-emerald-500/10 rounded-lg">
+                          <Icon size={20} className="text-emerald-400" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-white font-medium text-sm sm:text-base">
+                            {label}
+                          </div>
+                          <div className="text-slate-400 text-xs sm:text-sm">
+                            {description}
+                          </div>
+                        </div>
+                      </button>
+                    )
+                  )}
+                </motion.div>
+              )}
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex gap-4 pt-8 border-t border-slate-700">
+          {/* Action Buttons - Mobile Optimized */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-slate-700">
             <motion.button
               type="submit"
               disabled={isSubmitting}
               whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
               whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-              className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-3 sm:py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
             >
               {isSubmitting ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Creating Article...
+                  Creating...
                 </>
               ) : (
                 <>
@@ -493,7 +647,7 @@ export default function CreateArticlePage() {
               disabled={isSubmitting}
               whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
               whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-              className="px-6 py-4 bg-slate-800/50 text-slate-300 border border-slate-600 rounded-xl hover:bg-slate-700/50 hover:text-white transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
+              className="sm:flex-none px-6 py-3 sm:py-4 bg-slate-800/50 text-slate-300 border border-slate-600 rounded-xl hover:bg-slate-700/50 hover:text-white transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2 text-sm sm:text-base"
             >
               <Eye className="w-5 h-5" />
               Preview
