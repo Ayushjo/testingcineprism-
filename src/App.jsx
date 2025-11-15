@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import Homepage from "./pages/Home";
 import UpdateArticlePage from "./pages/UpdateArticlePage.jsx";
+import About from "./pages/About.jsx";
 
 // Lazy load components for code splitting
 const ReviewPage = lazy(() => import("./pages/ReviewPage"));
@@ -58,6 +59,10 @@ const ExploreGenresPage = lazy(() => import("./pages/ExploreGenresPage"));
 const IndiePage = lazy(() => import("./pages/IndiePage"));
 const IndianIndiePage = lazy(() => import("./pages/IndianIndiePage"));
 const WorldIndiePage = lazy(() => import("./pages/WorldIndiePage"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.jsx"));
+const AboutUs = lazy(() => import("./pages/About.jsx"));
+const Contact = lazy(() => import("./pages/Contact.jsx"));
+const Terms = lazy(() => import("./pages/Terms.jsx"));
 
 // Individual Genre Pages
 const SciFiPage = lazy(() => import("./pages/SciFiPage"));
@@ -142,6 +147,10 @@ const App = () => {
               <Route path="/news/:id" element={<NewsArticlePage />} />
               <Route path="/trending" element={<TrendingPage />} />
               <Route path="/explore-genres" element={<ExploreGenresPage />} />
+              <Route path="/about" element={<AboutUs />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
               {/* Individual Genre Pages */}
               <Route path="/sci-fi" element={<SciFiPage />} />

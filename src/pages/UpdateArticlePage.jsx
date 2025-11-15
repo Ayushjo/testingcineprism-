@@ -359,7 +359,7 @@ export default function UpdateArticlePage() {
 
       const loadingToastId = showLoadingToast("Updating article...");
 
-      const response = await axios.put(
+      const response = await axios.post(
         `https://api.thecineprism.com/api/v1/articles/update-article/${articleIdForUpdate}`,
         formData,
         {
