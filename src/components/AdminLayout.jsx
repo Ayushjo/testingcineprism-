@@ -16,6 +16,7 @@ import { Edit } from "lucide-react";
 const navigationItems = [
   { icon: FileText, label: "All Posts", id: "all-posts" },
   { icon: FilePlus2, label: "Create Post", id: "create-post" },
+  { icon: FilePlus2, label: "View Cache", id: "view-cache" },
   { icon: Star, label: "Add Top Picks", id: "add-top-picks" },
   { icon: ImageUp, label: "Upload Poster", id: "upload-poster" },
   { icon: ImageUp, label: "Upload Reviews Poster", id: "upload-review-poster" },

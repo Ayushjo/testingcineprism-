@@ -73,6 +73,7 @@ const HorrorPage = lazy(() => import("./pages/HorrorPage"));
 const AnimationPage = lazy(() => import("./pages/AnimationPage"));
 const ComedyPage = lazy(() => import("./pages/ComedyPage"));
 const WarPage = lazy(() => import("./pages/WarPage"));
+const CachePage = lazy(() => import("./pages/CacheManagement.jsx"));
 
 // Loading component for Suspense fallback
 const PageLoader = () => (
@@ -185,6 +186,7 @@ const App = () => {
                   path="upload-review-poster"
                   element={<ReviewPosterPage />}
                 />
+                <Route path="view-cache" element={<CachePage />} />
                 <Route path="add-top-picks" element={<AddTopPicksPage />} />
                 <Route path="edit-post" element={<EditPostPage />} />
                 <Route path="edit-rank" element={<TrendingRankManager />} />
