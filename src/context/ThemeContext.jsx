@@ -12,12 +12,18 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
     const root = document.documentElement;
+    const body = document.body;
+
     if (theme === "light") {
       root.classList.remove("dark");
       root.classList.add("light");
+      body.classList.remove("dark-mode");
+      body.classList.add("light-mode");
     } else {
       root.classList.remove("light");
       root.classList.add("dark");
+      body.classList.remove("light-mode");
+      body.classList.add("dark-mode");
     }
     localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
