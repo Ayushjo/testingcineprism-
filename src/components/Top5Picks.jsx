@@ -102,35 +102,35 @@ export default function Top5Picks() {
       title: "Citizen Kane",
       year: 1941,
       posterUrl:
-        "http://res.cloudinary.com/dapu22gee/image/upload/v1759147373/posters/w1cfdxlzamvbv5i5p5m1.jpg",
+        "https://thecineprismimages.s3.ap-south-1.amazonaws.com/manual-uploads/gzYbXKwFMBBoE5lTtGsyLBYwvMs.webp",
     },
     {
       id: 2,
       title: "Taxi Driver",
       year: 1976,
       posterUrl:
-        "http://res.cloudinary.com/dapu22gee/image/upload/v1759149316/posters/uximrb27ftfsaa9wkjvd.jpg",
+        "https://thecineprismimages.s3.ap-south-1.amazonaws.com/manual-uploads/vCNTbg9I859M4a2xgx1Q5ipAE0e.webp",
     },
     {
       id: 3,
       title: "Ran",
       year: 1985,
       posterUrl:
-        "http://res.cloudinary.com/dapu22gee/image/upload/v1759149994/posters/il5iwp6w4wrnhnksrjc4.jpg",
+        "https://thecineprismimages.s3.ap-south-1.amazonaws.com/manual-uploads/iYQcDhuHrdPOHLUUxXaFChFrc97.webp",
     },
     {
       id: 4,
       title: "Ardh Satya",
       year: 1983,
       posterUrl:
-        "http://res.cloudinary.com/dapu22gee/image/upload/v1759152310/posters/dbn4xu1wyewpm8eux8zx.webp",
+        "https://thecineprismimages.s3.ap-south-1.amazonaws.com/manual-uploads/uBefh0aCQ3OJu48Fzk5CWPvBAhg.webp",
     },
     {
       id: 5,
       title: "Breathless",
       year: 1960,
       posterUrl:
-        "http://res.cloudinary.com/dapu22gee/image/upload/v1759150237/posters/yzaa4vye04cgtcj0qbhw.jpg",
+        "https://thecineprismimages.s3.ap-south-1.amazonaws.com/manual-uploads/8dq0fHED6eq4mG3wVnMP8oXXbEH.webp",
     },
   ];
 
