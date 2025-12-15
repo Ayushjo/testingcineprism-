@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
 import { ShareButton } from "@/components/ShareComponent.jsx";
+import AdSense from "@/components/Adsense.jsx";
 import {
   Eye,
   Share2,
@@ -581,9 +582,11 @@ const ArticlePage = () => {
   if (!article) return null;
 
   return (
-    <div className={`min-h-screen transition-all duration-300 ${
-      theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
-    }`}>
+    <div
+      className={`min-h-screen transition-all duration-300 ${
+        theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+      }`}
+    >
       <Helmet>
         <title>{article.title} | TheCinePrism</title>
         <meta
@@ -653,11 +656,13 @@ const ArticlePage = () => {
       </Helmet>
 
       {/* Fixed Mobile Toolbar with Enhanced Design */}
-      <div className={`md:hidden fixed bottom-0 left-0 right-0 z-50 border-t backdrop-blur-xl transition-all duration-300 shadow-2xl ${
-        theme === "light"
-          ? "bg-white/98 border-gray-200 shadow-gray-200/50"
-          : "bg-slate-950/98 border-slate-800 shadow-black/50"
-      }`}>
+      <div
+        className={`md:hidden fixed bottom-0 left-0 right-0 z-50 border-t backdrop-blur-xl transition-all duration-300 shadow-2xl ${
+          theme === "light"
+            ? "bg-white/98 border-gray-200 shadow-gray-200/50"
+            : "bg-slate-950/98 border-slate-800 shadow-black/50"
+        }`}
+      >
         <div className="flex items-center justify-around px-2 py-3">
           <button
             onClick={() => navigate(-1)}
@@ -681,7 +686,11 @@ const ArticlePage = () => {
             }`}
           >
             <Heart className={`w-5 h-5 ${isLiked ? "fill-pink-500" : ""}`} />
-            <span className="text-xs font-medium">{likeCount > 999 ? `${(likeCount / 1000).toFixed(1)}k` : likeCount}</span>
+            <span className="text-xs font-medium">
+              {likeCount > 999
+                ? `${(likeCount / 1000).toFixed(1)}k`
+                : likeCount}
+            </span>
           </button>
           <button
             onClick={scrollToDiscussion}
@@ -692,11 +701,15 @@ const ArticlePage = () => {
             }`}
           >
             <MessageCircle className="w-5 h-5" />
-            <span className="text-xs font-medium">{comments.length > 99 ? '99+' : comments.length}</span>
+            <span className="text-xs font-medium">
+              {comments.length > 99 ? "99+" : comments.length}
+            </span>
           </button>
-          <div className={`flex flex-col items-center gap-1 px-3 py-1.5 ${
-            theme === "light" ? "text-gray-600" : "text-slate-400"
-          }`}>
+          <div
+            className={`flex flex-col items-center gap-1 px-3 py-1.5 ${
+              theme === "light" ? "text-gray-600" : "text-slate-400"
+            }`}
+          >
             <ShareButton
               url={window.location.href}
               title={article.title}
@@ -721,11 +734,13 @@ const ArticlePage = () => {
             style={{ backgroundImage: `url(${article.mainImageUrl})` }}
           />
           {/* Dark Gradient Overlay */}
-          <div className={`absolute inset-0 ${
-            theme === "light"
-              ? "bg-gradient-to-t from-white via-white/70 to-transparent"
-              : "bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent"
-          }`} />
+          <div
+            className={`absolute inset-0 ${
+              theme === "light"
+                ? "bg-gradient-to-t from-white via-white/70 to-transparent"
+                : "bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent"
+            }`}
+          />
 
           {/* Content Overlay */}
           <div className="absolute bottom-0 left-0 right-0 z-10">
@@ -737,28 +752,36 @@ const ArticlePage = () => {
                 className="max-w-4xl mx-auto"
               >
                 {/* Title */}
-                <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight drop-shadow-2xl ${
-                  theme === "light" ? "text-black" : "text-white"
-                }`}>
+                <h1
+                  className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight drop-shadow-2xl ${
+                    theme === "light" ? "text-black" : "text-white"
+                  }`}
+                >
                   {article.title}
                 </h1>
 
                 {/* Short Description */}
                 {article.shortDescription && (
-                  <p className={`text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed mb-6 max-w-3xl mx-auto drop-shadow-lg font-light ${
-                    theme === "light" ? "text-gray-800" : "text-white/95"
-                  }`}>
+                  <p
+                    className={`text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed mb-6 max-w-3xl mx-auto drop-shadow-lg font-light ${
+                      theme === "light" ? "text-gray-800" : "text-white/95"
+                    }`}
+                  >
                     {article.shortDescription}
                   </p>
                 )}
 
                 {/* Author Info */}
-                <div className={`flex items-center justify-center gap-3 mb-6 ${
-                  theme === "light" ? "text-gray-700" : "text-white/90"
-                }`}>
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold shadow-lg ${
-                    theme === "light" ? "bg-black" : "bg-emerald-600"
-                  }`}>
+                <div
+                  className={`flex items-center justify-center gap-3 mb-6 ${
+                    theme === "light" ? "text-gray-700" : "text-white/90"
+                  }`}
+                >
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold shadow-lg ${
+                      theme === "light" ? "bg-black" : "bg-emerald-600"
+                    }`}
+                  >
                     {article.author[0].toUpperCase()}
                   </div>
                   <div className="text-sm font-medium sm:flex ">
@@ -832,55 +855,69 @@ const ArticlePage = () => {
             >
               {article.category && (
                 <div className="mb-6">
-                  <span className={`inline-block text-xs font-bold px-3 py-1.5 rounded uppercase tracking-wide shadow-sm ${
-                    theme === "light"
-                      ? "bg-black text-white"
-                      : "bg-emerald-600 text-white"
-                  }`}>
+                  <span
+                    className={`inline-block text-xs font-bold px-3 py-1.5 rounded uppercase tracking-wide shadow-sm ${
+                      theme === "light"
+                        ? "bg-black text-white"
+                        : "bg-emerald-600 text-white"
+                    }`}
+                  >
                     {article.category || "Film Analysis"}
                   </span>
                 </div>
               )}
 
-              <h1 className={`font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.2] sm:leading-[1.1] md:leading-[1.08] mb-4 sm:mb-6 tracking-tight ${
-                theme === "light" ? "text-black" : "text-white"
-              }`}>
+              <h1
+                className={`font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.2] sm:leading-[1.1] md:leading-[1.08] mb-4 sm:mb-6 tracking-tight ${
+                  theme === "light" ? "text-black" : "text-white"
+                }`}
+              >
                 {article.title}
               </h1>
 
               {article.shortDescription && (
-                <p className={`text-base sm:text-xl md:text-2xl leading-[1.5] sm:leading-[1.6] md:leading-[1.65] mb-6 sm:mb-8 font-light max-w-3xl ${
-                  theme === "light" ? "text-gray-700" : "text-slate-300"
-                }`}>
+                <p
+                  className={`text-base sm:text-xl md:text-2xl leading-[1.5] sm:leading-[1.6] md:leading-[1.65] mb-6 sm:mb-8 font-light max-w-3xl ${
+                    theme === "light" ? "text-gray-700" : "text-slate-300"
+                  }`}
+                >
                   {article.shortDescription}
                 </p>
               )}
 
               <div className="flex flex-wrap items-center gap-4 mb-6">
                 <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-white font-semibold text-sm sm:text-base shadow-md transition-transform hover:scale-105 ${
-                    theme === "light" ? "bg-black" : "bg-emerald-600"
-                  }`}>
+                  <div
+                    className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-white font-semibold text-sm sm:text-base shadow-md transition-transform hover:scale-105 ${
+                      theme === "light" ? "bg-black" : "bg-emerald-600"
+                    }`}
+                  >
                     {article.author[0].toUpperCase()}
                   </div>
                   <div>
-                    <p className={`text-sm font-semibold tracking-tight ${
-                      theme === "light" ? "text-black" : "text-white"
-                    }`}>
+                    <p
+                      className={`text-sm font-semibold tracking-tight ${
+                        theme === "light" ? "text-black" : "text-white"
+                      }`}
+                    >
                       {article.author}
                     </p>
-                    <p className={`text-xs ${
-                      theme === "light" ? "text-gray-500" : "text-slate-500"
-                    }`}>
+                    <p
+                      className={`text-xs ${
+                        theme === "light" ? "text-gray-500" : "text-slate-500"
+                      }`}
+                    >
                       {formatDate(article.publishedAt || article.createdAt)}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <hr className={`border-t mb-4 sm:mb-6 ${
-                theme === "light" ? "border-gray-300" : "border-slate-700"
-              }`} />
+              <hr
+                className={`border-t mb-4 sm:mb-6 ${
+                  theme === "light" ? "border-gray-300" : "border-slate-700"
+                }`}
+              />
 
               <div className="hidden md:flex items-center gap-3">
                 <button
@@ -895,8 +932,14 @@ const ArticlePage = () => {
                       : "border-slate-700 text-slate-400 hover:border-slate-600 hover:bg-slate-800/50"
                   }`}
                 >
-                  <Heart className={`w-4 h-4 transition-transform group-hover:scale-110 ${isLiked ? "fill-pink-500" : ""}`} />
-                  <span className="text-sm font-semibold">{likeCount.toLocaleString()}</span>
+                  <Heart
+                    className={`w-4 h-4 transition-transform group-hover:scale-110 ${
+                      isLiked ? "fill-pink-500" : ""
+                    }`}
+                  />
+                  <span className="text-sm font-semibold">
+                    {likeCount.toLocaleString()}
+                  </span>
                 </button>
                 <button
                   onClick={scrollToDiscussion}
@@ -907,7 +950,10 @@ const ArticlePage = () => {
                   }`}
                 >
                   <MessageCircle className="w-4 h-4 transition-transform group-hover:scale-110" />
-                  <span className="text-sm font-semibold">{comments.length || 0} {comments.length === 1 ? 'Comment' : 'Comments'}</span>
+                  <span className="text-sm font-semibold">
+                    {comments.length || 0}{" "}
+                    {comments.length === 1 ? "Comment" : "Comments"}
+                  </span>
                 </button>
                 <ShareButton
                   url={window.location.href}
@@ -936,22 +982,93 @@ const ArticlePage = () => {
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
           <div className="prose prose-lg max-w-none">
             {article.blocks && article.blocks.length > 0 ? (
-              article.blocks.map((block, index) => (
-                <motion.div
-                  key={block.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05 * index }}
-                >
-                  {renderContentBlock(block, theme)}
-                </motion.div>
-              ))
+              <>
+                {/* AD 1: Top of Article */}
+                <AdSense adSlot="5899683538" />
+
+                {article.blocks.map((block, index) => {
+                  const totalBlocks = article.blocks.length;
+
+                  // Calculate ad positions
+                  const adPositions = [
+                    Math.floor(totalBlocks * 0.1), // 10% - Ad 2
+                    Math.floor(totalBlocks * 0.22), // 22% - Ad 3
+                    Math.floor(totalBlocks * 0.33), // 33% - Ad 4
+                    Math.floor(totalBlocks * 0.44), // 44% - Ad 5
+                    Math.floor(totalBlocks * 0.55), // 55% - Ad 6
+                    Math.floor(totalBlocks * 0.66), // 66% - Ad 7
+                    Math.floor(totalBlocks * 0.77), // 77% - Ad 8
+                    Math.floor(totalBlocks * 0.88), // 88% - Ad 9
+                  ];
+
+                  return (
+                    <React.Fragment key={block.id}>
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.05 * index }}
+                      >
+                        {renderContentBlock(block, theme)}
+                      </motion.div>
+
+                      {/* AD 2 */}
+                      {index === adPositions[0] && (
+                        <AdSense adSlot="5066766402" />
+                      )}
+
+                      {/* AD 3 */}
+                      {index === adPositions[1] && (
+                        <AdSense adSlot="5178447042" />
+                      )}
+
+                      {/* AD 4 */}
+                      {index === adPositions[2] && (
+                        <AdSense adSlot="3865365374" />
+                      )}
+
+                      {/* AD 5 */}
+                      {index === adPositions[3] && (
+                        <AdSense adSlot="1246300269" />
+                      )}
+
+                      {/* AD 6 */}
+                      {index === adPositions[4] && (
+                        <AdSense adSlot="2552283702" />
+                      )}
+
+                      {/* AD 7 */}
+                      {index === adPositions[5] && (
+                        <AdSense adSlot="1239202034" />
+                      )}
+
+                      {/* AD 8 */}
+                      {index === adPositions[6] && (
+                        <AdSense adSlot="7613038693" />
+                      )}
+
+                      {/* AD 9 */}
+                      {index === adPositions[7] && (
+                        <AdSense adSlot="4395030170" />
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+
+                {/* AD 10: Bottom */}
+                <AdSense adSlot="6299957025" />
+              </>
             ) : (
               <div className="text-center py-16">
-                <Tag className={`w-12 h-12 mx-auto mb-4 ${
-                  theme === "light" ? "text-gray-400" : "text-slate-500"
-                }`} />
-                <p className={theme === "light" ? "text-gray-600" : "text-slate-400"}>
+                <Tag
+                  className={`w-12 h-12 mx-auto mb-4 ${
+                    theme === "light" ? "text-gray-400" : "text-slate-500"
+                  }`}
+                />
+                <p
+                  className={
+                    theme === "light" ? "text-gray-600" : "text-slate-400"
+                  }
+                >
                   No content available for this article.
                 </p>
               </div>
@@ -960,27 +1077,43 @@ const ArticlePage = () => {
         </div>
       </motion.article>
 
-      <section id="discussion-section" className="py-16 border-t transition-all duration-300" style={{
-        borderColor: theme === "light" ? "rgb(229, 231, 235)" : "rgb(51, 65, 85)"
-      }}>
+      <section
+        id="discussion-section"
+        className="py-16 border-t transition-all duration-300"
+        style={{
+          borderColor:
+            theme === "light" ? "rgb(229, 231, 235)" : "rgb(51, 65, 85)",
+        }}
+      >
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className={`text-3xl md:text-4xl font-bold mb-4 tracking-tight transition-all duration-300 ${
-              theme === "light" ? "text-black" : "text-white"
-            }`}>
+            <h2
+              className={`text-3xl md:text-4xl font-bold mb-4 tracking-tight transition-all duration-300 ${
+                theme === "light" ? "text-black" : "text-white"
+              }`}
+            >
               Join the Discussion
             </h2>
-            <p className={`text-sm md:text-base ${
-              theme === "light" ? "text-gray-600" : "text-slate-400"
-            }`}>
-              Share your thoughts and engage with {comments.length > 0 ? `${comments.length} other ${comments.length === 1 ? 'reader' : 'readers'}` : 'the community'}
+            <p
+              className={`text-sm md:text-base ${
+                theme === "light" ? "text-gray-600" : "text-slate-400"
+              }`}
+            >
+              Share your thoughts and engage with{" "}
+              {comments.length > 0
+                ? `${comments.length} other ${
+                    comments.length === 1 ? "reader" : "readers"
+                  }`
+                : "the community"}
             </p>
           </div>
-          <div className={`backdrop-blur-xl border rounded-2xl p-6 mb-8 transition-all duration-300 ${
-            theme === "light"
-              ? "bg-gray-50 border-gray-300"
-              : "bg-slate-900/50 border-slate-700"
-          }`}>
+          <div
+            className={`backdrop-blur-xl border rounded-2xl p-6 mb-8 transition-all duration-300 ${
+              theme === "light"
+                ? "bg-gray-50 border-gray-300"
+                : "bg-slate-900/50 border-slate-700"
+            }`}
+          >
             <form onSubmit={handleSubmitComment}>
               <textarea
                 value={newComment}
@@ -1020,10 +1153,16 @@ const ArticlePage = () => {
           <div className="space-y-8">
             {commentsLoading && comments.length === 0 ? (
               <div className="flex items-center justify-center gap-3 py-8">
-                <Loader2 className={`w-6 h-6 animate-spin ${
-                  theme === "light" ? "text-black" : "text-emerald-400"
-                }`} />
-                <span className={theme === "light" ? "text-gray-600" : "text-slate-400"}>
+                <Loader2
+                  className={`w-6 h-6 animate-spin ${
+                    theme === "light" ? "text-black" : "text-emerald-400"
+                  }`}
+                />
+                <span
+                  className={
+                    theme === "light" ? "text-gray-600" : "text-slate-400"
+                  }
+                >
                   Loading comments...
                 </span>
               </div>
@@ -1062,15 +1201,23 @@ const ArticlePage = () => {
                 )}
                 {comments.length === 0 && !commentsLoading && (
                   <div className="text-center py-12">
-                    <MessageCircle className={`w-12 h-12 mx-auto mb-4 ${
-                      theme === "light" ? "text-gray-400" : "text-slate-600"
-                    }`} />
-                    <h3 className={`text-lg font-semibold mb-2 ${
-                      theme === "light" ? "text-gray-600" : "text-slate-400"
-                    }`}>
+                    <MessageCircle
+                      className={`w-12 h-12 mx-auto mb-4 ${
+                        theme === "light" ? "text-gray-400" : "text-slate-600"
+                      }`}
+                    />
+                    <h3
+                      className={`text-lg font-semibold mb-2 ${
+                        theme === "light" ? "text-gray-600" : "text-slate-400"
+                      }`}
+                    >
                       No comments yet
                     </h3>
-                    <p className={theme === "light" ? "text-gray-500" : "text-slate-500"}>
+                    <p
+                      className={
+                        theme === "light" ? "text-gray-500" : "text-slate-500"
+                      }
+                    >
                       Be the first to share your thoughts!
                     </p>
                   </div>
