@@ -3,6 +3,7 @@ import DuneImage from "../assets/Dune.jpg";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
+import AdSense from "@/components/Adsense";
 import {
   Star,
   Heart,
@@ -25,7 +26,7 @@ import OppenHeimerImage from "../assets/oppenheimer.jpg";
 import OppenHeimerFireImage from "../assets/oppenheimerfire.jpg";
 import GodImage from "../assets/god.webp";
 import Tilt from "react-parallax-tilt";
-import { DesktopHero, } from "@/components/ScriptHeroSections";
+import { DesktopHero } from "@/components/ScriptHeroSections";
 import LatestReviews from "../components/LatestReviews";
 import TrendingThisWeek from "../components/TrendingThisWeek";
 import ExploreByGenre from "../components/ExploreByGenre";
@@ -49,7 +50,7 @@ import DunkKirkImage from "../assets/dunkirk.jpg";
 import InteractiveVideoGrid from "../components/InteractiveVideoGrid";
 import ArticleSection from "../components/ArticleSection";
 import Top5Picks from "../components/Top5Picks";
-
+import FleebagVideo from "../../public/Fleebag.mp4";
 export default function Homepage() {
   const { theme } = useTheme();
   const [activeCard, setActiveCard] = useState(null);
@@ -93,8 +94,7 @@ export default function Homepage() {
     },
   ];
 
-  const backgroundVideoUrl =
-    "https://res.cloudinary.com/dapu22gee/video/upload/v1754809621/bgvideo1_ynn0u1.mp4";
+  const backgroundVideoUrl = FleebagVideo;
 
   // Extended featured carousel data for mobile film strip (increased length)
   const featuredCarouselData = [
@@ -183,7 +183,7 @@ export default function Homepage() {
       type: "featured",
       title: "Oppenheimer",
       subtitle: "Nolan's Atomic Masterpiece",
-      
+
       image: OppenHeimerFireImage,
       likes: 1247,
       comments: 189,
@@ -207,7 +207,7 @@ export default function Homepage() {
       type: "review",
       title: "Dune: Part Two",
       subtitle: "Sci-Fi Epic Continues",
-      
+
       image: DuneImage,
       likes: 892,
       comments: 156,
@@ -229,7 +229,7 @@ export default function Homepage() {
       type: "review",
       title: "Interstellar",
       subtitle: "Space Odyssey Reimagined",
-      
+
       image: InterstellarImage,
       likes: 743,
       comments: 98,
@@ -328,11 +328,13 @@ export default function Homepage() {
 
   return (
     <>
-      <div className={`min-h-screen overflow-hidden transition-colors duration-300 ${
-        theme === "light"
-          ? "bg-[#FFF8DC] text-black"
-          : "bg-slate-950 text-white"
-      }`}>
+      <div
+        className={`min-h-screen overflow-hidden transition-colors duration-300 ${
+          theme === "light"
+            ? "bg-[#FFF8DC] text-black"
+            : "bg-slate-950 text-white"
+        }`}
+      >
         {/* Desktop Hero Section - Hidden on Mobile */}
         <section className="relative min-h-[900px] xl:h-screen overflow-hidden pt-20 hidden xl:block">
           {/* Subtle Background Pattern */}
@@ -423,7 +425,10 @@ export default function Homepage() {
                               <div className="h-px flex-1 bg-white/30 max-w-[100px]"></div>
                               <p
                                 className="text-base font-editorial tracking-wider uppercase text-slate-400 whitespace-nowrap"
-                                style={{ letterSpacing: "0.2em", fontWeight: 600 }}
+                                style={{
+                                  letterSpacing: "0.2em",
+                                  fontWeight: 600,
+                                }}
                               >
                                 {quotes[currentQuoteIndex]?.author}
                               </p>
@@ -433,7 +438,8 @@ export default function Homepage() {
                         </motion.div>
                       ) : (
                         <p className="text-lg leading-relaxed text-slate-300 font-light">
-                          Deep dives, critical essays, and curated collections that celebrate the art of film.
+                          Deep dives, critical essays, and curated collections
+                          that celebrate the art of film.
                         </p>
                       )}
                     </div>
@@ -464,7 +470,11 @@ export default function Homepage() {
                         <AnimatePresence mode="wait">
                           {latestReviews.length > 0 && (
                             <motion.div
-                              key={latestReviews[currentSlide % latestReviews.length]?.id}
+                              key={
+                                latestReviews[
+                                  currentSlide % latestReviews.length
+                                ]?.id
+                              }
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               exit={{ opacity: 0 }}
@@ -473,11 +483,15 @@ export default function Homepage() {
                             >
                               <img
                                 src={
-                                  latestReviews[currentSlide % latestReviews.length]
-                                    ?.posterImageUrl ||
-                                  "/placeholder.svg"
+                                  latestReviews[
+                                    currentSlide % latestReviews.length
+                                  ]?.posterImageUrl || "/placeholder.svg"
                                 }
-                                alt={latestReviews[currentSlide % latestReviews.length]?.title}
+                                alt={
+                                  latestReviews[
+                                    currentSlide % latestReviews.length
+                                  ]?.title
+                                }
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                               />
                             </motion.div>
@@ -491,17 +505,33 @@ export default function Homepage() {
                         {latestReviews.length > 0 && (
                           <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
                             <h3 className="text-2xl font-bold mb-2 tracking-tight">
-                              {latestReviews[currentSlide % latestReviews.length]?.title}
+                              {
+                                latestReviews[
+                                  currentSlide % latestReviews.length
+                                ]?.title
+                              }
                             </h3>
                             <div className="flex items-center justify-between text-xs text-slate-200 mb-3">
                               <div className="flex items-center gap-3">
                                 <div className="flex items-center gap-1.5">
                                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                                  <span>{latestReviews[currentSlide % latestReviews.length]?.year}</span>
+                                  <span>
+                                    {
+                                      latestReviews[
+                                        currentSlide % latestReviews.length
+                                      ]?.year
+                                    }
+                                  </span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
                                   <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                                  <span>{latestReviews[currentSlide % latestReviews.length]?.genres?.[0]}</span>
+                                  <span>
+                                    {
+                                      latestReviews[
+                                        currentSlide % latestReviews.length
+                                      ]?.genres?.[0]
+                                    }
+                                  </span>
                                 </div>
                               </div>
                             </div>
@@ -515,7 +545,13 @@ export default function Homepage() {
                           <motion.button
                             whileTap={{ scale: 0.98 }}
                             onClick={() =>
-                              navigate(`/post/${latestReviews[currentSlide % latestReviews.length]?.id}`)
+                              navigate(
+                                `/post/${
+                                  latestReviews[
+                                    currentSlide % latestReviews.length
+                                  ]?.id
+                                }`
+                              )
                             }
                             className="backdrop-blur-md bg-white/90 text-black border-2 border-white/60 hover:bg-white hover:border-white px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 flex items-center gap-1 shadow-lg"
                           >
@@ -553,14 +589,16 @@ export default function Homepage() {
         <div className="xl:hidden">
           <MobileHero heroPosters={heroPosters} currentSlide={currentSlide} />
         </div>
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <AdSense adSlot="5981290614" />
+        </div>
         <Top5Picks />
         <LatestReviews />
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <AdSense adSlot="6874719829" />
+        </div>
         <TrendingThisWeek />
         <ExploreByGenre />
-
-
-
-
       </div>
     </>
   );

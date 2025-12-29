@@ -18,6 +18,7 @@ import {
   Camera,
   ChevronDown,
   ChevronUp,
+  Layers,
 } from "lucide-react";
 import { useCallback } from "react";
 import BlockEditor from "@/components/BlockEditor";
@@ -82,6 +83,12 @@ export default function CreateArticlePage() {
       label: "Divider",
       description: "Section separator",
     },
+    {
+      type: "ARTICLE_SECTION",
+      icon: Layers,
+      label: "Article Section",
+      description: "Heading + Image + Paragraph + Image + Paragraph",
+    },
   ];
 
   const handleInputChange = (field, value) => {
@@ -108,6 +115,47 @@ export default function CreateArticlePage() {
   };
 
   const addBlock = (type) => {
+    // Handle Article Section - creates multiple blocks
+    if (type === "ARTICLE_SECTION") {
+      const currentLength = blocks.length;
+      const sectionBlocks = [
+        {
+          id: crypto.randomUUID(),
+          type: "HEADING",
+          content: getDefaultContent("HEADING"),
+          order: currentLength,
+        },
+        {
+          id: crypto.randomUUID(),
+          type: "IMAGE",
+          content: getDefaultContent("IMAGE"),
+          order: currentLength + 1,
+        },
+        {
+          id: crypto.randomUUID(),
+          type: "PARAGRAPH",
+          content: getDefaultContent("PARAGRAPH"),
+          order: currentLength + 2,
+        },
+        {
+          id: crypto.randomUUID(),
+          type: "IMAGE",
+          content: getDefaultContent("IMAGE"),
+          order: currentLength + 3,
+        },
+        {
+          id: crypto.randomUUID(),
+          type: "PARAGRAPH",
+          content: getDefaultContent("PARAGRAPH"),
+          order: currentLength + 4,
+        },
+      ];
+      setBlocks([...blocks, ...sectionBlocks]);
+      setShowAddBlockMenu(false);
+      return;
+    }
+
+    // Handle single block
     const newBlock = {
       id: crypto.randomUUID(),
       type,

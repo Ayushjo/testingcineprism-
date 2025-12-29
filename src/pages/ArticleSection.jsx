@@ -11,74 +11,109 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { useTheme } from "../context/ThemeContext";
-
+import AdSense from "@/components/Adsense";
 // Article Cards with Focus (Blur effect)
 const ArticleCardsWithFocus = ({ filteredArticles }) => {
   const [hoveredCard, setHoveredCard] = useState(null);
   const navigate = useNavigate();
 
+  // Insert ads every N articles (e.g., every 4 articles = one ad per ~screen)
+  const articlesPerAd = 4;
+  const itemsWithAds = [];
+
+  filteredArticles.forEach((article, index) => {
+    itemsWithAds.push({ type: "article", data: article, index });
+
+    // Add ad after every articlesPerAd articles (but not after the last one)
+    if (
+      (index + 1) % articlesPerAd === 0 &&
+      index < filteredArticles.length - 1
+    ) {
+      itemsWithAds.push({ type: "ad", index: `ad-${index}` });
+    }
+  });
+
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {filteredArticles.map((article, index) => (
-          <motion.article
-            key={article.id || article.title}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{
-              opacity: hoveredCard !== null && hoveredCard !== index ? 0.3 : 1,
-              scale: hoveredCard === index ? 1.02 : 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.6,
-              delay: index * 0.1,
-              opacity: { duration: 0.3 },
-              scale: { duration: 0.3 },
-            }}
-            whileHover={{ y: -8 }}
-            onMouseEnter={() => {
-              setHoveredCard(index);
-            }}
-            onMouseLeave={() => {
-              setHoveredCard(null);
-            }}
-            onClick={() => navigate(`/articles/${article.slug}`)}
-            className="group relative aspect-[5/4] sm:aspect-[4/3] lg:aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-visible cursor-pointer"
-            style={{
-              filter:
-                hoveredCard !== null && hoveredCard !== index
-                  ? "blur(2px)"
-                  : "blur(0px)",
-              transition: "filter 0.3s ease-in-out",
-            }}
-          >
-            <div className="absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden">
+        {itemsWithAds.map((item, displayIndex) => {
+          if (item.type === "ad") {
+            return (
+              <motion.div
+                key={item.index}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: displayIndex * 0.1 }}
+                className="col-span-1 lg:col-span-2 flex items-center justify-center py-8"
+              >
+                <div className="w-full max-w-4xl">
+                  <AdSense adSlot="8224310579" />
+                </div>
+              </motion.div>
+            );
+          }
 
+          // Original article card code
+          const article = item.data;
+          const index = item.index;
 
-              <img
-                src={article.mainImageUrl || "/placeholder.svg"}
-                alt={article.title}
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                onError={(e) => {
-                  e.target.src =
-                    "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMUUyOTNGIi8+CjxwYXRoIGQ9Ik0xNzUgMTIwSDE3MFYxNjBIMTc1VjEyMFpNMjMwIDEyMEgyMjVWMTYwSDIzMFYxMjBaTTIwMCAxODBDMTgzLjQzMiAxODAgMTcwIDE2Ni41NjggMTcwIDE1MEMxNzAgMTMzLjQzMiAxODMuNDMyIDEyMCAyMDAgMTIwQzIxNi41NjggMTIwIDIzMCAxMzMuNDMyIDIzMCAxNTBDMjMwIDE2Ni41NjggMjE2LjU2OCAxODAgMjAwIDE4MFoiIGZpbGw9IiM0RjQ2RTUiLz4KPHBhdGggZD0iTTIwMCAxNDBDMjA4LjI4NCAxNDAgMjE1IDE0Ni43MTYgMjE1IDE1NUMyMTUgMTYzLjI4NCAyMDguMjg0IDE3MCAyMDAgMTcwQzE5MS43MTYgMTcwIDE4NSAxNjMuMjg0IDE4NSAxNTVDMTg1IDE0Ni43MTYgMTkxLjcxNiAxNDAgMjAwIDE0MFoiIGZpbGw9IiM5QTgyRkIiLz4KPC9zdmc+";
-                }}
-              />
+          return (
+            <motion.article
+              key={article.id || article.title}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{
+                opacity:
+                  hoveredCard !== null && hoveredCard !== index ? 0.3 : 1,
+                scale: hoveredCard === index ? 1.02 : 1,
+                y: 0,
+              }}
+              transition={{
+                duration: 0.6,
+                delay: displayIndex * 0.1,
+                opacity: { duration: 0.3 },
+                scale: { duration: 0.3 },
+              }}
+              whileHover={{ y: -8 }}
+              onMouseEnter={() => {
+                setHoveredCard(index);
+              }}
+              onMouseLeave={() => {
+                setHoveredCard(null);
+              }}
+              onClick={() => navigate(`/articles/${article.slug}`)}
+              className="group relative aspect-[5/4] sm:aspect-[4/3] lg:aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-visible cursor-pointer"
+              style={{
+                filter:
+                  hoveredCard !== null && hoveredCard !== index
+                    ? "blur(2px)"
+                    : "blur(0px)",
+                transition: "filter 0.3s ease-in-out",
+              }}
+            >
+              <div className="absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden">
+                <img
+                  src={article.mainImageUrl || "/placeholder.svg"}
+                  alt={article.title}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  onError={(e) => {
+                    e.target.src =
+                      "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMUUyOTNGIi8+CjxwYXRoIGQ9Ik0xNzUgMTIwSDE3MFYxNjBIMTc1VjEyMFpNMjMwIDEyMEgyMjVWMTYwSDIzMFYxMjBaTTIwMCAxODBDMTgzLjQzMiAxODAgMTcwIDE2Ni41NjggMTcwIDE1MEMxNzAgMTMzLjQzMiAxODMuNDMyIDEyMCAyMDAgMTIwQzIxNi41NjggMTIwIDIzMCAxMzMuNDMyIDIzMCAxNTBDMjMwIDE2Ni41NjggMjE2LjU2OCAxODAgMjAwIDE4MFoiIGZpbGw9IiM0RjQ2RTUiLz4KPHBhdGggZD0iTTIwMCAxNDBDMjA4LjI4NCAxNDAgMjE1IDE0Ni43MTYgMjE1IDE1NUMyMTUgMTYzLjI4NCAyMDguMjg0IDE3MCAyMDAgMTcwQzE5MS43MTYgMTcwIDE4NSAxNjMuMjg0IDE4NSAxNTVDMTg1IDE0Ni43MTYgMTkxLjcxNiAxNDAgMjAwIDE0MFoiIGZpbGw9IiM5QTgyRkIiLz4KPC9zdmc+";
+                  }}
+                />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20 sm:from-black/80 sm:via-black/40 sm:to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20 sm:from-black/80 sm:via-black/40 sm:to-transparent" />
 
-              <div className="relative h-full flex flex-col justify-end p-5 sm:p-6 lg:p-8">
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-2 tracking-tight group-hover:text-emerald-300 transition-colors duration-300 leading-tight">
-                    {article.title}
-                  </h2>
-
-                  
+                <div className="relative h-full flex flex-col justify-end p-5 sm:p-6 lg:p-8">
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-2 tracking-tight group-hover:text-emerald-300 transition-colors duration-300 leading-tight">
+                      {article.title}
+                    </h2>
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.article>
-        ))}
+            </motion.article>
+          );
+        })}
       </div>
     </>
   );

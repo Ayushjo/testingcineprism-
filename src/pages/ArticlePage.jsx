@@ -176,9 +176,7 @@ const Comment = ({
         <div
           className={`absolute top-0 bottom-0 ${
             theme === "light" ? "bg-gray-300/50" : "bg-slate-700/30"
-          } ${
-            isMobile ? "w-0.5 left-[-6px]" : "w-px left-[-10px]"
-          }`}
+          } ${isMobile ? "w-0.5 left-[-6px]" : "w-px left-[-10px]"}`}
         />
       )}
 
@@ -202,25 +200,35 @@ const Comment = ({
 
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
-            <span className={`text-xs sm:text-sm font-medium truncate max-w-[120px] sm:max-w-none ${
-              theme === "light" ? "text-black" : "text-emerald-400"
-            }`}>
+            <span
+              className={`text-xs sm:text-sm font-medium truncate max-w-[120px] sm:max-w-none ${
+                theme === "light" ? "text-black" : "text-emerald-400"
+              }`}
+            >
               @{comment.user.username}
             </span>
-            <span className={`text-xs flex-shrink-0 ${
-              theme === "light" ? "text-gray-600" : "text-slate-500"
-            }`}>
+            <span
+              className={`text-xs flex-shrink-0 ${
+                theme === "light" ? "text-gray-600" : "text-slate-500"
+              }`}
+            >
               {formatDate(comment.createdAt)}
             </span>
             {comment.updatedAt !== comment.createdAt && (
-              <span className={`text-xs ${
-                theme === "light" ? "text-gray-600" : "text-slate-500"
-              }`}>(edited)</span>
+              <span
+                className={`text-xs ${
+                  theme === "light" ? "text-gray-600" : "text-slate-500"
+                }`}
+              >
+                (edited)
+              </span>
             )}
             {depth > 2 && !isMobile && (
-              <span className={`text-xs hidden sm:inline ${
-                theme === "light" ? "text-gray-500" : "text-slate-600"
-              }`}>
+              <span
+                className={`text-xs hidden sm:inline ${
+                  theme === "light" ? "text-gray-500" : "text-slate-600"
+                }`}
+              >
                 • L{depth}
               </span>
             )}
@@ -266,9 +274,11 @@ const Comment = ({
               </div>
             </div>
           ) : (
-            <div className={`leading-relaxed mb-2 text-sm sm:text-base break-words ${
-              theme === "light" ? "text-black/90" : "text-slate-300"
-            }`}>
+            <div
+              className={`leading-relaxed mb-2 text-sm sm:text-base break-words ${
+                theme === "light" ? "text-black/90" : "text-slate-300"
+              }`}
+            >
               {comment.content}
             </div>
           )}
@@ -371,9 +381,11 @@ const Comment = ({
           {showReplies && (
             <div className="mt-3 sm:mt-4">
               {repliesLoading && replies.length === 0 ? (
-                <div className={`flex items-center gap-2 text-sm ${
-                  theme === "light" ? "text-gray-600" : "text-slate-500"
-                }`}>
+                <div
+                  className={`flex items-center gap-2 text-sm ${
+                    theme === "light" ? "text-gray-600" : "text-slate-500"
+                  }`}
+                >
                   <Loader2 className="w-4 h-4 animate-spin" />
                   Loading replies...
                 </div>
@@ -537,16 +549,26 @@ const ArticlePage = () => {
 
   if (loading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center transition-all duration-300 ${
-        theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
-      }`}>
+      <div
+        className={`min-h-screen flex items-center justify-center transition-all duration-300 ${
+          theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+        }`}
+      >
         <div className="text-center">
-          <div className={`w-16 h-16 border-4 rounded-full animate-spin mx-auto mb-6 ${
-            theme === "light"
-              ? "border-gray-300 border-t-black"
-              : "border-emerald-500/30 border-t-emerald-500"
-          }`}></div>
-          <p className={`text-lg ${theme === "light" ? "text-gray-600" : "text-slate-400"}`}>Loading article...</p>
+          <div
+            className={`w-16 h-16 border-4 rounded-full animate-spin mx-auto mb-6 ${
+              theme === "light"
+                ? "border-gray-300 border-t-black"
+                : "border-emerald-500/30 border-t-emerald-500"
+            }`}
+          ></div>
+          <p
+            className={`text-lg ${
+              theme === "light" ? "text-gray-600" : "text-slate-400"
+            }`}
+          >
+            Loading article...
+          </p>
         </div>
       </div>
     );
@@ -554,16 +576,26 @@ const ArticlePage = () => {
 
   if (error) {
     return (
-      <div className={`min-h-screen flex items-center justify-center transition-all duration-300 ${
-        theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
-      }`}>
+      <div
+        className={`min-h-screen flex items-center justify-center transition-all duration-300 ${
+          theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
+        }`}
+      >
         <div className="text-center max-w-md mx-auto px-6">
-          <h1 className={`text-4xl lg:text-5xl font-bold mb-6 ${
-            theme === "light" ? "text-black" : "text-white"
-          }`}>
+          <h1
+            className={`text-4xl lg:text-5xl font-bold mb-6 ${
+              theme === "light" ? "text-black" : "text-white"
+            }`}
+          >
             Article Not Found
           </h1>
-          <p className={`mb-8 text-lg ${theme === "light" ? "text-gray-600" : "text-slate-400"}`}>{error}</p>
+          <p
+            className={`mb-8 text-lg ${
+              theme === "light" ? "text-gray-600" : "text-slate-400"
+            }`}
+          >
+            {error}
+          </p>
           <button
             onClick={() => navigate(-1)}
             className={`px-8 py-4 rounded-2xl font-semibold transition-all duration-300 shadow-lg ${
@@ -991,14 +1023,16 @@ const ArticlePage = () => {
 
                   // Calculate ad positions
                   const adPositions = [
-                    Math.floor(totalBlocks * 0.1), // 10% - Ad 2
-                    Math.floor(totalBlocks * 0.22), // 22% - Ad 3
-                    Math.floor(totalBlocks * 0.33), // 33% - Ad 4
-                    Math.floor(totalBlocks * 0.44), // 44% - Ad 5
-                    Math.floor(totalBlocks * 0.55), // 55% - Ad 6
-                    Math.floor(totalBlocks * 0.66), // 66% - Ad 7
-                    Math.floor(totalBlocks * 0.77), // 77% - Ad 8
-                    Math.floor(totalBlocks * 0.88), // 88% - Ad 9
+                    Math.floor(totalBlocks * 0.09), // 9% - Ad 2
+                    Math.floor(totalBlocks * 0.18), // 18% - Ad 3
+                    Math.floor(totalBlocks * 0.27), // 27% - Ad 4
+                    Math.floor(totalBlocks * 0.36), // 36% - Ad 5
+                    Math.floor(totalBlocks * 0.45), // 45% - Ad 6
+                    Math.floor(totalBlocks * 0.54), // 54% - Ad 7
+                    Math.floor(totalBlocks * 0.63), // 63% - Ad 8
+                    Math.floor(totalBlocks * 0.72), // 72% - Ad 9
+                    Math.floor(totalBlocks * 0.81), // 81% - Ad 10
+                    Math.floor(totalBlocks * 0.9), // 90% - Ad 11
                   ];
 
                   return (
@@ -1049,6 +1083,14 @@ const ArticlePage = () => {
                       {/* AD 9 */}
                       {index === adPositions[7] && (
                         <AdSense adSlot="4395030170" />
+                      )}
+                      {/* AD 10 */}
+                      {index === adPositions[8] && (
+                        <AdSense adSlot="3817505168" />
+                      )}
+                      {/* AD 11 */}
+                      {index === adPositions[9] && (
+                        <AdSense adSlot="2504423493" />
                       )}
                     </React.Fragment>
                   );
@@ -1239,15 +1281,20 @@ const renderContentBlock = (block, theme) => {
       return (
         <div className="mb-5 sm:mb-6">
           {content.hasTitle && content.title && (
-            <h3 className={`text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 leading-tight tracking-tight ${
-              theme === "light" ? "text-black" : "text-white"
-            }`}>
+            <h3
+              className={`text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 leading-tight tracking-tight ${
+                theme === "light" ? "text-black" : "text-white"
+              }`}
+            >
               {content.title}
             </h3>
           )}
-          <p className={`leading-[1.7] sm:leading-[1.8] text-[16px] sm:text-[17px] md:text-lg font-normal tracking-normal whitespace-pre-wrap hyphens-auto ${
-            theme === "light" ? "text-gray-800" : "text-slate-300"
-          }`} style={{ textAlign: 'justify' }}>
+          <p
+            className={`leading-[1.7] sm:leading-[1.8] text-[16px] sm:text-[17px] md:text-lg font-normal tracking-normal whitespace-pre-wrap hyphens-auto ${
+              theme === "light" ? "text-gray-800" : "text-slate-300"
+            }`}
+            style={{ textAlign: "justify" }}
+          >
             {content.text}
           </p>
         </div>
@@ -1283,16 +1330,20 @@ const renderContentBlock = (block, theme) => {
               className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
             />
             {/* Subtle gradient overlay on hover */}
-            <div className={`absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100 ${
-              theme === "light"
-                ? "bg-gradient-to-t from-black/5 to-transparent"
-                : "bg-gradient-to-t from-emerald-900/10 to-transparent"
-            }`}></div>
+            <div
+              className={`absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100 ${
+                theme === "light"
+                  ? "bg-gradient-to-t from-black/5 to-transparent"
+                  : "bg-gradient-to-t from-emerald-900/10 to-transparent"
+              }`}
+            ></div>
           </div>
           {content.caption && (
-            <figcaption className={`text-center mt-3 italic text-sm ${
-              theme === "light" ? "text-gray-600" : "text-slate-400"
-            }`}>
+            <figcaption
+              className={`text-center mt-3 italic text-sm ${
+                theme === "light" ? "text-gray-600" : "text-slate-400"
+              }`}
+            >
               {content.caption}
             </figcaption>
           )}
@@ -1324,20 +1375,26 @@ const renderContentBlock = (block, theme) => {
 
     case "QUOTE":
       return (
-        <blockquote className={`border-l-[3px] pl-4 sm:pl-6 md:pl-8 py-4 sm:py-5 my-6 sm:my-8 rounded-r-lg transition-all duration-300 ${
-          theme === "light"
-            ? "border-black bg-gray-50/80 hover:bg-gray-100/80"
-            : "border-emerald-500 bg-slate-900/30 hover:bg-slate-900/50"
-        }`}>
-          <p className={`text-lg sm:text-xl md:text-2xl italic leading-relaxed mb-3 font-serif ${
-            theme === "light" ? "text-gray-800" : "text-slate-200"
-          }`}>
+        <blockquote
+          className={`border-l-[3px] pl-4 sm:pl-6 md:pl-8 py-4 sm:py-5 my-6 sm:my-8 rounded-r-lg transition-all duration-300 ${
+            theme === "light"
+              ? "border-black bg-gray-50/80 hover:bg-gray-100/80"
+              : "border-emerald-500 bg-slate-900/30 hover:bg-slate-900/50"
+          }`}
+        >
+          <p
+            className={`text-lg sm:text-xl md:text-2xl italic leading-relaxed mb-3 font-serif ${
+              theme === "light" ? "text-gray-800" : "text-slate-200"
+            }`}
+          >
             "{content.text}"
           </p>
           {content.author && (
-            <cite className={`font-semibold text-sm not-italic ${
-              theme === "light" ? "text-black" : "text-emerald-400"
-            }`}>
+            <cite
+              className={`font-semibold text-sm not-italic ${
+                theme === "light" ? "text-black" : "text-emerald-400"
+              }`}
+            >
               — {content.author}
             </cite>
           )}
@@ -1347,9 +1404,11 @@ const renderContentBlock = (block, theme) => {
     case "DIVIDER":
       return (
         <div className="flex items-center justify-center my-6 sm:my-8">
-          <div className={`flex items-center gap-3 ${
-            theme === "light" ? "text-gray-300" : "text-slate-700"
-          }`}>
+          <div
+            className={`flex items-center gap-3 ${
+              theme === "light" ? "text-gray-300" : "text-slate-700"
+            }`}
+          >
             <div className="w-16 h-px bg-current"></div>
             <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
             <div className="w-16 h-px bg-current"></div>
