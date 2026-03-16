@@ -12,6 +12,8 @@ import ScrollToTop from "./components/ScrollToTop";
 import Homepage from "./pages/Home";
 import UpdateArticlePage from "./pages/UpdateArticlePage.jsx";
 import About from "./pages/About.jsx";
+import IndieMoviesPage from "./pages/IndieMoviesPage.jsx";
+import AddIndiePage from "./pages/AddingIndiePage.jsx";
 
 // Lazy load components for code splitting
 const ReviewPage = lazy(() => import("./pages/ReviewPage"));
@@ -32,6 +34,7 @@ const AllPostsPage = lazy(() => import("./pages/AllPostsPage"));
 const AdminProtectedRoute = lazy(() =>
   import("./components/AdminProtectedRoute")
 );
+const NewsletterPage = lazy(()=>import("../src/pages/NewsletterPage.jsx"))
 const ReviewPosterPage = lazy(() => import("./pages/UploadReviewPoster"));
 const TopPicksPage = lazy(() => import("./pages/TopPicksPage"));
 const AddTopPicksPage = lazy(() => import("./pages/AddTopPicksPage"));
@@ -60,6 +63,8 @@ const IndiePage = lazy(() => import("./pages/IndiePage"));
 const IndianIndiePage = lazy(() => import("./pages/IndianIndiePage"));
 const WorldIndiePage = lazy(() => import("./pages/WorldIndiePage"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.jsx"));
+
+
 const AboutUs = lazy(() => import("./pages/About.jsx"));
 const Contact = lazy(() => import("./pages/Contact.jsx"));
 const Terms = lazy(() => import("./pages/Terms.jsx"));
@@ -139,6 +144,9 @@ const App = () => {
             <Route path="/reviews" element={<ReviewPage />} />
             <Route path="/articles" element={<ArticleSection />} />
             <Route path="/articles/:slug" element={<ArticlePage />} />
+            <Route path="/newsletter" element={<NewsletterPage />} />
+            <Route path="/indie-movies" element={<IndieMoviesPage />} />
+            <Route path="/create-indie-movie" element={<AddIndiePage />} />
 
             {/* Auth callback - must be outside protected routes */}
             <Route path="/auth/callback" element={<AuthCallback />} />
