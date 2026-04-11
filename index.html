@@ -19,10 +19,12 @@
     ></script>
 
     <!-- Preconnect to external domains for faster resource loading -->
+    <link rel="preconnect" href="https://api.thecineprism.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://image.tmdb.org" />
     <link rel="preconnect" href="https://res.cloudinary.com" />
+    <link rel="preload" as="video" href="/Fleebag.mp4" type="video/mp4" />
     <link rel="preconnect" href="https://platform-api.sharethis.com" />
 
     <!-- DNS prefetch for additional performance -->
@@ -97,7 +99,7 @@
     <script
       type="text/javascript"
       src="https://platform-api.sharethis.com/js/sharethis.js#property=68cf75029b8213b3901f50ff&product=inline-share-buttons"
-      async="async"
+      defer
     ></script>
   </body>
 </html>

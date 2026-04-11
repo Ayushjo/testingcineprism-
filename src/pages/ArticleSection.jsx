@@ -11,52 +11,16 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { useTheme } from "../context/ThemeContext";
-import AdSense from "@/components/Adsense";
 // Article Cards with Focus (Blur effect)
 const ArticleCardsWithFocus = ({ filteredArticles }) => {
   const [hoveredCard, setHoveredCard] = useState(null);
   const navigate = useNavigate();
 
-  // Insert ads every N articles (e.g., every 4 articles = one ad per ~screen)
-  const articlesPerAd = 4;
-  const itemsWithAds = [];
-
-  filteredArticles.forEach((article, index) => {
-    itemsWithAds.push({ type: "article", data: article, index });
-
-    // Add ad after every articlesPerAd articles (but not after the last one)
-    if (
-      (index + 1) % articlesPerAd === 0 &&
-      index < filteredArticles.length - 1
-    ) {
-      itemsWithAds.push({ type: "ad", index: `ad-${index}` });
-    }
-  });
-
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {itemsWithAds.map((item, displayIndex) => {
-          if (item.type === "ad") {
-            return (
-              <motion.div
-                key={item.index}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: displayIndex * 0.1 }}
-                className="col-span-1 lg:col-span-2 flex items-center justify-center py-8"
-              >
-                <div className="w-full max-w-4xl">
-                  <AdSense adSlot="8224310579" />
-                </div>
-              </motion.div>
-            );
-          }
-
-          // Original article card code
-          const article = item.data;
-          const index = item.index;
-
+        {filteredArticles.map((article, displayIndex) => {
+          const index = displayIndex;
           return (
             <motion.article
               key={article.id || article.title}

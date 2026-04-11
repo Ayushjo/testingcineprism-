@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
 import { ShareButton } from "@/components/ShareComponent.jsx";
-import AdSense from "@/components/Adsense.jsx";
 import {
   Eye,
   Share2,
@@ -1015,26 +1014,7 @@ const ArticlePage = () => {
           <div className="prose prose-lg max-w-none">
             {article.blocks && article.blocks.length > 0 ? (
               <>
-                {/* AD 1: Top of Article */}
-                <AdSense adSlot="5899683538" />
-
                 {article.blocks.map((block, index) => {
-                  const totalBlocks = article.blocks.length;
-
-                  // Calculate ad positions
-                  const adPositions = [
-                    Math.floor(totalBlocks * 0.09), // 9% - Ad 2
-                    Math.floor(totalBlocks * 0.18), // 18% - Ad 3
-                    Math.floor(totalBlocks * 0.27), // 27% - Ad 4
-                    Math.floor(totalBlocks * 0.36), // 36% - Ad 5
-                    Math.floor(totalBlocks * 0.45), // 45% - Ad 6
-                    Math.floor(totalBlocks * 0.54), // 54% - Ad 7
-                    Math.floor(totalBlocks * 0.63), // 63% - Ad 8
-                    Math.floor(totalBlocks * 0.72), // 72% - Ad 9
-                    Math.floor(totalBlocks * 0.81), // 81% - Ad 10
-                    Math.floor(totalBlocks * 0.9), // 90% - Ad 11
-                  ];
-
                   return (
                     <React.Fragment key={block.id}>
                       <motion.div
@@ -1044,60 +1024,9 @@ const ArticlePage = () => {
                       >
                         {renderContentBlock(block, theme)}
                       </motion.div>
-
-                      {/* AD 2 */}
-                      {index === adPositions[0] && (
-                        <AdSense adSlot="5066766402" />
-                      )}
-
-                      {/* AD 3 */}
-                      {index === adPositions[1] && (
-                        <AdSense adSlot="5178447042" />
-                      )}
-
-                      {/* AD 4 */}
-                      {index === adPositions[2] && (
-                        <AdSense adSlot="3865365374" />
-                      )}
-
-                      {/* AD 5 */}
-                      {index === adPositions[3] && (
-                        <AdSense adSlot="1246300269" />
-                      )}
-
-                      {/* AD 6 */}
-                      {index === adPositions[4] && (
-                        <AdSense adSlot="2552283702" />
-                      )}
-
-                      {/* AD 7 */}
-                      {index === adPositions[5] && (
-                        <AdSense adSlot="1239202034" />
-                      )}
-
-                      {/* AD 8 */}
-                      {index === adPositions[6] && (
-                        <AdSense adSlot="7613038693" />
-                      )}
-
-                      {/* AD 9 */}
-                      {index === adPositions[7] && (
-                        <AdSense adSlot="4395030170" />
-                      )}
-                      {/* AD 10 */}
-                      {index === adPositions[8] && (
-                        <AdSense adSlot="3817505168" />
-                      )}
-                      {/* AD 11 */}
-                      {index === adPositions[9] && (
-                        <AdSense adSlot="2504423493" />
-                      )}
                     </React.Fragment>
                   );
                 })}
-
-                {/* AD 10: Bottom */}
-                <AdSense adSlot="6299957025" />
               </>
             ) : (
               <div className="text-center py-16">

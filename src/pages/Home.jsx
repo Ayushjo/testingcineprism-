@@ -3,7 +3,6 @@ import DuneImage from "../assets/Dune.jpg";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
-import AdSense from "@/components/Adsense";
 import {
   Star,
   Heart,
@@ -50,12 +49,57 @@ import DunkKirkImage from "../assets/dunkirk.jpg";
 import InteractiveVideoGrid from "../components/InteractiveVideoGrid";
 import ArticleSection from "../components/ArticleSection";
 import Top5Picks from "../components/Top5Picks";
-import FleebagVideo from "../../public/Fleebag.mp4";
 export default function Homepage() {
   const { theme } = useTheme();
   const [activeCard, setActiveCard] = useState(null);
   const navigate = useNavigate();
-  const [quotes, setQuotes] = useState([]);
+  const quotes = [
+    {
+      "id": "54054f26-1128-40b4-bcbc-2c19234114d1",
+      "quote": "I'm gonna make him an offer he can't refuse.",
+      "author": "The Godfather (1972)"
+    },
+    {
+      "id": "ec54d81e-f3b7-4b11-b7e6-af6ba3aa4a5b",
+      "quote": "Frankly, my dear, I don't give a damn.",
+      "author": "Gone with the Wind (1939)"
+    },
+    {
+      "id": "251a4b93-1c4f-4efc-a152-d44c30027778",
+      "quote": "May the Force be with you.",
+      "author": "Star Wars (1977)"
+    },
+    {
+      "id": "b65c19f0-83ef-48a3-8777-bd9571917c72",
+      "quote": "You talking to me?",
+      "author": "Taxi Driver (1976)"
+    },
+    {
+      "id": "434c7c62-32c6-4459-8d14-ec074bed4f82",
+      "quote": "Here’s looking at you, kid.",
+      "author": "Casablanca (1942)"
+    },
+    {
+      "id": "a8917bcf-9d1e-4a8d-8d6d-747f1ca81d52",
+      "quote": "Say hello to my little friend!",
+      "author": "Scarface (1983)"
+    },
+    {
+      "id": "aeed776d-c8ac-4003-ad28-d36b7d99a411",
+      "quote": "I see dead people.",
+      "author": "The Sixth Sense (1999)"
+    },
+    {
+      "id": "6460d237-e627-435d-835e-c6997f2b1142",
+      "quote": "Life is like a box of chocolates. You never know what you’re gonna get.",
+      "author": "Forrest Gump (1994)"
+    },
+    {
+      "id": "fb63f909-c682-4459-be33-2795498cdc56",
+      "quote": "Why so serious?",
+      "author": "The Dark Knight (2008)"
+    }
+  ];
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const [latestReviews, setLatestReviews] = useState([]);
 
@@ -94,7 +138,7 @@ export default function Homepage() {
     },
   ];
 
-  const backgroundVideoUrl = FleebagVideo;
+  const backgroundVideoUrl = "/Fleebag.mp4";
 
   // Extended featured carousel data for mobile film strip (increased length)
   const featuredCarouselData = [
@@ -241,22 +285,7 @@ export default function Homepage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHoveringCard, setIsHoveringCard] = useState(false);
 
-  // Fetch quotes from API
-  useEffect(() => {
-    const fetchQuotes = async () => {
-      try {
-        const response = await axios.get(
-          "https://api.thecineprism.com/api/v1/admin/fetch-quotes"
-        );
-        if (response.data.quotes && Array.isArray(response.data.quotes)) {
-          setQuotes(response.data.quotes);
-        }
-      } catch (error) {
-        console.error("Error fetching quotes:", error);
-      }
-    };
-    fetchQuotes();
-  }, []);
+
 
   // Auto-rotate quotes every 5 seconds
   useEffect(() => {
@@ -589,14 +618,8 @@ export default function Homepage() {
         <div className="xl:hidden">
           <MobileHero heroPosters={heroPosters} currentSlide={currentSlide} />
         </div>
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <AdSense adSlot="5981290614" />
-        </div>
         <Top5Picks />
         <LatestReviews />
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <AdSense adSlot="6874719829" />
-        </div>
         <TrendingThisWeek />
         <ExploreByGenre />
       </div>
