@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0D0C0B">
+<title>The CinePrism — Bollywood Edition · Issue No. 01</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+
+/* ─── RESET & BASE ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+body {
+  background: #0D0C0B;
+  color: #E0D8C4;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Safe area for notched phones */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+img { display: block; max-width: 100%; height: auto; }
+strong { font-weight: 500; }
+em { font-style: italic; }
+
+/* ─── LAYOUT ─── */
+.wrap { max-width: 680px; margin: 0 auto; }
+
+/* ─── MASTHEAD ─── */
+.mast {
+  padding: clamp(28px, 6vw, 44px) clamp(16px, 5vw, 24px) 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.mast-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.issue {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(9px, 2.5vw, 10.5px);
+  letter-spacing: .14em;
+  color: #7A7060;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.badge {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(9px, 2.5vw, 10.5px);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid #7A5E28;
+  color: #C9A84C;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.brand {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(38px, 12vw, 54px);
+  font-weight: 900;
+  color: #F0EAD8;
+  letter-spacing: -1.5px;
+  line-height: 1;
+}
+.brand .g { color: #C9A84C; }
+
+.tagline {
+  font-size: clamp(10px, 2.8vw, 12.5px);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #7A7060;
+  margin-top: 8px;
+}
+
+.rule {
+  height: 1px;
+  background: linear-gradient(90deg, #C9A84C, transparent);
+  margin: 18px 0;
+}
+
+.intro {
+  font-size: clamp(12px, 3.5vw, 13px);
+  color: #7A7060;
+  line-height: 1.65;
+}
+
+/* ─── SECTIONS ─── */
+.sec {
+  padding: clamp(28px, 6vw, 38px) clamp(16px, 5vw, 24px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.slabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(9px, 2.5vw, 10px);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  color: #C9A84C;
+}
+.slabel::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: #C9A84C;
+  flex-shrink: 0;
+}
+
+/* ─── TYPOGRAPHY ─── */
+.bigtitle {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(22px, 6.5vw, 32px);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #F0EAD8;
+  margin-bottom: 8px;
+}
+
+.deck {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(15px, 4vw, 17px);
+  color: #9A9080;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.body-p {
+  font-size: clamp(14px, 3.8vw, 15px);
+  color: #E0D8C4;
+  line-height: 1.82;
+  margin-bottom: 14px;
+}
+.body-p:last-child { margin-bottom: 0; }
+
+.pq {
+  border-left: 3px solid #C9A84C;
+  padding: 12px 16px;
+  margin: 22px 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(15px, 4.2vw, 18px);
+  color: #F0EAD8;
+  line-height: 1.5;
+  background: #201F1C;
+}
+
+/* ─── POSTER ─── */
+.poster-wrap {
+  position: relative;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.14);
+  overflow: hidden;
+  /* Prevent CLS — aspect-ratio keeps space reserved before image loads */
+  aspect-ratio: 2 / 3;
+}
+
+.poster-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(.86);
+  transition: filter .3s ease;
+}
+
+/* Portrait posters look best; for landscape overrides use modifier */
+.poster-wrap.landscape {
+  aspect-ratio: 16 / 9;
+}
+
+.pcap {
+  padding: 32px 14px 13px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(13px, 3.5vw, 14px);
+  font-weight: 700;
+  color: #F0EAD8;
+  background: linear-gradient(transparent, rgba(0,0,0,.82));
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.pcap small {
+  display: block;
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(9px, 2.5vw, 10px);
+  color: rgba(240,234,216,.55);
+  font-weight: 400;
+  margin-top: 3px;
+}
+
+/* ─── STAT ROW ─── */
+.statrow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.statpill {
+  background: #201F1C;
+  border: 1px solid rgba(255,255,255,0.14);
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.sn {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(14px, 4vw, 18px);
+  color: #C9A84C;
+  display: block;
+  line-height: 1;
+}
+.sn-green { color: #5DBF5D; }
+
+.sl {
+  font-size: clamp(9px, 2.5vw, 10px);
+  color: #7A7060;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  display: block;
+  margin-top: 4px;
+}
+
+/* ─── OTT CARD ─── */
+.ott {
+  background: #201F1C;
+  border: 1px solid rgba(255,255,255,0.14);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.ott-poster-wrap {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+}
+.ott-poster-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(.8);
+}
+.ott-poster-wrap .pcap { font-size: 13px; }
+
+.ott-inner {
+  display: flex;
+  align-items: stretch;
+  /* On very narrow screens, stack vertically */
+}
+
+.ott-body {
+  padding: clamp(14px, 4vw, 20px) clamp(14px, 4vw, 20px);
+  flex: 1;
+  min-width: 0; /* prevent flex overflow */
+}
+
+.ott-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(18px, 5vw, 22px);
+  font-weight: 700;
+  color: #F0EAD8;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.ott-meta {
+  font-size: clamp(10px, 2.8vw, 11.5px);
+  color: #7A7060;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.ott-text {
+  font-size: clamp(13px, 3.5vw, 14px);
+  color: #E0D8C4;
+  line-height: 1.74;
+}
+
+.rbox {
+  width: clamp(58px, 15vw, 68px);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #0D0C0B;
+  border-left: 1px solid rgba(255,255,255,0.14);
+  padding: 10px 4px;
+  gap: 3px;
+}
+
+.rn {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(18px, 5vw, 22px);
+  font-weight: 900;
+  color: #C9A84C;
+  line-height: 1;
+  text-align: center;
+  /* Stars wrap on very narrow — keep them together */
+  letter-spacing: -1px;
+  word-break: break-all;
+}
+
+.rl {
+  font-size: clamp(8px, 2.2vw, 9px);
+  color: #7A7060;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  text-align: center;
+}
+
+/* ─── TV CARDS ─── */
+.tv-card {
+  display: flex;
+  border: 1px solid rgba(255,255,255,0.14);
+  margin-bottom: 12px;
+  overflow: hidden;
+  background: #201F1C;
+  /* min-height ensures short text doesn't make poster awkward */
+  min-height: 132px;
+}
+
+.tv-poster {
+  width: clamp(72px, 22vw, 88px);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.tv-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  filter: brightness(.82);
+  /* Match height to parent — important on mobile */
+  min-height: 132px;
+}
+
+.tv-body {
+  padding: clamp(12px, 3.5vw, 16px) clamp(12px, 3.5vw, 18px);
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.tv-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(15px, 4.2vw, 18px);
+  font-weight: 700;
+  color: #F0EAD8;
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+.tv-meta {
+  font-size: clamp(9px, 2.5vw, 11px);
+  color: #7A7060;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+
+.tv-text {
+  font-size: clamp(12.5px, 3.4vw, 13px);
+  color: #E0D8C4;
+  line-height: 1.68;
+  margin-bottom: 8px;
+  flex: 1;
+}
+
+.tv-plat {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(8.5px, 2.3vw, 10px);
+  letter-spacing: .08em;
+  color: #C9A84C;
+  border: 1px solid #7A5E28;
+  padding: 3px 8px;
+  text-transform: uppercase;
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+.tv-plat-b {
+  color: #4A8FD4;
+  border-color: #2A5580;
+}
+
+/* ─── ARCHIVE ─── */
+.arch-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(22px, 6vw, 28px);
+  font-weight: 700;
+  color: #F0EAD8;
+  margin-bottom: 3px;
+  line-height: 1.1;
+}
+
+.arch-year {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(10.5px, 3vw, 12px);
+  display: block;
+  margin-bottom: 12px;
+  color: #C9A84C;
+}
+
+.wtw {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255,255,255,0.14);
+  padding: 8px 12px;
+  font-size: clamp(11px, 3vw, 12px);
+  color: #7A7060;
+  margin-top: 16px;
+  /* Wrap gracefully on very narrow */
+  flex-wrap: wrap;
+}
+
+/* ─── GOSSIP / INDUSTRY ─── */
+.gitem {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.gitem:last-child { border-bottom: none; }
+
+.gnum {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #3A3530;
+  padding-top: 3px;
+  flex-shrink: 0;
+  width: 18px;
+}
+
+.gtext {
+  font-size: clamp(13px, 3.5vw, 14px);
+  color: #E0D8C4;
+  line-height: 1.7;
+  min-width: 0; /* prevent overflow */
+}
+
+/* ─── BIG NUMBER ─── */
+.bignum {
+  font-family: 'Playfair Display', Georgia, serif;
+  /* Scales from 44px on 320px screen to 56px on 680px */
+  font-size: clamp(44px, 12vw, 56px);
+  font-weight: 900;
+  line-height: .9;
+  display: block;
+  margin-bottom: 8px;
+  color: #C9A84C;
+}
+
+.bignum-ctx {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(15px, 4.2vw, 18px);
+  color: #9A9080;
+  font-style: italic;
+  margin-bottom: 16px;
+  line-height: 1.4;
+  display: block;
+}
+
+/* ─── SCENE BREAKDOWN ─── */
+.stag {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(9px, 2.5vw, 10.5px);
+  color: #B83030;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.stitle {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(19px, 5.5vw, 24px);
+  font-weight: 700;
+  color: #F0EAD8;
+  margin-bottom: 3px;
+  line-height: 1.2;
+}
+
+.sfilm {
+  font-size: clamp(10px, 2.8vw, 12px);
+  color: #7A7060;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.sbreakdown {
+  display: grid;
+  /* On narrow screens: 1 col; on wider: 2 cols */
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.sel {
+  background: #201F1C;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 12px 13px;
+}
+
+.selabel {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  display: block;
+  margin-bottom: 5px;
+  color: #C9A84C;
+}
+
+.setext {
+  font-size: clamp(11.5px, 3.2vw, 12px);
+  color: #E0D8C4;
+  line-height: 1.62;
+}
+
+/* ─── COMING UP ─── */
+.coming-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.coming-poster {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  border: 1px solid rgba(255,255,255,0.14);
+  overflow: hidden;
+  background: #1A1917;
+}
+
+.coming-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(.8);
+}
+
+.coming-poster-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  gap: 8px;
+  text-align: center;
+}
+
+.coming-poster-placeholder .cp-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: #7A7060;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.coming-poster-placeholder .cp-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #F0EAD8;
+  line-height: 1.2;
+}
+
+.coming-poster-placeholder .cp-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  padding: 3px 8px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+
+.cp-tag.wait { color: #C9A84C; border-color: rgba(201,168,76,.3); background: rgba(110,80,0,.3); }
+.cp-tag.watch { color: #5DBF5D; border-color: rgba(93,191,93,.3); background: rgba(40,80,40,.3); }
+
+.coming-poster .pcap {
+  font-size: 12px;
+}
+.coming-poster .pcap small { font-size: 9px; }
+
+.citem {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  align-items: flex-start;
+}
+.citem:last-child { border-bottom: none; }
+
+.cdate {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(9px, 2.5vw, 10px);
+  color: #C9A84C;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 3px;
+  min-width: 46px;
+}
+
+.cname {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(15px, 4.2vw, 17px);
+  font-weight: 700;
+  color: #F0EAD8;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.cverdict {
+  font-size: clamp(12.5px, 3.4vw, 13px);
+  color: #7A7060;
+  line-height: 1.62;
+}
+
+.vtag-wait {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(8px, 2.2vw, 9px);
+  letter-spacing: .08em;
+  padding: 2px 8px;
+  margin-right: 5px;
+  text-transform: uppercase;
+  background: rgba(110,80,0,.4);
+  color: #C9A84C;
+  border: 1px solid rgba(201,168,76,.25);
+  vertical-align: middle;
+}
+
+.vtag-watch {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(8px, 2.2vw, 9px);
+  letter-spacing: .08em;
+  padding: 2px 8px;
+  margin-right: 5px;
+  text-transform: uppercase;
+  background: rgba(40,80,40,.5);
+  color: #5DBF5D;
+  border: 1px solid rgba(93,191,93,.25);
+  vertical-align: middle;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: clamp(22px, 5vw, 28px) clamp(16px, 5vw, 24px);
+  /* Bottom safe area for iPhone home indicator */
+  padding-bottom: calc(clamp(22px, 5vw, 28px) + env(safe-area-inset-bottom, 0px));
+}
+
+.footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.footer-brand {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(16px, 4.5vw, 19px);
+  font-weight: 700;
+  color: #9A9080;
+}
+.footer-brand em { color: #C9A84C; font-style: normal; }
+
+.footer-links {
+  display: flex;
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links a {
+  font-size: clamp(10px, 2.8vw, 11px);
+  color: #7A7060;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  /* Minimum tap target 44px */
+  padding: 10px 0;
+  display: block;
+}
+
+.footer-fine {
+  margin-top: 14px;
+  font-size: clamp(10px, 2.8vw, 11px);
+  color: #3A3530;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ─── BREAKPOINT: Very narrow (≤ 360px) ─── */
+@media (max-width: 360px) {
+  .mast-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .statrow { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .sbreakdown { grid-template-columns: 1fr; }
+  .ott-inner { flex-direction: column; }
+  .rbox {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.14);
+    padding: 10px 16px;
+    gap: 8px;
+  }
+  .coming-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-row { flex-direction: column; align-items: flex-start; }
+}
+
+/* ─── BREAKPOINT: Tablet and up ─── */
+@media (min-width: 540px) {
+  .coming-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ─── TOUCH: Remove hover states on touch devices ─── */
+@media (hover: none) {
+  .poster-img { filter: brightness(.86); }
+}
+@media (hover: hover) {
+  .poster-wrap:hover .poster-img { filter: brightness(.95); }
+}
+
+</style>
+</head>
+<body bgcolor="#0D0C0B" style="margin:0;padding:0;background-color:#0D0C0B">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0D0C0B" style="background-color:#0D0C0B">
+<tr><td align="center" style="background-color:#0D0C0B">
+<div class="wrap" style="max-width:680px;width:100%;background-color:#0D0C0B">
+
+<!-- ── MASTHEAD ── -->
+<div class="mast">
+  <div class="mast-row">
+    <span class="issue">Issue No. 01 · May 2026</span>
+    <span class="badge">Bollywood Edition</span>
+  </div>
+  <div class="brand">The<span class="g">Cine</span>Prism</div>
+  <div class="tagline">Cinema through a sharper lens</div>
+  <div class="rule"></div>
+  <p class="intro">The weekly dispatch for people who actually think about Hindi cinema — not just watch it. Box office, criticism, what's streaming, the industry behind the curtain, and one scene that deserves more attention than it got.</p>
+</div>
+
+<!-- ── 01: BIG STORY ── -->
+<div class="sec">
+  <div class="slabel">01 — The Big Story</div>
+  <div class="poster-wrap">
+    <img src="https://image.tmdb.org/t/p/original/iVpF4Hj3ELlKfCSOCri8FhNa3Hj.jpg" class="poster-img" alt="Dhurandhar 2: The Revenge poster" loading="lazy">
+    <div class="pcap">Dhurandhar 2: The Revenge<small>Dir. Aditya Dhar · 2026</small></div>
+  </div>
+  <h1 class="bigtitle">Dhurandhar 2 didn't just succeed. It restructured what's possible.</h1>
+  <p class="deck">At ₹1,791 crore worldwide, Aditya Dhar has done something far more consequential than make money.</p>
+  <div class="rule"></div>
+  <p class="body-p">Let's start with what the number actually means. Dhurandhar 2: The Revenge is now the second highest-grossing Indian film of all time, sitting behind only Dangal and ahead of Baahubali 2. A Hindi film. With an A-certificate. With a runtime that exceeds conventional commercial wisdom. That shouldn't be possible according to every industry playbook — and yet.</p>
+  <p class="body-p">The conventional read is: Ranveer Singh is back, Aditya Dhar delivered, spy thrillers work. True — but it misses the larger implication. Dhurandhar 2 is proof that Hindi cinema's audience will reward ambition if you actually have some. The film demanded patience. It asked viewers to hold geopolitical complexity — multiple agents, Karachi alleys, Lyari's violence-soaked pulse — and sit with a protagonist whose arc doesn't resolve neatly. None of that is designed for the ₹200-crore-weekend crowd. And yet it earned that crowd's money.</p>
+  <div class="pq">"What Dhar has proven isn't that audiences love spy films. He's proven they love being treated like adults."</div>
+  <p class="body-p">The danger now is what Bollywood does with this. The almost certain outcome: a flood of murky-lighting-and-patriotism films trying to reverse-engineer the formula. That's not the formula. The formula is conviction — the willingness to not soften a single edge for commercial safety. Whether the next ten imitators understand that distinction will determine where Hindi cinema's next chapter goes.</p>
+</div>
+
+<!-- ── 02: BOX OFFICE AUTOPSY ── -->
+<div class="sec">
+  <div class="slabel">02 — Box Office Autopsy</div>
+  <div class="poster-wrap">
+    <img src="https://image.tmdb.org/t/p/original/ArIS4vwUxdhm3j7tsTHmffdfU8W.jpg" class="poster-img" alt="Bhooth Bangla poster" loading="lazy">
+    <div class="pcap">Bhooth Bangla<small>Dir. Priyadarshan · April 2026</small></div>
+  </div>
+  <div class="statrow">
+    <div class="statpill"><span class="sn">₹233cr</span><span class="sl">Worldwide</span></div>
+    <div class="statpill"><span class="sn">₹152cr</span><span class="sl">India Net</span></div>
+    <div class="statpill"><span class="sn sn-green">HIT</span><span class="sl">Verdict</span></div>
+  </div>
+  <p class="body-p">Here's the honest truth: Bhooth Bangla succeeded <em>despite</em> its reviews, not because of them. Critics were largely unkind — 1.5 from The Indian Express, 2 from NDTV — and they weren't entirely wrong. The story is structurally wobbly, Akshay's age shows, and the romantic subplot belongs in a different film entirely.</p>
+  <p class="body-p">And yet ₹84 crore in week one. Because Priyadarshan's horror-comedies exist in a register that criticism can't capture. People don't go for narrative coherence — they go for the reunion. Paresh Rawal doing Paresh Rawal things. Rajpal Yadav. The audience arriving for that specific experience was so loyal that mixed word-of-mouth couldn't dent the opening.</p>
+  <p class="body-p">More interesting: this became Akshay's biggest post-pandemic hit outside Sooryavanshi and Housefull 5. His commercial power still lives in horror-comedy, not the patriotic-action space where he overextended.</p>
+</div>
+
+<!-- ── 03: OTT DROP ── -->
+<div class="sec">
+  <div class="slabel">03 — OTT Drop of the Week</div>
+  <div class="poster-wrap">
+    <img src="https://image.tmdb.org/t/p/original/hTirV44jiLh6NqdiB6jtxPsDIoG.jpg" class="poster-img" alt="The Sheep Detectives poster" loading="lazy">
+    <div class="pcap">The Sheep Detectives<small>2026 · Family Mystery</small></div>
+  </div>
+  <div class="ott">
+    <div class="ott-inner">
+      <div class="ott-body">
+        <div class="ott-title">The Sheep Detectives</div>
+        <div class="ott-meta">2026 · Family Mystery · Now Streaming</div>
+        <p class="ott-text">A flock of sheep who've spent years absorbing detective novels — read aloud by their shepherd — investigate his murder. The premise sounds like a one-joke setup. It absolutely is not. The Sheep Detectives earns your trust through sheer sincerity. It never winks at you. The sheep are played completely straight, the mystery is genuinely hard to crack, and some scenes feel like a countryside <em>Knives Out</em>. Underneath all of it is a quietly devastating film about grief and the lengths we go to hold onto someone we've lost. Watch this instead of scrolling for 45 minutes.</p>
+      </div>
+      <div class="rbox">
+        <span class="rn">★★★★</span>
+        <span class="rl">Must Watch</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 04: TV SHOWS ── -->
+<div class="sec">
+  <div class="slabel">04 — What to Watch on TV This Week</div>
+  <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:clamp(14px,4vw,16px);color:#9A9080;margin-bottom:18px;line-height:1.5">Three shows worth your queue — from the one everyone's talking about to the one nobody's found yet.</p>
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#201F1C;border:1px solid rgba(255,255,255,0.14);margin-bottom:12px;overflow:hidden">
+    <tr>
+      <td width="88" valign="top" style="width:88px;padding:0;vertical-align:top">
+        <img src="https://image.tmdb.org/t/p/w185/5mi3aRl16yKmfpQJMzvqN5TXkdA.jpg" alt="Euphoria Season 3" width="88" height="132" style="display:block;width:88px;height:132px;object-fit:cover;object-position:top;filter:brightness(.82)">
+      </td>
+      <td valign="top" style="padding:14px 16px;vertical-align:top">
+        <div class="tv-title" style="font-family:'Playfair Display',Georgia,serif;font-size:17px;font-weight:700;color:#F0EAD8;margin-bottom:3px;line-height:1.2">Euphoria — S3</div>
+        <div class="tv-meta" style="font-size:10px;color:#7A7060;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">HBO Max · April 2026 · 8 Episodes</div>
+        <p class="tv-text" style="font-size:13px;color:#E0D8C4;line-height:1.68;margin-bottom:10px">Four years later, Sam Levinson's teenagers have grown into their 20s. Zendaya is still the most compelling force on prestige TV — Rue now a drug mule in debt to crime boss Laurie. Genuinely gripping in stretches, maddeningly uneven in others. Watch it for Zendaya. Accept the rest.</p>
+        <span class="tv-plat" style="display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;color:#C9A84C;border:1px solid #7A5E28;padding:3px 8px;text-transform:uppercase">HBO Max — Now</span>
+      </td>
+    </tr>
+  </table>
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#201F1C;border:1px solid rgba(255,255,255,0.14);margin-bottom:12px;overflow:hidden">
+    <tr>
+      <td width="88" valign="top" style="width:88px;padding:0;vertical-align:top">
+        <img src="https://image.tmdb.org/t/p/w185/cRAzL6mmdM6Q6UuQgc335UMgcfd.jpg" alt="Spider-Noir" width="88" height="132" style="display:block;width:88px;height:132px;object-fit:cover;object-position:top;filter:brightness(.82)">
+      </td>
+      <td valign="top" style="padding:14px 16px;vertical-align:top">
+        <div class="tv-title" style="font-family:'Playfair Display',Georgia,serif;font-size:17px;font-weight:700;color:#F0EAD8;margin-bottom:3px;line-height:1.2">Spider-Noir</div>
+        <div class="tv-meta" style="font-size:10px;color:#7A7060;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">Prime Video · May 27 · 8 Episodes</div>
+        <p class="tv-text" style="font-size:13px;color:#E0D8C4;line-height:1.68;margin-bottom:10px">Nicolas Cage as a Depression-era Spider-Man detective in 1930s New York. Directed by Harry Bradbeer (Fleabag). Dropping in both black-and-white AND Technicolor — two different experiences. Watch B&amp;W first. The most interesting superhero project in years.</p>
+        <span style="display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;color:#4A8FD4;border:1px solid #2A5580;padding:3px 8px;text-transform:uppercase">Prime Video — May 27</span>
+      </td>
+    </tr>
+  </table>
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#201F1C;border:1px solid rgba(255,255,255,0.14);margin-bottom:12px;overflow:hidden">
+    <tr>
+      <td width="88" valign="top" style="width:88px;padding:0;vertical-align:top">
+        <img src="https://image.tmdb.org/t/p/w185/zD50ejpus5rNidj6CBr4Ml59KOL.jpg" alt="Lord of the Flies" width="88" height="132" style="display:block;width:88px;height:132px;object-fit:cover;object-position:top;filter:brightness(.82)">
+      </td>
+      <td valign="top" style="padding:14px 16px;vertical-align:top">
+      <div>
+        <div class="tv-title">Lord of the Flies</div>
+        <div class="tv-meta">Netflix · Now Streaming · 4 Episodes</div>
+        <p class="tv-text" style="font-size:13px;color:#E0D8C4;line-height:1.68;margin-bottom:10px">Golding's 1954 novel finally gets a proper TV adaptation, scripted by Jack Thorne (Adolescence). Short, dense, and haunting — the kind of miniseries you finish in one evening and keep thinking about the next morning.</p>
+      </div>
+      <span style="display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;color:#C9A84C;border:1px solid #7A5E28;padding:3px 8px;text-transform:uppercase">Netflix — Now</span>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<!-- ── 05: ARCHIVE ── -->
+<div class="sec">
+  <div class="slabel">05 — The Underrated Archive</div>
+  <div class="poster-wrap">
+    <img src="https://image.tmdb.org/t/p/original/rCQV72xJ90ZmG8tiXeJiOJEBzm7.jpg" class="poster-img" alt="Maqbool poster" loading="lazy">
+    <div class="pcap">Maqbool<small>Dir. Vishal Bhardwaj · 2003</small></div>
+  </div>
+  <div class="arch-title">Maqbool</div>
+  <span class="arch-year">Vishal Bhardwaj · 2003</span>
+  <p class="body-p">Macbeth set inside Mumbai's crime syndicate. Irrfan Khan plays Maqbool — second-in-command to a don, in love with the don's mistress Nimmi (Tabu, at the absolute height of her powers), slowly consumed by desire he can't fully articulate. Bhardwaj keeps Shakespeare's architecture of ambition and lets Mumbai's underworld fill it with its own specific weight. Two corrupt police officers double as the witches.</p>
+  <p class="body-p">The scene where he and Tabu finally decide — you understand exactly what is being lost in that room, and Irrfan makes you feel the weight in real time. One of the finest performances in Hindi cinema. Period.</p>
+  <div class="pq">"A film about a man who wanted the wrong things for the right reasons — and destroyed everything finding that out."</div>
+  <div class="wtw">📺 &nbsp;<strong style="color:#F0EAD8">Where to Watch:</strong>&nbsp; JioCinema · Amazon Prime Video</div>
+</div>
+
+<!-- ── 06: INDUSTRY MOVES ── -->
+<div class="sec">
+  <div class="slabel">06 — Industry Moves Worth Knowing</div>
+  <div class="gitem">
+    <span class="gnum">01</span>
+    <p class="gtext"><strong style="color:#F0EAD8">Salman Khan is reportedly all-in on making Sikandar work.</strong> Sources suggest the production has gone back for reshoots after mixed internal screenings — a pattern familiar to anyone who watched Radhe's trajectory.</p>
+  </div>
+  <div class="gitem">
+    <span class="gnum">02</span>
+    <p class="gtext"><strong style="color:#F0EAD8">Balaji Telefilms is pivoting hard toward YouTube originals.</strong> OTT platform fees have compressed; YouTube ad-revenue is reliable at scale. Smart read of where the money is moving.</p>
+  </div>
+  <div class="gitem">
+    <span class="gnum">03</span>
+    <p class="gtext"><strong style="color:#F0EAD8">Ayushmann Khurrana and Sara Ali Khan have reportedly signed a second film together</strong> — spy-comedy Udta Teer — before Pati Patni Aur Woh Do even releases this week.</p>
+  </div>
+  <div class="gitem">
+    <span class="gnum">04</span>
+    <p class="gtext"><strong style="color:#F0EAD8">Bhooth Bangla marks Asrani's final screen appearance.</strong> Akshay Kumar's tribute was genuine — twelve films, decades. The great Bollywood character comedians are a vanishing species.</p>
+  </div>
+</div>
+
+<!-- ── 07: THE NUMBER ── -->
+<div class="sec">
+  <div class="slabel">07 — The Number That Matters</div>
+  <span class="bignum">₹1,791cr</span>
+  <span class="bignum-ctx">Dhurandhar 2's worldwide gross. Here's why Pathaan's ₹1,050 crore matters for context.</span>
+  <p class="body-p">Pathaan (2023) was star-driven — you went because it was SRK back on screens. Dhurandhar 2 was director-driven. People returned for Aditya Dhar's world, not just a star face. In Hollywood, director-driven tentpoles are the norm — Nolan puts people in seats on his name alone. In Bollywood, this is almost entirely a star-driven industry. Dhurandhar 2 suggests that might be changing at the very top end.</p>
+</div>
+
+<!-- ── 08: SCENE OF THE WEEK ── -->
+<div class="sec">
+  <div class="slabel">08 — Scene of the Week</div>
+  <span class="stag">Close Reading</span>
+  <div class="stitle">The decision scene</div>
+  <span class="sfilm">Maqbool (2003) · Dir. Vishal Bhardwaj</span>
+  <div class="sbreakdown">
+    <div class="sel">
+      <span class="selabel">Cinematography</span>
+      <span class="setext">Piercing Sharma lights in deep amber-brown — the warmth of complicity, not romance. Both characters at near-equal depth; neither in clear dominance.</span>
+    </div>
+    <div class="sel">
+      <span class="selabel">Performance</span>
+      <span class="setext">Irrfan does nothing overtly. The decision registers entirely through stillness — shoulders dropping a fraction of an inch.</span>
+    </div>
+    <div class="sel">
+      <span class="selabel">Editing</span>
+      <span class="setext">A single cut to Nimmi's face at the moment of decision — held two beats longer than comfortable. She's watching herself, not him.</span>
+    </div>
+    <div class="sel">
+      <span class="selabel">Score</span>
+      <span class="setext">No swelling strings. A distant radio. The mundanity is the point — tragedy dressed in ordinary clothes lands hardest.</span>
+    </div>
+  </div>
+  <p class="body-p">The scene is constructed to feel like nothing is happening. That restraint is Bhardwaj's masterstroke. Shakespeare's original crackles with rhetoric. Bhardwaj gives his version silence. The moral weight lands harder for being unspoken.</p>
+</div>
+
+<!-- ── 09: ON DECK ── -->
+<div class="sec">
+  <div class="slabel">09 — On Deck Next Week</div>
+
+  <div class="coming-grid">
+    <!-- PATI PATNI — has real poster -->
+    <div class="coming-poster">
+      <img src="https://image.tmdb.org/t/p/original/x0RUPvba4JlCCkyyEZGlQFIFVuF.jpg" alt="Pati Patni Aur Woh Do" loading="lazy">
+      <div class="pcap">Pati Patni Aur Woh Do<small>15 May 2026</small></div>
+    </div>
+    <!-- SANJAY DUTT — placeholder -->
+    <div class="coming-poster">
+      <div class="coming-poster-placeholder">
+        <span class="cp-date">15 May 2026</span>
+        <span class="cp-title">Sanjay Dutt</span>
+        <span style="font-size:11px;color:#7A7060;margin-top:2px">Untitled</span>
+        <span class="cp-tag wait">Tracking</span>
+      </div>
+    </div>
+    <!-- LAKSHYA — placeholder -->
+    <div class="coming-poster">
+      <div class="coming-poster-placeholder">
+        <span class="cp-date">22 May 2026</span>
+        <span class="cp-title">Lakshya &amp; Ananya Panday</span>
+        <span style="font-size:11px;color:#7A7060;margin-top:2px">Untitled</span>
+        <span class="cp-tag watch">Watch</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="citem">
+    <span class="cdate">15 May</span>
+    <div>
+      <div class="cname">Pati Patni Aur Woh Do</div>
+      <p class="cverdict"><span class="vtag-wait">Wait &amp; See</span> Ayushmann Khurrana in a four-person love-chaos comedy by Mudassar Aziz. The cast chemistry seems real. But this sits in the zone where Bollywood comedy either clicks completely or dies in week two.</p>
+    </div>
+  </div>
+  <div class="citem">
+    <span class="cdate">15 May</span>
+    <div>
+      <div class="cname">Sanjay Dutt (untitled)</div>
+      <p class="cverdict"><span class="vtag-wait">Tracking</span> The week's wildcard. Watch for the trailer and early booking numbers.</p>
+    </div>
+  </div>
+  <div class="citem">
+    <span class="cdate">22 May</span>
+    <div>
+      <div class="cname">Lakshya &amp; Ananya Panday</div>
+      <p class="cverdict"><span class="vtag-watch">Tracking</span> Interesting pairing with early buzz. Advance bookings will tell the real story.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<div class="footer">
+  <div class="footer-row">
+    <div class="footer-brand">The<em>Cine</em>Prism</div>
+    <ul class="footer-links">
+      <li><a href="https://thecineprism.com">Website</a></li>
+      <li><a href="https://twitter.com/TheCineprism">@TheCineprism</a></li>
+    </ul>
+  </div>
+  <p class="footer-fine">© 2026 TheCinePrism · Bollywood Edition · Issue No. 01 · Written with opinion, not with PR notes.</p>
+</div>
+
+</div><!-- /wrap -->
+</td></tr></table>
+</body>
+</html>

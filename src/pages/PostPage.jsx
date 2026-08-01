@@ -629,25 +629,54 @@ export default function PostPage() {
     );
   }
 
-  const generateMetaTags = () => {
-    if (!currentPost) return null;
-    const pageUrl = window.location.href;
-    const description =
-      currentPost.content && currentPost.content.length > 160
-        ? currentPost.content.substring(0, 157) + "..."
-        : currentPost.content || `A movie review of ${currentPost.title}`;
-
-    return (
-      <Helmet>
-        <title>{currentPost.title} - CinePrism</title>
-      </Helmet>
-    );
-  };
-
   return (
     <div className={`min-h-screen pt-20 transition-all duration-300 ${
       theme === "light" ? "bg-white text-black" : "bg-slate-950 text-white"
     }`}>
+      {currentPost && (
+        <Helmet>
+          <title>{currentPost.title} | TheCinePrism</title>
+          <meta
+            name="description"
+            content={
+              currentPost.content && currentPost.content.length > 160
+                ? currentPost.content.substring(0, 157) + "..."
+                : currentPost.content || `Film review of ${currentPost.title} on TheCinePrism`
+            }
+          />
+          <meta property="og:type" content="article" />
+          <meta property="og:site_name" content="TheCinePrism" />
+          <meta property="og:title" content={`${currentPost.title} | TheCinePrism`} />
+          <meta
+            property="og:description"
+            content={
+              currentPost.content && currentPost.content.length > 160
+                ? currentPost.content.substring(0, 157) + "..."
+                : currentPost.content || `Film review of ${currentPost.title} on TheCinePrism`
+            }
+          />
+          <meta
+            property="og:image"
+            content={currentPost.posterImageUrl || "https://thecineprism.com/thecineprismlogo.jpg"}
+          />
+          <meta property="og:url" content={window.location.href} />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:site" content="@thecineprism" />
+          <meta name="twitter:title" content={`${currentPost.title} | TheCinePrism`} />
+          <meta
+            name="twitter:description"
+            content={
+              currentPost.content && currentPost.content.length > 160
+                ? currentPost.content.substring(0, 157) + "..."
+                : currentPost.content || `Film review of ${currentPost.title} on TheCinePrism`
+            }
+          />
+          <meta
+            name="twitter:image"
+            content={currentPost.posterImageUrl || "https://thecineprism.com/thecineprismlogo.jpg"}
+          />
+        </Helmet>
+      )}
       {/* Ambient Background */}
       <div className="absolute inset-0 opacity-20">
         {theme === "light" ? (

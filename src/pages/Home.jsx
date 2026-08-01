@@ -49,6 +49,7 @@ import DunkKirkImage from "../assets/dunkirk.jpg";
 import InteractiveVideoGrid from "../components/InteractiveVideoGrid";
 import ArticleSection from "../components/ArticleSection";
 import Top5Picks from "../components/Top5Picks";
+import { Helmet } from "react-helmet";
 export default function Homepage() {
   const { theme } = useTheme();
   const [activeCard, setActiveCard] = useState(null);
@@ -357,6 +358,21 @@ export default function Homepage() {
 
   return (
     <>
+      <Helmet>
+        <title>TheCinePrism — Film Reviews, Essays & Cinema Analysis</title>
+        <meta name="description" content="TheCinePrism is your lens into world cinema — in-depth film reviews, essays, director spotlights, and analysis across Bollywood, Hollywood, indie, and art-house cinema." />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="TheCinePrism" />
+        <meta property="og:title" content="TheCinePrism — Film Reviews, Essays & Cinema Analysis" />
+        <meta property="og:description" content="Your lens into world cinema — in-depth film reviews, essays, director spotlights, and analysis across Bollywood, Hollywood, indie, and art-house cinema." />
+        <meta property="og:url" content="https://thecineprism.com" />
+        <meta property="og:image" content="https://thecineprism.com/thecineprismlogo.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@thecineprism" />
+        <meta name="twitter:title" content="TheCinePrism — Film Reviews, Essays & Cinema Analysis" />
+        <meta name="twitter:description" content="Your lens into world cinema — in-depth film reviews, essays, director spotlights, and analysis." />
+        <meta name="twitter:image" content="https://thecineprism.com/thecineprismlogo.jpg" />
+      </Helmet>
       <div
         className={`min-h-screen overflow-hidden transition-colors duration-300 ${
           theme === "light"

@@ -1,0 +1,30 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+CALSCALE:GREGORIAN
+PRODID:calcom/ics
+METHOD:REQUEST
+X-PUBLISHED-TTL:PT1H
+BEGIN:VEVENT
+UID:ahjEtr3NKVGVBkdTMZeHm5@Cal.com
+SUMMARY:Technical Interview Round between Lakshya Sharma and Ayush Singh
+DTSTAMP:20260603T202900Z
+DTSTART:20260607T110000Z
+DTEND:20260607T113000Z
+DESCRIPTION:What:\nTechnical Interview Round between Lakshya Sharma and Ayu
+	sh Singh\n\nInvitee timezone:\nAsia/Calcutta\n\nWho:\nLakshya Sharma - Org
+	anizer\nlakshya@myvedaai.com\nAyush Singh\nayushsingh202586@gmail.com\n\nW
+	here:\nhttps://meet.google.com/meh-kson-jia\n\nAdditional notes:\nI'm a fu
+	ll-stack engineer (Node.js/TypeScript\, PostgreSQL\, Redis\, Docker\, AWS)
+	 with production experience building a media platform and currently a Devi
+	n-type coding agent\, GitHub issue in\, PR out\, using multi-tool LLM orch
+	estration\, BullMQ\, dockerode\, and sandboxed code execution. Looking for
+	ward to the conversation.\n\nNeed to reschedule or cancel? https://cal.com
+	/booking/ahjEtr3NKVGVBkdTMZeHm5?changes=true
+LOCATION:https://meet.google.com/meh-kson-jia
+STATUS:CONFIRMED
+ORGANIZER;CN=Lakshya Sharma:mailto:lakshya@myvedaai.com
+X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+ATTENDEE;RSVP=TRUE;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=Ayush Singh:ma
+	ilto:ayushsingh202586@gmail.com
+END:VEVENT
+END:VCALENDAR

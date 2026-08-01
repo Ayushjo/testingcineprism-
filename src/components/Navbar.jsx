@@ -104,7 +104,7 @@ export default function Navbar() {
       { href: "/trending", label: "Trending" },
       { href: "/explore-genres", label: "Explore Genres" },
       { href: "/articles", label: "Articles" },
-      { href: "/merchandise", label: "Merchandise" },
+      { href: "/newsletter", label: "Newsletter" },
     ];
 
     const links = user
@@ -154,7 +154,7 @@ export default function Navbar() {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 animate-fade-in-down ${
-        isScrolled || isMobileMenuOpen
+        isScrolled || isMobileMenuOpen || theme === "light"
           ? theme === "light"
             ? "bg-white/95 backdrop-blur-xl border-b border-black/20"
             : "bg-slate-950/90 backdrop-blur-xl border-b border-white/5"

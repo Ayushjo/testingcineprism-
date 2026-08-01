@@ -8,7 +8,8 @@ import {
   Star,
   Menu,
   X,
-  TrendingUp
+  TrendingUp,
+  Mail,
 } from "lucide-react";
 import { File } from "lucide-react";
 import { Edit } from "lucide-react";
@@ -28,6 +29,7 @@ const navigationItems = [
   { icon: File, label: "Create Quote", id: "create-quote" },
   { icon: Edit, label: "Edit Quote", id: "edit-quote" },
   { icon: FilePlus2, label: "Add ByGenres", id: "add-byGenres" },
+  { icon: Mail, label: "Newsletter", id: "newsletter" },
 ];
 
 export default function AdminLayout() {

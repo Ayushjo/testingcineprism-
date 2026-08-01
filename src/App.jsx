@@ -34,7 +34,9 @@ const AllPostsPage = lazy(() => import("./pages/AllPostsPage"));
 const AdminProtectedRoute = lazy(() =>
   import("./components/AdminProtectedRoute")
 );
-const NewsletterPage = lazy(()=>import("../src/pages/NewsletterPage.jsx"))
+const NewsletterPage = lazy(()=>import("./pages/NewsletterPage.jsx"))
+const NewsletterStatus = lazy(()=>import("./pages/NewsletterStatus.jsx"))
+const NewsletterAdmin = lazy(()=>import("./pages/admin/NewsletterAdmin.jsx"))
 const ReviewPosterPage = lazy(() => import("./pages/UploadReviewPoster"));
 const TopPicksPage = lazy(() => import("./pages/TopPicksPage"));
 const AddTopPicksPage = lazy(() => import("./pages/AddTopPicksPage"));
@@ -145,6 +147,7 @@ const App = () => {
             <Route path="/articles" element={<ArticleSection />} />
             <Route path="/articles/:slug" element={<ArticlePage />} />
             <Route path="/newsletter" element={<NewsletterPage />} />
+            <Route path="/newsletter/status" element={<NewsletterStatus />} />
             <Route path="/indie-movies" element={<IndieMoviesPage />} />
             <Route path="/create-indie-movie" element={<AddIndiePage />} />
 
@@ -208,6 +211,7 @@ const App = () => {
                 <Route path="create-quote" element={<CreateQuotePage />} />
                 <Route path="edit-quote" element={<EditQuotePage />} />
                 <Route path="add-byGenres" element={<AddByGenrePage />} />
+                <Route path="newsletter" element={<NewsletterAdmin />} />
               </Route>
             </Route>
           </Routes>
